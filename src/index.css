@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --- CONFIGURACIÓN GLOBAL --- */
+:root {
+  color-scheme: dark; /* Fuerza el modo oscuro en el navegador */
+}
+
+body {
+  background-color: #050505; /* Fondo Base (Más oscuro que las tarjetas para dar profundidad) */
+  color: #F1F5F9; /* Slate-100 para texto legible */
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth; /* Desplazamiento suave en toda la web */
+  overflow-x: hidden; /* Evita scroll horizontal indeseado */
+}
+
+/* ------------------------------------------------------------- */
+/* 🎨 SCROLLBAR TITAN (Estilo Unificado Global)                 */
+/* ------------------------------------------------------------- */
+
+/* Aplica a toda la web, no solo a contenedores específicos */
+::-webkit-scrollbar {
+  width: 6px; /* Fino y elegante */
+  height: 6px;
+}
+
+/* El rastro (track) */
+::-webkit-scrollbar-track {
+  background: transparent; /* Invisible para limpieza visual */
+}
+
+/* El pulgar (thumb) - Color Índigo Titan */
+::-webkit-scrollbar-thumb {
+  background: #3730a3; /* Indigo-900 (Sutil en reposo) */
+  border-radius: 99px;
+}
+
+/* Pulgar al pasar el ratón - Brillo */
+::-webkit-scrollbar-thumb:hover {
+  background: #6366f1; /* Indigo-500 (Resalta al interactuar) */
+}
+
+/* Compatibilidad Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #3730a3 transparent;
+}
+
+/* ------------------------------------------------------------- */
+/* UTILIDADES DE TEXTO */
+/* ------------------------------------------------------------- */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance; /* Mejora títulos de varias líneas */
+  }
+}
