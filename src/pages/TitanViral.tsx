@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { 
   Video, TrendingUp, Zap, Target, Brain, 
   CheckCircle2, BarChart3, Sparkles, Copy, 
@@ -7,7 +7,8 @@ import {
 } from 'lucide-react';
 import { supabase } from '../lib/supabase'; // Ajusta la ruta a tu cliente de Supabase
 
-const TitanViralV103 = () => {
+// ✅ CAMBIO CLAVE: Exportación nombrada compatible con App.tsx
+export const TitanViral = () => {
   // --- ESTADOS DEL SISTEMA ---
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -47,7 +48,7 @@ const TitanViralV103 = () => {
     }
   };
 
-  // --- PROCESAMIENTO: SUBIDA DESDE PC (ORREO IMPACTOIA) ---
+  // --- PROCESAMIENTO: SUBIDA DESDE PC ---
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -113,7 +114,7 @@ const TitanViralV103 = () => {
             <div className="w-px h-10 bg-white/10" />
             <div className="text-center">
               <div className="text-3xl font-black text-green-400">
-                {(result.viral_prediction?.confidence * 100 || 80).toFixed(0)}%
+                {((result.viral_prediction?.confidence || 0.8) * 100).toFixed(0)}%
               </div>
               <div className="text-[10px] text-gray-500 font-bold uppercase">Confidence</div>
             </div>
@@ -123,7 +124,6 @@ const TitanViralV103 = () => {
 
       {/* --- INGESTIÓN DUAL: URL + PC --- */}
       <div className="max-w-6xl mx-auto mb-12 grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Opción Link */}
         <div className="bg-white/5 border border-white/10 p-6 rounded-3xl space-y-4">
           <div className="flex items-center gap-3">
             <Globe size={20} className="text-blue-400" />
@@ -147,7 +147,6 @@ const TitanViralV103 = () => {
           </div>
         </div>
 
-        {/* Opción PC */}
         <div 
           onClick={() => !loading && fileInputRef.current?.click()}
           className="relative overflow-hidden bg-purple-500/5 border border-purple-500/20 p-6 rounded-3xl cursor-pointer hover:bg-purple-500/10 transition-all group"
@@ -172,10 +171,7 @@ const TitanViralV103 = () => {
       {result && (
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
           
-          {/* Columna Principal (Script y Visuales) */}
           <div className="lg:col-span-8 space-y-6">
-            
-            {/* SELECTOR DE HOOKS CON MÉTRICAS */}
             <div className="bg-white/5 border border-white/10 rounded-3xl p-6">
               <h3 className="text-xs font-black text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
                 <Target size={14} className="text-indigo-400" /> Hook Variations (Forensic DNA)
@@ -200,7 +196,6 @@ const TitanViralV103 = () => {
               </div>
             </div>
 
-            {/* ÁREA DE TRABAJO (TABS) */}
             <div className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
               <div className="flex bg-black/50 border-b border-white/10">
                 {['script', 'visuals', 'analysis'].map((tab) => (
@@ -220,11 +215,11 @@ const TitanViralV103 = () => {
                 {activeTab === 'script' && (
                   <div className="space-y-6">
                     <div className="p-6 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl group relative">
-                      <button onClick={() => copyToClipboard(result.hook_variations[activeHook].script)} className="absolute top-4 right-4 p-2 bg-indigo-500 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button onClick={() => copyToClipboard(result.hook_variations[activeHook]?.script)} className="absolute top-4 right-4 p-2 bg-indigo-500 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
                         <Copy size={16} />
                       </button>
                       <span className="text-[10px] font-black text-indigo-400 uppercase">Hook Adaptado</span>
-                      <p className="text-2xl font-black italic mt-2">"{result.hook_variations[activeHook].script}"</p>
+                      <p className="text-2xl font-black italic mt-2">"{result.hook_variations[activeHook]?.script}"</p>
                     </div>
                     <div className="relative group">
                       <button onClick={() => copyToClipboard(result.script_body)} className="absolute top-0 right-0 p-2 bg-white/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
@@ -263,7 +258,6 @@ const TitanViralV103 = () => {
             </div>
           </div>
 
-          {/* Columna Derecha (Insights & QA) */}
           <div className="lg:col-span-4 space-y-6">
             <div className="bg-white/5 border border-white/10 rounded-3xl p-6">
               <h3 className="text-xs font-black text-gray-500 uppercase tracking-widest mb-6 flex items-center gap-2">
@@ -272,7 +266,7 @@ const TitanViralV103 = () => {
               <div className="space-y-4">
                 <div className="bg-black/50 p-4 rounded-2xl border border-white/5">
                   <div className="text-[10px] font-black text-indigo-400 uppercase mb-1">Niche Strategy</div>
-                  <p className="text-sm font-bold leading-tight">{result.adaptation_metadata?.niche_translation || "Cargando..."}</p>
+                  <p className="text-sm font-bold leading-tight">{result.adaptation_metadata?.niche_translation || "Analyzing..."}</p>
                 </div>
                 <div className="bg-black/50 p-4 rounded-2xl border border-white/5">
                   <div className="text-[10px] font-black text-indigo-400 uppercase mb-1">Psychological Trigger</div>
@@ -298,11 +292,9 @@ const TitanViralV103 = () => {
               <Download size={20} /> EXPORTAR PLAN
             </button>
           </div>
-
         </div>
       )}
 
-      {/* NOTIFICACIÓN DE COPIADO */}
       {copied && (
         <div className="fixed bottom-8 right-8 bg-indigo-600 text-white px-6 py-3 rounded-2xl font-bold shadow-2xl animate-bounce z-50">
           ¡Copiado con éxito!
@@ -311,5 +303,3 @@ const TitanViralV103 = () => {
     </div>
   );
 };
-
-export default TitanViralV103;
