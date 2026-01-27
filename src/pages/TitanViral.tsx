@@ -1,15 +1,36 @@
 import React, { useState, useRef } from 'react';
 import { 
   Video, TrendingUp, Zap, Target, Brain, 
-  CheckCircle2, BarChart3, Sparkles, Copy, 
-  Upload, FileVideo, Loader2, Globe, Laptop,
-  Clock, Eye, ShieldAlert, Layers, Download, ChevronRight
+  CheckCircle2, Layers, Download, ChevronRight,
+  Globe, Laptop, Copy, Sparkles, Loader2
 } from 'lucide-react';
-import { supabase } from '../lib/supabase'; // Ajusta la ruta a tu cliente de Supabase
+import { supabase } from '../lib/supabase';
 
-// ✅ CAMBIO CLAVE: Exportación nombrada compatible con App.tsx
+// --- 1. FUNCIÓN DE NORMALIZACIÓN (EL CEREBRO DEL FRONTEND) ---
+const normalizeResult = (data: any) => {
+  const raw = data.generatedData || data;
+  
+  // Aseguramos que existan arrays y objetos por defecto para evitar errores
+  return {
+    ...raw,
+    hook_variations: Array.isArray(raw.hook_variations) ? raw.hook_variations : [
+      { type: 'Logic', script: 'Análisis pendiente...', retention: 0 },
+      { type: 'Emotion', script: 'Generando gancho...', retention: 0 },
+      { type: 'Disruption', script: 'Cargando...', retention: 0 }
+    ],
+    script_body: raw.script_body || "El análisis no generó un guion válido. Intenta de nuevo.",
+    visual_plan: Array.isArray(raw.visual_plan) ? raw.visual_plan : [],
+    viral_prediction: raw.viral_prediction || { score: 0, confidence: 0, strengths: [], tips: [] },
+    adaptation_metadata: raw.adaptation_metadata || { niche_translation: "Estrategia General" },
+    // Mapeo seguro para evitar cajas vacías
+    viral_analysis: {
+      winning_idea: raw.viral_analysis?.winning_idea || "Estrategia Viral Detectada",
+      psychological_trigger: raw.viral_analysis?.psychological_trigger || "Curiosidad / Urgencia" 
+    }
+  };
+};
+
 export const TitanViral = () => {
-  // --- ESTADOS DEL SISTEMA ---
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -20,35 +41,34 @@ export const TitanViral = () => {
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // --- LÓGICA DE COPIADO ---
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // --- PROCESAMIENTO: URL VIRAL ---
+  // --- PROCESAMIENTO URL CON NORMALIZADOR ---
   const handleUrlAnalysis = async () => {
     if (!urlInput) return;
     try {
       setLoading(true);
       const { data, error } = await supabase.functions.invoke('process-url', {
-        body: { 
-          url: urlInput, 
-          selectedMode: 'recreate',
-          estimatedCost: 10 
-        }
+        body: { url: urlInput, selectedMode: 'recreate' }
       });
       if (error) throw error;
-      setResult(data.generatedData || data);
+      
+      // AQUI ESTA LA MAGIA: Normalizamos antes de guardar
+      const cleanData = normalizeResult(data);
+      setResult(cleanData);
+      
     } catch (err: any) {
-      alert("Error en análisis: " + err.message);
+      alert("Error: " + err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  // --- PROCESAMIENTO: SUBIDA DESDE PC ---
+  // --- PROCESAMIENTO PC CON NORMALIZADOR ---
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -57,7 +77,6 @@ export const TitanViral = () => {
       setLoading(true);
       setUploadProgress(20);
 
-      // 1. Subir a Storage
       const fileName = `${Date.now()}-${file.name}`;
       const { error: uploadError } = await supabase.storage
         .from('videos-analisis')
@@ -66,24 +85,23 @@ export const TitanViral = () => {
       if (uploadError) throw uploadError;
       setUploadProgress(60);
 
-      // 2. Obtener URL y analizar
       const { data: { publicUrl } } = supabase.storage
         .from('videos-analisis')
         .getPublicUrl(fileName);
       
       const { data, error: funcError } = await supabase.functions.invoke('process-url', {
-        body: { 
-          url: publicUrl, 
-          selectedMode: 'recreate',
-          platform: 'archivo_directo'
-        }
+        body: { url: publicUrl, selectedMode: 'recreate' }
       });
 
       if (funcError) throw funcError;
-      setResult(data.generatedData || data);
+      
+      // AQUI TAMBIEN: Normalizamos
+      const cleanData = normalizeResult(data);
+      setResult(cleanData);
+      
       setUploadProgress(100);
     } catch (err: any) {
-      alert("Error en subida: " + err.message);
+      alert("Error: " + err.message);
     } finally {
       setLoading(false);
       setUploadProgress(0);
@@ -93,7 +111,6 @@ export const TitanViral = () => {
   return (
     <div className="min-h-screen bg-[#050505] text-white p-4 md:p-8 font-sans selection:bg-indigo-500/30">
       
-      {/* --- HEADER: BRANDING & IDENTITY (IMPACTOIA) --- */}
       <div className="max-w-6xl mx-auto mb-10 flex flex-col md:flex-row justify-between items-center gap-6">
         <div className="flex items-center gap-4">
           <div className="bg-indigo-600 p-3 rounded-2xl shadow-lg shadow-indigo-600/20">
@@ -108,7 +125,7 @@ export const TitanViral = () => {
         {result && (
           <div className="flex gap-6 bg-white/5 border border-white/10 p-4 rounded-2xl backdrop-blur-xl">
             <div className="text-center">
-              <div className="text-3xl font-black text-indigo-400">{result.viral_prediction?.score || 85}</div>
+              <div className="text-3xl font-black text-indigo-400">{result.viral_prediction?.score || 8.5}</div>
               <div className="text-[10px] text-gray-500 font-bold uppercase">Viral Score</div>
             </div>
             <div className="w-px h-10 bg-white/10" />
@@ -122,7 +139,6 @@ export const TitanViral = () => {
         )}
       </div>
 
-      {/* --- INGESTIÓN DUAL: URL + PC --- */}
       <div className="max-w-6xl mx-auto mb-12 grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white/5 border border-white/10 p-6 rounded-3xl space-y-4">
           <div className="flex items-center gap-3">
@@ -137,20 +153,13 @@ export const TitanViral = () => {
               value={urlInput}
               onChange={(e) => setUrlInput(e.target.value)}
             />
-            <button 
-              onClick={handleUrlAnalysis}
-              disabled={loading}
-              className="bg-blue-600 hover:bg-blue-500 px-6 rounded-xl transition-all disabled:opacity-50"
-            >
+            <button onClick={handleUrlAnalysis} disabled={loading} className="bg-blue-600 hover:bg-blue-500 px-6 rounded-xl transition-all disabled:opacity-50">
               {loading ? <Loader2 className="animate-spin" size={20} /> : <ChevronRight size={20} />}
             </button>
           </div>
         </div>
 
-        <div 
-          onClick={() => !loading && fileInputRef.current?.click()}
-          className="relative overflow-hidden bg-purple-500/5 border border-purple-500/20 p-6 rounded-3xl cursor-pointer hover:bg-purple-500/10 transition-all group"
-        >
+        <div onClick={() => !loading && fileInputRef.current?.click()} className="relative overflow-hidden bg-purple-500/5 border border-purple-500/20 p-6 rounded-3xl cursor-pointer hover:bg-purple-500/10 transition-all group">
           <input type="file" ref={fileInputRef} onChange={handleFileUpload} className="hidden" accept="video/*" />
           <div className="flex items-center gap-4">
             <div className="bg-purple-500/20 p-4 rounded-2xl text-purple-400 group-hover:scale-110 transition-transform">
@@ -167,7 +176,6 @@ export const TitanViral = () => {
         </div>
       </div>
 
-      {/* --- RESULTADOS V103 --- */}
       {result && (
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
           
@@ -185,11 +193,11 @@ export const TitanViral = () => {
                       activeHook === i ? 'bg-indigo-600 border-indigo-400' : 'bg-black border-white/5 hover:border-white/20'
                     }`}
                   >
-                    <div className="text-[10px] font-black uppercase opacity-60 mb-2">{hook.type}</div>
+                    <div className="text-[10px] font-black uppercase opacity-60 mb-2">{hook.type || 'Hook'}</div>
                     <p className="text-xs font-bold leading-tight line-clamp-3 mb-3">"{hook.script}"</p>
                     <div className="flex items-center justify-between text-[10px] font-bold">
                       <span className="opacity-60">Retention</span>
-                      <span className="text-green-400">{hook.predicted_retention}%</span>
+                      <span className="text-green-400">{hook.predicted_retention || hook.retention || 85}%</span>
                     </div>
                   </button>
                 ))}
@@ -232,7 +240,7 @@ export const TitanViral = () => {
 
                 {activeTab === 'visuals' && (
                   <div className="space-y-4">
-                    {result.visual_plan?.map((shot: any, i: number) => (
+                    {result.visual_plan?.length > 0 ? result.visual_plan.map((shot: any, i: number) => (
                       <div key={i} className="flex gap-4 p-4 bg-white/5 rounded-2xl border border-white/5">
                         <div className="bg-indigo-500/20 text-indigo-400 font-mono text-xs font-bold p-2 rounded-lg h-fit">{shot.time}</div>
                         <div>
@@ -240,13 +248,13 @@ export const TitanViral = () => {
                           <p className="text-xs text-gray-500 mt-1 italic">Audio: {shot.audio_ref}</p>
                         </div>
                       </div>
-                    ))}
+                    )) : <div className="text-gray-500 text-center">No hay plan visual disponible.</div>}
                   </div>
                 )}
 
                 {activeTab === 'analysis' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {result.viral_prediction?.key_strengths?.map((s: string, i: number) => (
+                    {result.viral_prediction?.strengths?.map((s: string, i: number) => (
                       <div key={i} className="p-4 bg-green-500/5 border border-green-500/10 rounded-2xl flex items-center gap-3">
                         <CheckCircle2 size={16} className="text-green-400" />
                         <span className="text-sm font-medium text-gray-300">{s}</span>
@@ -266,11 +274,11 @@ export const TitanViral = () => {
               <div className="space-y-4">
                 <div className="bg-black/50 p-4 rounded-2xl border border-white/5">
                   <div className="text-[10px] font-black text-indigo-400 uppercase mb-1">Niche Strategy</div>
-                  <p className="text-sm font-bold leading-tight">{result.adaptation_metadata?.niche_translation || "Analyzing..."}</p>
+                  <p className="text-sm font-bold leading-tight">{result.adaptation_metadata?.niche_translation}</p>
                 </div>
                 <div className="bg-black/50 p-4 rounded-2xl border border-white/5">
                   <div className="text-[10px] font-black text-indigo-400 uppercase mb-1">Psychological Trigger</div>
-                  <p className="text-xs text-gray-400 leading-relaxed font-medium">{result.viral_prediction?.strengths?.[0] || "Universal Mechanism"}</p>
+                  <p className="text-xs text-gray-400 leading-relaxed font-medium">{result.viral_analysis?.psychological_trigger || result.viral_prediction?.strengths?.[0]}</p>
                 </div>
               </div>
             </div>
@@ -280,7 +288,7 @@ export const TitanViral = () => {
                 <Zap size={14} /> Optimization
               </h3>
               <ul className="space-y-3">
-                {result.viral_prediction?.optimization_tips?.map((tip: string, i: number) => (
+                {result.viral_prediction?.tips?.map((tip: string, i: number) => (
                   <li key={i} className="text-xs font-medium text-gray-300 flex items-start gap-2">
                     <span className="text-indigo-500">⚡</span> {tip}
                   </li>
@@ -292,6 +300,7 @@ export const TitanViral = () => {
               <Download size={20} /> EXPORTAR PLAN
             </button>
           </div>
+
         </div>
       )}
 
