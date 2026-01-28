@@ -1805,24 +1805,6 @@ serve(async (req) => {
 
     console.log(`[TITAN] ✅ Éxito. Tiempo: ${Date.now() - startTime}ms`);
 
-    // 10. RESPUESTA
-    return new Response(JSON.stringify({ 
-      generatedData, 
-      finalCost: estimatedCost,
-      timestamp: new Date().toISOString()
-    }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-
-  } catch (error: any) {
-    console.error(`[TITAN ERROR] ❌`, error.message);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-  }
-});
-
     // ==================================================================================
     // 9. LÓGICA DEL CEREBRO - SISTEMA MODULAR DE 9 FUNCIONES
     // ==================================================================================
@@ -1902,20 +1884,38 @@ serve(async (req) => {
         break;
 
       case 'mentor_estrategico':
+      case 'mentor_ia':
         {
           const mentorResult = await ejecutarMentorEstrategico(
             userContext,
-            { memoria: MEMORIA_SISTEMA },
+            { memoria: MEMORIA_SISTEMA, query: processedContext },
             openai
           );
           result = mentorResult.data;
           tokensUsed = mentorResult.tokens;
         }
         break;
+      
+      case 'calendar_generator':
+        {
+           // Lógica directa para calendario usando el prompt definido arriba
+           const calSettings = JSON.parse(processedContext || "{}"); 
+           const completion = await openai.chat.completions.create({
+            model: 'gpt-4o',
+            response_format: { type: 'json_object' },
+            messages: [
+              { role: 'system', content: 'Eres un estratega de contenidos.' },
+              { role: 'user', content: PROMPT_CALENDAR_GENERATOR(calSettings, userContext) }
+            ]
+           });
+           result = JSON.parse(completion.choices[0].message.content || '{}');
+           tokensUsed = completion.usage?.total_tokens || 0;
+        }
+        break;
 
       default:
         result = {
-          message: 'Modo no implementado',
+          message: 'Modo no implementado o desconocido',
           modos_disponibles: [
             'ideas_rapidas',
             'autopsia_viral',
@@ -1924,12 +1924,12 @@ serve(async (req) => {
             'juez_viral',
             'auditar_avatar',
             'auditar_experto',
-            'mentor_estrategico'
+            'mentor_estrategico',
+            'calendar_generator'
           ]
         };
     }
-
-    // 10. CÁLCULO DE COSTO Y COBRO
+// 10. CÁLCULO DE COSTO Y COBRO
     const realCost = calculateRealCost(tokensUsed, whisperMinutes);
     const finalCost = Math.max(estimatedCost || 0, realCost);
     
@@ -1942,7 +1942,8 @@ serve(async (req) => {
     }
 
     // 11. PERSISTENCIA EN BASE DE DATOS
-    if (!['chat-avatar', 'mentor_ia', 'mentor'].includes(selectedMode)) {
+    // Guardamos el resultado en el historial (excepto chats efímeros)
+    if (!['chat-avatar', 'mentor_ia', 'mentor', 'chat_expert'].includes(selectedMode)) {
       await supabase.from('viral_generations').insert({ 
         user_id: userId, 
         type: selectedMode, 
