@@ -1729,7 +1729,8 @@ serve(async (req) => {
     
     let result: any;
     let tokensUsed = 0;
-
+    let whisperMinutes = 0; // <--- ESTA ES LA LÍNEA QUE FALTABA
+    
     switch (selectedMode) {
       case 'ideas_rapidas':
         {
