@@ -2,40 +2,50 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
-// Layout y Páginas
+// Layout
 import { DashboardLayout } from './layouts/DashboardLayout';
-import { DashboardHome } from './pages/DashboardHome';
+
+// Páginas Principales
 import { Auth } from './pages/Auth';
-import { Settings } from './pages/Settings';
-import { History } from './pages/History';
-import { QuickIdeas } from './pages/QuickIdeas';
-import { ScriptGenerator } from './pages/ScriptGenerator';
-import { ViralCalculator } from './pages/ViralCalculator';
-import { AnalyzeViral } from './pages/AnalyzeViral';
-import { TitanViral } from './pages/TitanViral';
-import { TranscribeVideo } from './pages/TranscribeVideo';
-import { AvatarProfile } from './pages/AvatarProfile';
-import { ExpertProfile } from './pages/ExpertProfile';
+import { DashboardHome } from './pages/DashboardHome';
+
+// El Cerebro & Identidad (V300)
 import { KnowledgeBase } from './pages/KnowledgeBase';
+import { ExpertProfile } from './pages/ExpertProfile';
+import { AvatarProfile } from './pages/AvatarProfile';
+
+// Herramientas de Creación
+import { ScriptGenerator } from './pages/ScriptGenerator';
+import { AnalyzeViral } from './pages/AnalyzeViral';
+import { ViralCalculator } from './pages/ViralCalculator';
+import { TitanViral } from './pages/TitanViral'; // Recreate Viral
+import { QuickIdeas } from './pages/QuickIdeas';
+import { TranscribeVideo } from './pages/TranscribeVideo';
+
+// Gestión y Estrategia
 import { Calendar } from './pages/Calendar';
 import { AiAssistant } from './pages/AiAssistant';
+import { History } from './pages/History';
+import { Settings } from './pages/Settings';
 
-// --- PROTECTOR DE RUTAS PROFESIONAL ---
+// --- PROTECTOR DE RUTAS V300 ---
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, isLoading } = useAuth();
   
-  // ✅ MEJORA: Solo bloqueamos si REALMENTE estamos cargando y NO hay usuario.
-  // Si hay un error y el Watchdog de AuthContext libera la carga, esto permitirá pasar.
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center text-white font-sans">
-        <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-        <p className="text-xs font-black uppercase tracking-[0.3em] opacity-50">Sincronizando Titan</p>
+        <div className="relative">
+            <div className="w-16 h-16 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin"></div>
+            <div className="absolute top-0 left-0 w-16 h-16 border-4 border-purple-500/30 border-b-purple-500 rounded-full animate-spin direction-reverse"></div>
+        </div>
+        <p className="mt-6 text-[10px] font-black uppercase tracking-[0.3em] text-indigo-400 animate-pulse">
+            Sincronizando Ecosistema V300
+        </p>
       </div>
     );
   }
   
-  // Si no hay usuario tras terminar de cargar, enviamos a login.
   if (!user) return <Navigate to="/login" replace />;
   
   return <>{children}</>;
@@ -44,37 +54,49 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 function AppContent() {
   return (
     <Routes>
+      {/* 1. AUTENTICACIÓN */}
       <Route path="/login" element={<Auth />} />
 
-      {/* RUTAS PROTEGIDAS */}
-      <Route element={
+      {/* 2. RUTAS PROTEGIDAS (ECOSISTEMA TITAN) */}
+      <Route path="/dashboard" element={
           <ProtectedRoute>
             <DashboardLayout /> 
           </ProtectedRoute>
       }>
-          <Route path="/" element={<DashboardHome />} />
-          <Route path="/dashboard/settings" element={<Settings />} />
-          <Route path="/dashboard/history" element={<History />} />
-          <Route path="/dashboard/quick-ideas" element={<QuickIdeas />} />
-          <Route path="/dashboard/script-generator" element={<ScriptGenerator />} />
-          <Route path="/dashboard/viral-calculator" element={<ViralCalculator />} />
-          <Route path="/dashboard/analyze-viral" element={<AnalyzeViral />} />
-          <Route path="/dashboard/recreate-viral" element={<TitanViral />} />
-          <Route path="/dashboard/transcriptor" element={<TranscribeVideo />} />
-          <Route path="/dashboard/avatar-profile" element={<AvatarProfile />} />
-          <Route path="/dashboard/expert-profile" element={<ExpertProfile />} />
-          <Route path="/dashboard/knowledge-base" element={<KnowledgeBase />} />
-          <Route path="/dashboard/calendar" element={<Calendar />} />
-          <Route path="/dashboard/ai-assistant" element={<AiAssistant />} />
+          {/* Torre de Control (Index) */}
+          <Route index element={<DashboardHome />} />
+
+          {/* El Cerebro (Configuración Estratégica) */}
+          <Route path="knowledge-base" element={<KnowledgeBase />} />
+          <Route path="expert-profile" element={<ExpertProfile />} />
+          <Route path="avatar-profile" element={<AvatarProfile />} />
+
+          {/* Herramientas de Producción */}
+          <Route path="script-generator" element={<ScriptGenerator />} />
+          <Route path="analyze-viral" element={<AnalyzeViral />} />
+          <Route path="viral-calculator" element={<ViralCalculator />} />
+          <Route path="recreate-viral" element={<TitanViral />} />
+          <Route path="quick-ideas" element={<QuickIdeas />} />
+          <Route path="transcriptor" element={<TranscribeVideo />} />
+
+          {/* Gestión */}
+          <Route path="calendar" element={<Calendar />} />
+          <Route path="ai-assistant" element={<AiAssistant />} />
+          <Route path="history" element={<History />} />
+          <Route path="settings" element={<Settings />} />
       </Route>
 
-      {/* Redirecciones de compatibilidad */}
+      {/* 3. REDIRECCIONES DE COMPATIBILIDAD */}
+      {/* Si entran a la raíz, enviarlos al dashboard */}
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      
+      {/* Redirecciones de rutas antiguas para no romper enlaces viejos */}
       <Route path="/settings" element={<Navigate to="/dashboard/settings" replace />} />
-      <Route path="/quick-ideas" element={<Navigate to="/dashboard/quick-ideas" replace />} />
       <Route path="/script-generator" element={<Navigate to="/dashboard/script-generator" replace />} />
       <Route path="/calendar" element={<Navigate to="/dashboard/calendar" replace />} />
-      
-      <Route path="*" element={<Navigate to="/" replace />} />
+
+      {/* Catch-all: Cualquier ruta desconocida va al dashboard */}
+      <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
   );
 }
@@ -88,4 +110,5 @@ export default function App() {
     </Router>
   );
 }
-console.log("ACTUALIZACION FORZADA V102");
+
+console.log("🚀 TITAN V300 SYSTEM: ONLINE");

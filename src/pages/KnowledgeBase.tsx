@@ -9,7 +9,7 @@ import {
 // --- MOTOR DE LECTURA PDF ---
 import * as pdfjsLib from 'pdfjs-dist';
 
-// Configuración del Worker para leer PDFs
+// Configuración del Worker (CDN estable)
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 interface Resource {
@@ -21,11 +21,11 @@ interface Resource {
     created_at: string;
 }
 
-const BUCKET_NAME = 'Conocimientos del Usuario-TITAN APPS'; 
+// ⚠️ IMPORTANTE: Asegúrate de crear este bucket en Supabase Storage y hacerlo público o con políticas correctas
+const BUCKET_NAME = 'knowledge-files'; 
 
 export const KnowledgeBase = () => {
-    // Traemos 'isLoading' del Auth renombrado a 'authLoading'
-    const { user, isLoading: authLoading } = useAuth();
+    const { user, isLoading: authLoading } = useAuth(); // Asumiendo que tu AuthContext exporta isLoading
     
     // --- ESTADOS ---
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,61 +42,32 @@ export const KnowledgeBase = () => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const isMounted = useRef(true);
 
-    // --- EFECTO PRINCIPAL BLINDADO (MODO SEGURO) ---
+    // --- CARGA DE DATOS ---
     useEffect(() => {
         isMounted.current = true;
-
-        // 1. SI EL AUTH AÚN ESTÁ CARGANDO, NO HACEMOS NADA
         if (authLoading) return;
-
-        // 2. SI YA TERMINÓ Y NO HAY USUARIO, APAGAMOS CARGA Y SALIMOS
-        if (!user) {
-            setIsLoading(false);
-            return;
-        }
-
-        // 3. VÁLVULA DE SEGURIDAD: SI EN 4 SEGUNDOS NO CARGA, SE ABRE A LA FUERZA
-        const safetyTimer = setTimeout(() => {
-            if (isMounted.current && isLoading) {
-                console.warn("⚠️ KnowledgeBase: Tiempo agotado. Forzando apertura.");
-                setIsLoading(false);
-            }
-        }, 4000);
+        if (!user) { setIsLoading(false); return; }
 
         const loadData = async () => {
             try {
-                // Solo activamos spinner si la lista está vacía visualmente
-                if (resources.length === 0) setIsLoading(true);
-                
+                // ALINEACIÓN V300: Leemos de la tabla 'documents'
                 const { data } = await supabase
-                    .from('knowledge_base')
+                    .from('documents') 
                     .select('*')
                     .eq('user_id', user.id)
                     .order('created_at', { ascending: false });
                 
-                if (isMounted.current) {
-                    setResources(data || []);
-                }
+                if (isMounted.current) setResources(data || []);
             } catch (error) { 
                 console.error("Error cargando conocimientos:", error); 
             } finally {
-                // SIEMPRE APAGAMOS AL TERMINAR (ÉXITO O ERROR)
-                if (isMounted.current) {
-                    setIsLoading(false);
-                    clearTimeout(safetyTimer); // Cancelamos la válvula porque ya cargó bien
-                }
+                if (isMounted.current) setIsLoading(false);
             }
         };
 
         loadData();
-
-        return () => { 
-            isMounted.current = false;
-            clearTimeout(safetyTimer);
-        };
-        // Dependencia segura: user?.id (String)
-    }, [user?.id, authLoading]); 
-
+        return () => { isMounted.current = false; };
+    }, [user, authLoading]); 
 
     // --- 🧠 UTILIDAD: EXTRAER TEXTO DE PDF ---
     const extractTextFromPDF = async (file: File): Promise<string> => {
@@ -104,11 +75,14 @@ export const KnowledgeBase = () => {
         const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
         let fullText = '';
 
-        for (let i = 1; i <= pdf.numPages; i++) {
+        // Leemos máximo 5 páginas para no saturar memoria ni tokens
+        const maxPages = Math.min(pdf.numPages, 10); 
+
+        for (let i = 1; i <= maxPages; i++) {
             const page = await pdf.getPage(i);
             const textContent = await page.getTextContent();
             const pageText = textContent.items.map((item: any) => item.str).join(' ');
-            fullText += `[Página ${i}]: ${pageText}\n\n`;
+            fullText += `[Pág ${i}]: ${pageText}\n`;
         }
         return fullText;
     };
@@ -124,18 +98,20 @@ export const KnowledgeBase = () => {
             const newResource = {
                 user_id: user.id,
                 title: titleValue,
-                type: inputModalType,
+                type: inputModalType === 'url' ? 'url' : 'text', // Alineado con SQL
                 content: content,
-                file_size: inputModalType === 'text' ? `${content.length} chars` : 'Enlace Web'
+                // Guardamos metadatos extra en filename o similar si tu tabla no tiene file_size
+                filename: inputModalType === 'text' ? `Nota (${content.length} chars)` : 'Enlace Web'
             };
 
-            const { data, error } = await supabase.from('knowledge_base').insert(newResource).select().single();
+            // ALINEACIÓN V300: Insertamos en 'documents'
+            const { data, error } = await supabase.from('documents').insert(newResource).select().single();
             if (error) throw error;
             
             setResources([data, ...resources]);
             setIsModalOpen(false);
             resetForm();
-            alert("✅ Conocimiento guardado.");
+            alert("✅ Conocimiento guardado en el Cerebro.");
         } catch (error: any) { 
             alert(`Error: ${error.message}`); 
         } finally {
@@ -145,14 +121,14 @@ export const KnowledgeBase = () => {
 
     // --- BORRAR RECURSO ---
     const handleDelete = async (id: string) => {
-        if(!confirm("¿Borrar este recurso?")) return;
+        if(!confirm("¿Borrar este recurso del cerebro de la IA?")) return;
         try {
-            await supabase.from('knowledge_base').delete().eq('id', id);
+            // ALINEACIÓN V300: Borramos de 'documents'
+            await supabase.from('documents').delete().eq('id', id);
             setResources(resources.filter(r => r.id !== id));
         } catch (error) { console.error(error); }
     };
 
-    // --- CONTROL MODAL ---
     const openModal = (type: 'text' | 'url') => {
         setInputModalType(type);
         setIsModalOpen(true);
@@ -172,23 +148,29 @@ export const KnowledgeBase = () => {
         if (file.size > 10 * 1024 * 1024) return alert("Máximo 10MB.");
 
         setIsUploading(true);
-        setUploadStatus('Subiendo archivo...');
+        setUploadStatus('Procesando archivo...');
         
         try {
             let extractedContent = "";
-            
+            let fileTypeForDb = 'file'; // Default
+
+            // A. Extracción de Texto (La parte mágica para la IA)
             if (file.type === 'application/pdf') {
-                setUploadStatus('Leyendo PDF (IA)...');
+                setUploadStatus('Extrayendo texto para la IA...');
                 try {
                     extractedContent = await extractTextFromPDF(file);
+                    fileTypeForDb = 'pdf';
                 } catch (readError) {
-                    alert("No pudimos extraer el texto. Se guardará solo la referencia.");
+                    console.error(readError);
+                    alert("No pudimos leer el texto del PDF. La IA solo sabrá el nombre del archivo.");
                 }
             } else if (file.type === 'text/plain') {
                 extractedContent = await file.text();
+                fileTypeForDb = 'text';
             }
 
-            // 1. Subir al Storage
+            // B. Subir al Storage (Para que el usuario pueda descargarlo luego)
+            setUploadStatus('Subiendo a la nube...');
             const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
             const filePath = `${user.id}/${Date.now()}-${safeName}`;
             
@@ -198,24 +180,24 @@ export const KnowledgeBase = () => {
 
             if (uploadError) throw uploadError;
 
-            // 2. Guardar en DB
+            // C. Guardar en Base de Datos (ALINEACIÓN V300)
             const finalContent = extractedContent 
-                ? `[FUENTE: ${file.name}]\n${extractedContent}` 
-                : `Referencia de Archivo: ${filePath}`;
+                ? `[CONTENIDO DE ${file.name}]:\n${extractedContent}` 
+                : `[ARCHIVO SIN TEXTO LEGIBLE]: ${file.name}`;
 
             const newResource = {
                 user_id: user.id,
                 title: file.name,
-                type: 'file' as const, 
-                content: finalContent, 
-                file_size: `${(file.size / 1024 / 1024).toFixed(2)} MB` 
+                type: fileTypeForDb, 
+                content: finalContent, // ¡ESTO ES LO QUE LEE LA IA!
+                filename: filePath // Guardamos la ruta del archivo aquí
             };
 
-            const { data, error: dbError } = await supabase.from('knowledge_base').insert(newResource).select().single();
+            const { data, error: dbError } = await supabase.from('documents').insert(newResource).select().single();
             if (dbError) throw dbError;
 
             setResources([data, ...resources]);
-            alert("✅ Archivo guardado.");
+            alert("✅ Archivo procesado e indexado.");
             
         } catch (error: any) {
             alert(`Error: ${error.message}`);
@@ -227,19 +209,18 @@ export const KnowledgeBase = () => {
     };
 
     // --- RENDERIZADO DE CARGA ---
-    // Solo mostramos el spinner si ESTÁ CARGANDO y ADEMÁS la lista está vacía.
     if (isLoading && resources.length === 0) {
         return (
             <div className="flex h-[60vh] flex-col items-center justify-center text-white">
                 <Loader2 className="animate-spin mb-4 text-indigo-500" size={40}/> 
                 <span className="font-bold tracking-widest uppercase text-xs text-indigo-400 animate-pulse">
-                    Sincronizando Cerebro Digital...
+                    Conectando con el Cerebro...
                 </span>
             </div>
         );
     }
 
-    // --- INTERFAZ PRINCIPAL ---
+    // --- INTERFAZ ---
     return (
         <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500 pb-20 p-4">
             
@@ -250,141 +231,87 @@ export const KnowledgeBase = () => {
                 </div>
                 <h1 className="text-3xl font-black text-white">Cerebro Digital</h1>
                 <p className="text-gray-400 max-w-2xl mx-auto text-sm">
-                    Alimenta tu inteligencia artificial con PDFs, guías y notas estratégicas.
+                    Sube tus PDFs y notas. La IA leerá el contenido automáticamente.
                 </p>
-                <div className="inline-block bg-green-900/20 border border-green-500/30 px-4 py-1.5 rounded-full mt-2">
-                    <p className="text-green-400 font-bold text-xs flex items-center gap-2">
-                        <CheckCircle2 size={14}/> Extracción automática de texto activada
-                    </p>
-                </div>
             </div>
 
-            {/* BOTONES DE ACCIÓN */}
+            {/* BOTONES */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                
-                {/* BOTÓN NOTA */}
                 <div onClick={() => openModal('text')} className="bg-[#0B0E14] border border-gray-800 rounded-3xl p-8 flex flex-col items-center justify-center text-center hover:border-indigo-500/50 transition-all cursor-pointer group shadow-xl">
-                    <div className="p-4 bg-gray-900 rounded-2xl mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-all text-gray-400 shadow-inner">
-                        <FileText size={28} />
-                    </div>
-                    <h3 className="font-bold text-white text-lg">Añadir Nota</h3>
-                    <p className="text-xs text-gray-500 mt-2">Copys, bios o ideas rápidas.</p>
+                    <div className="p-4 bg-gray-900 rounded-2xl mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-all text-gray-400 shadow-inner"><FileText size={28} /></div>
+                    <h3 className="font-bold text-white">Nota de Texto</h3>
                 </div>
                 
-                {/* BOTÓN SUBIR ARCHIVO */}
                 <div onClick={() => fileInputRef.current?.click()} className="bg-[#0B0E14] border border-gray-800 rounded-3xl p-8 flex flex-col items-center justify-center text-center hover:border-green-500/50 transition-all cursor-pointer group shadow-xl">
                     <div className="p-4 bg-gray-900 rounded-2xl mb-4 group-hover:bg-green-600 group-hover:text-white transition-all text-gray-400 shadow-inner">
                         {isUploading ? <Loader2 className="animate-spin" size={28}/> : <Upload size={28}/>}
                     </div>
-                    <h3 className="font-bold text-white text-lg">
-                        {isUploading ? 'Procesando...' : 'Subir PDF / TXT'}
-                    </h3>
-                    <p className="text-xs text-gray-500 mt-1">
-                        {uploadStatus || 'La IA leerá el contenido.'}
-                    </p>
+                    <h3 className="font-bold text-white">{isUploading ? 'Procesando...' : 'Subir PDF'}</h3>
+                    <p className="text-[10px] text-green-400 mt-1">{uploadStatus}</p>
                     <input type="file" ref={fileInputRef} className="hidden" onChange={handleFileChange} accept=".pdf,.txt" />
                 </div>
                 
-                {/* BOTÓN URL */}
                 <div onClick={() => openModal('url')} className="bg-[#0B0E14] border border-gray-800 rounded-3xl p-8 flex flex-col items-center justify-center text-center hover:border-purple-500/50 transition-all cursor-pointer group shadow-xl">
-                    <div className="p-4 bg-gray-900 rounded-2xl mb-4 group-hover:bg-purple-600 group-hover:text-white transition-all text-gray-400 shadow-inner">
-                        <LinkIcon size={28}/>
-                    </div>
-                    <h3 className="font-bold text-white text-lg">Añadir URL</h3>
-                    <p className="text-xs text-gray-500 mt-1">Webs y fuentes externas.</p>
+                    <div className="p-4 bg-gray-900 rounded-2xl mb-4 group-hover:bg-purple-600 group-hover:text-white transition-all text-gray-400 shadow-inner"><LinkIcon size={28}/></div>
+                    <h3 className="font-bold text-white">Guardar URL</h3>
                 </div>
             </div>
 
-            {/* LISTA DE RECURSOS */}
+            {/* LISTA */}
             <div className="space-y-4 pt-8 border-t border-gray-800">
                 <div className="flex justify-between items-center px-2">
-                    <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                        <Database size={20} className="text-indigo-500"/> Biblioteca de Conocimiento
-                    </h3>
-                    <span className="text-[10px] font-mono text-gray-500 bg-gray-900 px-2 py-1 rounded border border-gray-800">
-                        {resources.length} Activos
-                    </span>
+                    <h3 className="text-xl font-bold text-white flex items-center gap-2"><Database size={20} className="text-indigo-500"/> Archivos Indexados</h3>
+                    <span className="text-[10px] font-mono text-gray-500 bg-gray-900 px-2 py-1 rounded border border-gray-800">{resources.length} Docs</span>
                 </div>
                 
                 {resources.length === 0 ? (
-                    <div className="text-center py-24 bg-[#0B0E14] rounded-3xl border-2 border-dashed border-gray-800 text-gray-500 flex flex-col items-center">
-                        <Database size={48} className="opacity-10 mb-4"/>
-                        <p className="font-medium text-sm">Aún no has subido conocimientos.</p>
-                        <p className="text-xs mt-1">Empieza subiendo un PDF con tu metodología.</p>
+                    <div className="text-center py-20 bg-[#0B0E14] rounded-3xl border-2 border-dashed border-gray-800 text-gray-500">
+                        <p>Tu cerebro está vacío. Sube algo para empezar.</p>
                     </div>
                 ) : (
                     <div className="grid gap-3">
                         {resources.map((res) => (
-                            <div key={res.id} className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-5 flex justify-between items-center hover:border-gray-600 transition-all group shadow-lg">
-                                <div className="flex items-center gap-5 overflow-hidden">
-                                    <div className={`p-3 rounded-2xl shrink-0 shadow-inner ${
-                                        res.type === 'url' ? 'bg-purple-900/10 text-purple-400' : 
-                                        res.type === 'file' ? 'bg-indigo-900/10 text-indigo-400' : 
-                                        'bg-green-900/10 text-green-400'
-                                    }`}>
-                                        {res.type === 'url' ? <LinkIcon size={22}/> : res.type === 'file' ? <FileType size={22}/> : <FileText size={22}/>}
+                            <div key={res.id} className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-5 flex justify-between items-center hover:border-gray-600 transition-all">
+                                <div className="flex items-center gap-4 overflow-hidden">
+                                    <div className={`p-3 rounded-xl shrink-0 ${res.type === 'url' ? 'bg-purple-900/20 text-purple-400' : 'bg-indigo-900/20 text-indigo-400'}`}>
+                                        {res.type === 'url' ? <LinkIcon size={20}/> : <FileText size={20}/>}
                                     </div>
                                     <div className="min-w-0">
-                                        <p className="text-white font-bold text-base truncate pr-4">{res.title}</p>
-                                        <div className="flex items-center gap-3 text-[10px] text-gray-500 font-bold uppercase tracking-wider mt-1">
+                                        <p className="text-white font-bold text-sm truncate">{res.title}</p>
+                                        <div className="flex items-center gap-2 text-[10px] text-gray-500 mt-1">
                                             <span>{new Date(res.created_at).toLocaleDateString()}</span>
-                                            <span className="w-1 h-1 bg-gray-700 rounded-full"></span>
-                                            <span>{res.file_size}</span>
-                                            
-                                            {/* Etiqueta especial si es contenido indexado por IA */}
-                                            {res.type === 'file' && res.content?.startsWith('[FUENTE:') && (
-                                                <span className="text-indigo-400 flex items-center gap-1.5 bg-indigo-900/20 px-2 py-0.5 rounded border border-indigo-500/20">
-                                                    <CheckCircle2 size={10}/> IA INDEXED
-                                                </span>
+                                            {res.content && res.content.length > 50 && (
+                                                <span className="text-green-500 flex items-center gap-1"><CheckCircle2 size={10}/> INDEXADO</span>
                                             )}
                                         </div>
                                     </div>
                                 </div>
-                                <button onClick={() => handleDelete(res.id)} className="p-2.5 text-gray-600 hover:text-red-500 hover:bg-red-900/20 rounded-xl transition-all opacity-0 group-hover:opacity-100">
-                                    <Trash2 size={20}/>
-                                </button>
+                                <button onClick={() => handleDelete(res.id)} className="p-2 text-gray-600 hover:text-red-500 transition-colors"><Trash2 size={18}/></button>
                             </div>
                         ))}
                     </div>
                 )}
             </div>
 
-            {/* MODAL */}
+            {/* MODAL INPUT */}
             {isModalOpen && (
-                <div className="fixed inset-0 bg-black/95 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
-                    <div className="bg-[#0B0E14] border border-gray-700 rounded-3xl w-full max-w-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-                        <div className="p-6 border-b border-gray-800 flex justify-between items-center bg-gray-900/50">
-                            <div>
-                                <h2 className="text-xl font-bold text-white">
-                                    {inputModalType === 'text' ? 'Añadir Nota Maestro' : 'Anclar URL Externa'}
-                                </h2>
-                                <p className="text-[10px] text-gray-500 uppercase font-black tracking-widest mt-1">
-                                    Knowledge Injection
-                                </p>
-                            </div>
-                            <button onClick={() => setIsModalOpen(false)} className="text-gray-500 hover:text-white bg-gray-800 p-2 rounded-xl transition-all"><X size={20}/></button>
+                <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                    <div className="bg-[#0B0E14] border border-gray-700 rounded-3xl w-full max-w-lg shadow-2xl p-6">
+                        <div className="flex justify-between items-center mb-6">
+                            <h2 className="text-lg font-bold text-white">{inputModalType === 'text' ? 'Nueva Nota' : 'Guardar Enlace'}</h2>
+                            <button onClick={() => setIsModalOpen(false)}><X className="text-gray-500 hover:text-white" size={20}/></button>
                         </div>
-                        <div className="p-8 space-y-6 overflow-y-auto">
-                            <div>
-                                <label className="block text-xs font-black text-indigo-400 mb-2 uppercase tracking-tighter">Título del Recurso</label>
-                                <input type="text" className="w-full bg-gray-900 border border-gray-700 rounded-2xl p-4 text-white focus:border-indigo-500 outline-none font-bold placeholder-gray-600 transition-all shadow-inner" value={titleValue} onChange={(e) => setTitleValue(e.target.value)} placeholder="Ej: Metodología Rocket 2025" autoFocus />
-                            </div>
+                        <div className="space-y-4">
+                            <input type="text" className="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white focus:border-indigo-500 outline-none" value={titleValue} onChange={(e) => setTitleValue(e.target.value)} placeholder="Título..." autoFocus />
+                            
                             {inputModalType === 'text' ? (
-                                <div>
-                                    <label className="block text-xs font-black text-indigo-400 mb-2 uppercase tracking-tighter">Cuerpo de la Nota</label>
-                                    <textarea className="w-full h-56 bg-gray-900 border border-gray-700 rounded-2xl p-4 text-white focus:border-indigo-500 outline-none resize-none font-medium placeholder-gray-600 shadow-inner" value={textInputValue} onChange={(e) => setTextInputValue(e.target.value)} placeholder="Pega aquí el texto que quieres que la IA aprenda..." />
-                                </div>
+                                <textarea className="w-full h-40 bg-gray-900 border border-gray-700 rounded-xl p-3 text-white focus:border-indigo-500 outline-none resize-none" value={textInputValue} onChange={(e) => setTextInputValue(e.target.value)} placeholder="Escribe aquí..." />
                             ) : (
-                                <div>
-                                    <label className="block text-xs font-black text-indigo-400 mb-2 uppercase tracking-tighter">URL de Referencia</label>
-                                    <input type="url" className="w-full bg-gray-900 border border-gray-700 rounded-2xl p-4 text-white focus:border-indigo-500 outline-none font-bold placeholder-gray-600 shadow-inner" value={urlInputValue} onChange={(e) => setUrlInputValue(e.target.value)} placeholder="https://tupagina.com/blog-post" />
-                                </div>
+                                <input type="url" className="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white focus:border-indigo-500 outline-none" value={urlInputValue} onChange={(e) => setUrlInputValue(e.target.value)} placeholder="https://..." />
                             )}
-                        </div>
-                        <div className="p-6 border-t border-gray-800 bg-gray-900/50 flex justify-end gap-3">
-                            <button onClick={() => setIsModalOpen(false)} className="px-6 py-3 text-gray-500 hover:text-white text-sm font-bold transition-all">Cancelar</button>
-                            <button onClick={handleSaveInput} disabled={isUploading || !titleValue} className="bg-indigo-600 hover:bg-indigo-500 text-white px-10 py-3 rounded-2xl font-black text-sm flex items-center gap-2 shadow-lg disabled:opacity-50 transition-all active:scale-95">
-                                {isUploading ? <Loader2 className="animate-spin" size={18}/> : <Save size={18}/>} GUARDAR CONOCIMIENTO
+                            
+                            <button onClick={handleSaveInput} disabled={isUploading} className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl transition-all">
+                                {isUploading ? <Loader2 className="animate-spin mx-auto"/> : 'GUARDAR'}
                             </button>
                         </div>
                     </div>

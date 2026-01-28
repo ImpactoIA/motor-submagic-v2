@@ -3,22 +3,28 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { 
     Send, Save, User, Bot, RefreshCw, BrainCircuit, Rocket, Copy,
-    Users, BookOpen // <--- Iconos para los selectores
+    Users, BookOpen, Trash2, History, MessageSquare, Sparkles
 } from 'lucide-react';
 
 export const AiAssistant = () => {
   const { user, userProfile, refreshProfile } = useAuth();
+  
+  // --- ESTADOS ---
   const [input, setInput] = useState('');
-  
   const [messages, setMessages] = useState<any[]>([
-    { role: 'system', content: 'Bienvenido a tu Sala de Estrategia. Selecciona un Experto, un Avatar y una Base de Conocimiento arriba para comenzar.' }
+    { role: 'system', content: 'Bienvenido a tu Sala de Guerra. Selecciona tus activos estratégicos arriba para comenzar.' }
   ]);
-  
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  
+  // Historial de Chats
+  const [chatHistory, setChatHistory] = useState<any[]>([]);
+  const [showHistory, setShowHistory] = useState(false);
+  
+  // Referencias
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // --- ESTADOS DE CONTEXTO (LO QUE FALTABA) ---
+  // --- CONTEXTO V30 ---
   const [experts, setExperts] = useState<any[]>([]);
   const [avatars, setAvatars] = useState<any[]>([]);
   const [knowledgeBases, setKnowledgeBases] = useState<any[]>([]); 
@@ -29,62 +35,64 @@ export const AiAssistant = () => {
 
   const COSTO_MENTOR = 2;
 
-  // Scroll automático al fondo del chat
+  // Scroll automático
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
 
-  // --- CARGAR PERFILES Y CONOCIMIENTOS (V30) ---
+  // --- CARGA INICIAL ---
   useEffect(() => {
-      const fetchContext = async () => {
+      const init = async () => {
           if (!user) return;
-          try {
-              // 1. Expertos
-              const { data: exp } = await supabase.from('expert_profiles').select('id, name').eq('user_id', user.id);
-              if (exp) setExperts(exp);
-              
-              // 2. Avatares
-              const { data: av } = await supabase.from('avatars').select('id, name').eq('user_id', user.id);
-              if (av) setAvatars(av);
-
-              // 3. Base de Conocimiento (CORRECCIÓN: Busca nombre o titulo para que aparezcan tus PDFs)
-              const { data: kb, error } = await supabase.from('knowledge_bases').select('*').eq('user_id', user.id);
-              
-              if (kb && kb.length > 0) {
-                  setKnowledgeBases(kb.map((k: any) => ({
-                      id: k.id,
-                      title: k.title || k.name || k.filename || "Documento sin nombre"
-                  })));
-              } else {
-                  // Fallback por si la tabla se llama 'documents'
-                  const { data: docs } = await supabase.from('documents').select('*').eq('user_id', user.id);
-                  if (docs) {
-                      setKnowledgeBases(docs.map((d: any) => ({
-                          id: d.id,
-                          title: d.title || d.name || d.filename || "Documento"
-                      })));
-                  }
-              }
-
-              // Defaults del perfil
-              if (userProfile?.active_expert_id) setSelectedExpertId(userProfile.active_expert_id);
-              if (userProfile?.active_avatar_id) setSelectedAvatarId(userProfile.active_avatar_id);
-          } catch (e) { console.error("Error loading context:", e); }
+          await fetchContext();
+          await fetchHistory();
       };
-      fetchContext();
-  }, [user, userProfile]);
+      init();
+  }, [user]);
 
-  // --- 🚀 ENVÍO DE MENSAJE (CON CEREBRO V30) ---
+  const fetchContext = async () => {
+      try {
+          const { data: exp } = await supabase.from('expert_profiles').select('id, name').eq('user_id', user?.id);
+          if (exp) setExperts(exp);
+          
+          const { data: av } = await supabase.from('avatars').select('id, name').eq('user_id', user?.id);
+          if (av) setAvatars(av);
+
+          const { data: kb } = await supabase.from('documents').select('id, title, filename').eq('user_id', user?.id);
+          if (kb) setKnowledgeBases(kb.map((k: any) => ({ id: k.id, title: k.title || k.filename })));
+
+          if (userProfile?.active_expert_id) setSelectedExpertId(userProfile.active_expert_id);
+          if (userProfile?.active_avatar_id) setSelectedAvatarId(userProfile.active_avatar_id);
+      } catch (e) { console.error(e); }
+  };
+
+  const fetchHistory = async () => {
+      try {
+          const { data } = await supabase.from('mentor_chats').select('id, title, created_at').eq('user_id', user?.id).order('created_at', { ascending: false });
+          if (data) setChatHistory(data);
+      } catch (e) { console.error(e); }
+  };
+
+  // --- CARGAR CHAT ANTIGUO ---
+  const loadChat = async (chatId: string) => {
+      try {
+          const { data } = await supabase.from('mentor_chats').select('messages').eq('id', chatId).single();
+          if (data) {
+              setMessages(data.messages);
+              setShowHistory(false);
+          }
+      } catch (e) { console.error(e); }
+  };
+
+  // --- ENVÍO DE MENSAJE (CEREBRO V30) ---
   const handleSend = async () => {
     if (!input.trim() || !user) return;
     
-    // Validación de Saldo
-    if (userProfile && userProfile.tier !== 'admin' && userProfile.credits < COSTO_MENTOR) {
-        if(confirm(`Saldo insuficiente. El Mentor requiere ${COSTO_MENTOR} créditos. ¿Deseas recargar?`)) {
-             // Redirigir si tienes configurada la ruta
-        }
+    // Validar Saldo (Solo si no es admin)
+    if (userProfile?.tier !== 'admin' && (userProfile?.credits || 0) < COSTO_MENTOR) {
+        if(!confirm(`Saldo insuficiente (${COSTO_MENTOR} créditos). ¿Recargar?`)) return;
+        // Navegar a recarga...
         return;
     }
 
-    // Agregar mensaje del usuario a la UI
     const userMsg = { role: 'user', content: input };
     setMessages(prev => [...prev, userMsg]);
     
@@ -93,187 +101,157 @@ export const AiAssistant = () => {
     setLoading(true);
 
     try {
-        // Enviar al Backend INCLUYENDO EL CONTEXTO SELECCIONADO
         const { data, error } = await supabase.functions.invoke('process-url', {
             body: {
-                selectedMode: 'mentor_ia',
+                selectedMode: 'mentor_ia', // Prompt de Consultor V300
                 transcript: currentInput, 
-                platform: 'Consultor IA',
-                url: '', 
-                expertId: selectedExpertId,     // <--- V30: ID del Experto
-                avatarId: selectedAvatarId,     // <--- V30: ID del Avatar
-                knowledgeBaseId: selectedKbId,  // <--- V30: ID del PDF
-                estimatedCost: COSTO_MENTOR
+                // Contexto Completo
+                expertId: selectedExpertId,     
+                avatarId: selectedAvatarId,     
+                knowledgeBaseId: selectedKbId,  
+                estimatedCost: COSTO_MENTOR,
+                // Historial reciente para contexto conversacional (opcional)
+                customPrompt: JSON.stringify(messages.slice(-3)) 
             },
         });
 
-        if (error) throw new Error(error.message || 'Error al conectar con el cerebro de Titan.');
+        if (error) throw error;
 
-        let botReply = "No pude generar una respuesta estratégica.";
+        const res = data.generatedData;
+        let botReply = res.answer || res.generated_content || "Análisis completado.";
         
-        if (data.generatedData) {
-            const res = data.generatedData;
-            botReply = res.answer || res.generated_content || "Análisis completado.";
-            
-            // Si la respuesta viene estructurada con pasos o insights
-            if (res.action_steps && Array.isArray(res.action_steps)) {
-                botReply += "\n\n**🚀 Pasos recomendados:**\n" + res.action_steps.map((step: string) => `- ${step}`).join("\n");
-            }
-            if (res.key_insight) {
-                botReply += `\n\n**💡 Insight:** ${res.key_insight}`;
-            }
+        // Formato enriquecido si la IA devuelve pasos
+        if (res.action_steps && Array.isArray(res.action_steps)) {
+            botReply += "\n\n🚀 **PLAN DE ACCIÓN:**\n" + res.action_steps.map((step: string) => `• ${step}`).join("\n");
         }
 
         setMessages(prev => [...prev, { role: 'assistant', content: botReply }]);
         if (refreshProfile) refreshProfile();
 
     } catch (error: any) {
-        console.error("Error en Titan:", error);
         setMessages(prev => [...prev, { role: 'assistant', content: `⚠️ Error: ${error.message}` }]);
     } finally {
         setLoading(false);
     }
   };
 
-  // Guardar sesión en Historial
+  // --- GUARDAR SESIÓN ---
   const handleSaveSession = async () => {
-      if (messages.length < 2) return alert("Inicia la sesión antes de archivar.");
+      if (messages.length < 2) return;
       setSaving(true);
       try {
-          const firstUserMsg = messages.find(m => m.role === 'user')?.content || "Sesión Estratégica";
-          const title = firstUserMsg.length > 40 ? firstUserMsg.substring(0, 40) + "..." : firstUserMsg;
+          const firstUserMsg = messages.find(m => m.role === 'user')?.content || "Nueva Sesión";
+          const title = firstUserMsg.substring(0, 30) + (firstUserMsg.length > 30 ? "..." : "");
 
-          const { error } = await supabase.from('mentor_chats').insert({
+          await supabase.from('mentor_chats').insert({
               user_id: user?.id,
               title: title,
               messages: messages
           });
+          
+          await fetchHistory();
+          alert("✅ Sesión guardada en el historial.");
+      } catch (e: any) { alert(`Error: ${e.message}`); } 
+      finally { setSaving(false); }
+  };
 
-          if (error) throw error;
-          alert("✅ Sesión archivada en el Baúl.");
-      } catch (e: any) {
-          alert(`Error al guardar: ${e.message}`);
-      } finally {
-          setSaving(false);
-      }
+  const handleDeleteChat = async (id: string, e: React.MouseEvent) => {
+      e.stopPropagation();
+      if(!confirm("¿Borrar chat?")) return;
+      await supabase.from('mentor_chats').delete().eq('id', id);
+      await fetchHistory();
   };
 
   return (
-    <div className="max-w-5xl mx-auto h-[85vh] flex flex-col pb-20 animate-in fade-in">
+    <div className="max-w-6xl mx-auto h-[calc(100vh-100px)] flex gap-6 pb-4 animate-in fade-in p-4">
       
-      {/* HEADER + BOTÓN GUARDAR */}
-      <div className="flex justify-between items-center mb-4 px-2 pt-2">
-          <div>
-              <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-                  <div className="p-2 bg-indigo-900/30 rounded-lg border border-indigo-500/30">
-                    <BrainCircuit className="text-indigo-400" size={24}/>
+      {/* SIDEBAR HISTORIAL (Opcional en móvil) */}
+      <div className={`w-64 flex-shrink-0 bg-[#0B0E14] border border-gray-800 rounded-2xl flex flex-col overflow-hidden transition-all ${showHistory ? 'translate-x-0' : '-translate-x-full absolute z-30 h-full md:relative md:translate-x-0'}`}>
+          <div className="p-4 border-b border-gray-800 flex justify-between items-center">
+              <span className="text-xs font-bold text-gray-500 uppercase tracking-widest flex items-center gap-2">
+                  <History size={14}/> Historial
+              </span>
+              <button onClick={() => setMessages([{ role: 'system', content: 'Nueva sesión iniciada.' }])} className="p-1.5 hover:bg-white/10 rounded-lg text-white" title="Nuevo Chat">
+                  <PlusIcon size={14}/>
+              </button>
+          </div>
+          <div className="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-1">
+              {chatHistory.map(chat => (
+                  <div key={chat.id} onClick={() => loadChat(chat.id)} className="p-3 hover:bg-gray-800/50 rounded-xl cursor-pointer group flex justify-between items-center transition-colors">
+                      <div className="flex items-center gap-2 overflow-hidden">
+                          <MessageSquare size={14} className="text-indigo-500 flex-shrink-0"/>
+                          <span className="text-xs text-gray-300 truncate">{chat.title}</span>
+                      </div>
+                      <button onClick={(e) => handleDeleteChat(chat.id, e)} className="opacity-0 group-hover:opacity-100 text-gray-600 hover:text-red-400 transition-opacity">
+                          <Trash2 size={12}/>
+                      </button>
                   </div>
-                  Consultor Estratégico IA
-              </h1>
-              <p className="text-gray-400 text-xs mt-1 ml-14">Tu consejo de sabios personal (V30).</p>
-          </div>
-          
-          <button 
-            onClick={handleSaveSession} 
-            disabled={messages.length < 2 || saving} 
-            className="group flex items-center gap-2 bg-[#0B0E14] hover:bg-gray-900 border border-gray-700 hover:border-gray-500 px-4 py-2 rounded-xl text-gray-300 text-xs font-medium transition-all"
-          >
-            {saving ? <RefreshCw className="animate-spin text-indigo-500" size={14}/> : <Save size={14} className="group-hover:text-indigo-400 transition-colors"/>} 
-            {saving ? 'Archivando...' : 'Guardar Sesión'}
-          </button>
-      </div>
-
-      {/* --- BARRA DE CONTEXTO V30 (AQUÍ ESTÁN LOS 3 BOTONES) --- */}
-      <div className="bg-[#0B0E14] border border-gray-800 rounded-t-2xl p-3 flex gap-3 overflow-x-auto border-b-0 shadow-lg z-20">
-          
-          {/* SELECTOR EXPERTO */}
-          <div className="flex items-center gap-2 min-w-[180px] bg-gray-900/50 rounded-lg border border-gray-700/50 p-1">
-              <div className="p-1.5 bg-indigo-900/20 rounded-md"><User size={14} className="text-indigo-400"/></div>
-              <select 
-                  value={selectedExpertId} 
-                  onChange={(e) => setSelectedExpertId(e.target.value)}
-                  className="bg-transparent text-[11px] font-medium text-white w-full outline-none cursor-pointer"
-              >
-                  <option value="">Selecciona Experto</option>
-                  {experts.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
-              </select>
-          </div>
-
-          {/* SELECTOR AVATAR */}
-          <div className="flex items-center gap-2 min-w-[180px] bg-gray-900/50 rounded-lg border border-gray-700/50 p-1">
-              <div className="p-1.5 bg-pink-900/20 rounded-md"><Users size={14} className="text-pink-400"/></div>
-              <select 
-                  value={selectedAvatarId} 
-                  onChange={(e) => setSelectedAvatarId(e.target.value)}
-                  className="bg-transparent text-[11px] font-medium text-white w-full outline-none cursor-pointer"
-              >
-                  <option value="">Selecciona Avatar</option>
-                  {avatars.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
-              </select>
-          </div>
-
-          {/* SELECTOR CONOCIMIENTO */}
-          <div className="flex items-center gap-2 min-w-[180px] bg-gray-900/50 rounded-lg border border-gray-700/50 p-1">
-              <div className="p-1.5 bg-yellow-900/20 rounded-md"><BookOpen size={14} className="text-yellow-400"/></div>
-              <select 
-                  value={selectedKbId} 
-                  onChange={(e) => setSelectedKbId(e.target.value)}
-                  className="bg-transparent text-[11px] font-medium text-white w-full outline-none cursor-pointer"
-              >
-                  <option value="">Selecciona Base Conoc.</option>
-                  {knowledgeBases.map(kb => <option key={kb.id} value={kb.id}>{kb.title}</option>)}
-              </select>
+              ))}
+              {chatHistory.length === 0 && <div className="text-center text-xs text-gray-600 mt-10">Sin historial</div>}
           </div>
       </div>
 
-      {/* ÁREA DE CHAT */}
-      <div className="flex-1 bg-[#0B0E14] border border-gray-800 rounded-b-2xl p-0 overflow-hidden relative shadow-2xl flex flex-col rounded-tr-2xl"> 
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03]">
-              <BrainCircuit size={300} className="text-white"/>
+      {/* ÁREA PRINCIPAL */}
+      <div className="flex-1 flex flex-col bg-[#0B0E14] border border-gray-800 rounded-2xl overflow-hidden shadow-2xl relative">
+          
+          {/* HEADER CONTEXTO */}
+          <div className="p-3 border-b border-gray-800 bg-[#0F1218] flex flex-col md:flex-row gap-3 items-center justify-between z-20">
+              <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto">
+                  
+                  {/* Toggle History Mobile */}
+                  <button onClick={() => setShowHistory(!showHistory)} className="md:hidden p-2 text-gray-400"><History size={18}/></button>
+
+                  <div className="flex items-center gap-2 bg-gray-900/50 rounded-lg p-1.5 border border-gray-700/50">
+                      <User size={12} className="text-indigo-400 ml-1"/>
+                      <select value={selectedExpertId} onChange={(e) => setSelectedExpertId(e.target.value)} className="bg-transparent text-[10px] text-white w-24 outline-none cursor-pointer"><option value="">Experto</option>{experts.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}</select>
+                  </div>
+                  <div className="flex items-center gap-2 bg-gray-900/50 rounded-lg p-1.5 border border-gray-700/50">
+                      <Users size={12} className="text-pink-400 ml-1"/>
+                      <select value={selectedAvatarId} onChange={(e) => setSelectedAvatarId(e.target.value)} className="bg-transparent text-[10px] text-white w-24 outline-none cursor-pointer"><option value="">Avatar</option>{avatars.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}</select>
+                  </div>
+                  <div className="flex items-center gap-2 bg-gray-900/50 rounded-lg p-1.5 border border-gray-700/50">
+                      <BookOpen size={12} className="text-yellow-400 ml-1"/>
+                      <select value={selectedKbId} onChange={(e) => setSelectedKbId(e.target.value)} className="bg-transparent text-[10px] text-white w-24 outline-none cursor-pointer"><option value="">Conocimiento</option>{knowledgeBases.map(kb => <option key={kb.id} value={kb.id}>{kb.title}</option>)}</select>
+                  </div>
+              </div>
+              
+              <button onClick={handleSaveSession} disabled={saving} className="text-xs font-bold text-gray-400 hover:text-white flex items-center gap-1 transition-colors px-3 py-1.5 rounded-lg hover:bg-white/5">
+                  {saving ? <RefreshCw size={12} className="animate-spin"/> : <Save size={12}/>} Guardar
+              </button>
           </div>
 
-          {/* LISTA DE MENSAJES */}
-          <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-6 relative z-10">
+          {/* CHAT AREA */}
+          <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-6 bg-gradient-to-b from-[#0B0E14] to-[#080a0f] relative">
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.02]">
+                  <BrainCircuit size={400} className="text-white"/>
+              </div>
+
               {messages.filter(m => m.role !== 'system').map((msg, idx) => (
-                  <div key={idx} className={`flex gap-4 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-lg border ${
-                          msg.role === 'user' ? 'bg-indigo-600 border-indigo-400' : 'bg-[#1A1D24] border-gray-700'
-                      }`}>
-                          {msg.role === 'user' ? <User size={14} className="text-white"/> : <Bot size={14} className="text-indigo-400"/>}
+                  <div key={idx} className={`flex gap-4 relative z-10 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 border ${msg.role === 'user' ? 'bg-indigo-600 border-indigo-400' : 'bg-gray-800 border-gray-600'}`}>
+                          {msg.role === 'user' ? <User size={14} className="text-white"/> : <Sparkles size={14} className="text-indigo-400"/>}
                       </div>
                       
-                      <div className={`p-4 rounded-2xl max-w-[85%] md:max-w-[75%] text-sm leading-6 shadow-md transition-all ${
+                      <div className={`p-4 rounded-2xl max-w-[85%] text-sm leading-relaxed shadow-lg ${
                           msg.role === 'user' 
-                          ? 'bg-gradient-to-br from-indigo-600 to-violet-600 text-white rounded-tr-none shadow-indigo-900/20' 
-                          : 'bg-[#1A1D24] border border-gray-800 text-gray-200 rounded-tl-none shadow-black/40'
+                          ? 'bg-indigo-600 text-white rounded-tr-none' 
+                          : 'bg-[#1A1D24] border border-gray-700 text-gray-200 rounded-tl-none'
                       }`}>
-                          <span className={`text-[10px] font-bold uppercase tracking-wider block mb-2 ${
-                              msg.role === 'user' ? 'text-indigo-200' : 'text-indigo-400 flex items-center gap-1'
-                          }`}>
-                              {msg.role === 'user' ? 'Tú' : <><Rocket size={10} className="animate-pulse"/> Consultor IA</>}
-                          </span>
-                          <div className="whitespace-pre-wrap font-light tracking-wide">
-                              {msg.content}
-                          </div>
+                          <div className="whitespace-pre-wrap">{msg.content}</div>
                           {msg.role === 'assistant' && (
-                                <div className="mt-2 pt-2 border-t border-gray-800 flex justify-end opacity-50 hover:opacity-100 transition-opacity">
-                                    <button onClick={() => {navigator.clipboard.writeText(msg.content); alert("Copiado!")}} className="text-gray-400 hover:text-white flex items-center gap-1 text-[10px]" title="Copiar"><Copy size={10}/> Copiar</button>
-                                </div>
+                              <button onClick={() => navigator.clipboard.writeText(msg.content)} className="mt-3 text-[10px] text-gray-500 hover:text-white flex items-center gap-1 transition-colors">
+                                  <Copy size={10}/> Copiar
+                              </button>
                           )}
                       </div>
                   </div>
               ))}
               
               {loading && (
-                  <div className="flex gap-4 relative z-10 animate-in fade-in slide-in-from-bottom-2">
-                      <div className="w-8 h-8 rounded-full bg-[#1A1D24] border border-gray-700 flex items-center justify-center"><Bot size={14} className="text-indigo-400"/></div>
-                      <div className="p-3 rounded-2xl bg-[#1A1D24] border border-gray-800 text-gray-400 text-xs flex items-center gap-3 shadow-lg">
-                          <div className="flex gap-1">
-                              <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-bounce"></span>
-                              <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-bounce delay-100"></span>
-                              <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-bounce delay-200"></span>
-                          </div>
-                          Analizando estrategia con tus datos...
+                  <div className="flex gap-4 animate-in fade-in slide-in-from-bottom-2">
+                      <div className="w-8 h-8 rounded-full bg-gray-800 border border-gray-600 flex items-center justify-center"><RefreshCw size={14} className="animate-spin text-indigo-400"/></div>
+                      <div className="p-3 rounded-2xl bg-[#1A1D24] border border-gray-700 text-gray-400 text-xs">
+                          Analizando estrategia...
                       </div>
                   </div>
               )}
@@ -281,30 +259,35 @@ export const AiAssistant = () => {
           </div>
 
           {/* INPUT AREA */}
-          <div className="p-4 bg-[#0B0E14]/95 backdrop-blur-md border-t border-gray-800 absolute bottom-0 left-0 right-0 z-20">
-              <div className="relative flex items-center gap-2 max-w-4xl mx-auto">
-                  <div className="relative flex-1 group">
-                      <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl opacity-20 group-hover:opacity-40 transition duration-500 blur"></div>
-                      <input 
-                        type="text" 
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                        placeholder="Pregúntame algo sobre tu estrategia..."
-                        className="relative w-full bg-[#0F1218] text-white border border-gray-700 rounded-xl px-5 py-4 outline-none focus:border-indigo-500 focus:bg-[#13161C] transition-all placeholder-gray-500 font-medium shadow-inner text-sm"
-                        disabled={loading}
-                      />
-                  </div>
+          <div className="p-4 bg-[#0B0E14] border-t border-gray-800">
+              <div className="relative flex items-center max-w-4xl mx-auto">
+                  <input 
+                    type="text" 
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                    placeholder="Haz una pregunta estratégica..."
+                    className="w-full bg-[#13161C] text-white border border-gray-700 rounded-xl px-5 py-4 pr-16 outline-none focus:border-indigo-500 transition-all placeholder-gray-600 shadow-inner text-sm"
+                    disabled={loading}
+                  />
                   <button 
                     onClick={handleSend} 
                     disabled={loading || !input.trim()} 
-                    className="p-4 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white rounded-xl transition-all shadow-lg shadow-indigo-600/20 disabled:opacity-50 disabled:shadow-none transform active:scale-95"
+                    className="absolute right-2 p-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg transition-all shadow-lg disabled:opacity-50 disabled:shadow-none"
                   >
-                      {loading ? <RefreshCw className="animate-spin" size={20}/> : <Send size={20} strokeWidth={2.5}/>}
+                      {loading ? <RefreshCw className="animate-spin" size={18}/> : <Send size={18}/>}
                   </button>
               </div>
+              <p className="text-center text-[10px] text-gray-600 mt-2">
+                  Titan V300 puede cometer errores. Verifica la información importante.
+              </p>
           </div>
       </div>
+      
+      <style>{`.custom-scrollbar::-webkit-scrollbar { width: 4px; } .custom-scrollbar::-webkit-scrollbar-track { background: transparent; } .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }`}</style>
     </div>
   );
 };
+
+// Icono Helper
+const PlusIcon = ({size}: {size: number}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>;

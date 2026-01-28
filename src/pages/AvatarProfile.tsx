@@ -3,8 +3,8 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { 
     Save, Plus, Trash2, Target, Heart, 
-    Flame, Zap, MessageSquare, Send, Search, Users, RefreshCw, Copy,
-    User, BookOpen // <--- Iconos V30
+    Flame, Zap, MessageSquare, Send, Search, Users, RefreshCw, 
+    User, BookOpen, Brain, Activity, AlertTriangle, CheckCircle2
 } from 'lucide-react';
 
 export const AvatarProfile = () => {
@@ -14,21 +14,21 @@ export const AvatarProfile = () => {
     const [selectedAvatarId, setSelectedAvatarId] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
-    // --- ESTADOS DEL CHAT Y AUDITORÍA ---
+    // --- ESTADOS IA ---
     const [chatInput, setChatInput] = useState('');
-    const [chatResponse, setChatResponse] = useState('');
+    const [chatResponse, setChatResponse] = useState(''); // Ahora puede ser HTML/Markdown
+    const [auditResult, setAuditResult] = useState<any>(null); // NUEVO: Resultado estructurado
     const [isChatting, setIsChatting] = useState(false);
     const [isAuditing, setIsAuditing] = useState(false);
-    const [auditCost, setAuditCost] = useState(0);
 
-    // --- CONTEXTO V30 (CEREBRO) ---
+    // --- CONTEXTO ---
     const [experts, setExperts] = useState<any[]>([]);
     const [knowledgeBases, setKnowledgeBases] = useState<any[]>([]);
     const [selectedExpertId, setSelectedExpertId] = useState<string>('');
     const [selectedKbId, setSelectedKbId] = useState<string>('');
 
     const COSTO_AUDITORIA = 2;
-    const COSTO_CHAT = 2;
+    const COSTO_CHAT = 1;
 
     // --- FORMULARIO ---
     const [formData, setFormData] = useState({
@@ -45,7 +45,7 @@ export const AvatarProfile = () => {
         return 1;
     };
 
-    // --- CARGAR DATOS ---
+    // --- CARGA DE DATOS ---
     useEffect(() => { 
         if (user) {
             fetchAvatars();
@@ -66,45 +66,22 @@ export const AvatarProfile = () => {
         } catch (e) { console.error(e); }
     };
 
-   const fetchContextData = async () => {
+    const fetchContextData = async () => {
         try {
-            // 1. Cargar Expertos
             const { data: exp } = await supabase.from('expert_profiles').select('id, name').eq('user_id', user?.id);
             if(exp) setExperts(exp);
             
-            // 2. Cargar Avatares
-            const { data: av } = await supabase.from('avatars').select('id, name').eq('user_id', user?.id);
-            if(av) setAvatars(av);
-            
-            // 3. CARGAR CONOCIMIENTOS (AQUÍ ESTÁ LA CORRECCIÓN)
-            // Intentamos seleccionar todo (*) para ver qué columnas tienes realmente
-            const { data: kb, error } = await supabase
-                .from('knowledge_bases') // <--- ASEGÚRATE QUE TU TABLA SE LLAME ASÍ
-                .select('*') 
-                .eq('user_id', user?.id);
-            
-            if (error) {
-                console.error("Error buscando conocimientos:", error);
-                // Si falla, intenta buscar en la tabla 'documents' por si acaso
-                const { data: docs } = await supabase.from('documents').select('*').eq('user_id', user?.id);
-                if (docs) setKnowledgeBases(docs.map((d: any) => ({ id: d.id, title: d.name || d.title || d.filename })));
-            } else if (kb) {
-                // Mapeamos para asegurar que siempre haya un 'title' aunque la columna se llame 'name'
-                setKnowledgeBases(kb.map((k: any) => ({ 
-                    id: k.id, 
-                    title: k.title || k.name || k.filename || "Sin Título" 
-                })));
-            }
+            const { data: kb } = await supabase.from('documents').select('id, title, filename').eq('user_id', user?.id);
+            if (kb) setKnowledgeBases(kb.map((k: any) => ({ id: k.id, title: k.title || k.filename })));
 
-            // Seleccionar defaults del perfil
             if (userProfile?.active_expert_id) setSelectedExpertId(userProfile.active_expert_id);
-            if (userProfile?.active_avatar_id) setSelectedAvatarId(userProfile.active_avatar_id);
         } catch (e) { console.error(e); }
     };
+
     const selectAvatar = (avatar: any) => {
         setSelectedAvatarId(avatar.id);
         setChatResponse(''); 
-        setAuditCost(0);
+        setAuditResult(null);
         setFormData({
             name: avatar.name || '',
             age_range: avatar.edad || '', 
@@ -125,6 +102,7 @@ export const AvatarProfile = () => {
         if (avatarsList.length >= limit) return alert(`⚠️ Límite de ${limit} avatares alcanzado.`);
         setSelectedAvatarId(null);
         setChatResponse('');
+        setAuditResult(null);
         setFormData({ 
             name: '', age_range: '', primary_pain: '', hell_situation: '', heaven_situation: '', 
             hidden_fear: '', central_objection: '', limiting_belief: '', past_vehicle: '', 
@@ -164,7 +142,7 @@ export const AvatarProfile = () => {
             if(refreshProfile) refreshProfile();
             setSelectedAvatarId(newId);
             await fetchAvatars(); 
-            alert("✅ Avatar Guardado y Activado");
+            // Feedback sutil en lugar de alert
         } catch (e: any) { alert(`Error: ${e.message}`); } 
         finally { setLoading(false); }
     };
@@ -182,119 +160,160 @@ export const AvatarProfile = () => {
         } catch (e) { console.error(e); }
     };
 
-    // --- IA: AUDITORÍA (PODER V30) ---
+    // --- IA: AUDITORÍA PSICOLÓGICA (V300) ---
     const handleAudit = async () => {
-        if (!formData.hell_situation) return alert("Define al menos el 'Infierno' para auditar.");
+        if (!formData.name || !formData.primary_pain) return alert("Completa al menos el Nombre y el Dolor.");
+        
         if (userProfile?.tier !== 'admin' && (userProfile?.credits || 0) < COSTO_AUDITORIA) {
             return alert(`⚠️ Saldo insuficiente.`);
         }
+
         setIsAuditing(true);
-        setChatResponse('');
+        setAuditResult(null);
+        
         try {
             const { data, error } = await supabase.functions.invoke('process-url', {
                 body: {
-                    url: 'audit-avatar', 
-                    // Enviamos el contexto completo al prompt
-                    transcript: `Analiza este avatar con visión de rayos X: ${JSON.stringify(formData)}`, 
-                    selectedMode: 'audit', // Usamos el modo de auditoría específico
-                    platform: 'Avatar Auditor',
-                    expertId: selectedExpertId,     // <--- V30
-                    knowledgeBaseId: selectedKbId   // <--- V30
+                    // Modo específico para auditoría
+                    selectedMode: 'audit_avatar', 
+                    transcript: JSON.stringify(formData), // Enviamos el JSON del formulario
+                    expertId: selectedExpertId,
+                    knowledgeBaseId: selectedKbId,
+                    estimatedCost: COSTO_AUDITORIA
                 },
             });
+
             if (error) throw error;
-            setChatResponse(data.generatedData.critique || data.generatedData.answer || "Sin respuesta.");
-            setAuditCost(data.finalCost);
+            
+            // Esperamos un JSON estructurado del backend
+            const result = data.generatedData.audit_result || {
+                score: 50,
+                feedback: "Falta información para un análisis profundo.",
+                blind_spots: ["No has definido el miedo oculto"],
+                suggestions: ["Define qué le quita el sueño"]
+            };
+            
+            setAuditResult(result);
             if(refreshProfile) refreshProfile();
-        } catch (e: any) { setChatResponse(`⚠️ Error: ${e.message}`); }
-        finally { setIsAuditing(false); }
+
+        } catch (e: any) { 
+            console.error(e);
+            alert(`Error: ${e.message}`); 
+        } finally { setIsAuditing(false); }
     };
 
-    // --- IA: SIMULADOR (PODER V30) ---
+    // --- IA: SIMULADOR DE CHAT (V300) ---
     const handleChat = async () => {
         if (!chatInput) return;
         if (userProfile?.tier !== 'admin' && (userProfile?.credits || 0) < COSTO_CHAT) return alert(`⚠️ Saldo insuficiente.`);
+        
         setIsChatting(true);
         try {
             const { data, error } = await supabase.functions.invoke('process-url', {
                 body: {
-                    url: 'chat-avatar', 
-                    // Simulamos que el Avatar habla, pero usando el conocimiento base para filtrar
-                    transcript: `Actúa como este avatar: ${formData.name}. Responde a: "${chatInput}". (Usa la Base de Conocimiento para validar si la respuesta es coherente con la realidad del mercado).`, 
-                    selectedMode: 'mentor_ia', 
-                    platform: 'Avatar Chat',
-                    expertId: selectedExpertId,     // <--- V30
-                    knowledgeBaseId: selectedKbId   // <--- V30
+                    selectedMode: 'chat_avatar', // Modo Chat
+                    transcript: `Usuario pregunta: "${chatInput}". \nContexto del Avatar: ${JSON.stringify(formData)}`,
+                    expertId: selectedExpertId,
+                    knowledgeBaseId: selectedKbId,
+                    estimatedCost: COSTO_CHAT
                 },
             });
+            
             if (error) throw error;
-            setChatResponse(data.generatedData.answer || "...");
+            setChatResponse(data.generatedData.answer || "No tengo respuesta.");
             if (refreshProfile) refreshProfile();
-        } catch (e) { setChatResponse("Error de conexión."); }
+            
+        } catch (e) { setChatResponse("Error de conexión con el Avatar."); }
         finally { setIsChatting(false); }
     };
 
     return (
-        <div className="max-w-7xl mx-auto space-y-6 pb-20 animate-in fade-in">
-            <div className="flex flex-col md:flex-row justify-between items-end gap-4">
+        <div className="max-w-7xl mx-auto space-y-6 pb-20 animate-in fade-in duration-500">
+            
+            {/* Header */}
+            <div className="flex flex-col md:flex-row justify-between items-end gap-4 pt-6">
                 <div>
-                    <h1 className="text-3xl font-bold text-white flex items-center gap-2">
-                        <Heart className="text-pink-500"/> Laboratorio de Empatía
+                    <h1 className="text-3xl font-black text-white flex items-center gap-2 tracking-tighter">
+                        <Heart className="text-pink-500" fill="currentColor"/> THE EMPATHY ENGINE
                     </h1>
-                    <p className="text-gray-400">Define los 10 puntos clave de tu cliente ideal.</p>
+                    <p className="text-gray-400 text-sm font-medium">Define la psicología profunda de tu cliente ideal para predecir sus decisiones.</p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 w-full md:w-auto">
                     <select 
                         onChange={(e) => {
                             const selected = avatarsList.find(a => a.id === e.target.value);
                             if(selected) selectAvatar(selected);
                         }}
                         value={selectedAvatarId || ""}
-                        className="bg-[#0B0E14] border border-gray-700 text-white text-sm rounded-lg p-2 outline-none cursor-pointer hover:border-pink-500 transition-colors"
+                        className="flex-1 bg-[#0a0a0a] border border-white/10 text-white text-sm rounded-xl p-3 outline-none cursor-pointer hover:border-pink-500 transition-colors"
                     >
-                        <option value="" disabled>Cargar Avatar...</option>
+                        <option value="" disabled>Seleccionar Avatar...</option>
                         {avatarsList.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
                     </select>
-                    <button onClick={handleNewAvatar} className="p-2 bg-pink-600 rounded-lg hover:bg-pink-500 text-white transition-all shadow-lg shadow-pink-900/20"><Plus size={20}/></button>
+                    <button onClick={handleNewAvatar} className="p-3 bg-pink-600 rounded-xl hover:bg-pink-500 text-white transition-all shadow-lg shadow-pink-900/20"><Plus size={20}/></button>
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                {/* --- IZQUIERDA: FORMULARIO PSICOLÓGICO (8 Cols) --- */}
                 <div className="lg:col-span-8 space-y-6">
-                    {/* SECCIÓN 1 */}
-                    <div className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-6 shadow-xl hover:border-gray-700 transition-all">
-                        <h3 className="text-white font-bold mb-4 flex items-center gap-2"><Users size={18} className="text-blue-400"/> 1. Identidad Psicológica</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div><label className="text-xs font-bold text-gray-500 uppercase mb-1 block">Nombre Clave</label><input type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="input-viral" placeholder="Ej: Emprendedor Estancado"/></div>
-                            <div><label className="text-xs font-bold text-gray-500 uppercase mb-1 block">Edad / Generación</label><input type="text" value={formData.age_range} onChange={(e) => setFormData({...formData, age_range: e.target.value})} className="input-viral" placeholder="Ej: 25-40 años"/></div>
-                        </div>
-                        <div><label className="text-xs font-bold text-red-400 uppercase mb-1 block">Dolor Primario</label><textarea value={formData.primary_pain} onChange={(e) => setFormData({...formData, primary_pain: e.target.value})} className="textarea-viral h-20 border-red-500/30 focus:border-red-500" placeholder="¿Qué le quita el sueño hoy?"/></div>
-                    </div>
-
-                    {/* SECCIÓN 2 */}
-                    <div className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-6 shadow-xl hover:border-gray-700 transition-all">
-                        <h3 className="text-white font-bold mb-4 flex items-center gap-2"><Flame size={18} className="text-orange-500"/> 2. Infierno, Cielo y Bloqueos</h3>
-                        <div className="space-y-4">
-                            <div><label className="text-xs font-bold text-orange-400 uppercase mb-1 block">Infierno (Situación Actual)</label><textarea value={formData.hell_situation} onChange={(e) => setFormData({...formData, hell_situation: e.target.value})} className="textarea-viral h-20" placeholder="Describe su realidad negativa..."/></div>
-                            <div><label className="text-xs font-bold text-green-400 uppercase mb-1 block">Cielo (Resultado Deseado)</label><textarea value={formData.heaven_situation} onChange={(e) => setFormData({...formData, heaven_situation: e.target.value})} className="textarea-viral h-20" placeholder="¿Cómo sería su vida ideal?"/></div>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                            <div><label className="text-xs font-bold text-gray-500 uppercase mb-1 block">Miedo Oculto</label><input type="text" value={formData.hidden_fear} onChange={(e) => setFormData({...formData, hidden_fear: e.target.value})} className="input-viral" placeholder="Lo que no le cuenta a nadie"/></div>
-                            <div><label className="text-xs font-bold text-gray-500 uppercase mb-1 block">Objeción Central</label><input type="text" value={formData.central_objection} onChange={(e) => setFormData({...formData, central_objection: e.target.value})} className="input-viral" placeholder="¿Por qué no compraría?"/></div>
-                        </div>
-                        <div className="mt-4"><label className="text-xs font-bold text-gray-500 uppercase mb-1 block">Creencia Limitante</label><input type="text" value={formData.limiting_belief} onChange={(e) => setFormData({...formData, limiting_belief: e.target.value})} className="input-viral" placeholder="La mentira que se dice a sí mismo"/></div>
-                    </div>
-
-                    {/* SECCIÓN 3 */}
-                    <div className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-6 shadow-xl hover:border-gray-700 transition-all">
-                        <h3 className="text-white font-bold mb-4 flex items-center gap-2"><Zap size={18} className="text-yellow-500"/> 3. Vehículo y Conciencia</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div><label className="text-xs font-bold text-gray-500 uppercase mb-1 block">Vehículo Pasado</label><input type="text" value={formData.past_vehicle} onChange={(e) => setFormData({...formData, past_vehicle: e.target.value})} className="input-viral" placeholder="Lo que ya intentó y falló"/></div>
-                            <div><label className="text-xs font-bold text-gray-500 uppercase mb-1 block">Gatillo (Trigger)</label><input type="text" value={formData.trigger_event} onChange={(e) => setFormData({...formData, trigger_event: e.target.value})} className="input-viral" placeholder="El evento que lo hace buscar ayuda"/></div>
+                    
+                    {/* 1. IDENTIDAD */}
+                    <div className="bg-[#0B0E14] border border-gray-800 rounded-3xl p-6 shadow-xl relative group">
+                        <div className="absolute top-0 left-0 w-1 h-full bg-blue-500 rounded-l-3xl group-hover:w-2 transition-all"></div>
+                        <h3 className="text-white font-bold mb-6 flex items-center gap-2 text-lg">
+                            <Users size={20} className="text-blue-400"/> 1. Identidad & Dolor
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block tracking-widest">Nombre Clave</label>
+                                <input type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="input-viral" placeholder="Ej: El Emprendedor Atrapado"/>
+                            </div>
+                            <div>
+                                <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block tracking-widest">Rango de Edad</label>
+                                <input type="text" value={formData.age_range} onChange={(e) => setFormData({...formData, age_range: e.target.value})} className="input-viral" placeholder="Ej: 30-45 años"/>
+                            </div>
                         </div>
                         <div>
-                            <label className="text-xs font-bold text-gray-500 uppercase mb-1 block">Nivel de Conciencia</label>
-                            <select value={formData.awareness_level} onChange={(e) => setFormData({...formData, awareness_level: e.target.value})} className="input-viral cursor-pointer">
+                            <label className="text-[10px] font-black text-red-400 uppercase mb-2 block tracking-widest flex items-center gap-2"><AlertTriangle size={12}/> Dolor Primario (The Bleeding Neck)</label>
+                            <textarea value={formData.primary_pain} onChange={(e) => setFormData({...formData, primary_pain: e.target.value})} className="textarea-viral h-24 border-red-500/20 focus:border-red-500" placeholder="¿Cuál es el problema urgente que le quita el sueño y pagaría por resolver YA?"/>
+                        </div>
+                    </div>
+
+                    {/* 2. INFIERNO vs CIELO */}
+                    <div className="bg-[#0B0E14] border border-gray-800 rounded-3xl p-6 shadow-xl relative group">
+                        <div className="absolute top-0 left-0 w-1 h-full bg-orange-500 rounded-l-3xl group-hover:w-2 transition-all"></div>
+                        <h3 className="text-white font-bold mb-6 flex items-center gap-2 text-lg">
+                            <Flame size={20} className="text-orange-500"/> 2. Transformación Deseada
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="bg-red-900/5 p-4 rounded-2xl border border-red-500/10">
+                                <label className="text-[10px] font-black text-red-400 uppercase mb-2 block tracking-widest">Infierno (Situación Actual)</label>
+                                <textarea value={formData.hell_situation} onChange={(e) => setFormData({...formData, hell_situation: e.target.value})} className="textarea-viral h-32 bg-transparent border-none p-0 focus:ring-0 resize-none placeholder:text-red-900/30 text-gray-300" placeholder="Describe su día a día negativo..."/>
+                            </div>
+                            <div className="bg-green-900/5 p-4 rounded-2xl border border-green-500/10">
+                                <label className="text-[10px] font-black text-green-400 uppercase mb-2 block tracking-widest">Cielo (Situación Deseada)</label>
+                                <textarea value={formData.heaven_situation} onChange={(e) => setFormData({...formData, heaven_situation: e.target.value})} className="textarea-viral h-32 bg-transparent border-none p-0 focus:ring-0 resize-none placeholder:text-green-900/30 text-gray-300" placeholder="¿Cómo se ve su vida una vez resuelto el problema?"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 3. PSICOLOGÍA PROFUNDA */}
+                    <div className="bg-[#0B0E14] border border-gray-800 rounded-3xl p-6 shadow-xl relative group">
+                        <div className="absolute top-0 left-0 w-1 h-full bg-purple-500 rounded-l-3xl group-hover:w-2 transition-all"></div>
+                        <h3 className="text-white font-bold mb-6 flex items-center gap-2 text-lg">
+                            <Brain size={20} className="text-purple-500"/> 3. Psicología Profunda
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                            <div><label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Miedo Oculto (Inconfesable)</label><input type="text" value={formData.hidden_fear} onChange={(e) => setFormData({...formData, hidden_fear: e.target.value})} className="input-viral" placeholder="Ej: Ser visto como un fraude"/></div>
+                            <div><label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Objeción Central</label><input type="text" value={formData.central_objection} onChange={(e) => setFormData({...formData, central_objection: e.target.value})} className="input-viral" placeholder="Ej: 'No tengo tiempo'"/></div>
+                        </div>
+                        <div className="mb-4"><label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Creencia Limitante</label><input type="text" value={formData.limiting_belief} onChange={(e) => setFormData({...formData, limiting_belief: e.target.value})} className="input-viral" placeholder="Ej: 'Necesito ser experto técnico para vender'"/></div>
+                        
+                        <div className="p-4 bg-gray-900/50 rounded-xl border border-gray-800">
+                            <label className="text-[10px] font-black text-blue-400 uppercase mb-2 block">Nivel de Conciencia (Market Sophistication)</label>
+                            <select value={formData.awareness_level} onChange={(e) => setFormData({...formData, awareness_level: e.target.value})} className="w-full bg-transparent text-white text-sm outline-none cursor-pointer font-bold">
                                 <option>Inconsciente del Problema</option>
                                 <option>Consciente del Problema</option>
                                 <option>Consciente de la Solución</option>
@@ -304,60 +323,89 @@ export const AvatarProfile = () => {
                         </div>
                     </div>
 
-                    <div className="flex justify-between pt-6 border-t border-gray-800">
-                        <button onClick={handleSave} disabled={loading} className="px-6 py-3 bg-pink-600 hover:bg-pink-500 text-white font-bold rounded-xl shadow-lg flex items-center gap-2 transition-all transform active:scale-95 disabled:opacity-50">
-                            {loading ? <RefreshCw size={18} className="animate-spin"/> : <Save size={18}/>} Guardar Avatar
-                        </button>
+                    <div className="flex justify-end gap-4 pt-4 border-t border-gray-800">
                         {selectedAvatarId && (
-                            <button onClick={handleDelete} className="text-red-500 hover:text-white flex items-center gap-2 px-4 py-2 hover:bg-red-900/20 rounded-lg transition-colors border border-transparent hover:border-red-500/50">
-                                <Trash2 size={18}/> Eliminar
+                            <button onClick={handleDelete} className="text-red-500 hover:text-white px-4 py-3 rounded-xl hover:bg-red-900/20 transition-all text-sm font-bold flex items-center gap-2">
+                                <Trash2 size={16}/> Eliminar
                             </button>
                         )}
+                        <button onClick={handleSave} disabled={loading} className="px-8 py-3 bg-white text-black font-black rounded-xl hover:bg-gray-200 transition-all flex items-center gap-2 shadow-lg shadow-white/5">
+                            {loading ? <RefreshCw size={18} className="animate-spin"/> : <Save size={18}/>} GUARDAR AVATAR
+                        </button>
                     </div>
                 </div>
 
-                {/* --- SIDEBAR IA (SIMULADOR V30) --- */}
+                {/* --- DERECHA: SIMULADOR IA (4 Cols) --- */}
                 <div className="lg:col-span-4 space-y-6">
-                    <div className="bg-[#0f1115] border border-gray-800 rounded-2xl p-6 sticky top-6 shadow-xl flex flex-col h-[620px]">
-                        <div className="border-b border-gray-800 pb-4 mb-4">
-                            <h3 className="text-lg font-bold text-white flex items-center gap-2"><MessageSquare size={18} className="text-purple-400"/> Simulador / Auditor</h3>
+                    <div className="bg-[#0f1115] border border-gray-800 rounded-3xl p-6 sticky top-6 shadow-2xl flex flex-col h-[700px]">
+                        
+                        {/* Header IA */}
+                        <div className="border-b border-gray-800 pb-4 mb-4 flex justify-between items-center">
+                            <h3 className="text-lg font-bold text-white flex items-center gap-2"><MessageSquare size={18} className="text-purple-400"/> IA Simulator</h3>
+                            <div className="bg-purple-900/20 px-2 py-1 rounded text-[10px] text-purple-400 font-bold border border-purple-500/30">V300</div>
                         </div>
 
-                        {/* SELECTORES CONTEXTO (NUEVO V30) */}
+                        {/* Selectores Contexto IA */}
                         <div className="mb-4 space-y-2">
-                            <div className="relative">
-                                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-indigo-400"><User size={14}/></div>
-                                <select value={selectedExpertId} onChange={(e) => setSelectedExpertId(e.target.value)} className="w-full bg-[#0B0E14] border border-gray-700 text-white text-xs rounded-lg p-2 pl-8 focus:border-purple-500 outline-none">
-                                    <option value="">-- Experto Auditor --</option>
-                                    {experts.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
-                                </select>
-                            </div>
-                            <div className="relative">
-                                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-yellow-400"><BookOpen size={14}/></div>
-                                <select value={selectedKbId} onChange={(e) => setSelectedKbId(e.target.value)} className="w-full bg-[#0B0E14] border border-gray-700 text-white text-xs rounded-lg p-2 pl-8 focus:border-purple-500 outline-none">
-                                    <option value="">-- Criterio Base --</option>
-                                    {knowledgeBases.map(kb => <option key={kb.id} value={kb.id}>{kb.title}</option>)}
-                                </select>
-                            </div>
+                            <select value={selectedExpertId} onChange={(e) => setSelectedExpertId(e.target.value)} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-3 text-xs text-gray-300 outline-none focus:border-purple-500">
+                                <option value="">🧠 Experto Auditor</option>{experts.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
+                            </select>
+                            <select value={selectedKbId} onChange={(e) => setSelectedKbId(e.target.value)} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-3 text-xs text-gray-300 outline-none focus:border-yellow-500">
+                                <option value="">📚 Criterio Base (KB)</option>{knowledgeBases.map(kb => <option key={kb.id} value={kb.id}>{kb.title}</option>)}
+                            </select>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto custom-scrollbar bg-[#0B0E14] rounded-xl p-4 border border-gray-800 mb-4 shadow-inner">
-                            {chatResponse ? (
-                                <div className="space-y-2">
-                                    <p className="text-gray-300 text-sm whitespace-pre-wrap leading-relaxed animate-in fade-in font-medium">{chatResponse}</p>
-                                    {auditCost > 0 && <span className="text-[10px] text-yellow-500 bg-yellow-900/10 px-2 py-1 rounded inline-block mt-2 border border-yellow-500/20">Costo: {auditCost} créditos</span>}
+                        {/* Pantalla de Resultados (Chat o Auditoría) */}
+                        <div className="flex-1 overflow-y-auto custom-scrollbar bg-[#0a0a0a] rounded-2xl p-4 border border-gray-800 mb-4 shadow-inner relative">
+                            
+                            {/* Si hay resultado de Auditoría */}
+                            {auditResult ? (
+                                <div className="space-y-4 animate-in fade-in">
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-xs text-gray-500 uppercase font-bold">Claridad del Avatar</span>
+                                        <span className={`text-xl font-black ${auditResult.score >= 80 ? 'text-green-400' : 'text-yellow-400'}`}>{auditResult.score}/100</span>
+                                    </div>
+                                    <div className="h-1 w-full bg-gray-800 rounded-full overflow-hidden">
+                                        <div className={`h-full ${auditResult.score >= 80 ? 'bg-green-500' : 'bg-yellow-500'}`} style={{width: `${auditResult.score}%`}}></div>
+                                    </div>
+                                    
+                                    <div className="bg-red-900/10 p-3 rounded-xl border border-red-500/20">
+                                        <h4 className="text-[10px] font-black text-red-400 uppercase mb-2 flex items-center gap-1"><AlertTriangle size={10}/> Puntos Ciegos</h4>
+                                        <ul className="space-y-1">
+                                            {auditResult.blind_spots?.map((bs: string, i: number) => (
+                                                <li key={i} className="text-xs text-gray-300">• {bs}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+
+                                    <div className="bg-green-900/10 p-3 rounded-xl border border-green-500/20">
+                                        <h4 className="text-[10px] font-black text-green-400 uppercase mb-2 flex items-center gap-1"><CheckCircle2 size={10}/> Sugerencias</h4>
+                                        <p className="text-xs text-gray-300 leading-relaxed">{auditResult.feedback}</p>
+                                    </div>
+                                </div>
+                            ) : chatResponse ? (
+                                // Si hay respuesta de Chat
+                                <div className="bg-purple-900/10 p-4 rounded-xl border border-purple-500/20 animate-in zoom-in-95">
+                                    <span className="text-[10px] text-purple-400 font-bold uppercase mb-2 block">{formData.name || "Avatar"} dice:</span>
+                                    <p className="text-sm text-white leading-relaxed font-medium">{chatResponse}</p>
                                 </div>
                             ) : (
-                                <div className="h-full flex flex-col items-center justify-center text-gray-600 opacity-50"><Target size={32} className="mb-2"/><p className="text-xs text-center">Inicia una auditoría estratégica<br/>o habla con tu avatar.</p></div>
+                                // Estado Vacío
+                                <div className="h-full flex flex-col items-center justify-center text-gray-600 opacity-40">
+                                    <Target size={40} className="mb-3"/>
+                                    <p className="text-xs text-center font-medium max-w-[150px]">Audita tu perfil o chatea con tu cliente ideal.</p>
+                                </div>
                             )}
                         </div>
+
+                        {/* Botones de Acción */}
                         <div className="space-y-3">
-                            <button onClick={handleAudit} disabled={isAuditing || !formData.name} className="w-full py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg text-sm font-bold flex justify-center items-center gap-2 transition-all border border-gray-700 hover:border-gray-500 shadow-sm">
-                                {isAuditing ? <RefreshCw size={14} className="animate-spin"/> : <Search size={14}/>} Auditar con IA (2 Cr)
+                            <button onClick={handleAudit} disabled={isAuditing || !formData.name} className="w-full py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-xs font-black uppercase tracking-widest flex justify-center items-center gap-2 transition-all border border-gray-700">
+                                {isAuditing ? <RefreshCw size={14} className="animate-spin"/> : <Activity size={14}/>} Auditar Perfil (2 Cr)
                             </button>
                             <div className="relative">
-                                <input type="text" value={chatInput} onChange={(e) => setChatInput(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && handleChat()} placeholder="Pregúntale algo..." className="w-full bg-[#0B0E14] border border-gray-700 rounded-xl py-3 pl-4 pr-12 text-white text-sm focus:border-purple-500 outline-none transition-all shadow-inner"/>
-                                <button onClick={handleChat} disabled={isChatting || !chatInput} className="absolute right-2 top-2 p-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg disabled:opacity-50 transition-all shadow-md">
+                                <input type="text" value={chatInput} onChange={(e) => setChatInput(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && handleChat()} placeholder="Hazle una pregunta a tu avatar..." className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl py-3 pl-4 pr-12 text-white text-sm focus:border-purple-500 outline-none transition-all shadow-inner"/>
+                                <button onClick={handleChat} disabled={isChatting || !chatInput} className="absolute right-2 top-2 p-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg disabled:opacity-50 transition-all shadow-lg shadow-purple-900/20">
                                     {isChatting ? <RefreshCw size={14} className="animate-spin"/> : <Send size={14}/>}
                                 </button>
                             </div>
@@ -365,7 +413,7 @@ export const AvatarProfile = () => {
                     </div>
                 </div>
             </div>
-            <style>{`.input-viral { width: 100%; background-color: #0B0E14; border: 1px solid #1f2937; border-radius: 0.5rem; padding: 0.75rem; color: white; font-size: 0.875rem; outline: none; transition: all 0.2s; } .input-viral:focus { border-color: #db2777; box-shadow: 0 0 0 2px rgba(219, 39, 119, 0.1); } .textarea-viral { width: 100%; background-color: #0B0E14; border: 1px solid #1f2937; border-radius: 0.5rem; padding: 0.75rem; color: white; font-size: 0.875rem; outline: none; resize: none; transition: all 0.2s; } .textarea-viral:focus { border-color: #db2777; box-shadow: 0 0 0 2px rgba(219, 39, 119, 0.1); } .custom-scrollbar::-webkit-scrollbar { width: 4px; } .custom-scrollbar::-webkit-scrollbar-track { background: transparent; } .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }`}</style>
+            <style>{`.input-viral { width: 100%; background-color: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); border-radius: 0.75rem; padding: 0.75rem; color: white; font-size: 0.875rem; outline: none; transition: all 0.2s; } .input-viral:focus { border-color: #db2777; box-shadow: 0 0 0 2px rgba(219, 39, 119, 0.1); } .textarea-viral { width: 100%; background-color: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); border-radius: 0.75rem; padding: 0.75rem; color: white; font-size: 0.875rem; outline: none; resize: none; transition: all 0.2s; } .textarea-viral:focus { border-color: #db2777; box-shadow: 0 0 0 2px rgba(219, 39, 119, 0.1); } .custom-scrollbar::-webkit-scrollbar { width: 4px; } .custom-scrollbar::-webkit-scrollbar-track { background: transparent; } .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }`}</style>
         </div>
     );
 };

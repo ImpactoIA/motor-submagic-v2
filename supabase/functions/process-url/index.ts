@@ -1,12 +1,12 @@
 // ==================================================================================
-// 🚀 TITAN ENGINE V103 COMPLETE - FULL PRODUCTION SYSTEM
+// 🚀 TITAN ENGINE V103 ULTIMATE - FULL CEREBRO INTEGRADO
 // ==================================================================================
 // SISTEMA COMPLETO:
 // ✅ Scrapers para 6 plataformas (YouTube, TikTok, Instagram, Facebook, Twitter, LinkedIn)
 // ✅ Whisper transcription con chunking
 // ✅ Sistema de seguridad (rate limiting, sanitización, validación créditos)
-// ✅ Extracción de ADN Viral (6 capas de análisis)
-// ✅ Adaptación inteligente al nicho
+// ✅ CEREBRO COMPLETO: 9 módulos de IA interconectados
+// ✅ Memoria del sistema y contexto compartido
 // ✅ Quality assurance automático
 // ✅ Predicción de rendimiento
 // ✅ Sistema completo de costos y transacciones
@@ -46,7 +46,41 @@ const SECURITY_CONFIG = {
 };
 
 // ==================================================================================
-// 📚 BIBLIOTECAS DE CONOCIMIENTO
+// 🧠 NÚCLEO DE INTELIGENCIA - Base de conocimiento compartida
+// ==================================================================================
+
+interface SystemMemory {
+  videos_analizados: any[];
+  estructuras_exitosas: string[];
+  hooks_alto_rendimiento: string[];
+  estrategias_validadas: string[];
+  patrones_virales: string[];
+}
+
+interface ContextoUsuario {
+  nicho: string;
+  avatar_ideal: string;
+  dolor_principal: string;
+  deseo_principal: string;
+  competencia_analizada: any[];
+  hooks_exitosos: string[];
+  patrones_virales: string[];
+  posicionamiento?: string;
+  enemigo_comun?: string;
+  diferenciadores?: string[];
+}
+
+// Base de datos de aprendizaje continuo (en memoria para esta ejecución)
+const MEMORIA_SISTEMA: SystemMemory = {
+  videos_analizados: [],
+  estructuras_exitosas: [],
+  hooks_alto_rendimiento: [],
+  estrategias_validadas: [],
+  patrones_virales: []
+};
+
+// ==================================================================================
+// 📚 BIBLIOTECAS DE CONOCIMIENTO WINNER ROCKET
 // ==================================================================================
 
 const VIDEO_FORMATS_STR = `12 FORMATOS VISUALES WINNER ROCKET:
@@ -762,167 +796,800 @@ async function runIngestionPipeline(
 }
 
 // ==================================================================================
-// 🧬 PROMPTS MAESTROS V103
+// 🧠 SISTEMA CEREBRAL - 9 MÓDULOS DE IA INTERCONECTADOS
 // ==================================================================================
 
-const VIRAL_DNA_EXTRACTOR = `YOU ARE THE WORLD'S #1 VIRAL VIDEO FORENSIC ANALYST.
+// 1️ IDEAS RÁPIDAS
+const PROMPT_IDEAS_RAPIDAS = (contexto: ContextoUsuario) => `ERES UN GENIO CREATIVO DE CONTENIDO VIRAL EN ESPAÑOL.
+TU MISIÓN: Generar 10 ideas de video EXPLOSIVAS para el nicho del usuario en menos de 30 segundos.
 
-MISSION: Extract the complete STRUCTURAL DNA from this video - not the content, but the MECHANISMS that make it viral.
+CONTEXTO DEL USUARIO:
+- Nicho: ${contexto.nicho || 'General'}
+- Avatar: ${contexto.avatar_ideal || 'Audiencia general'}
+- Dolor: ${contexto.dolor_principal || 'N/A'}
+- Deseo: ${contexto.deseo_principal || 'N/A'}
+- Hooks exitosos previos: ${contexto.hooks_exitosos?.join(', ') || 'N/A'}
+- Patrones virales identificados: ${contexto.patrones_virales?.join(', ') || 'N/A'}
 
-Execute 6-layer viral DNA sequencing:
+BIBLIOTECAS DE CONOCIMIENTO:
+${MASTER_HOOKS_STR}
+${VIDEO_FORMATS_STR}
+${ALGORITHM_SECRETS_STR}
 
-LAYER 1: HOOK DNA (0-3s)
-- Trigger type (pattern interrupt/curiosity gap/identity/data shock/fear/secret)
-- Formula structure: [ELEMENT 1] + [ELEMENT 2] + [ELEMENT 3]
-- Psychological mechanism activated
-- Visual/audio synchronization (exact timing)
-- Retention score prediction (0-100)
+PROTOCOLO DE GENERACIÓN:
+1. Analiza el contexto completo del usuario
+2. Aplica los 7 disparadores virales: Curiosidad, Miedo, Deseo, Urgencia, Identidad, Controversia, Transformación
+3. Combina los patrones exitosos detectados por el sistema
+4. Genera ideas que conecten con el dolor profundo del Avatar
 
-LAYER 2: RETENTION ARCHITECTURE
-- Micro-hooks timeline (every 5-7s: what keeps watching?)
-- Information gaps (opened timestamp → closed timestamp)
-- Emotional curve (plot: 0s emotion, 10s emotion, 20s...)
-- Pacing map (fast segments, slow segments, acceleration points)
-- Loop mechanics (what creates rewatchability)
-
-LAYER 3: NARRATIVE STRUCTURE
-- Framework name (PAS/BAB/Hero Journey/Myth vs Reality/Enemy/Secret/etc)
-- Act breakdown (setup 0-Xs, conflict X-Ys, resolution Y-Zs)
-- Story beats with timestamps
-- Why this structure works
-
-LAYER 4: PRODUCTION DNA
-Visual: shot distribution %, cut rhythm, camera style, B-roll strategy, text timing
-Audio: music architecture, voice characteristics (WPM/energy), strategic silence
-
-LAYER 5: ALGORITHM SIGNALS
-- Watch time tactics
-- Engagement engineering (comment/share/save baits)
-- Platform-specific optimizations detected
-- Viral coefficient estimate (0-10)
-
-LAYER 6: REPLICATION BLUEPRINT
-PRESERVE: hook formula, micro-hook timing, emotional peaks, narrative framework, pacing
-ADAPT: words (keep structure), examples (keep pattern), niche references
-Complexity score (0-10), production requirements
-
-OUTPUT: Complete JSON with all 6 layers + viral_potential_score + key_success_factors`;
-
-const NICHE_ADAPTER = `YOU ARE AN ELITE VIRAL CONTENT ADAPTATION SPECIALIST.
-
-MISSION: Transform viral DNA into niche-specific content maintaining 100% of viral mechanics.
-
-PROTOCOL:
-
-1. PRESERVE STRUCTURE (100%)
-✓ Hook formula (exact pattern)
-✓ Micro-hook timing (same intervals)
-✓ Emotional curve (same shape)
-✓ Narrative framework (same beats)
-✓ Pacing rhythm (same dynamics)
-
-2. TRANSLATE CONTENT (100%)
-Generic → Niche-specific
-Broad audience → Avatar profile
-General examples → Industry examples
-Common language → Expert vocabulary
-Universal desire → Avatar dream
-Generic objection → Avatar objection
-
-3. GENERATE 3 HOOKS (using viral DNA formula)
-A. LOGIC: [STRUCTURE] + niche data (max 10 words)
-B. EMOTION: [STRUCTURE] + avatar pain (max 12 words)  
-C. DISRUPTION: [STRUCTURE] + niche contrarian (max 10 words)
-
-4. FULL SCRIPT ADAPTATION
-Maintain: timing, gaps, peaks, pacing
-Change: examples, vocabulary, pain points, references
-Format: Teleprompter-ready (no brackets)
-
-5. VISUAL PLAN
-Replicate: shot types, timing, rhythm
-Adapt: visuals to niche context
-
-6. THUMBNAIL
-Maintain: emotional impact
-Adapt: visual context to niche
-Text: max 5 words, niche-relevant
-
-OUTPUT JSON:
+FORMATO DE SALIDA JSON ESTRICTO:
 {
-  "adaptation_metadata": { dna_preserved, niche_translation },
-  "hook_variations": [3 hooks with formula + retention prediction],
-  "script_body": "clean teleprompter text",
-  "visual_plan": [timeline maintaining DNA timing],
-  "thumbnail_concept": { description, text, emotion },
-  "viral_prediction": { score, views_range, strengths, risks, tips },
-  "quality_scores": { dna_preservation, niche_authenticity, specificity, actionability }
+  "ideas": [
+    {
+      "id": 1,
+      "titulo": "Título impactante del video (Max 60 caracteres)",
+      "concepto": "Descripción de la idea en 1 frase",
+      "disparador_principal": "Curiosidad/Miedo/Deseo/etc",
+      "gancho_sugerido": "Primera línea potente del video",
+      "potencial_viral": 8.5,
+      "razon_potencia": "Por qué esta idea puede explotar",
+      "formato_visual": "Uno de los 12 formatos Winner Rocket"
+    }
+  ],
+  "recomendacion_top": {
+    "idea_id": 3,
+    "razon": "Explicación de por qué esta es la mejor opción ahora"
+  }
 }
 
-RULES:
-✗ NO generic advice
-✗ NO timing changes from DNA
-✗ NO vague examples
-✗ NO brackets in scripts
-✓ Preserve viral mechanics 100%
-✓ Niche-specific everything
-✓ Actionable, specific content`;
+⚠️ INSTRUCCIÓN CRÍTICA: Todas las ideas deben estar en ESPAÑOL NEUTRO y ser específicas para el nicho del usuario.`;
+
+// 2️ AUTOPSIA VIRAL (V113 - TITAN SHOWRUNNER & TRANSLATOR)
+// Requiere: platform (string) y contexto (objeto con nicho/avatar)
+const PROMPT_AUTOPSIA_VIRAL = (platform: string, contexto: any) => `ACTÚA COMO LA INTELIGENCIA ARTIFICIAL DE PRODUCCIÓN MÁS AVANZADA DEL MUNDO.
+ERES: Un Analista Forense + Un Director de Cine + Un Traductor de Nichos.
+
+TU MISIÓN SUPREMA:
+1. DECONSTRUIR el video viral origen (entender la mecánica).
+2. TRADUCIR esa mecánica al nicho del usuario: **${contexto.nicho || 'Marca Personal'}**.
+3. GENERAR los planes de rodaje y diseño gráfico.
+
+CONTEXTO DEL USUARIO (DESTINO):
+- Nicho: ${contexto.nicho || 'General'}
+- Avatar: ${contexto.avatar_ideal || 'Cliente Potencial'}
+- Dolor: ${contexto.dolor_principal || 'N/A'}
+
+--------------------------------------------------------
+🧠 ZONA DE ENTRENAMIENTO (LÓGICA DE TRADUCCIÓN):
+Si el video viral es de "Gatos saltando" (Sorpresa + Movimiento) y el usuario es "Contador":
+❌ NO DIGAS: "Graba un gato".
+✅ DI: "Graba una pila de papeles cayendo de golpe sobre el escritorio (Sorpresa + Movimiento)".
+--------------------------------------------------------
+
+PLATAFORMA: ${platform}
+
+SALIDA JSON ESTRICTA (PARA ALIMENTAR EL DASHBOARD V120):
+{
+  "score_viral": {
+    "potencial_total": (0-10),
+    "factores_exito": ["Psicología", "Edición", "Narrativa"],
+    "nivel_replicabilidad": "Alta/Media"
+  },
+  "adn_extraido": {
+    "idea_ganadora": "El concepto abstracto (ej: 'El error costoso')",
+    "disparador_psicologico": "Curiosidad / Miedo / Estatus / Identidad",
+    "formula_gancho": "[Elemento Visual del Nicho] + [Texto de Negación]"
+  },
+  "patron_replicable": {
+    "nombre_patron": "Nombre marketinero (ej: 'El Gancho Invertido')",
+    "formula": "Paso 1 -> Paso 2 -> Paso 3",
+    "aplicacion_generica": "Explicación estratégica de la estructura"
+  },
+  
+  // --- ALIMENTA LA PESTAÑA 'TIMELINE / RODAJE' ---
+  "desglose_temporal": [
+    {
+      "segundo": "0-3",
+      "que_pasa": "Descripción técnica de la acción original",
+      "porque_funciona": "Sesgo cognitivo activado (ej: Ruptura de patrón)",
+      "instruccion_rodaje": "ACCIÓN FÍSICA TRADUCIDA AL NICHO ${contexto.nicho}: 'Graba [Acción específica] mirando a cámara con expresión de [Emoción]'"
+    },
+    {
+      "segundo": "4-10",
+      "que_pasa": "Retención y Desarrollo",
+      "porque_funciona": "Apertura de bucle / Agitación",
+      "instruccion_rodaje": "CAMBIO DE PLANO: 'Muestra [B-Roll o Pantalla] que demuestre el problema mencionado'"
+    },
+    {
+      "segundo": "11-End",
+      "que_pasa": "Resolución y CTA",
+      "porque_funciona": "Dopamina y Recompensa",
+      "instruccion_rodaje": "CIERRE: 'Vuelve a plano medio, da la solución en una frase y señala para el CTA'"
+    }
+  ],
+
+  // --- ALIMENTA LA PESTAÑA 'PRODUCCIÓN' ---
+  "produccion_deconstruida": {
+    "ritmo_cortes": "Rápido (TikTok) / Lento (Cinemático)",
+    "movimiento_camara": "Estático / Handheld / Zoom Digital",
+    "musica_sonido": "Vibra sugerida (ej: Trending Phonk, Lo-fi, Tensión)"
+  },
+
+  // --- ALIMENTA LA PESTAÑA 'MINIATURA' ---
+  "thumbnail_concept": {
+    "elemento_visual": "Imagen principal sugerida (ej: Tu cara en primer plano sosteniendo [Objeto del Nicho])",
+    "texto_en_imagen": "Copy corto y gigante (Max 3 palabras, ej: '¡ERROR FATAL!')",
+    "color_psicologia": "Colores de alto contraste recomendados (ej: Amarillo sobre Negro)",
+    "composicion": "Regla de tercios / Split Screen / Cara Sorprendida"
+  },
+
+  "insights_algoritmicos": {
+    "optimizacion_retencion": "Táctica usada para evitar el abandono",
+    "seo_keywords": ["Keyword 1", "Keyword 2"]
+  }
+}`;
+
+// 3️ GENERADOR DE GUIONES
+const PROMPT_GENERADOR_GUIONES = (contexto: ContextoUsuario, viralDNA?: any) => {
+  const dnaContext = viralDNA ? `\n\nADN VIRAL EXTRAÍDO:\n${JSON.stringify(viralDNA)}` : '';
+  
+  return `ERES EL MEJOR GUIONISTA DE CONTENIDO VIRAL EN ESPAÑOL DEL MUNDO.
+TU MISIÓN: Crear guiones completos, listos para teleprompter, que ENGANCHEN desde el segundo 1.
+
+CONTEXTO DEL USUARIO:
+- Nicho: ${contexto.nicho || 'General'}
+- Avatar: ${contexto.avatar_ideal || 'Audiencia general'}
+- Dolor: ${contexto.dolor_principal || 'N/A'}
+- Deseo: ${contexto.deseo_principal || 'N/A'}
+- Posicionamiento: ${contexto.posicionamiento || 'N/A'}
+- Enemigo común: ${contexto.enemigo_comun || 'N/A'}${dnaContext}
+
+BIBLIOTECAS DE CONOCIMIENTO:
+${MASTER_HOOKS_STR}
+${WINNER_ROCKET_TIMELINE}
+${VIDEO_FORMATS_STR}
+
+ARQUITECTURA DE GUION (APLICAR SIEMPRE):
+1. GANCHO (0-3s): Dispara curiosidad o rompe patrón
+2. PROBLEMA (4-15s): Amplifica el dolor del Avatar
+3. AGITACIÓN (16-30s): Profundiza en consecuencias
+4. SOLUCIÓN (31-50s): Presenta el camino (tu método/producto)
+5. PRUEBA (51-70s): Validación social o datos
+6. CTA (71-90s): Llamado a la acción irresistible
+
+PROTOCOLOS DE ESCRITURA:
+- Español neutro, natural, conversacional
+- Frases cortas (máx 15 palabras)
+- Lenguaje del Avatar (sus palabras, su jerga)
+- Sin relleno, cada palabra tiene propósito
+- Formato teleprompter: SIN [corchetes] ni (paréntesis) en el texto hablado
+
+FORMATO DE SALIDA JSON ESTRICTO:
+{
+  "metadata_guion": {
+    "nicho": "${contexto.nicho || 'General'}",
+    "duracion_estimada": "60-90 segundos",
+    "dificultad_produccion": "Baja/Media/Alta",
+    "recursos_necesarios": ["Recurso 1", "Recurso 2"]
+  },
+  "estructura_narrativa": {
+    "framework": "PAS / Héroe / Mito vs Realidad",
+    "arco_emocional": "Descripción de la curva emocional"
+  },
+  "ganchos_opcionales": [
+    {
+      "tipo": "Curiosidad",
+      "texto": "Primera línea del video - Opción 1 (Max 12 palabras)",
+      "retencion_predicha": 92,
+      "patron_usado": "De los 40 ganchos Winner Rocket"
+    },
+    {
+      "tipo": "Disrupción",
+      "texto": "Primera línea del video - Opción 2 (Max 12 palabras)",
+      "retencion_predicha": 95,
+      "patron_usado": "De los 40 ganchos Winner Rocket"
+    },
+    {
+      "tipo": "Miedo",
+      "texto": "Primera línea del video - Opción 3 (Max 12 palabras)",
+      "retencion_predicha": 88,
+      "patron_usado": "De los 40 ganchos Winner Rocket"
+    }
+  ],
+  "guion_completo": "AQUÍ VA EL GUION PALABRA POR PALABRA\\n\\nSeparado en párrafos claros.\\n\\nCada párrafo es una idea completa.\\n\\nListo para leer en teleprompter.\\n\\nSin anotaciones de producción en el texto hablado.",
+  "plan_visual": [
+    {
+      "tiempo": "0-3s",
+      "accion_en_pantalla": "Descripción de lo que se ve",
+      "instruccion_produccion": "Plano detalle / Movimiento de cámara",
+      "audio": "Música / Silencio / Efecto"
+    }
+  ],
+  "optimizacion_algoritmica": {
+    "keywords_seo": ["Keyword 1", "Keyword 2", "Keyword 3"],
+    "momento_publicacion": "Mejor día y hora basado en nicho",
+    "hashtags_sugeridos": ["#hashtag1", "#hashtag2"],
+    "descripcion_video": "Texto optimizado para SEO de plataforma"
+  }
+}
+
+⚠️ REGLA DE ORO: El guion debe ser tan bueno que el usuario solo necesite leerlo en cámara para crear un video viral.`;
+};
+
+// 4️ JUEZ VIRAL (V109 - THE NEURO-SURGEON)
+const PROMPT_JUEZ_VIRAL = (contexto: ContextoUsuario, contenido: string) => `ACTÚA COMO EL 'CHIEF ATTENTION OFFICER' DE LA MAYOR CONSULTORA DE VIRALIDAD DEL MUNDO.
+TU CONOCIMIENTO: Neurociencia (Dopamina/Cortisol), Copywriting de Respuesta Directa y Algoritmos de Retención (Short-Form).
+
+TU MISIÓN:
+Realizar una "Neuro-Cirugía" al contenido del usuario.
+1. DIAGNÓSTICO: Encuentra dónde el cerebro del espectador se "desconecta" (Cognitive Load alto).
+2. CIRUGÍA: Reescribe el guion para que sea imposible de ignorar, usando "Palabras Gatillo" y "Bucles de Curiosidad".
+
+CONTEXTO DEL OBJETIVO:
+- Nicho: ${contexto.nicho || 'General'}
+- Avatar: ${contexto.avatar_ideal || 'Audiencia general'}
+- Dolor Principal: ${contexto.dolor_principal || 'N/A'}
+
+CONTENIDO A AUDITAR:
+"${contenido}"
+
+PROTOCOLO DE REESCRITURA (ESTRICTO):
+1. LEY DEL HIELO (0-3s): Si el gancho no promete un beneficio egoísta inmediato o rompe una creencia, MÁTALO. Escribe uno nuevo.
+2. VELOCIDAD NARRATIVA: Elimina adverbios, saludos y "fluff". Aumenta la densidad de información.
+3. INGENIERÍA DE LA BRECHA: Abre un bucle al inicio ("Te han mentido sobre...") y ciérralo SOLO al final.
+4. TONO: Autoridad Absoluta pero Empatía Radical. Háblale al dolor del Avatar.
+
+FORMATO DE SALIDA JSON ESTRICTO:
+{
+  "veredicto_final": {
+    "score_total": (0-100. Sé científico. Un 90+ requiere perfección psicológica),
+    "clasificacion": "VIRAL ELITE / POTENCIAL BUENO / INVISIBLE",
+    "probabilidad_viral": "Alta/Media/Baja",
+    "confianza_prediccion": "96%"
+  },
+  "evaluacion_criterios": [
+    { 
+      "criterio": "Impacto Neuro-Visual (Hook)", 
+      "score": (0-10), 
+      "analisis": "¿Rompe el patrón de scroll o es ruido blanco? Análisis técnico.",
+      "sugerencia": "Acción específica (ej: 'Usa un objeto físico')"
+    },
+    { 
+      "criterio": "Retención y Pacing", 
+      "score": (0-10), 
+      "analisis": "Evaluación de la densidad de valor por segundo.",
+      "sugerencia": "Dónde cortar grasa"
+    }
+  ],
+  "fortalezas_clave": ["Elemento de autoridad bien usado", "Trigger emocional detectado"],
+  "debilidades_criticas": [
+    {
+      "problema": "Inicio lento (La 'Zona de Muerte' de los 3s)",
+      "impacto": "Pérdida del 60% de tráfico",
+      "solucion": "Empezar in-media-res (en medio de la acción)"
+    }
+  ],
+  "optimizaciones_rapidas": [
+    "PNL: Cambia 'trataré de explicar' por 'te voy a revelar'",
+    "Estructura: Mueve el beneficio final al principio"
+  ],
+  "prediccion_metricas": {
+    "vistas_estimadas": "Proyección basada en el gancho",
+    "engagement_rate": "Proyección basada en el CTA",
+    "tiempo_viralizacion": "Estimado"
+  },
+  "decision_recomendada": "PUBLICAR / REESCRIBIR (USAR VERSIÓN OPTIMIZADA) / DESCARTAR",
+  
+  "rewritten_version": "ESCRIBE AQUÍ LA 'MASTERPIECE' VIRAL. APLICA TODA TU CIENCIA.\n\nREGLAS DE ORO PARA ESTA VERSIÓN:\n1. FORMATO: Usa mayúsculas para énfasis y saltos de línea rítmicos.\n2. VOCABULARIO: Usa palabras sensoriales y de alto impacto.\n3. ESTRUCTURA: Gancho (La Promesa/El Miedo) -> El Problema (Agitación) -> La Solución (Tu Método) -> CTA (Identidad).\n4. SIN SALUDOS: Empieza golpeando.\n5. ADAPTADO AL NICHO: Usa la jerga específica del ${contexto.nicho}."
+}`;
+
+// 5️ TRANSCRIPTOR
+const PROMPT_TRANSCRIPTOR = (platform: string) => `ERES UN TRANSCRIPTOR EXPERTO CON ANÁLISIS CONTEXTUAL.
+TU MISIÓN: Convertir videos en texto estructurado Y añadir capas de análisis.
+
+PLATAFORMA: ${platform}
+
+PROTOCOLO DE TRANSCRIPCIÓN INTELIGENTE:
+
+NIVEL 1: TRANSCRIPCIÓN BÁSICA
+- Texto exacto palabra por palabra
+- Timestamps cada 5 segundos
+- Identificación de pausas significativas
+- Marcadores de cambio de tono/énfasis
+
+NIVEL 2: ESTRUCTURA NARRATIVA
+- Identificar secciones: Gancho, Problema, Desarrollo, CTA
+- Etiquetar transiciones clave
+- Mapear arco emocional del discurso
+
+NIVEL 3: ANÁLISIS CONTEXTUAL
+- Identificar hooks y por qué funcionan
+- Extraer frases potentes replicables
+- Detectar patrones persuasivos
+- Keywords y temas principales
+
+FORMATO DE SALIDA JSON ESTRICTO:
+{
+  "metadata_transcripcion": {
+    "duracion_video": "90 segundos",
+    "numero_palabras": 245,
+    "velocidad_promedio": "163 palabras/minuto",
+    "idioma_detectado": "Español"
+  },
+  "transcripcion_completa": [
+    {
+      "timestamp": "0:00 - 0:03",
+      "texto": "Texto exacto dicho en este segmento",
+      "seccion": "Gancho",
+      "enfasis": "Alto/Medio/Bajo"
+    }
+  ],
+  "estructura_identificada": {
+    "gancho": {
+      "texto": "Primeras palabras del video",
+      "duracion": "3 segundos",
+      "tipo_hook": "Pregunta/Shock/Curiosidad",
+      "score_efectividad": 8.5
+    },
+    "cierre": {
+      "texto": "Últimas palabras del video",
+      "tipo_cta": "Suscribirse/Comentar/Comprar"
+    }
+  },
+  "frases_potentes": [
+    {
+      "frase": "Frase exacta que destaca",
+      "timestamp": "0:25",
+      "porque_funciona": "Análisis de por qué esta frase es fuerte"
+    }
+  ],
+  "patrones_detectados": [
+    {
+      "patron": "Uso de pregunta retórica cada 15 segundos",
+      "frecuencia": "5 veces en 90 segundos",
+      "efecto": "Mantiene atención por micro-ganchos"
+    }
+  ]
+}`;
+
+// 6️ AUDITOR DE AVATAR (V300 - THE EMPATHY PROFILER)
+// Analiza la profundidad psicológica del cliente ideal.
+const PROMPT_AUDIT_AVATAR = (avatarJson: string) => `
+ACTÚA COMO: El Psicólogo de Consumo y Copywriter de Respuesta Directa más sofisticado del mundo (Estilo Eugene Schwartz + Jordan Peterson).
+
+TU OBJETIVO:
+Auditar sin piedad el perfil del "Avatar" (Cliente Ideal) que ha definido el usuario. Debes detectar si es un perfil real, visceral y rentable, o si es una descripción genérica y superficial.
+
+DATOS DEL AVATAR A AUDITAR:
+${avatarJson}
+
+CRITERIOS DE CALIFICACIÓN (ESTÁNDAR DE ÉLITE):
+1. **ESPECIFICIDAD:** - 0 Puntos: "Quiere ganar más dinero".
+   - 100 Puntos: "Le tiembla la mano al pasar la tarjeta en el súper por miedo a que sea rechazada".
+2. **URGENCIA (BLEEDING NECK):** - ¿El dolor descrito es una molestia leve o una herida abierta que necesita solución YA?
+3. **COHERENCIA EMOCIONAL:** - ¿El "Miedo Oculto" coincide con la "Objeción"? (Ej: Si su miedo es el estatus, su objeción será "qué dirán si esto falla", no el precio).
+
+SALIDA JSON ESTRICTA (PARA ALIMENTAR EL DASHBOARD):
+{
+  "audit_result": {
+    "score": (0-100. Sé crítico. 100 es perfección psicológica),
+    
+    "feedback": "Resumen directo. Dime si este avatar es rentable o es una fantasía. Sé duro pero constructivo.",
+    
+    "blind_spots": [
+      "Punto Ciego 1: Ej. 'Su Infierno es muy genérico, falta describir la emoción física'.",
+      "Punto Ciego 2: Ej. 'Dices que tiene 20 años pero su miedo es de alguien de 50'."
+    ],
+    
+    "suggestions": [
+      "Acción 1: Ej. 'Cambia el dolor X por Y para aumentar la urgencia'.",
+      "Acción 2: Ej. 'Define una situación específica donde sienta ese miedo (cena familiar, oficina)'."
+    ]
+  }
+}
+`;
+
+// 7️ AUDITOR DE EXPERTO (V300 - ELITE STRATEGIST)
+// Fusiona tu lógica de "7 Fases" con la estructura visual del Frontend
+const PROMPT_AUDIT_EXPERT = (expertProfile: any, avatarContext: string) => `
+ERES UN ANALISTA COMPETITIVO Y ESTRATEGA DE POSICIONAMIENTO.
+TU MISIÓN: Analizar el perfil del usuario, su competencia y el mercado para encontrar su ÁNGULO ÚNICO.
+
+DATOS DEL EXPERTO:
+- Nicho: ${expertProfile.niche || 'General'}
+- Misión: ${expertProfile.mission || 'N/A'}
+- Framework: ${expertProfile.framework || 'N/A'}
+
+CONTEXTO DEL AVATAR (OBJETIVO):
+${avatarContext || 'Mercado General'}
+
+--- TU PROTOCOLO DE PENSAMIENTO (LAS 7 FASES DE ÉLITE) ---
+Usa internamente este proceso para generar el análisis:
+1. MAPEO DE COMPETENCIA (Top players)
+2. ANÁLISIS DE BRECHAS (Qué hacen todos vs Qué no hace nadie)
+3. DIFERENCIACIÓN (Fortalezas únicas)
+4. POSICIONAMIENTO (Declaración única)
+5. ESTRATEGIA DE CONTENIDO (Pilares)
+6. MATRIZ DE OPORTUNIDADES (Qué crear ahora)
+7. SISTEMA DE MONITOREO (KPIs)
+
+--- SALIDA JSON ESTRICTA (MAPEO AL DASHBOARD) ---
+Traduce tus hallazgos de las 7 fases al siguiente formato para la interfaz gráfica:
+
+{
+  "audit_result": {
+    "score": (0-100. 100=Océano Azul Total, 0=Irrelevante/Copia),
+    
+    "feedback": "Sintetiza aquí el 'Resumen Ejecutivo' y el 'Posicionamiento Estratégico'. Diles cuál es su Oportunidad Principal detectada en la Fase 6.",
+    
+    "blind_spots": [
+      "Brecha de Mercado: Describe el 'Ángulo Virgen' detectado en la Fase 2.",
+      "Error Común: Describe lo que 'Todos hacen mal' según tu análisis."
+    ],
+    
+    "suggestions": [
+      "Estrategia de Contenido: Tu mejor recomendación de la Fase 5 (Pilares).",
+      "Acción Inmediata: La acción más crítica del 'Plan de 90 Días' (Fase 7)."
+    ]
+  }
+}
+`;
+
+// 8 MENTOR ESTRATÉGICO (V300 - THE GRANDMASTER)
+// Este prompt usa razonamiento profundo y prioriza la Base de Conocimiento (KB)
+const PROMPT_MENTOR_STRATEGIST = (userQuery: string, contexto: any) => `
+ACTÚA COMO: Un Asesor de Negocios de "Nivel Gran Maestro" (Mezcla de Alex Hormozi, Dan Kennedy y un Estratega Militar).
+TU OBJETIVO: Resolver la duda del usuario con precisión quirúrgica, usando EXCLUSIVAMENTE su propia metodología si está disponible.
+
+--- TUS ARCHIVOS (LA VERDAD ABSOLUTA) ---
+1. QUIÉN ERES (Experto): ${contexto.nicho || 'Experto General'}.
+2. A QUIÉN VENDES (Avatar): ${contexto.avatar_ideal || 'Audiencia General'}.
+3. TU CEREBRO (Knowledge Base): ${contexto.knowledge_base_content ? 
+   `[PRIORIDAD MÁXIMA] USA ESTOS DATOS PARA RESPONDER: "${contexto.knowledge_base_content.substring(0, 3000)}..."` : 
+   "[ALERTA] No hay Knowledge Base. Usa principios universales de marketing de respuesta directa."}
+
+--- LA CONSULTA ---
+"${userQuery}"
+
+--- TU PROTOCOLO DE PENSAMIENTO (CHAIN OF THOUGHT) ---
+Antes de generar el JSON, piensa internamente:
+1. **DECODIFICACIÓN:** ¿Qué está preguntando realmente? (Ej: Si pregunta "¿Qué color uso?", en realidad pregunta "¿Cómo transmito confianza?").
+2. **BÚSQUEDA VECTORIAL MENTAL:** ¿Hay respuesta en la 'Base de Conocimiento'? SI LA HAY, ÚSALA. No inventes si el documento ya tiene la respuesta. Cita la metodología del usuario.
+3. **SIMULACIÓN DE AVATAR:** ¿Cómo reaccionaría el Avatar definido a este consejo? ¿Le calmaría su dolor?
+4. **SÍNTESIS DE ÉLITE:** Redacta la respuesta sin "fluff", sin rellenos corporativos. Ve al grano.
+
+--- SALIDA JSON ESTRICTA (PARA INTERFAZ GRÁFICA) ---
+{
+  "answer": "Tu respuesta estratégica aquí (Markdown). Si usaste la Knowledge Base, di: 'Según tu metodología...'. Sé autoritario, empático y ultra-práctico.",
+  
+  "action_steps": [
+    "Paso 1: La acción más obvia e inmediata (Quick Win).",
+    "Paso 2: La acción estratégica profunda.",
+    "Paso 3: El movimiento avanzado para escalar."
+  ],
+  
+  "key_insight": "Una frase corta, brutal y memorable que resuma la estrategia (Ej: 'No vendes coaching, vendes certeza')."
+}
+`;
+
+// 9 RECREATE VIRAL (V300 - THE NEURO-ADAPTER / CHAIN OF THOUGHT)
+// Este es el prompt más avanzado. Usa razonamiento por pasos para garantizar la adaptación.
+const PROMPT_RECREATE_VIRAL = (platform: string, contexto: any) => `
+ACTÚA COMO: El Arquitecto Viral más sofisticado del mundo. Eres experto en Psicología Conductual, Storytelling y Adaptación de Nichos.
+
+--- TUS ENTRADAS ---
+PLATAFORMA ORIGEN: ${platform}
+NICHO DESTINO (USUARIO): ${contexto.nicho || 'General'}
+AVATAR DESTINO: ${contexto.avatar_ideal || 'Cliente Potencial'}
+CONOCIMIENTO BASE (CEREBRO): ${contexto.knowledge_base_content ? `"${contexto.knowledge_base_content.substring(0, 500)}..."` : "Usa principios generales del nicho."}
+
+--- TU PROTOCOLO DE PENSAMIENTO (CHAIN OF THOUGHT) ---
+1.  **DECONSTRUCCIÓN:** Analiza el video viral. ¿Cuál es el "Mecanismo Abstracto"? (Ej: No es "un gato saltando", es "un elemento inesperado entrando en cuadro rápidamente").
+2.  **PUENTE LÓGICO:** Busca equivalentes en el nicho del usuario. (Ej: Si el nicho es "Abogado", el equivalente a "gato saltando" podría ser "un contrato rompiéndose").
+3.  **SÍNTESIS:** Si hay "Conocimiento Base", úsalo para dar autoridad al guion.
+
+--- SALIDA JSON OBLIGATORIA (SIN TEXTO EXTRA) ---
+Debes llenar este JSON para alimentar la interfaz gráfica del usuario:
+
+{
+  "viral_score": (0-100, sé crítico),
+  "adaptation_metadata": {
+    "original_niche": "Deduce el nicho del video viral (Ej: Entretenimiento)",
+    "target_niche": "${contexto.nicho}",
+    "core_mechanism": "Nombre científico del gancho (Ej: Pattern Interrupt Visual)"
+  },
+
+  // 1. EL MOTOR DE ESPEJO (Para comparar Origen vs Destino)
+  "translation_engine": [
+    {
+      "phase": "GANCHO (0-3s)",
+      "original_action": "Describe brevemente la acción visual del video viral",
+      "your_action": "INSTRUCCIÓN DE RODAJE EXACTA para el nicho ${contexto.nicho}. Sé visual y directivo.",
+      "principle": "El sesgo cognitivo usado (Ej: Curiosidad Inmediata)"
+    },
+    {
+      "phase": "RETENCIÓN (Cuerpo)",
+      "original_action": "Qué mantiene la atención en el original",
+      "your_action": "Acción adaptada que aporta valor/entretenimiento en ${contexto.nicho}",
+      "principle": "Ej: Open Loop / Storytelling"
+    },
+    {
+      "phase": "CLÍMAX / CTA",
+      "original_action": "Cómo cierra el original",
+      "your_action": "Cierre estratégico para vender/convertir en ${contexto.nicho}",
+      "principle": "Ej: High Dopamine Reward"
+    }
+  ],
+
+  // 2. EL GUION VERTICAL (Lo que el usuario debe decir/leer)
+  "script_structure": {
+    "hook": "Escribe la PRIMERA FRASE impactante adaptada al nicho.",
+    "body": "Desarrollo del guion (puntos clave). Usa el tono del experto.",
+    "cta": "La frase final para pedir acción (Follow/Buy)."
+  },
+
+  // 3. DATOS PARA LAS PESTAÑAS (Tabs)
+  "desglose_temporal": [
+    {
+      "segundo": "0-3",
+      "que_pasa": "Gancho Visual",
+      "instruccion_rodaje": "Describe la toma exacta: Plano, Acción, Gesto.",
+      "porque_funciona": "Explicación psicológica breve."
+    },
+    {
+      "segundo": "4-End",
+      "que_pasa": "Desarrollo",
+      "instruccion_rodaje": "Instrucciones para el cuerpo del video y cierre.",
+      "porque_funciona": "Retención."
+    }
+  ],
+  "produccion_deconstruida": {
+    "musica_sonido": "Sugiere música (Trending/Cinematic) y SFX específicos."
+  },
+  "thumbnail_concept": {
+    "elemento_visual": "Descripción de la imagen principal para la miniatura.",
+    "texto_en_imagen": "Texto corto (max 3 palabras) para la imagen.",
+    "color_psicologia": "Paleta de colores recomendada.",
+    "composicion": "Ej: Regla de tercios, Cara grande, etc."
+  }
+}
+`;
+
+// 10 GENERADOR DE CALENDARIO (V300 - WAR ROOM STRATEGIST)
+const PROMPT_CALENDAR_GENERATOR = (settings: any, contexto: any) => `
+ACTÚA COMO: Director de Estrategia de Contenidos (CMO) de clase mundial.
+TU MISIÓN: Crear un plan de acción de ${settings.duration} días.
+
+--- TU ARSENAL (CONTEXTO) ---
+1. EL EXPERTO (Voz): ${contexto.nicho || 'General'}.
+2. EL OBJETIVO (Target): ${contexto.avatar_ideal || 'Audiencia General'}.
+3. LA BIBLIA (Fuente de Verdad): ${contexto.knowledge_base_content ? 
+   `USA ESTA BASE DE CONOCIMIENTO PARA LOS TEMAS: "${contexto.knowledge_base_content.substring(0, 1500)}..."` : 
+   "No hay base de conocimiento. Usa temas estándar del nicho."}
+
+--- PARÁMETROS DE LA MISIÓN ---
+- OBJETIVO TÁCTICO: ${settings.focus} (Viralidad / Autoridad / Venta).
+- FORMATO: ${settings.format}.
+
+--- INSTRUCCIONES DE EJECUCIÓN ---
+1. Si hay "Base de Conocimiento", extrae conceptos específicos de ahí. No inventes, usa su metodología.
+2. Si el objetivo es "Venta", asegúrate de que las ideas ataquen objeciones del Avatar.
+3. Si el objetivo es "Viralidad", usa ganchos polarizantes.
+
+--- SALIDA JSON ESTRICTA ---
+{
+  "calendar": [
+    {
+      "day": 1,
+      "title": "Un título gancho potente (Ej: 'Deja de hacer X')",
+      "objective": "Viralidad/Autoridad/Venta",
+      "format": "${settings.format}",
+      "angle": "Explica el enfoque psicológico (Ej: 'Derribar un mito común del nicho')",
+      "description": "Breve descripción de qué trata el video."
+    },
+    ... (Repite para los ${settings.duration} días)
+  ]
+}
+`;
 
 // ==================================================================================
-// 🧠 FUNCIONES V103
+// 🧠 FUNCIONES EJECUTORAS DE MÓDULOS
 // ==================================================================================
 
-async function executeViralDNAExtraction(content: string, platform: string, openai: any) {
-  console.log('[V103] 🧬 Extrayendo ADN viral...');
+async function ejecutarIdeasRapidas(
+  contexto: ContextoUsuario,
+  openai: any
+): Promise<{ data: any; tokens: number }> {
+  console.log('[CEREBRO] 💡 Ejecutando Ideas Rápidas...');
   
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o',
     response_format: { type: 'json_object' },
     messages: [
-      { role: 'system', content: 'You are the world\'s leading viral video reverse engineer.' },
-      { role: 'user', content: `${VIRAL_DNA_EXTRACTOR}\n\nPLATFORM: ${platform}\n\nCONTENT:\n${content}` }
+      { role: 'system', content: 'Eres un genio creativo de contenido viral en español.' },
+      { role: 'user', content: PROMPT_IDEAS_RAPIDAS(contexto) }
+    ],
+    temperature: 0.8,
+    max_tokens: 3000
+  });
+  
+  return {
+    data: JSON.parse(completion.choices[0].message.content || '{}'),
+    tokens: completion.usage?.total_tokens || 0
+  };
+}
+
+async function ejecutarAutopsiaViral(
+  content: string,
+  platform: string,
+  openai: any
+): Promise<{ data: any; tokens: number }> {
+  console.log('[CEREBRO] 🔬 Ejecutando Autopsia Viral...');
+  
+  const completion = await openai.chat.completions.create({
+    model: 'gpt-4o',
+    response_format: { type: 'json_object' },
+    messages: [
+      { role: 'system', content: 'Eres el forense de viralidad #1 del mundo.' },
+      { role: 'user', content: `${PROMPT_AUTOPSIA_VIRAL(platform)}\n\nCONTENIDO A ANALIZAR:\n${content}` }
     ],
     temperature: 0.3,
     max_tokens: 4096
   });
   
-  // Ahora devolvemos un objeto con la DATA y los TOKENS
+  const data = JSON.parse(completion.choices[0].message.content || '{}');
+  
+  // Guardar en memoria del sistema
+  if (data.patron_replicable) {
+    MEMORIA_SISTEMA.patrones_virales.push(data.patron_replicable.nombre_patron);
+  }
+  if (data.adn_extraido?.formula_gancho) {
+    MEMORIA_SISTEMA.hooks_alto_rendimiento.push(data.adn_extraido.formula_gancho);
+  }
+  
   return {
-    data: JSON.parse(completion.choices[0].message.content || '{}'),
+    data,
     tokens: completion.usage?.total_tokens || 0
   };
 }
 
-// 2. ADAPTACIÓN AL NICHO (Actualizada con retorno de tokens)
-async function executeNicheAdaptation(viralDNA: any, context: any, openai: any) {
-  console.log('[V103] 🎯 Adaptando al nicho...');
+async function ejecutarGeneradorGuiones(
+  contexto: ContextoUsuario,
+  viralDNA: any | null,
+  openai: any
+): Promise<{ data: any; tokens: number }> {
+  console.log('[CEREBRO] 📝 Ejecutando Generador de Guiones...');
   
-  const contextStr = `
-Expert: ${context.expertNiche || 'General'} | Tone: ${context.expertTone || 'Pro'}
-Avatar: ${context.avatarName || 'Audience'} | Pain: ${context.avatarPain || 'N/A'}
-Dream: ${context.avatarCielo || 'N/A'} | Objection: ${context.avatarObjecion || 'N/A'}
-KB: ${context.knowledgeBase || 'N/A'}`;
-
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o',
     response_format: { type: 'json_object' },
     messages: [
-      { role: 'system', content: 'You are an elite viral content adaptation specialist.' },
-      { role: 'user', content: `${NICHE_ADAPTER}\n\nVIRAL DNA:\n${JSON.stringify(viralDNA)}\n\nCONTEXT:${contextStr}` }
+      { role: 'system', content: 'Eres el mejor guionista de contenido viral en español.' },
+      { role: 'user', content: PROMPT_GENERADOR_GUIONES(contexto, viralDNA) }
     ],
     temperature: 0.7,
     max_tokens: 4096
   });
   
-  // Ahora devolvemos un objeto con la DATA y los TOKENS
   return {
     data: JSON.parse(completion.choices[0].message.content || '{}'),
     tokens: completion.usage?.total_tokens || 0
   };
 }
 
-// 3. CONTEXTO DE USUARIO (Se mantiene igual, es sólida)
-async function getUserContext(supabase: any, expertId: string, avatarId: string, kbId: string) {
+async function ejecutarJuezViral(
+  contexto: ContextoUsuario,
+  contenido: string,
+  openai: any
+): Promise<{ data: any; tokens: number }> {
+  console.log('[CEREBRO] ⚖️ Ejecutando Juez Viral...');
+  
+  const completion = await openai.chat.completions.create({
+    model: 'gpt-4o',
+    response_format: { type: 'json_object' },
+    messages: [
+      { role: 'system', content: 'Eres el algoritmo humano más preciso para predecir viralidad.' },
+      { role: 'user', content: PROMPT_JUEZ_VIRAL(contexto, contenido) }
+    ],
+    temperature: 0.3,
+    max_tokens: 3000
+  });
+  
+  return {
+    data: JSON.parse(completion.choices[0].message.content || '{}'),
+    tokens: completion.usage?.total_tokens || 0
+  };
+}
+
+async function ejecutarAuditorAvatar(
+  infoCliente: string,
+  nicho: string,
+  openai: any
+): Promise<{ data: any; tokens: number }> {
+  console.log('[CEREBRO] 👤 Ejecutando Auditor de Avatar...');
+  
+  const completion = await openai.chat.completions.create({
+    model: 'gpt-4o',
+    response_format: { type: 'json_object' },
+    messages: [
+      { role: 'system', content: 'Eres un psicólogo de consumidor y estratega de avatares.' },
+      { role: 'user', content: PROMPT_AUDITOR_AVATAR(infoCliente, nicho) }
+    ],
+    temperature: 0.5,
+    max_tokens: 4096
+  });
+  
+  return {
+    data: JSON.parse(completion.choices[0].message.content || '{}'),
+    tokens: completion.usage?.total_tokens || 0
+  };
+}
+
+async function ejecutarAuditorExperto(
+  contexto: ContextoUsuario,
+  openai: any
+): Promise<{ data: any; tokens: number }> {
+  console.log('[CEREBRO] 🎯 Ejecutando Auditor de Experto...');
+  
+  const completion = await openai.chat.completions.create({
+    model: 'gpt-4o',
+    response_format: { type: 'json_object' },
+    messages: [
+      { role: 'system', content: 'Eres un analista competitivo y estratega de posicionamiento.' },
+      { role: 'user', content: PROMPT_AUDITOR_EXPERTO(contexto) }
+    ],
+    temperature: 0.5,
+    max_tokens: 4096
+  });
+  
+  const data = JSON.parse(completion.choices[0].message.content || '{}');
+  
+  // Actualizar contexto con posicionamiento
+  if (data.posicionamiento_estrategico) {
+    contexto.posicionamiento = data.posicionamiento_estrategico.declaracion_posicionamiento;
+    contexto.enemigo_comun = data.posicionamiento_estrategico.enemigo_comun;
+  }
+  
+  return {
+    data,
+    tokens: completion.usage?.total_tokens || 0
+  };
+}
+
+async function ejecutarMentorEstrategico(
+  contexto: ContextoUsuario,
+  resultados: any,
+  openai: any
+): Promise<{ data: any; tokens: number }> {
+  console.log('[CEREBRO] 🧭 Ejecutando Mentor Estratégico...');
+  
+  const completion = await openai.chat.completions.create({
+    model: 'gpt-4o',
+    response_format: { type: 'json_object' },
+    messages: [
+      { role: 'system', content: 'Eres un mentor de élite y estratega de crecimiento.' },
+      { role: 'user', content: PROMPT_MENTOR_ESTRATEGICO(contexto, resultados) }
+    ],
+    temperature: 0.6,
+    max_tokens: 4096
+  });
+  
+  return {
+    data: JSON.parse(completion.choices[0].message.content || '{}'),
+    tokens: completion.usage?.total_tokens || 0
+  };
+}
+
+// ==================================================================================
+// 🔄 CONTEXTO DE USUARIO (Carga de perfil)
+// ==================================================================================
+
+async function getUserContext(
+  supabase: any, 
+  expertId: string, 
+  avatarId: string, 
+  kbId: string
+): Promise<ContextoUsuario> {
   const promises = [
     expertId ? supabase.from('expert_profiles').select('*').eq('id', expertId).single() : null,
     avatarId ? supabase.from('avatars').select('*').eq('id', avatarId).single() : null,
@@ -931,44 +1598,41 @@ async function getUserContext(supabase: any, expertId: string, avatarId: string,
 
   const results = await Promise.allSettled(promises as Promise<any>[]);
   
-  const context: any = {};
+  const contexto: ContextoUsuario = {
+    nicho: 'General',
+    avatar_ideal: 'Audiencia general',
+    dolor_principal: 'N/A',
+    deseo_principal: 'N/A',
+    competencia_analizada: [],
+    hooks_exitosos: [],
+    patrones_virales: MEMORIA_SISTEMA.patrones_virales
+  };
   
   if (results[0]?.status === 'fulfilled') {
     const expert = results[0].value?.data;
     if (expert) {
-      context.expertNiche = expert.niche;
-      context.expertMission = expert.mission;
-      context.expertTone = expert.tone;
-      context.expertVocabulary = expert.key_vocabulary;
+      contexto.nicho = expert.niche || contexto.nicho;
     }
   }
   
   if (results[1]?.status === 'fulfilled') {
     const avatar = results[1].value?.data;
     if (avatar) {
-      context.avatarName = avatar.name;
-      context.avatarPain = avatar.dolor;
-      context.avatarInfierno = avatar.infierno;
-      context.avatarCielo = avatar.cielo;
-      context.avatarObjecion = avatar.objecion;
+      contexto.avatar_ideal = avatar.name || contexto.avatar_ideal;
+      contexto.dolor_principal = avatar.dolor || contexto.dolor_principal;
+      contexto.deseo_principal = avatar.cielo || contexto.deseo_principal;
     }
   }
   
-  if (results[2]?.status === 'fulfilled') {
-    const kb = results[2].value?.data;
-    if (kb) {
-      context.knowledgeBase = (kb.content || kb.content_text || '').substring(0, 8000);
-    }
-  }
-  
-  return context;
+  return contexto;
 }
 
 // ==================================================================================
-// 🚀 SERVIDOR PRINCIPAL
+// 🚀 SERVIDOR PRINCIPAL (SERVE)
 // ==================================================================================
 
 serve(async (req) => {
+  // 0. CORS Preflight
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
   const startTime = Date.now();
@@ -979,7 +1643,6 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
     const openaiKey = Deno.env.get('OPENAI_API_KEY');
-    const apifyToken = Deno.env.get('APIFY_TOKEN');
     
     if (!supabaseUrl || !supabaseKey || !openaiKey) {
       throw new Error('ENV_ERROR: Variables críticas faltantes');
@@ -997,77 +1660,276 @@ serve(async (req) => {
     if (authError || !user) throw new Error('AUTH_ERROR: Usuario no autenticado');
     userId = user.id;
 
-    // 3. SEGURIDAD: RATE LIMIT
-    if (!checkRateLimit(userId)) {
-      throw new Error('RATE_LIMIT: Demasiadas solicitudes. Espera 1 minuto.');
+    // 3. PARSEO DE DATOS
+    const { 
+      selectedMode, 
+      url, 
+      platform, 
+      transcript, 
+      expertId, 
+      avatarId, 
+      knowledgeBaseId, 
+      estimatedCost,
+      customPrompt
+    } = await req.json();
+
+    console.log(`\n${'='.repeat(50)}`);
+    console.log(`[TITAN V300] 🧠 PROCESANDO: ${selectedMode}`);
+    console.log(`[USER]: ${user.email}`);
+    console.log(`${'='.repeat(50)}`);
+
+    // 4. VALIDACIÓN DE CRÉDITOS
+    if (estimatedCost > 0) {
+      const { data: profile } = await supabase.from('profiles').select('credits, tier').eq('id', userId).single();
+      if (profile.tier !== 'admin' && (profile.credits || 0) < estimatedCost) {
+        throw new Error(`CREDITS_ERROR: Saldo insuficiente. Requerido: ${estimatedCost}`);
+      }
     }
 
-    // 4. PARSEO DE DATOS
-    const { selectedMode, url, platform, transcript, expertId, avatarId, knowledgeBaseId, estimatedCost } = await req.json();
+    // 5. CARGA DE CONTEXTO INTELIGENTE (EL CEREBRO V300)
+    let userContext: any = {
+      nicho: 'General',
+      avatar_ideal: 'Audiencia General',
+      knowledge_base_content: ''
+    };
 
-    console.log(`\n${'='.repeat(80)}`);
-    console.log(`[TITAN V103] 🚀 INICIANDO SISTEMA DE INGENIERÍA FORENSE`);
-    console.log(`[USER]: ${user.email} | [MODE]: ${selectedMode}`);
-    console.log(`${'='.repeat(80)}`);
-
-    // 5. VALIDACIÓN DE CRÉDITOS
-    const creditCheck = await validateUserCredits(supabase, userId, estimatedCost || 0);
-    if (!creditCheck.valid) throw new Error(`CREDITS_ERROR: ${creditCheck.error}`);
-
-    // 6. PIPELINE DE INGESTIÓN (URL o Transcripción)
-    let contextText = transcript || "";
-    let whisperMinutes = 0;
+    // A. Cargar Experto
+    if (expertId) {
+      const { data: exp } = await supabase.from('expert_profiles').select('*').eq('id', expertId).single();
+      if (exp) userContext.nicho = `Nicho: ${exp.nicho}. Misión: ${exp.mission}. Estilo: ${exp.tone}`;
+    }
     
-    if (url && isValidUrl(url) && (!transcript || transcript.length < 50)) {
-      console.log(`[PIPELINE] 🚀 Procesando fuente externa...`);
-      const pipeResult = await runIngestionPipeline(url, apifyToken || "", openaiKey || "");
-      contextText = pipeResult.content;
-      whisperMinutes = pipeResult.whisperMinutes;
+    // B. Cargar Avatar
+    if (avatarId) {
+      const { data: av } = await supabase.from('avatars').select('*').eq('id', avatarId).single();
+      if (av) userContext.avatar_ideal = `${av.name} (Dolor Principal: ${av.dolor})`;
     }
 
-   // ==================================================================================
-    // 7. SANITIZACIÓN Y CONTEXTO ESTRATÉGICO
+    // C. Cargar Base de Conocimiento (RAG Simple)
+    if (knowledgeBaseId) {
+      const { data: doc } = await supabase.from('documents').select('content').eq('id', knowledgeBaseId).single();
+      if (doc && doc.content) {
+        // Limitamos a ~3000 caracteres para el contexto
+        userContext.knowledge_base_content = doc.content.substring(0, 3000);
+      }
+    }
+
+    // 6. PIPELINE DE INGESTIÓN
+    let processedContext = transcript || customPrompt || "";
+
+    // Caso A: Procesar URL Externa si no hay transcripción
+    if (url && (!processedContext || processedContext.length < 50)) {
+       console.log(`[PIPELINE] 🔗 URL detectada sin transcripción: ${url}`);
+       processedContext = `Analiza el contenido de esta URL/Video: ${url}`;
+    }
+
+    // 7. SELECCIÓN DE CEREBRO (ROUTER V300)
+    let systemPrompt = "";
+    let userMessage = "";
+
+    switch (selectedMode) {
+      // --- MODO 1: RECREAR VIDEO (V300) ---
+      case 'recreate': 
+      case 'autopsia_viral':
+        systemPrompt = PROMPT_RECREATE_VIRAL(platform || 'Video Viral', userContext);
+        userMessage = `ANALIZA ESTO Y REPLÍCALO: ${processedContext}`;
+        break;
+
+      // --- MODO 2: AUDITAR AVATAR (V300) ---
+      case 'audit_avatar':
+        systemPrompt = PROMPT_AUDIT_AVATAR(processedContext); 
+        userMessage = "Audita la psicología de este avatar.";
+        break;
+
+      // --- MODO 3: AUDITAR EXPERTO (V300) ---
+      case 'audit_expert':
+        const expertData = JSON.parse(processedContext || "{}");
+        systemPrompt = PROMPT_AUDIT_EXPERT(expertData, userContext.avatar_ideal);
+        userMessage = "Audita la estrategia de mercado.";
+        break;
+
+      // --- MODO 4: GENERADOR DE CALENDARIO (V300) ---
+      case 'calendar_generator':
+        const calSettings = JSON.parse(processedContext || "{}"); 
+        systemPrompt = PROMPT_CALENDAR_GENERATOR(calSettings, userContext);
+        userMessage = "Genera el plan estratégico ahora.";
+        break;
+
+      // --- MODO 5: MENTOR ESTRATÉGICO (V300 - ELITE) ---
+      case 'mentor_ia':
+        // processedContext aquí es la pregunta del usuario
+        systemPrompt = PROMPT_MENTOR_STRATEGIST(processedContext, userContext);
+        userMessage = "Dame la estrategia ganadora basándote en mis documentos.";
+        break;
+
+      // --- MODO 6: CHATS SIMULADORES ---
+      case 'chat_expert':
+        systemPrompt = `ACTÚA COMO ESTE EXPERTO: ${userContext.nicho}. TU AUDIENCIA ES: ${userContext.avatar_ideal}. TU CONOCIMIENTO: ${userContext.knowledge_base_content}. Responde con autoridad.`;
+        userMessage = customPrompt || "Hola";
+        break;
+
+      case 'chat_avatar':
+        systemPrompt = `ACTÚA COMO EL AVATAR: ${userContext.avatar_ideal}. TU DOLOR ES: ${processedContext}. CONTEXTO MERCADO: ${userContext.knowledge_base_content}. INSTRUCCIÓN: Responde corto, emocional y desde tus miedos.`;
+        userMessage = customPrompt || "Hola";
+        break;
+      
+      // Fallback
+      default:
+         systemPrompt = "Eres un asistente de marketing experto de Titan V300.";
+         userMessage = processedContext || "Estoy listo.";
+    }
+
+    // 8. EJECUCIÓN DE OPENAI
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o", 
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userMessage }
+      ],
+      response_format: { type: "json_object" }, 
+      temperature: 0.7,
+    });
+
+    const aiContent = completion.choices[0].message.content;
+    if (!aiContent) throw new Error('AI_ERROR: Respuesta vacía de OpenAI');
+
+    const generatedData = JSON.parse(aiContent);
+
+    // 9. COBRO DE CRÉDITOS
+    if (estimatedCost > 0) {
+      const { data: p } = await supabase.from('profiles').select('tier').eq('id', userId).single();
+      if (p?.tier !== 'admin') {
+        await supabase.rpc('decrement_credits', { count: estimatedCost, user_id: userId });
+      }
+    }
+
+    console.log(`[TITAN] ✅ Éxito. Tiempo: ${Date.now() - startTime}ms`);
+
+    // 10. RESPUESTA
+    return new Response(JSON.stringify({ 
+      generatedData, 
+      finalCost: estimatedCost,
+      timestamp: new Date().toISOString()
+    }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+
+  } catch (error: any) {
+    console.error(`[TITAN ERROR] ❌`, error.message);
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+});
+
     // ==================================================================================
-    const sanitizedContext = sanitizeUserContent(contextText);
-    let processedContext = sanitizedContext;
+    // 9. LÓGICA DEL CEREBRO - SISTEMA MODULAR DE 9 FUNCIONES
+    // ==================================================================================
     
-    // Si el contenido es masivo, lo resumimos inteligentemente para no quemar tokens
-    if (sanitizedContext.length > SECURITY_CONFIG.MAX_CONTENT_LENGTH) {
-      console.log(`[CHUNKING] 📦 Contenido extenso detectado, optimizando...`);
-      processedContext = await processLongContent(sanitizedContext, openai);
-    }
-
-    // Cargamos el ADN del experto, el avatar y la base de conocimiento en paralelo
-    const userContext = await getUserContext(supabase, expertId, avatarId, knowledgeBaseId);
-
-    // ==================================================================================
-    // 8. --- LÓGICA V103 MASTER (INGENIERÍA FORENSE DE DOBLE CAPA) ---
-    // ==================================================================================
     let result: any;
     let tokensUsed = 0;
 
-    if (selectedMode === 'recreate') {
-      // FASE A: Extracción Forense del ADN Viral (Secuenciación de 6 capas)
-      const dnaResult = await executeViralDNAExtraction(processedContext, platform || 'general', openai);
-      const viralDNA = dnaResult.data;
-      
-      // FASE B: Adaptación Quirúrgica al Nicho (Traducción 100% fiel al ADN viral)
-      const nicheResult = await executeNicheAdaptation(viralDNA, userContext, openai);
-      
-      // Consolidación de resultados y suma de tokens REALES
-      result = nicheResult.data;
-      tokensUsed = (dnaResult.tokens || 0) + (nicheResult.tokens || 0); 
-      
-      console.log(`[V103] ✅ Ingeniería Forense Finalizada. Consumo Total: ${tokensUsed} tokens.`);
-    } else {
-      // Fallback de seguridad para otros modos
-      result = { 
-        message: 'Modo no implementado en V103',
-        tip: 'Usa el modo RECREATE para activar la ingeniería forense de 6 capas.'
-      };
+    switch (selectedMode) {
+      case 'ideas_rapidas':
+        {
+          const ideasResult = await ejecutarIdeasRapidas(userContext, openai);
+          result = ideasResult.data;
+          tokensUsed = ideasResult.tokens;
+        }
+        break;
+
+      case 'autopsia_viral':
+      case 'recreate':
+        {
+          // FASE A: Autopsia Viral (Extracción de ADN)
+          const autopsiaResult = await ejecutarAutopsiaViral(
+            processedContext,
+            platform || 'general',
+            openai
+          );
+          
+          // FASE B: Generador de Guiones (Adaptación)
+          const guionResult = await ejecutarGeneradorGuiones(
+            userContext,
+            autopsiaResult.data.adn_extraido,
+            openai
+          );
+          
+          result = {
+            autopsia_viral: autopsiaResult.data,
+            guion_adaptado: guionResult.data
+          };
+          
+          tokensUsed = autopsiaResult.tokens + guionResult.tokens;
+        }
+        break;
+
+      case 'generar_guion':
+        {
+          const guionResult = await ejecutarGeneradorGuiones(userContext, null, openai);
+          result = guionResult.data;
+          tokensUsed = guionResult.tokens;
+        }
+        break;
+
+      case 'juez_viral':
+        {
+          const juezResult = await ejecutarJuezViral(userContext, processedContext, openai);
+          result = juezResult.data;
+          tokensUsed = juezResult.tokens;
+        }
+        break;
+
+      case 'auditar_avatar':
+        {
+          const avatarResult = await ejecutarAuditorAvatar(
+            processedContext,
+            userContext.nicho,
+            openai
+          );
+          result = avatarResult.data;
+          tokensUsed = avatarResult.tokens;
+        }
+        break;
+
+      case 'auditar_experto':
+        {
+          const expertoResult = await ejecutarAuditorExperto(userContext, openai);
+          result = expertoResult.data;
+          tokensUsed = expertoResult.tokens;
+        }
+        break;
+
+      case 'mentor_estrategico':
+        {
+          const mentorResult = await ejecutarMentorEstrategico(
+            userContext,
+            { memoria: MEMORIA_SISTEMA },
+            openai
+          );
+          result = mentorResult.data;
+          tokensUsed = mentorResult.tokens;
+        }
+        break;
+
+      default:
+        result = {
+          message: 'Modo no implementado',
+          modos_disponibles: [
+            'ideas_rapidas',
+            'autopsia_viral',
+            'recreate',
+            'generar_guion',
+            'juez_viral',
+            'auditar_avatar',
+            'auditar_experto',
+            'mentor_estrategico'
+          ]
+        };
     }
 
-    // 9. CÁLCULO DE COSTO Y COBRO REAL
+    // 10. CÁLCULO DE COSTO Y COBRO
     const realCost = calculateRealCost(tokensUsed, whisperMinutes);
     const finalCost = Math.max(estimatedCost || 0, realCost);
     
@@ -1079,7 +1941,7 @@ serve(async (req) => {
       if (creditError) console.error(`[CREDITS] ⚠️ Error: ${creditError.message}`);
     }
 
-    // 10. PERSISTENCIA EN BASE DE DATOS
+    // 11. PERSISTENCIA EN BASE DE DATOS
     if (!['chat-avatar', 'mentor_ia', 'mentor'].includes(selectedMode)) {
       await supabase.from('viral_generations').insert({ 
         user_id: userId, 
@@ -1093,14 +1955,22 @@ serve(async (req) => {
       });
     }
 
-    // 11. RESPUESTA FINAL
+    // 12. RESPUESTA FINAL
     const duration = Date.now() - startTime;
     return new Response(
       JSON.stringify({ 
         success: true,
         generatedData: result, 
         finalCost, 
-        metadata: { mode: selectedMode, version: 'V103_COMPLETE', duration }
+        metadata: { 
+          mode: selectedMode, 
+          version: 'V103_ULTIMATE_CEREBRO', 
+          duration,
+          memoria_sistema: {
+            patrones_virales: MEMORIA_SISTEMA.patrones_virales.length,
+            hooks_alto_rendimiento: MEMORIA_SISTEMA.hooks_alto_rendimiento.length
+          }
+        }
       }), 
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
     );

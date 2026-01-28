@@ -1,66 +1,115 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { 
-  Video, TrendingUp, Zap, Target, Brain, 
-  CheckCircle2, Layers, Download, ChevronRight,
-  Globe, Laptop, Copy, Sparkles, Loader2
+  Video, Zap, Brain, Activity, 
+  Globe, Loader2, ArrowRightLeft, 
+  Clapperboard, User, Users,
+  Laptop, UploadCloud, MonitorPlay, Music, ArrowRight, Camera, Image as ImageIcon, Layers
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { useAuth } from '../context/AuthContext';
 
-// --- 1. FUNCIÓN DE NORMALIZACIÓN (EL CEREBRO DEL FRONTEND) ---
+// --- NORMALIZADOR DE DATOS ---
 const normalizeResult = (data: any) => {
   const raw = data.generatedData || data;
-  
-  // Aseguramos que existan arrays y objetos por defecto para evitar errores
   return {
-    ...raw,
-    hook_variations: Array.isArray(raw.hook_variations) ? raw.hook_variations : [
-      { type: 'Logic', script: 'Análisis pendiente...', retention: 0 },
-      { type: 'Emotion', script: 'Generando gancho...', retention: 0 },
-      { type: 'Disruption', script: 'Cargando...', retention: 0 }
-    ],
-    script_body: raw.script_body || "El análisis no generó un guion válido. Intenta de nuevo.",
-    visual_plan: Array.isArray(raw.visual_plan) ? raw.visual_plan : [],
-    viral_prediction: raw.viral_prediction || { score: 0, confidence: 0, strengths: [], tips: [] },
-    adaptation_metadata: raw.adaptation_metadata || { niche_translation: "Estrategia General" },
-    // Mapeo seguro para evitar cajas vacías
-    viral_analysis: {
-      winning_idea: raw.viral_analysis?.winning_idea || "Estrategia Viral Detectada",
-      psychological_trigger: raw.viral_analysis?.psychological_trigger || "Curiosidad / Urgencia" 
-    }
+    viral_score: raw.viral_score || 85,
+    adaptation_metadata: raw.adaptation_metadata || { 
+      original_niche: "Detectado",
+      target_niche: "Tu Nicho",
+      core_mechanism: "Estructura Viral"
+    },
+    translation_engine: Array.isArray(raw.translation_engine) ? raw.translation_engine : [],
+    script_structure: raw.script_structure || { hook: "...", body: "...", cta: "..." },
+    desglose_temporal: raw.desglose_temporal || [], 
+    thumbnail_concept: raw.thumbnail_concept || {}, 
+    produccion_deconstruida: raw.produccion_deconstruida || {},
+    adn_extraido: raw.adn_extraido || { idea_ganadora: "Idea Viral", formula_gancho: "Gancho" }
   };
 };
 
 export const TitanViral = () => {
-  const [result, setResult] = useState<any>(null);
+  const { user, userProfile, refreshProfile } = useAuth();
+  const navigate = useNavigate();
+
+  // Estados UI
+  const [activeTab, setActiveTab] = useState<'forensics' | 'production' | 'thumbnail'>('forensics');
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [activeHook, setActiveHook] = useState(0);
-  const [activeTab, setActiveTab] = useState('script');
-  const [copied, setCopied] = useState(false);
-  const [urlInput, setUrlInput] = useState('');
+  const [result, setResult] = useState<any>(null);
   
+  // Inputs
+  const [urlInput, setUrlInput] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  // Contexto V300
+  const [experts, setExperts] = useState<any[]>([]);
+  const [avatars, setAvatars] = useState<any[]>([]);
+  const [knowledgeBases, setKnowledgeBases] = useState<any[]>([]);
+  
+  const [selectedExpertId, setSelectedExpertId] = useState<string>('');
+  const [selectedAvatarId, setSelectedAvatarId] = useState<string>('');
+  const [selectedKbId, setSelectedKbId] = useState<string>('');
+
+  const COSTO_RECREATE = 5;
+
+  // --- CARGA INICIAL ---
+  useEffect(() => {
+      const fetchData = async () => {
+          if (!user) return;
+          try {
+              const { data: exp } = await supabase.from('expert_profiles').select('id, name').eq('user_id', user.id);
+              if(exp) setExperts(exp);
+              
+              const { data: av } = await supabase.from('avatars').select('id, name').eq('user_id', user.id);
+              if(av) setAvatars(av);
+
+              const { data: kb } = await supabase.from('documents').select('id, title, filename').eq('user_id', user.id);
+              if (kb) setKnowledgeBases(kb.map((k: any) => ({ id: k.id, title: k.title || k.filename || "Documento" })));
+
+              if (userProfile?.active_expert_id) setSelectedExpertId(userProfile.active_expert_id);
+              if (userProfile?.active_avatar_id) setSelectedAvatarId(userProfile.active_avatar_id);
+          } catch (e) { console.error(e); }
+      };
+      fetchData();
+  }, [user, userProfile]);
+
+  const checkCredits = () => {
+      if (userProfile?.tier !== 'admin' && (userProfile?.credits || 0) < COSTO_RECREATE) {
+          if(confirm(`💰 Saldo insuficiente (${COSTO_RECREATE} Cr). ¿Deseas recargar?`)) navigate('/settings');
+          return false;
+      }
+      return true;
   };
 
-  // --- PROCESAMIENTO URL CON NORMALIZADOR ---
-  const handleUrlAnalysis = async () => {
-    if (!urlInput) return;
+  // --- ANÁLISIS POR URL ---
+  const handleUrlAnalyze = async () => {
+    if (!urlInput) return alert("Ingresa una URL válida");
+    if (!user || !checkCredits()) return;
+
+    setLoading(true);
+    setResult(null);
+    setActiveTab('forensics');
+
     try {
-      setLoading(true);
       const { data, error } = await supabase.functions.invoke('process-url', {
-        body: { url: urlInput, selectedMode: 'recreate' }
+        body: { 
+            url: urlInput, 
+            selectedMode: 'recreate', 
+            expertId: selectedExpertId,
+            avatarId: selectedAvatarId,
+            knowledgeBaseId: selectedKbId,
+            estimatedCost: COSTO_RECREATE
+        } 
       });
+
       if (error) throw error;
+      const genData = data?.generatedData;
+      // Normalizamos la respuesta, ya sea que venga plana o anidada
+      setResult(normalizeResult(genData.autopsia_viral || genData));
       
-      // AQUI ESTA LA MAGIA: Normalizamos antes de guardar
-      const cleanData = normalizeResult(data);
-      setResult(cleanData);
-      
+      if(refreshProfile) refreshProfile();
+
     } catch (err: any) {
       alert("Error: " + err.message);
     } finally {
@@ -68,245 +117,325 @@ export const TitanViral = () => {
     }
   };
 
-  // --- PROCESAMIENTO PC CON NORMALIZADOR ---
+  // --- ANÁLISIS POR ARCHIVO (FALLBACK INTELIGENTE) ---
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
+    if (!user || !checkCredits()) return;
 
     try {
-      setLoading(true);
-      setUploadProgress(20);
+        setLoading(true);
+        setResult(null);
+        setActiveTab('forensics');
+        setUploadProgress(10);
 
-      const fileName = `${Date.now()}-${file.name}`;
-      const { error: uploadError } = await supabase.storage
-        .from('videos-analisis')
-        .upload(fileName, file);
+        const fileExt = file.name.split('.').pop();
+        const fileName = `viral-${Date.now()}.${fileExt}`;
+        const filePath = `${fileName}`;
 
-      if (uploadError) throw uploadError;
-      setUploadProgress(60);
+        // Intentamos subir a 'videos-analisis', si falla usamos 'knowledge-files' como fallback
+        let bucketName = 'videos-analisis';
+        
+        // 1. Subir
+        let { error: uploadError } = await supabase.storage.from(bucketName).upload(filePath, file);
+        
+        if (uploadError && (uploadError.message.includes('not found') || uploadError.message.includes('permission'))) {
+             // Fallback a bucket conocido
+             bucketName = 'knowledge-files';
+             const { error: retryError } = await supabase.storage.from(bucketName).upload(filePath, file);
+             if (retryError) throw retryError;
+        } else if (uploadError) {
+            throw uploadError;
+        }
+        
+        setUploadProgress(50);
 
-      const { data: { publicUrl } } = supabase.storage
-        .from('videos-analisis')
-        .getPublicUrl(fileName);
-      
-      const { data, error: funcError } = await supabase.functions.invoke('process-url', {
-        body: { url: publicUrl, selectedMode: 'recreate' }
-      });
+        // 2. URL Pública
+        const { data: { publicUrl } } = supabase.storage.from(bucketName).getPublicUrl(filePath);
 
-      if (funcError) throw funcError;
-      
-      // AQUI TAMBIEN: Normalizamos
-      const cleanData = normalizeResult(data);
-      setResult(cleanData);
-      
-      setUploadProgress(100);
+        // 3. Procesar
+        const { data, error } = await supabase.functions.invoke('process-url', {
+            body: { 
+                url: publicUrl, 
+                selectedMode: 'recreate',
+                expertId: selectedExpertId,
+                avatarId: selectedAvatarId,
+                knowledgeBaseId: selectedKbId,
+                estimatedCost: COSTO_RECREATE
+            } 
+        });
+
+        if (error) throw error;
+        setUploadProgress(100);
+
+        const genData = data?.generatedData;
+        setResult(normalizeResult(genData.autopsia_viral || genData));
+        
+        if(refreshProfile) refreshProfile();
+
     } catch (err: any) {
-      alert("Error: " + err.message);
+        console.error(err);
+        alert("Error en análisis: " + err.message);
     } finally {
-      setLoading(false);
-      setUploadProgress(0);
+        setLoading(false);
+        setUploadProgress(0);
+        if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const getScoreColor = (score: number) => {
+    if (score >= 90) return "text-fuchsia-400 border-fuchsia-500 shadow-fuchsia-500/20";
+    if (score >= 75) return "text-emerald-400 border-emerald-500 shadow-emerald-500/20";
+    return "text-amber-400 border-amber-500 shadow-amber-500/20";
+  };
+
+  const renderContent = () => {
+    if (!result) return null;
+
+    if (activeTab === 'forensics') return (
+        <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                <div className={`md:col-span-3 bg-[#0a0a0a] border rounded-3xl p-8 flex flex-col justify-center items-center relative overflow-hidden ${getScoreColor(result.viral_score)}`}>
+                    <div className="absolute top-0 left-0 w-full h-1 bg-current opacity-50"></div>
+                    <Activity size={32} className="mb-4 opacity-80" />
+                    <div className="text-6xl font-black tracking-tighter mb-1">{result.viral_score}</div>
+                    <div className="text-[10px] uppercase tracking-widest font-bold opacity-60">Potencial</div>
+                </div>
+
+                <div className="md:col-span-9 bg-[#0a0a0a] border border-white/10 rounded-3xl p-8 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-10 opacity-5"><Brain size={120}/></div>
+                    <h3 className="text-xs font-black text-indigo-400 uppercase tracking-widest mb-2">Mecanismo Viral Detectado</h3>
+                    <h2 className="text-3xl font-bold text-white mb-4 leading-tight">"{result.adaptation_metadata?.core_mechanism}"</h2>
+                    <div className="flex gap-4">
+                        <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5">
+                            <span className="text-[10px] text-gray-500 uppercase block">Origen</span>
+                            <span className="text-sm font-bold text-gray-300">{result.adaptation_metadata?.original_niche}</span>
+                        </div>
+                        <div className="flex items-center text-gray-600"><ArrowRightLeft size={16}/></div>
+                        <div className="bg-indigo-500/10 px-4 py-2 rounded-lg border border-indigo-500/20">
+                            <span className="text-[10px] text-indigo-400 uppercase block">Tu Adaptación</span>
+                            <span className="text-sm font-bold text-indigo-200">{result.adaptation_metadata?.target_niche}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="space-y-4">
+                <div className="flex items-center gap-3 mb-2">
+                    <ArrowRightLeft className="text-fuchsia-500" />
+                    <h2 className="text-lg font-black uppercase tracking-tighter">Traducción de Nicho (El Espejo)</h2>
+                </div>
+                {result.translation_engine?.map((item: any, i: number) => (
+                    <div key={i} className="grid grid-cols-1 md:grid-cols-11 gap-4 bg-[#0a0a0a] border border-white/5 p-6 rounded-3xl group hover:border-indigo-500/30 transition-all">
+                        <div className="md:col-span-1 flex items-center justify-center md:justify-start">
+                            <span className="text-[10px] font-black text-gray-500 -rotate-90 whitespace-nowrap">{item.phase}</span>
+                        </div>
+                        <div className="md:col-span-4 bg-red-900/5 p-4 rounded-2xl border border-red-500/10 opacity-60 grayscale group-hover:grayscale-0 transition-all">
+                            <div className="flex items-center gap-2 mb-2"><Video size={14} className="text-red-400"/><span className="text-[10px] font-bold text-red-400 uppercase">Video Original</span></div>
+                            <p className="text-sm text-gray-300 font-medium">"{item.original_action}"</p>
+                        </div>
+                        <div className="md:col-span-1 flex items-center justify-center"><ArrowRightLeft size={20} className="text-gray-600 group-hover:text-indigo-400" /></div>
+                        <div className="md:col-span-5 bg-green-900/10 p-5 rounded-2xl border border-green-500/20 shadow-lg shadow-green-900/5">
+                            <div className="flex items-center gap-2 mb-2"><Clapperboard size={14} className="text-green-400"/><span className="text-[10px] font-black text-green-400 uppercase tracking-wider">Tu Instrucción</span></div>
+                            <p className="text-lg text-white font-bold leading-snug">"{item.your_action}"</p>
+                            <div className="mt-3 pt-3 border-t border-green-500/10"><p className="text-[10px] text-green-600 font-bold uppercase">Principio: {item.principle}</p></div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+
+    if (activeTab === 'production') return (
+        <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300">
+            <div className="bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700 rounded-3xl p-8 relative">
+                <div className="absolute top-4 right-4 opacity-10"><Clapperboard size={60} className="text-white"/></div>
+                <h3 className="text-white font-black text-xl mb-6 flex items-center gap-2">
+                    <Camera size={24} className="text-green-400"/> Lista de Tomas (Shot List)
+                </h3>
+                <div className="space-y-4">
+                    {(result.desglose_temporal || []).map((step: any, i: number) => (
+                        <div key={i} className="flex items-start gap-4 p-4 bg-black/20 rounded-xl border border-white/5 hover:border-green-500/30 transition-colors">
+                            <div className="w-6 h-6 rounded-full border-2 border-gray-600 flex items-center justify-center shrink-0 mt-1 cursor-pointer hover:bg-green-500 hover:border-green-500 transition-colors">
+                                <div className="w-3 h-3 bg-transparent rounded-full"></div>
+                            </div>
+                            <div>
+                                <span className="text-[10px] font-mono text-green-400 uppercase mb-1 block">TOMA {i + 1} ({step.segundo}s)</span>
+                                <p className="text-white font-bold text-sm mb-1">{step.instruccion_rodaje || step.que_pasa}</p>
+                                <p className="text-xs text-gray-400 italic mt-1">Por qué: {step.porque_funciona}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <div className="mt-6 bg-gray-900/50 p-4 rounded-xl border border-gray-700/50">
+                    <h4 className="text-xs font-black text-gray-400 uppercase mb-2 flex items-center gap-2"><Music size={12}/> Audio</h4>
+                    <p className="text-sm text-white font-medium">{result.produccion_deconstruida?.musica_sonido}</p>
+                </div>
+            </div>
+        </div>
+    );
+
+    if (activeTab === 'thumbnail') {
+        const thumb = result.thumbnail_concept || {};
+        return (
+            <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300">
+                <div className="bg-[#0B0E14] border border-gray-800 rounded-3xl p-8 relative">
+                    <div className="flex flex-col md:flex-row items-start gap-6">
+                        <div className="w-full md:w-1/3 aspect-[9/16] bg-gray-800 rounded-lg flex items-center justify-center relative overflow-hidden border-2 border-dashed border-gray-600 group hover:border-purple-500 transition-colors">
+                            <ImageIcon size={40} className="text-gray-600 group-hover:text-purple-500 transition-colors"/>
+                            <div className="absolute bottom-4 left-0 w-full text-center px-2">
+                                <span className="bg-red-600 text-white text-[10px] font-black px-2 py-1 uppercase shadow-lg block truncate">{thumb.texto_en_imagen || "TEXTO"}</span>
+                            </div>
+                        </div>
+                        <div className="flex-1 space-y-4 w-full">
+                            <h3 className="text-white font-black text-lg flex items-center gap-2"><MonitorPlay size={20} className="text-purple-400"/> Arquitectura de Miniatura</h3>
+                            <div className="space-y-3">
+                                <div className="bg-purple-900/10 p-4 rounded-xl border border-purple-500/20">
+                                    <span className="text-[10px] font-bold text-purple-400 uppercase block mb-1">Visual</span>
+                                    <p className="text-sm text-white leading-snug">{thumb.elemento_visual}</p>
+                                </div>
+                                <div className="bg-purple-900/10 p-4 rounded-xl border border-purple-500/20">
+                                    <span className="text-[10px] font-bold text-purple-400 uppercase block mb-1">Texto (Copy)</span>
+                                    <p className="text-sm text-white leading-snug">"{thumb.texto_en_imagen}"</p>
+                                </div>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="bg-purple-900/10 p-3 rounded-xl border border-purple-500/20"><span className="text-[10px] font-bold text-purple-400 uppercase block mb-1">Color</span><p className="text-xs text-gray-300">{thumb.color_psicologia}</p></div>
+                                    <div className="bg-purple-900/10 p-3 rounded-xl border border-purple-500/20"><span className="text-[10px] font-bold text-purple-400 uppercase block mb-1">Layout</span><p className="text-xs text-gray-300">{thumb.composicion}</p></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white p-4 md:p-8 font-sans selection:bg-indigo-500/30">
+    <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500 pb-20 p-4 font-sans text-white">
       
-      <div className="max-w-6xl mx-auto mb-10 flex flex-col md:flex-row justify-between items-center gap-6">
-        <div className="flex items-center gap-4">
-          <div className="bg-indigo-600 p-3 rounded-2xl shadow-lg shadow-indigo-600/20">
-            <Sparkles size={28} className="text-white" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-black tracking-tighter italic">TITAN <span className="text-indigo-500">V103</span></h1>
-            <p className="text-gray-500 text-[10px] uppercase tracking-[0.3em] font-bold">ImpactoIA Global Intelligence</p>
-          </div>
+      {/* HEADER */}
+      <div className="text-center space-y-4 pt-10">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-black uppercase tracking-[0.2em] mb-2 animate-pulse">
+          <Brain size={12} /> Titan V300 - Full Access
         </div>
-
-        {result && (
-          <div className="flex gap-6 bg-white/5 border border-white/10 p-4 rounded-2xl backdrop-blur-xl">
-            <div className="text-center">
-              <div className="text-3xl font-black text-indigo-400">{result.viral_prediction?.score || 8.5}</div>
-              <div className="text-[10px] text-gray-500 font-bold uppercase">Viral Score</div>
-            </div>
-            <div className="w-px h-10 bg-white/10" />
-            <div className="text-center">
-              <div className="text-3xl font-black text-green-400">
-                {((result.viral_prediction?.confidence || 0.8) * 100).toFixed(0)}%
-              </div>
-              <div className="text-[10px] text-gray-500 font-bold uppercase">Confidence</div>
-            </div>
-          </div>
-        )}
+        <h1 className="text-5xl md:text-6xl font-black tracking-tighter text-white">
+          RECREAR <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-fuchsia-500">VIRAL</span>
+        </h1>
+        <p className="text-gray-400 font-medium text-sm md:text-base max-w-xl mx-auto">
+          Copia la estructura viral y adáptala a tu <span className="text-white font-bold">Base de Conocimiento</span>.
+        </p>
       </div>
 
-      <div className="max-w-6xl mx-auto mb-12 grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white/5 border border-white/10 p-6 rounded-3xl space-y-4">
-          <div className="flex items-center gap-3">
-            <Globe size={20} className="text-blue-400" />
-            <h3 className="font-bold text-sm uppercase tracking-wider">Analizar Link Viral</h3>
-          </div>
-          <div className="flex gap-2">
-            <input 
-              type="text" 
-              placeholder="TikTok, Reels, YouTube URL..."
-              className="flex-1 bg-black border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500 transition-all"
-              value={urlInput}
-              onChange={(e) => setUrlInput(e.target.value)}
-            />
-            <button onClick={handleUrlAnalysis} disabled={loading} className="bg-blue-600 hover:bg-blue-500 px-6 rounded-xl transition-all disabled:opacity-50">
-              {loading ? <Loader2 className="animate-spin" size={20} /> : <ChevronRight size={20} />}
-            </button>
-          </div>
+      {/* INPUT & CONTEXTO */}
+      <div className="max-w-4xl mx-auto mb-16 space-y-6">
+        
+        {/* SELECTORES CONTEXTO */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="relative group">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-indigo-400"><User size={14}/></div>
+                <select value={selectedExpertId} onChange={(e) => setSelectedExpertId(e.target.value)} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-3 pl-9 text-xs text-gray-300 outline-none focus:border-indigo-500 transition-colors cursor-pointer hover:bg-gray-900">
+                    <option value="">Tu Perfil (Experto)</option>{experts.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
+                </select>
+            </div>
+            <div className="relative group">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-fuchsia-400"><Users size={14}/></div>
+                <select value={selectedAvatarId} onChange={(e) => setSelectedAvatarId(e.target.value)} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-3 pl-9 text-xs text-gray-300 outline-none focus:border-fuchsia-500 transition-colors cursor-pointer hover:bg-gray-900">
+                    <option value="">Tu Audiencia (Avatar)</option>{avatars.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+                </select>
+            </div>
+            <div className="relative group">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-emerald-400"><Globe size={14}/></div>
+                <select value={selectedKbId} onChange={(e) => setSelectedKbId(e.target.value)} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-3 pl-9 text-xs text-gray-300 outline-none focus:border-emerald-500 transition-colors cursor-pointer hover:bg-gray-900">
+                    <option value="">Tu Conocimiento (Cerebro)</option>{knowledgeBases.map(kb => <option key={kb.id} value={kb.id}>{kb.title}</option>)}
+                </select>
+            </div>
         </div>
 
-        <div onClick={() => !loading && fileInputRef.current?.click()} className="relative overflow-hidden bg-purple-500/5 border border-purple-500/20 p-6 rounded-3xl cursor-pointer hover:bg-purple-500/10 transition-all group">
-          <input type="file" ref={fileInputRef} onChange={handleFileUpload} className="hidden" accept="video/*" />
-          <div className="flex items-center gap-4">
-            <div className="bg-purple-500/20 p-4 rounded-2xl text-purple-400 group-hover:scale-110 transition-transform">
-              {loading ? <Loader2 className="animate-spin" size={24} /> : <Laptop size={24} />}
+        {/* INPUTS DUALES: URL + UPLOAD */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* 1. URL INPUT */}
+            <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 flex flex-col justify-between hover:border-indigo-500/30 transition-all">
+                <div className="mb-4">
+                    <div className="flex items-center gap-2 mb-2 text-indigo-400 font-bold text-xs uppercase tracking-widest"><Globe size={14}/> Opción A: Link</div>
+                    <input 
+                        type="text" 
+                        placeholder="Pega link de TikTok / YT..."
+                        className="w-full bg-black border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 transition-all"
+                        value={urlInput}
+                        onChange={(e) => setUrlInput(e.target.value)}
+                    />
+                </div>
+                <button 
+                    onClick={handleUrlAnalyze} 
+                    disabled={loading || !urlInput}
+                    className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                    {loading && urlInput ? <Loader2 className="animate-spin" size={16} /> : <Zap size={16}/>} ANALIZAR LINK
+                </button>
             </div>
-            <div>
-              <h3 className="font-bold text-sm uppercase tracking-wider">Subir desde Ordenador</h3>
-              <p className="text-xs text-gray-500">Soporta MP4, MOV y WebM</p>
+
+            {/* 2. UPLOAD INPUT */}
+            <div 
+                className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 flex flex-col justify-between hover:border-fuchsia-500/30 transition-all cursor-pointer relative overflow-hidden group"
+                onClick={() => !loading && fileInputRef.current?.click()}
+            >
+                <input type="file" ref={fileInputRef} onChange={handleFileUpload} className="hidden" accept="video/*" />
+                
+                <div className="mb-4 relative z-10">
+                    <div className="flex items-center gap-2 mb-2 text-fuchsia-400 font-bold text-xs uppercase tracking-widest"><Laptop size={14}/> Opción B: Archivo</div>
+                    <div className="w-full bg-black border border-white/10 rounded-xl px-4 py-8 text-center border-dashed group-hover:border-fuchsia-500/50 transition-all">
+                        <UploadCloud size={24} className="mx-auto text-gray-500 mb-2 group-hover:text-fuchsia-400"/>
+                        <span className="text-xs text-gray-400">Click para subir MP4/MOV</span>
+                    </div>
+                </div>
+                
+                {loading && uploadProgress > 0 && (
+                    <div className="absolute bottom-0 left-0 h-1 bg-fuchsia-500 transition-all duration-300" style={{ width: `${uploadProgress}%` }} />
+                )}
             </div>
-          </div>
-          {loading && uploadProgress > 0 && (
-            <div className="absolute bottom-0 left-0 h-1 bg-purple-500 transition-all duration-300" style={{ width: `${uploadProgress}%` }} />
-          )}
+        </div>
+        
+        <div className="text-center">
+            <span className="text-[10px] font-bold text-gray-500 bg-white/5 px-3 py-1 rounded-full border border-white/5">
+                Costo por operación: {COSTO_RECREATE} créditos
+            </span>
         </div>
       </div>
 
+      {/* --- RESULTADOS --- */}
       {result && (
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-          
-          <div className="lg:col-span-8 space-y-6">
-            <div className="bg-white/5 border border-white/10 rounded-3xl p-6">
-              <h3 className="text-xs font-black text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
-                <Target size={14} className="text-indigo-400" /> Hook Variations (Forensic DNA)
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                {result.hook_variations?.map((hook: any, i: number) => (
-                  <button 
-                    key={i}
-                    onClick={() => setActiveHook(i)}
-                    className={`p-4 rounded-2xl text-left transition-all border ${
-                      activeHook === i ? 'bg-indigo-600 border-indigo-400' : 'bg-black border-white/5 hover:border-white/20'
-                    }`}
-                  >
-                    <div className="text-[10px] font-black uppercase opacity-60 mb-2">{hook.type || 'Hook'}</div>
-                    <p className="text-xs font-bold leading-tight line-clamp-3 mb-3">"{hook.script}"</p>
-                    <div className="flex items-center justify-between text-[10px] font-bold">
-                      <span className="opacity-60">Retention</span>
-                      <span className="text-green-400">{hook.predicted_retention || hook.retention || 85}%</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-8 duration-700">
+            
+            {/* TABS NAVIGATION */}
+            <div className="flex p-1 bg-gray-900/50 rounded-2xl border border-gray-800 max-w-2xl mx-auto">
+                <button onClick={() => setActiveTab('forensics')} className={`flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all ${activeTab === 'forensics' ? 'bg-[#0B0E14] text-cyan-400 shadow-lg border border-gray-800' : 'text-gray-500 hover:text-gray-300'}`}>
+                    <Layers size={14}/> Análisis
+                </button>
+                <button onClick={() => setActiveTab('production')} className={`flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all ${activeTab === 'production' ? 'bg-[#0B0E14] text-green-400 shadow-lg border border-gray-800' : 'text-gray-500 hover:text-gray-300'}`}>
+                    <Camera size={14}/> Rodaje
+                </button>
+                <button onClick={() => setActiveTab('thumbnail')} className={`flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all ${activeTab === 'thumbnail' ? 'bg-[#0B0E14] text-purple-400 shadow-lg border border-gray-800' : 'text-gray-500 hover:text-gray-300'}`}>
+                    <ImageIcon size={14}/> Miniatura
+                </button>
             </div>
 
-            <div className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
-              <div className="flex bg-black/50 border-b border-white/10">
-                {['script', 'visuals', 'analysis'].map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => setActiveTab(tab)}
-                    className={`flex-1 py-4 text-[10px] font-black uppercase tracking-widest transition-all ${
-                      activeTab === tab ? 'bg-indigo-600 text-white' : 'text-gray-500 hover:text-white'
-                    }`}
-                  >
-                    {tab}
-                  </button>
-                ))}
-              </div>
-
-              <div className="p-8">
-                {activeTab === 'script' && (
-                  <div className="space-y-6">
-                    <div className="p-6 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl group relative">
-                      <button onClick={() => copyToClipboard(result.hook_variations[activeHook]?.script)} className="absolute top-4 right-4 p-2 bg-indigo-500 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Copy size={16} />
-                      </button>
-                      <span className="text-[10px] font-black text-indigo-400 uppercase">Hook Adaptado</span>
-                      <p className="text-2xl font-black italic mt-2">"{result.hook_variations[activeHook]?.script}"</p>
-                    </div>
-                    <div className="relative group">
-                      <button onClick={() => copyToClipboard(result.script_body)} className="absolute top-0 right-0 p-2 bg-white/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Copy size={16} />
-                      </button>
-                      <p className="text-xl text-gray-300 leading-relaxed font-medium whitespace-pre-wrap">{result.script_body}</p>
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === 'visuals' && (
-                  <div className="space-y-4">
-                    {result.visual_plan?.length > 0 ? result.visual_plan.map((shot: any, i: number) => (
-                      <div key={i} className="flex gap-4 p-4 bg-white/5 rounded-2xl border border-white/5">
-                        <div className="bg-indigo-500/20 text-indigo-400 font-mono text-xs font-bold p-2 rounded-lg h-fit">{shot.time}</div>
-                        <div>
-                          <p className="text-sm font-bold text-gray-200">{shot.visual_instruction}</p>
-                          <p className="text-xs text-gray-500 mt-1 italic">Audio: {shot.audio_ref}</p>
-                        </div>
-                      </div>
-                    )) : <div className="text-gray-500 text-center">No hay plan visual disponible.</div>}
-                  </div>
-                )}
-
-                {activeTab === 'analysis' && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {result.viral_prediction?.strengths?.map((s: string, i: number) => (
-                      <div key={i} className="p-4 bg-green-500/5 border border-green-500/10 rounded-2xl flex items-center gap-3">
-                        <CheckCircle2 size={16} className="text-green-400" />
-                        <span className="text-sm font-medium text-gray-300">{s}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="lg:col-span-4 space-y-6">
-            <div className="bg-white/5 border border-white/10 rounded-3xl p-6">
-              <h3 className="text-xs font-black text-gray-500 uppercase tracking-widest mb-6 flex items-center gap-2">
-                <Layers size={16} className="text-indigo-400" /> Viral Forensic DNA
-              </h3>
-              <div className="space-y-4">
-                <div className="bg-black/50 p-4 rounded-2xl border border-white/5">
-                  <div className="text-[10px] font-black text-indigo-400 uppercase mb-1">Niche Strategy</div>
-                  <p className="text-sm font-bold leading-tight">{result.adaptation_metadata?.niche_translation}</p>
-                </div>
-                <div className="bg-black/50 p-4 rounded-2xl border border-white/5">
-                  <div className="text-[10px] font-black text-indigo-400 uppercase mb-1">Psychological Trigger</div>
-                  <p className="text-xs text-gray-400 leading-relaxed font-medium">{result.viral_analysis?.psychological_trigger || result.viral_prediction?.strengths?.[0]}</p>
-                </div>
-              </div>
+            {/* TAB CONTENT */}
+            <div className="min-h-[400px]">
+                {renderContent()}
             </div>
 
-            <div className="bg-indigo-600/10 border border-indigo-500/20 rounded-3xl p-6">
-              <h3 className="text-xs font-black text-indigo-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                <Zap size={14} /> Optimization
-              </h3>
-              <ul className="space-y-3">
-                {result.viral_prediction?.tips?.map((tip: string, i: number) => (
-                  <li key={i} className="text-xs font-medium text-gray-300 flex items-start gap-2">
-                    <span className="text-indigo-500">⚡</span> {tip}
-                  </li>
-                ))}
-              </ul>
+            {/* BOTON FINAL */}
+            <div className="max-w-2xl mx-auto">
+                <button 
+                    onClick={() => navigate('/dashboard/script-generator', { state: { topic: result.adn_extraido?.idea_ganadora || "Video Recreado", hook: result.adn_extraido?.formula_gancho || "Gancho Viral" } })}
+                    className="w-full py-5 bg-gradient-to-r from-gray-900 to-gray-800 border border-gray-700 hover:border-indigo-500/50 text-white rounded-2xl flex items-center justify-center gap-3 transition-all group shadow-xl hover:shadow-indigo-900/20"
+                >
+                    <span className="font-black text-sm uppercase tracking-widest">Llevar al Generador de Guiones</span>
+                    <ArrowRight size={20} className="text-indigo-400 group-hover:translate-x-1 transition-transform"/>
+                </button>
             </div>
 
-            <button className="w-full bg-white text-black font-black py-4 rounded-2xl flex items-center justify-center gap-2 hover:bg-indigo-500 hover:text-white transition-all shadow-xl shadow-white/5">
-              <Download size={20} /> EXPORTAR PLAN
-            </button>
-          </div>
-
-        </div>
-      )}
-
-      {copied && (
-        <div className="fixed bottom-8 right-8 bg-indigo-600 text-white px-6 py-3 rounded-2xl font-bold shadow-2xl animate-bounce z-50">
-          ¡Copiado con éxito!
         </div>
       )}
     </div>
