@@ -1,12 +1,72 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
-import { useAuth } from '../context/AuthContext';
+import { supabase } from '../../lib/supabase';
+import { useAuth } from '../../context/AuthContext';
 import { 
     RefreshCw, Wand2, Zap, Copy, Save,
-    Video, Instagram, Youtube, Linkedin, CheckCircle2, Activity, Clock, AlignLeft,
-    User, Users, BookOpen, AlertCircle, PenTool
+    Video, Instagram, Youtube, Linkedin, CheckCircle2, Clock, AlignLeft,
+    User, Users, BookOpen, AlertCircle, PenTool, Layout, Brain, Target
 } from 'lucide-react';
+
+// ==================================================================================
+// 1. CONFIGURACIÓN Y LISTAS ESTÁTICAS
+// ==================================================================================
+
+// --- 🏗️ ARQUITECTURAS VIRALES ---
+const STRUCTURES = [
+    { 
+        id: 'winner_rocket', 
+        label: 'Winner Rocket 🚀', 
+        desc: 'La fórmula viral de 7 pasos. Retención máxima + Loops.', 
+        color: 'border-yellow-500 bg-yellow-500/10 text-yellow-400',
+        recommended: true
+    },
+    { 
+        id: 'pas', 
+        label: 'Dolor Profundo (PAS)', 
+        desc: 'Problema → Agitación → Solución. Venta directa.', 
+        color: 'border-red-500/50 bg-red-500/5 text-red-400',
+        recommended: false
+    },
+    { 
+        id: 'aida', 
+        label: 'Clásica (AIDA)', 
+        desc: 'Atención → Interés → Deseo → Acción.', 
+        color: 'border-blue-500/50 bg-blue-500/5 text-blue-400',
+        recommended: false
+    },
+    { 
+        id: 'hso', 
+        label: 'Storytelling (HSO)', 
+        desc: 'Gancho → Historia → Oferta/Lección.', 
+        color: 'border-purple-500/50 bg-purple-500/5 text-purple-400',
+        recommended: false
+    }
+];
+
+// --- 🧠 MATRIZ PSICOLÓGICA ---
+const AWARENESS_LEVELS = [
+    "Totalmente Inconsciente (No sabe que tiene problema)",
+    "Consciente del Problema (Siente dolor, busca nombre)",
+    "Consciente de la Solución (Conoce métodos)",
+    "Consciente del Producto (Te conoce, duda compra)"
+];
+
+const OBJECTIVES = [
+    "Educar / Valor",
+    "Inspirar / Motivar",
+    "Persuadir / Vender",
+    "Entretener / Viralidad",
+    "Romper Objeciones"
+];
+
+const SITUATIONS = [
+    "Dolor Agudo (Urgencia)",
+    "Miedo / Incertidumbre",
+    "Deseo / Ambición",
+    "Curiosidad Pura",
+    "Escepticismo"
+];
 
 // --- 🪝 LISTA MAESTRA DE 40 GANCHOS (COMPLETA) ---
 const MASTER_HOOKS = [
@@ -52,35 +112,24 @@ const MASTER_HOOKS = [
     { name: '🏆 Reto' }
 ];
 
-// --- 📹 LISTA DE 12 FORMATOS VISUALES (COMPLETA) ---
-const VIDEO_FORMATS = [
-    '1. Hablando a cámara (Frontal)',
-    '2. Entrevista / Podcast',
-    '3. POV (Punto de Vista)',
-    '4. Storytelling Cinemático',
-    '5. Demo / Tutorial Paso a Paso',
-    '6. Testimonio en Video',
-    '7. Gancho + Corte + Solución',
-    '8. Texto + Música (Sin hablar)',
-    '9. Vlog educativo / Detrás de cámara',
-    '10. Sketch / Dramatización',
-    '11. Micro-Clase (60s)',
-    '12. Mito vs Realidad'
+// --- ⏱️ DURACIONES & COSTOS ---
+const DURATIONS = [
+    { id: 'short', label: 'Flash (30s)', cost: 5, desc: 'Viralidad Rápida' },
+    { id: 'medium', label: 'Estándar (60s)', cost: 5, desc: 'Retención' },
+    { id: 'long', label: 'Profundo (90s)', cost: 5, desc: 'Autoridad' },
+    { id: 'masterclass', label: 'Masterclass (+5m)', cost: 32, desc: 'Curso Completo' },
 ];
 
 const PLATFORMS = [
-    { id: 'TikTok', icon: Video, label: 'TikTok', color: 'text-cyan-400', bg: 'bg-cyan-900/20', border: 'border-cyan-500/50' },
-    { id: 'Reels', icon: Instagram, label: 'Reels', color: 'text-pink-500', bg: 'bg-pink-900/20', border: 'border-pink-500/50' },
-    { id: 'YouTube', icon: Youtube, label: 'YouTube', color: 'text-red-500', bg: 'bg-red-900/20', border: 'border-red-500/50' },
-    { id: 'LinkedIn', icon: Linkedin, label: 'LinkedIn', color: 'text-blue-400', bg: 'bg-blue-900/20', border: 'border-blue-500/50' }
+    { id: 'TikTok', icon: Video, label: 'TikTok', color: 'text-cyan-400', bg: 'bg-cyan-900/20' },
+    { id: 'Reels', icon: Instagram, label: 'Reels', color: 'text-pink-500', bg: 'bg-pink-900/20' },
+    { id: 'YouTube', icon: Youtube, label: 'YouTube', color: 'text-red-500', bg: 'bg-red-900/20' },
+    { id: 'LinkedIn', icon: Linkedin, label: 'LinkedIn', color: 'text-blue-400', bg: 'bg-blue-900/20' }
 ];
 
-const DURATIONS = [
-    { id: 'short', label: 'Flash (30s)', cost: 1, desc: 'Viralidad Rápida' },
-    { id: 'medium', label: 'Estándar (60s)', cost: 1, desc: 'Retención' },
-    { id: 'long', label: 'Profundo (90s+)', cost: 2, desc: 'Autoridad' },
-    { id: 'masterclass', label: 'Masterclass', cost: 3, desc: 'Curso Completo' },
-];
+// ==================================================================================
+// 2. COMPONENTE PRINCIPAL
+// ==================================================================================
 
 export const ScriptGenerator = () => {
     const navigate = useNavigate();
@@ -89,337 +138,340 @@ export const ScriptGenerator = () => {
     
     // --- ESTADOS UI ---
     const [topic, setTopic] = useState('');
-    const [angle, setAngle] = useState(''); 
+    const [selectedStructure, setSelectedStructure] = useState('winner_rocket');
     const [selectedPlatform, setSelectedPlatform] = useState(PLATFORMS[0]);
-    const [hookType, setHookType] = useState(MASTER_HOOKS[0].name); 
-    const [formatType, setFormatType] = useState(VIDEO_FORMATS[0]);
-    const [durationId, setDurationId] = useState('medium'); 
+    const [durationId, setDurationId] = useState('medium');
+    const [hookType, setHookType] = useState(MASTER_HOOKS[0].name);
+
+    // --- ESTADOS PSICOLÓGICOS ---
+    const [awareness, setAwareness] = useState(AWARENESS_LEVELS[1]);
+    const [objective, setObjective] = useState(OBJECTIVES[0]);
+    const [situation, setSituation] = useState(SITUATIONS[0]);
     
+    // --- ESTADOS DE CONTEXTO ---
+    const [experts, setExperts] = useState<any[]>([]);
+    const [selectedExpertId, setSelectedExpertId] = useState('');
+    const [knowledgeBases, setKnowledgeBases] = useState<any[]>([]);
+    const [selectedKbId, setSelectedKbId] = useState('');
+    
+    // --- ESTADOS DE PROCESO ---
     const [isGenerating, setIsGenerating] = useState(false);
-    const [cost, setCost] = useState(1); 
     const [result, setResult] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
+    const [cost, setCost] = useState(5);
 
-    // --- CONTEXTO V300 (Backend Connection) ---
-    const [experts, setExperts] = useState<any[]>([]);
-    const [avatars, setAvatars] = useState<any[]>([]);
-    const [knowledgeBases, setKnowledgeBases] = useState<any[]>([]);
-    
-    const [selectedExpertId, setSelectedExpertId] = useState<string>('');
-    const [selectedAvatarId, setSelectedAvatarId] = useState<string>('');
-    const [selectedKbId, setSelectedKbId] = useState<string>('');
-
-    // --- CARGA INICIAL ---
+    // --- CARGA INICIAL DE DATOS ---
     useEffect(() => {
         if (!user) return;
-        fetchContextData();
+        
+        // Cargar Expertos
+        supabase.from('expert_profiles').select('id, niche, name').eq('user_id', user.id)
+            .then(({ data }) => { if (data) setExperts(data); });
 
-        // Datos desde navegación (ej: Calendario)
-        if (location.state) {
-            if (location.state.topic) setTopic(location.state.topic);
-            if (location.state.angle) setAngle(location.state.angle);
-            if (location.state.format) {
-                const fmt = VIDEO_FORMATS.find(f => f.toLowerCase().includes(location.state.format.toLowerCase()));
-                if(fmt) setFormatType(fmt);
-            }
-        }
-    }, [user, location]);
+        // Cargar Bases de Conocimiento
+        supabase.from('documents').select('id, title').eq('user_id', user.id)
+            .then(({ data }) => { if (data) setKnowledgeBases(data); });
+        
+        // Si viene de otra página (Navegación)
+        if (location.state?.topic) setTopic(location.state.topic);
+        
+        // Defaults del perfil
+        if (userProfile?.active_expert_id) setSelectedExpertId(userProfile.active_expert_id);
 
-    const fetchContextData = async () => {
-        try {
-            const { data: exp } = await supabase.from('expert_profiles').select('id, name').eq('user_id', user?.id);
-            if(exp) setExperts(exp);
-            
-            const { data: av } = await supabase.from('avatars').select('id, name').eq('user_id', user?.id);
-            if(av) setAvatars(av);
-            
-            const { data: kb } = await supabase.from('documents').select('id, title, filename').eq('user_id', user?.id);
-            if (kb) setKnowledgeBases(kb.map((k: any) => ({ id: k.id, title: k.title || k.filename })));
+    }, [user, userProfile, location]);
 
-            if (userProfile?.active_expert_id) setSelectedExpertId(userProfile.active_expert_id);
-            if (userProfile?.active_avatar_id) setSelectedAvatarId(userProfile.active_avatar_id);
-        } catch (e) { console.error(e); }
-    };
-
-    // Actualizar costo según duración
+    // --- CALCULAR COSTO EN TIEMPO REAL ---
     useEffect(() => {
-        const sel = DURATIONS.find(d => d.id === durationId);
-        if (sel) setCost(sel.cost);
+        const d = DURATIONS.find(x => x.id === durationId);
+        if (d) setCost(d.cost);
     }, [durationId]);
 
-    // --- GENERACIÓN CONECTADA A BACKEND V300 CON ESTRUCTURA NARRATIVA ---
+    // ==================================================================================
+    // 3. FUNCIÓN GENERAR (CONECTADA AL BACKEND V300)
+    // ==================================================================================
     const handleGenerate = async () => {
-        if (!topic) return alert("Escribe un tema.");
+        if (!topic) return alert("Por favor escribe un tema.");
+        
+        // Validación de Saldo
         if (userProfile?.tier !== 'admin' && (userProfile?.credits || 0) < cost) {
-            if(confirm(`Saldo insuficiente (${cost} créditos). ¿Recargar?`)) navigate('/settings');
+            if(confirm(`⚠️ Saldo insuficiente (${cost} créditos). ¿Deseas recargar?`)) navigate('/settings');
             return;
         }
 
         setIsGenerating(true);
-        setResult(null);
         setError(null);
+        setResult(null);
 
         try {
-            // AQUÍ INYECTAMOS LA ESTRUCTURA NARRATIVA OBLIGATORIA
-            const structuralPrompt = `
-                TEMA: ${topic}. 
-                ÁNGULO: ${angle}. 
-                GANCHO PREFERIDO: ${hookType}. 
-                FORMATO VISUAL: ${formatType}. 
-                DURACIÓN: ${DURATIONS.find(d => d.id === durationId)?.label}.
-
-                ⚠️ ESTRUCTURA NARRATIVA OBLIGATORIA (NO LA CAMBIES):
-                
-                1. HOOK PODEROSO (0-3 seg): Usa el gancho "${hookType}". Frase que dispare curiosidad o afirmación disruptiva. Maximiza impacto.
-                
-                2. CONTEXTO (4-10 seg): Conecta con el espectador conectando con su realidad (su punto de vista).
-                
-                3. CONFLICTO (11-20 seg): Revela un error, mito, bloqueo o dolor oculto que el avatar no ve o está cometiendo.
-                
-                4. CURIOSITY LOOP (21-23 seg): Abre una incógnita antes de dar el tip (“Y cuando descubrí esto…” o “Pero lo curioso es que…”).
-                
-                5. INSIGHT / VALOR (24-35 seg): Revela la enseñanza potente, tip concreto, método o cambio de mentalidad.
-                
-                6. RESOLUCIÓN (36-50 seg): Muestra cómo ese conocimiento cambia la situación. Comparte una pequeña victoria, inspira y cierra con moraleja desde el corazón.
-                
-                7. CIERRE + CTA (51-60 seg): Frase emocional que invite a seguir para aprender más o acompañarte. Llamado a la acción natural.
-
-                REGLAS DE ORO:
-                - Incluye al menos 2 puntos de curiosidad.
-                - Cierra el loop narrativo antes del final.
-                - Usa lenguaje 100% humano, emocional y NO técnico.
-            `;
-
-            const { data, error } = await supabase.functions.invoke('process-url', {
+            // Llamada al Backend (Titan Engine)
+            const { data, error: apiError } = await supabase.functions.invoke('process-url', {
                 body: {
-                    selectedMode: 'recreate', 
-                    platform: selectedPlatform.label,
+                    selectedMode: 'generar_guion',
+                    userInput: topic,
                     
-                    // Enviamos el prompt estructurado como transcript
-                    transcript: structuralPrompt,
+                    // 👇 PAQUETE DE DATOS COMPLETO PARA EL CEREBRO
+                    settings: {
+                        structure: selectedStructure, // 'winner_rocket'
+                        awareness: awareness,
+                        objective: objective,
+                        situation: situation,
+                        duration: durationId, // 'masterclass' = 32 créditos
+                        hook_type: hookType,
+                        platform: selectedPlatform.label
+                    },
                     
-                    // Contexto V300 (IDs para que el backend lea los perfiles)
+                    // Contexto
                     expertId: selectedExpertId,
-                    avatarId: selectedAvatarId,
                     knowledgeBaseId: selectedKbId,
                     
-                    estimatedCost: cost,
-                    // Refuerzo en customPrompt
-                    customPrompt: `Escribe un guion viral sobre "${topic}" siguiendo estrictamente la ESTRUCTURA NARRATIVA de 7 pasos provista.`
-                },
+                    // Validación de Costo
+                    estimatedCost: cost
+                }
             });
 
-            if (error) throw error;
+            if (apiError) throw apiError;
             
+            // Éxito
             setResult(data.generatedData);
-            if(refreshProfile) refreshProfile();
+            if(refreshProfile) refreshProfile(); // Actualizar créditos en UI
 
-        } catch (e: any) { 
-            console.error(e);
-            setError(e.message || "Error generando guion.");
-        } finally { 
-            setIsGenerating(false); 
+        } catch (e: any) {
+            console.error("Error Generando:", e);
+            setError(e.message || "Error al conectar con el cerebro IA.");
+        } finally {
+            setIsGenerating(false);
         }
     };
 
-    // --- GUARDAR EN BAÚL ---
+    // --- GUARDAR EN BASE DE DATOS ---
     const handleSave = async () => {
         if (!result) return;
         try {
             await supabase.from('scripts').insert({
                 user_id: user?.id,
                 topic: topic,
-                content: result,
+                content: result, // Guardamos el JSON completo
                 format: selectedPlatform.label,
-                hook_type: hookType,
-                status: 'saved'
+                status: 'saved',
+                created_at: new Date()
             });
-            alert("✅ Guion guardado en el Baúl.");
-        } catch (e) { console.error(e); alert("Error al guardar."); }
+            alert("✅ Guion guardado en tu Biblioteca.");
+        } catch (e) { 
+            console.error(e);
+            alert("Error al guardar."); 
+        }
     };
 
-    // --- COPY TEXTO PLANO ---
-    const getCleanText = () => {
-        if (!result) return "";
-        let text = `TEMA: ${topic}\n\n`;
-        text += `GANCHO: ${result.script_structure?.hook || result.hook_variations?.[0]}\n\n`;
-        text += `CUERPO:\n${result.script_structure?.body || result.script_body}\n\n`;
-        text += `CTA: ${result.script_structure?.cta || "Sígueme para más."}`;
-        return text;
-    };
-
+    // ==================================================================================
+    // 4. RENDERIZADO (UI)
+    // ==================================================================================
     return (
         <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in pb-20 p-4 font-sans text-white">
             
-            {/* HEADER */}
-            <div className="flex flex-col md:flex-row justify-between items-end gap-4">
+            {/* Header */}
+            <div className="flex flex-col md:flex-row justify-between items-end gap-4 border-b border-gray-800 pb-6">
                 <div>
-                    <h1 className="text-3xl font-black flex items-center gap-2">
+                    <h1 className="text-3xl font-black flex items-center gap-2 bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-purple-500">
                         <PenTool className="text-pink-500"/> SCRIPT WRITER V300
                     </h1>
-                    <p className="text-gray-400 text-sm">El arquitecto de guiones con estructura narrativa comprobada.</p>
+                    <p className="text-gray-400 text-sm mt-1">Arquitectura Winner Rocket + Psicología de Masas.</p>
+                </div>
+                <div className="bg-gray-900 px-4 py-2 rounded-lg border border-gray-800 flex items-center gap-2">
+                    <span className="text-xs font-bold text-gray-400">Tus Créditos:</span>
+                    <span className="text-sm font-black text-white">{userProfile?.credits || 0}</span>
                 </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 
-                {/* --- IZQUIERDA: CONFIGURACIÓN (5 Cols) --- */}
+                {/* 👈 IZQUIERDA: CONTROLES (5 Columnas) */}
                 <div className="lg:col-span-5 space-y-6">
                     
-                    {/* 1. CONTEXTO DE MARCA (V300) */}
-                    <div className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-5 shadow-xl relative overflow-hidden group">
-                        <div className="absolute top-0 left-0 w-1 h-full bg-indigo-500 group-hover:w-2 transition-all"></div>
-                        <h3 className="text-white font-bold mb-4 flex items-center gap-2 text-xs uppercase tracking-widest text-indigo-400">
-                            <User size={14}/> Contexto Inteligente
-                        </h3>
-                        <div className="space-y-3">
-                            <div className="grid grid-cols-2 gap-3">
-                                <div className="relative">
-                                    <select value={selectedExpertId} onChange={(e) => setSelectedExpertId(e.target.value)} className="w-full bg-gray-900 border border-gray-800 text-gray-300 text-xs rounded-xl p-2.5 outline-none focus:border-indigo-500 appearance-none"><option value="">Experto...</option>{experts.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}</select>
-                                    <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500"><User size={12}/></div>
-                                </div>
-                                <div className="relative">
-                                    <select value={selectedAvatarId} onChange={(e) => setSelectedAvatarId(e.target.value)} className="w-full bg-gray-900 border border-gray-800 text-gray-300 text-xs rounded-xl p-2.5 outline-none focus:border-pink-500 appearance-none"><option value="">Avatar...</option>{avatars.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}</select>
-                                    <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500"><Users size={12}/></div>
-                                </div>
-                            </div>
-                            <div className="relative">
-                                <select value={selectedKbId} onChange={(e) => setSelectedKbId(e.target.value)} className="w-full bg-gray-900 border border-gray-800 text-gray-300 text-xs rounded-xl p-2.5 outline-none focus:border-yellow-500 appearance-none"><option value="">Base de Conocimiento (Cerebro)</option>{knowledgeBases.map(kb => <option key={kb.id} value={kb.id}>{kb.title}</option>)}</select>
-                                <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500"><BookOpen size={12}/></div>
-                            </div>
+                    {/* 1. TEMA Y PLATAFORMA */}
+                    <div className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-5 shadow-lg group hover:border-gray-700 transition-colors">
+                        <label className="text-xs font-black text-gray-500 uppercase mb-2 block tracking-widest">1. Tema Principal</label>
+                        <textarea 
+                            value={topic}
+                            onChange={(e) => setTopic(e.target.value)}
+                            placeholder="Ej: Cómo invertir en bienes raíces sin dinero..."
+                            className="w-full bg-gray-900 border border-gray-800 rounded-xl p-3 text-white text-sm focus:border-indigo-500 outline-none h-24 resize-none transition-all focus:ring-1 focus:ring-indigo-500/50"
+                        />
+                        
+                        <div className="grid grid-cols-4 gap-2 mt-4">
+                            {PLATFORMS.map(p => (
+                                <button key={p.id} onClick={() => setSelectedPlatform(p)} className={`p-2 rounded-xl border flex flex-col items-center gap-1 transition-all ${selectedPlatform.id === p.id ? `${p.bg} ${p.color} border-current ring-1 ring-current` : 'bg-gray-900 border-gray-800 text-gray-500 hover:border-gray-600'}`}>
+                                    <p.icon size={16} />
+                                    <span className="text-[9px] font-bold">{p.label}</span>
+                                </button>
+                            ))}
                         </div>
                     </div>
 
-                    {/* 2. CONFIGURACIÓN DEL GUION */}
-                    <div className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-6 shadow-xl space-y-5">
+                    {/* 2. ARQUITECTURA VIRAL */}
+                    <div className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-5 shadow-lg">
+                        <label className="text-xs font-black text-gray-500 uppercase mb-3 flex items-center gap-2 tracking-widest">
+                            <Layout size={14} /> 2. Estructura Narrativa
+                        </label>
+                        <div className="space-y-2">
+                            {STRUCTURES.map((s) => (
+                                <button
+                                    key={s.id}
+                                    onClick={() => setSelectedStructure(s.id)}
+                                    className={`w-full p-3 rounded-xl border text-left transition-all relative overflow-hidden group ${
+                                        selectedStructure === s.id ? s.color : 'bg-gray-900 border-gray-800 text-gray-400 hover:bg-gray-800'
+                                    }`}
+                                >
+                                    <div className="flex justify-between items-center relative z-10">
+                                        <span className="font-bold text-sm">{s.label}</span>
+                                        {selectedStructure === s.id && <CheckCircle2 size={16} />}
+                                    </div>
+                                    <p className="text-[10px] opacity-70 relative z-10 mt-1">{s.desc}</p>
+                                    
+                                    {/* Efecto Brillo para Winner Rocket */}
+                                    {s.recommended && selectedStructure === s.id && (
+                                        <div className="absolute top-0 right-0 w-20 h-20 bg-yellow-500/20 blur-2xl -translate-y-8 translate-x-8"></div>
+                                    )}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* 3. MATRIZ PSICOLÓGICA */}
+                    <div className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-5 shadow-lg space-y-4 relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-1 h-full bg-indigo-600"></div>
+                        <label className="text-xs font-black text-gray-500 uppercase mb-2 flex items-center gap-2 tracking-widest">
+                            <Brain size={14} /> 3. Configuración Psicológica
+                        </label>
                         
-                        {/* Plataforma */}
                         <div>
-                            <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block tracking-widest">Plataforma</label>
-                            <div className="grid grid-cols-4 gap-2">
-                                {PLATFORMS.map(p => (
-                                    <button key={p.id} onClick={() => setSelectedPlatform(p)} className={`p-2 rounded-xl border flex flex-col items-center gap-1 transition-all ${selectedPlatform.id === p.id ? `${p.bg} ${p.border} text-white` : 'bg-gray-900/50 border-gray-800 text-gray-500 hover:border-gray-700'}`}>
-                                        <p.icon size={16} />
-                                        <span className="text-[9px] font-bold">{p.label}</span>
-                                    </button>
-                                ))}
-                            </div>
+                            <span className="text-[10px] text-indigo-400 font-bold block mb-1">NIVEL DE CONCIENCIA</span>
+                            <select value={awareness} onChange={(e) => setAwareness(e.target.value)} className="w-full bg-gray-900 border border-gray-700 text-gray-300 text-xs rounded-lg p-2.5 outline-none focus:border-indigo-500 transition-colors">
+                                {AWARENESS_LEVELS.map(a => <option key={a} value={a}>{a}</option>)}
+                            </select>
                         </div>
-
-                        {/* Tema y Ángulo */}
-                        <div className="space-y-3">
-                            <div>
-                                <label className="text-[10px] font-black text-gray-500 uppercase mb-1 block">Tema Principal</label>
-                                <input type="text" value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="Ej: Invertir con poco dinero..." className="w-full bg-gray-900 border border-gray-800 rounded-xl p-3 text-white text-sm focus:border-indigo-500 outline-none font-medium" />
-                            </div>
-                            <div>
-                                <label className="text-[10px] font-black text-gray-500 uppercase mb-1 block">Ángulo / Enfoque</label>
-                                <textarea value={angle} onChange={(e) => setAngle(e.target.value)} placeholder="Ej: Contrarian, historia personal, mito..." className="w-full bg-gray-900 border border-gray-800 rounded-xl p-3 text-white text-sm focus:border-indigo-500 outline-none h-20 resize-none" />
-                            </div>
-                        </div>
-
-                        {/* Selectores Técnicos (FULL LISTS) */}
-                        <div className="space-y-3">
-                            <div>
-                                <label className="text-[10px] font-black text-gray-500 uppercase mb-1 block">Gancho (0-3s)</label>
-                                <select value={hookType} onChange={(e) => setHookType(e.target.value)} className="w-full bg-gray-900 border border-gray-800 rounded-xl p-3 text-white text-xs outline-none cursor-pointer hover:border-gray-600 focus:border-pink-500 transition-colors">
-                                    {MASTER_HOOKS.map(h => <option key={h.name} value={h.name}>{h.name}</option>)}
-                                </select>
-                            </div>
-                            <div>
-                                <label className="text-[10px] font-black text-gray-500 uppercase mb-1 block">Formato Visual</label>
-                                <select value={formatType} onChange={(e) => setFormatType(e.target.value)} className="w-full bg-gray-900 border border-gray-800 rounded-xl p-3 text-white text-xs outline-none cursor-pointer hover:border-gray-600 focus:border-indigo-500 transition-colors">
-                                    {VIDEO_FORMATS.map(f => <option key={f} value={f}>{f}</option>)}
-                                </select>
-                            </div>
-                        </div>
-
-                        {/* Duración */}
                         <div>
-                            <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block tracking-widest">Duración</label>
+                            <span className="text-[10px] text-pink-400 font-bold block mb-1">OBJETIVO DEL VIDEO</span>
+                            <select value={objective} onChange={(e) => setObjective(e.target.value)} className="w-full bg-gray-900 border border-gray-700 text-gray-300 text-xs rounded-lg p-2.5 outline-none focus:border-pink-500 transition-colors">
+                                {OBJECTIVES.map(o => <option key={o} value={o}>{o}</option>)}
+                            </select>
+                        </div>
+                        <div>
+                            <span className="text-[10px] text-orange-400 font-bold block mb-1">SITUACIÓN DEL AVATAR</span>
+                            <select value={situation} onChange={(e) => setSituation(e.target.value)} className="w-full bg-gray-900 border border-gray-700 text-gray-300 text-xs rounded-lg p-2.5 outline-none focus:border-orange-500 transition-colors">
+                                {SITUATIONS.map(s => <option key={s} value={s}>{s}</option>)}
+                            </select>
+                        </div>
+                    </div>
+
+                    {/* 4. CONFIGURACIÓN FINAL (GANCHO, DURACIÓN, EXPERTO) */}
+                    <div className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-5 shadow-lg space-y-4">
+                        
+                        {/* Selector de Ganchos (LISTA MAESTRA DE 40) */}
+                        <div>
+                            <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block tracking-widest">Estilo de Gancho</label>
+                            <select value={hookType} onChange={(e) => setHookType(e.target.value)} className="w-full bg-gray-900 border border-gray-800 text-gray-300 text-xs rounded-xl p-2.5 outline-none focus:border-indigo-500 transition-colors">
+                                {MASTER_HOOKS.map((h, i) => <option key={i} value={h.name}>{h.name}</option>)}
+                            </select>
+                        </div>
+
+                        <div>
+                            <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block tracking-widest">Duración & Costo</label>
                             <div className="grid grid-cols-2 gap-2">
                                 {DURATIONS.map(d => (
-                                    <button key={d.id} onClick={() => setDurationId(d.id)} className={`p-2 rounded-xl border flex justify-between items-center transition-all ${durationId === d.id ? 'bg-indigo-600/20 border-indigo-500' : 'bg-gray-900/50 border-gray-800'}`}>
+                                    <button key={d.id} onClick={() => setDurationId(d.id)} className={`p-2.5 rounded-xl border flex justify-between items-center transition-all ${durationId === d.id ? 'bg-indigo-600/20 border-indigo-500 shadow-md shadow-indigo-900/20' : 'bg-gray-900/50 border-gray-800 text-gray-500 hover:bg-gray-800'}`}>
                                         <span className="text-[10px] font-bold text-white">{d.label}</span>
-                                        <span className="text-[9px] text-gray-500 bg-gray-800 px-1.5 py-0.5 rounded">{d.cost}Cr</span>
+                                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${durationId === d.id ? 'bg-indigo-500 text-white' : 'bg-gray-800 text-gray-500'}`}>{d.cost}Cr</span>
                                     </button>
                                 ))}
                             </div>
                         </div>
-
-                        {/* Botón Acción */}
-                        <button onClick={handleGenerate} disabled={!topic || isGenerating} className="w-full py-4 bg-gradient-to-r from-pink-600 to-purple-600 text-white font-black rounded-2xl flex justify-center items-center gap-2 hover:shadow-xl hover:shadow-pink-500/20 transition-all active:scale-95 shadow-lg mt-2 group disabled:opacity-50">
-                            {isGenerating ? <RefreshCw className="animate-spin" size={20}/> : <Zap size={20} className="group-hover:animate-pulse"/>}
-                            {isGenerating ? 'ESTRUCTURANDO...' : `GENERAR GUION (${cost} CR)`}
-                        </button>
                         
-                        {error && <p className="text-red-400 text-xs text-center flex items-center justify-center gap-1"><AlertCircle size={12}/> {error}</p>}
+                        {/* Selector de Experto */}
+                        <div className="relative">
+                            <select value={selectedExpertId} onChange={(e) => setSelectedExpertId(e.target.value)} className="w-full bg-gray-900 border border-gray-800 text-gray-300 text-xs rounded-xl p-3 outline-none focus:border-indigo-500 appearance-none"><option value="">-- Usar Experto (Opcional) --</option>{experts.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}</select>
+                            <User size={14} className="absolute right-3 top-3.5 text-gray-500 pointer-events-none"/>
+                        </div>
                     </div>
+
+                    {/* BOTÓN MAGISTRAL */}
+                    <button onClick={handleGenerate} disabled={!topic || isGenerating} className="w-full py-4 bg-gradient-to-r from-pink-600 to-purple-600 text-white font-black rounded-2xl flex justify-center items-center gap-2 hover:shadow-2xl hover:shadow-pink-500/20 transition-all active:scale-95 shadow-lg group disabled:opacity-50 disabled:cursor-not-allowed">
+                        {isGenerating ? <RefreshCw className="animate-spin" size={20}/> : <Zap size={20} className="group-hover:text-yellow-300 transition-colors"/>}
+                        {isGenerating ? 'ANALIZANDO PSICOLOGÍA...' : `GENERAR GUION (${cost} CR)`}
+                    </button>
+                    {error && <div className="bg-red-500/10 border border-red-500/20 p-3 rounded-xl text-red-400 text-xs text-center flex items-center justify-center gap-2"><AlertCircle size={14}/> {error}</div>}
                 </div>
 
-                {/* --- DERECHA: RESULTADO (7 Cols) --- */}
+                {/* 👉 DERECHA: RESULTADOS (7 Columnas) */}
                 <div className="lg:col-span-7">
                     {result ? (
-                        <div className="bg-[#0B0E14] border border-gray-800 rounded-3xl p-8 shadow-2xl animate-in slide-in-from-bottom-8 duration-500 relative min-h-[600px] flex flex-col">
+                        <div className="bg-[#0B0E14] border border-gray-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden min-h-[700px] flex flex-col animate-in slide-in-from-bottom-8 duration-700">
                             
-                            {/* Header Resultado */}
-                            <div className="flex justify-between items-start border-b border-gray-800 pb-6 mb-6">
+                            {/* Barra Superior */}
+                            <div className="flex justify-between items-start border-b border-gray-800 pb-5 mb-6">
                                 <div>
-                                    <span className="text-[10px] font-black text-green-500 uppercase tracking-widest flex items-center gap-2 mb-1"><CheckCircle2 size={12}/> Script Finalizado</span>
-                                    <h2 className="text-2xl font-black text-white leading-tight max-w-md line-clamp-2">{topic}</h2>
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <span className="text-[10px] font-black text-green-400 uppercase tracking-widest bg-green-500/10 px-2 py-0.5 rounded border border-green-500/20 flex items-center gap-1"><CheckCircle2 size={10}/> Completado</span>
+                                        <span className="text-[10px] text-gray-500 uppercase tracking-widest border border-gray-800 px-2 py-0.5 rounded bg-gray-900">{result.metadata_guion?.arquitectura || selectedStructure}</span>
+                                    </div>
+                                    <h2 className="text-xl font-black text-white leading-tight max-w-lg">{topic}</h2>
                                 </div>
                                 <div className="flex gap-2">
-                                    <button onClick={() => { navigator.clipboard.writeText(getCleanText()); alert("Copiado 🚀"); }} className="p-2.5 bg-gray-900 rounded-xl hover:bg-gray-800 text-gray-400 hover:text-white transition-all border border-gray-800" title="Copiar"><Copy size={18}/></button>
-                                    <button onClick={handleSave} className="flex items-center gap-2 px-4 py-2.5 bg-white text-black rounded-xl hover:bg-gray-200 font-bold transition-all text-xs uppercase tracking-wide shadow-lg"><Save size={16}/> Guardar</button>
+                                    <button onClick={() => {navigator.clipboard.writeText(result.guion_completo); alert("✅ Copiado al portapapeles")}} className="p-2.5 bg-gray-900 rounded-xl hover:bg-gray-800 text-gray-400 hover:text-white transition-all border border-gray-800 shadow-sm" title="Copiar Texto"><Copy size={18}/></button>
+                                    <button onClick={handleSave} className="px-5 py-2.5 bg-white text-black rounded-xl hover:bg-gray-200 font-bold text-xs uppercase shadow-lg flex items-center gap-2 transition-colors"><Save size={16}/> Guardar</button>
                                 </div>
                             </div>
 
-                            {/* Score y Métricas */}
-                            <div className="grid grid-cols-2 gap-4 mb-8">
-                                <div className="bg-indigo-900/20 border border-indigo-500/20 p-4 rounded-2xl flex flex-col">
-                                    <span className="text-[10px] text-indigo-400 font-bold uppercase mb-1">Viral Score</span>
-                                    <span className="text-2xl font-black text-white">{result.viral_score || 85}/100</span>
-                                </div>
-                                <div className="bg-gray-900/50 border border-gray-800 p-4 rounded-2xl flex flex-col">
-                                    <span className="text-[10px] text-gray-500 font-bold uppercase mb-1">Duración Est.</span>
-                                    <span className="text-xl font-bold text-gray-300 flex items-center gap-2"><Clock size={16}/> {durationId === 'short' ? '30-45s' : durationId === 'medium' ? '60s' : '90s+'}</span>
-                                </div>
-                            </div>
-
-                            {/* Script Blocks */}
-                            <div className="space-y-6 flex-1">
-                                {/* Gancho */}
-                                <div className="relative pl-6 border-l-2 border-pink-500">
-                                    <span className="text-[10px] font-black text-pink-500 uppercase tracking-widest absolute -top-3 left-0 bg-[#0B0E14] pr-2">00:00 - GANCHO</span>
-                                    <p className="text-white text-lg font-bold italic leading-relaxed">
-                                        "{result.script_structure?.hook || result.hook_variations?.[0]}"
-                                    </p>
-                                    <p className="text-gray-500 text-xs mt-2 font-mono flex items-center gap-1"><Video size={10}/> Visual: {result.translation_engine?.[0]?.your_action || "Hablar a cámara con energía."}</p>
-                                </div>
-
-                                {/* Cuerpo */}
-                                <div className="relative pl-6 border-l-2 border-gray-700">
-                                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest absolute -top-3 left-0 bg-[#0B0E14] pr-2">DESARROLLO (7 FASES)</span>
-                                    <div className="text-gray-300 whitespace-pre-wrap leading-7 text-sm font-medium">
-                                        {result.script_structure?.body || result.script_body}
+                            {/* Ganchos Alternativos */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                                {result.ganchos_opcionales?.map((hook: any, idx: number) => (
+                                    <div key={idx} className="bg-gray-900/40 p-4 rounded-2xl border border-gray-800 hover:border-indigo-500/30 transition-colors group">
+                                        <div className="flex justify-between mb-2">
+                                            <span className="text-[10px] font-bold text-indigo-400 uppercase bg-indigo-500/10 px-2 py-0.5 rounded">{hook.tipo}</span>
+                                            <span className="text-[10px] font-bold text-green-400 flex items-center gap-1"><Target size={10}/> {hook.retencion_predicha}% Retención</span>
+                                        </div>
+                                        <p className="text-sm text-gray-300 italic group-hover:text-white transition-colors">"{hook.texto}"</p>
                                     </div>
-                                </div>
+                                ))}
+                            </div>
 
-                                {/* CTA */}
-                                <div className="relative pl-6 border-l-2 border-green-500">
-                                    <span className="text-[10px] font-black text-green-500 uppercase tracking-widest absolute -top-3 left-0 bg-[#0B0E14] pr-2">CIERRE (CTA)</span>
-                                    <p className="text-white font-bold leading-relaxed">
-                                        "{result.script_structure?.cta || "Sígueme para más."}"
-                                    </p>
+                            {/* GUION TELEPROMPTER */}
+                            <div className="flex-1 space-y-3 mb-8">
+                                <label className="text-xs font-black text-gray-500 uppercase tracking-widest flex items-center gap-2"><AlignLeft size={14}/> Teleprompter Mode</label>
+                                <div className="bg-black/60 p-8 rounded-2xl border border-gray-800 text-gray-200 text-lg leading-relaxed font-medium whitespace-pre-wrap shadow-inner max-h-[600px] overflow-y-auto font-mono selection:bg-pink-500 selection:text-white">
+                                    {result.guion_completo}
+                                </div>
+                            </div>
+
+                            {/* Plan Visual (Tabla) */}
+                            <div className="border-t border-gray-800 pt-6">
+                                <label className="text-xs font-black text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2"><Video size={14}/> Plan de Rodaje</label>
+                                <div className="space-y-3">
+                                    {result.plan_visual?.map((scene: any, idx: number) => (
+                                        <div key={idx} className="flex gap-4 p-4 bg-gray-900/30 rounded-xl border border-gray-800/50 items-center hover:bg-gray-900 transition-colors">
+                                            <span className="text-xs font-black text-gray-500 w-16 text-right font-mono">{scene.tiempo}</span>
+                                            <div className="flex-1">
+                                                <p className="text-sm text-white font-medium mb-1">{scene.accion_en_pantalla}</p>
+                                                <div className="flex gap-3">
+                                                    <span className="text-[10px] text-indigo-400 uppercase tracking-wide">🎥 {scene.instruccion_produccion}</span>
+                                                    {scene.audio && <span className="text-[10px] text-pink-400 uppercase tracking-wide">🎵 {scene.audio}</span>}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
 
                         </div>
                     ) : (
-                        <div className="h-full border-2 border-dashed border-gray-800 rounded-3xl flex flex-col items-center justify-center text-center p-12 text-gray-700 bg-gray-900/10 min-h-[500px]">
-                            <div className="p-5 bg-gray-900/50 rounded-full mb-4"><Wand2 size={40} className="text-gray-600"/></div>
-                            <p className="text-sm font-bold uppercase tracking-widest mb-1">Lienzo Vacío</p>
-                            <p className="text-xs text-gray-600 max-w-xs">Configura los parámetros a la izquierda para que la IA redacte tu guion maestro.</p>
+                        // ESTADO VACÍO
+                        <div className="h-full border-2 border-dashed border-gray-800 rounded-3xl flex flex-col items-center justify-center text-center p-12 bg-gray-900/20 min-h-[600px]">
+                            <div className="p-6 bg-gray-900 rounded-full mb-6 shadow-xl">
+                                <Wand2 size={48} className="text-gray-600"/>
+                            </div>
+                            <h3 className="text-xl font-bold text-white mb-2">Lienzo Creativo Vacío</h3>
+                            <p className="text-sm text-gray-500 max-w-xs mx-auto leading-relaxed">
+                                Configura la psicología y estructura a la izquierda para que la IA diseñe tu próximo viral.
+                            </p>
                         </div>
                     )}
                 </div>
