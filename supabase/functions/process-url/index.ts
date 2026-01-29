@@ -935,132 +935,147 @@ FORMATO DE SALIDA JSON ESTRICTO:
  REGLA CRÍTICA: No describas el video, DECONSTRUYE su arquitectura.`;
 
 // ==================================================================================
-//  3. GENERADOR DE GUIONES (MEGA PROMPT V300 - WINNER ROCKET & PSYCHOLOGY)
+// 🧠 3. GENERADOR DE GUIONES (PROMPT MAESTRO TITAN V300 - EDICIÓN COMPLETA)
 // ==================================================================================
 
 const PROMPT_GENERADOR_GUIONES = (contexto: any, viralDNA: any, settings: any = {}) => {
-  const dnaContext = viralDNA ? `\n\nADN VIRAL EXTRAÍDO:\n${JSON.stringify(viralDNA)}` : '';
+  const dnaContext = viralDNA ? `\n\nADN VIRAL DE REFERENCIA (ESTILO A MODELAR):\n${JSON.stringify(viralDNA)}` : '';
   
-  // 1. EXTRACCIÓN DE PARÁMETROS PSICOLÓGICOS
-  const structureType = settings.structure || 'winner_rocket'; // Default a la nueva
+  // 1. EXTRACCIÓN DE PARÁMETROS PSICOLÓGICOS (Con valores por defecto de seguridad)
+  const structureType = settings.structure || 'winner_rocket'; 
   const awarenessLevel = settings.awareness || 'Consciente del Problema';
   const contentObjective = settings.objective || 'Educar';
   const avatarSituation = settings.situation || 'Dolor Agudo';
 
-  //  DICCIONARIO DE ARQUITECTURAS VIRALES (ACTUALIZADO)
+  // 2. BIBLIOTECA DE ARQUITECTURAS VIRALES (DETALLADA)
   const ARCHITECTURES: Record<string, string> = {
     'winner_rocket': `
-      1. HOOK PODEROSO (0-3s): Dispara curiosidad o usa una afirmación disruptiva. Debe detener el scroll inmediatamente.
-      2. CONTEXTO (4-10s): Conecta con la realidad del espectador (empatía). Di: "Sé que te pasa esto...".
-      3. CONFLICTO (11-20s): Revela un error, mito, bloqueo o dolor oculto que el avatar no ve.
-      4. CURIOSITY LOOP (21-23s): Abre una incógnita antes del tip ("Y cuando descubrí esto..." o "Pero lo curioso es...").
-      5. INSIGHT / VALOR (24-35s): Revela la enseñanza potente, el método o el cambio de mentalidad.
-      6. RESOLUCIÓN (36-50s): Muestra el cambio logrado. Comparte una pequeña victoria. Inspira.
-      7. CIERRE + CTA NATURAL (51-60s): Frase emocional que invite a seguirte desde el corazón, no desde la venta fría.`,
+      ESTRUCTURA 'WINNER ROCKET' (7 PASOS OBLIGATORIOS):
+      1. HOOK PODEROSO (0-3s): Usa el tipo de gancho elegido. Debe ser una afirmación disruptiva, una pregunta filtro o una ruptura de patrón visual. El objetivo es detener el scroll.
+      2. CONTEXTO EMPÁTICO (4-10s): Conecta con la realidad del espectador. Usa frases como "Sé que te sientes..." o "Seguramente has intentado...". Valida su situación actual.
+      3. CONFLICTO / AGITACIÓN (11-20s): Revela un error común, un mito falso, un bloqueo invisible o un dolor oculto que el avatar está cometiendo. Aumenta la tensión.
+      4. CURIOSITY LOOP (21-23s): Abre una incógnita narrativa justo antes de dar la solución ("Y lo que descubrí cambió todo...", "Pero el secreto no es lo que crees...").
+      5. INSIGHT / SOLUCIÓN (24-35s): Entrega la enseñanza potente, el método paso a paso o el cambio de mentalidad. Debe ser valor real y aplicable.
+      6. RESOLUCIÓN / PRUEBA (36-50s): Muestra el resultado de aplicar ese conocimiento. Comparte una pequeña victoria, un caso de éxito o inspira con la transformación lograda.
+      7. CIERRE + CTA NATURAL (51-60s): Cierra con una moraleja que te posicione como autoridad y haz un llamado a la acción emocional (invita a seguirte, no a comprar).`,
 
-    'pas': `1. PROBLEMA (0-10s): Describe el dolor. 2. AGITACIÓN (11-30s): Consecuencias de no actuar. 3. SOLUCIÓN (31-60s): Tu método.`,
-    'aida': `1. ATENCIÓN (0-3s). 2. INTERÉS (4-15s). 3. DESEO (16-45s). 4. ACCIÓN (46-60s).`,
-    'bab': `1. ANTES (0-10s): Mundo con dolor. 2. DESPUÉS (11-30s): Mundo ideal. 3. PUENTE (31-60s): Cómo llegar ahí.`,
-    'hso': `1. HOOK (0-3s). 2. STORY (4-40s): Anécdota personal. 3. OFFER (41-60s): Lección aprendida.`
+    'pas': `
+      ESTRUCTURA 'PAS' (PROBLEMA-AGITACIÓN-SOLUCIÓN):
+      1. PROBLEMA (0-10s): Describe el dolor específico del avatar con detalle sangriento.
+      2. AGITACIÓN (11-30s): Profundiza en las consecuencias negativas de no solucionar ese problema ahora. Haz que duela.
+      3. SOLUCIÓN (31-60s): Presenta tu método/producto como la única pastilla para ese dolor.`,
+
+    'aida': `
+      ESTRUCTURA 'AIDA' (ATENCIÓN-INTERÉS-DESEO-ACCIÓN):
+      1. ATENCIÓN (0-5s): Impacto visual o auditivo fuerte.
+      2. INTERÉS (6-20s): Datos curiosos, estadísticas o hechos que retengan la mente lógica.
+      3. DESEO (21-45s): Muestra los beneficios y la transformación soñada (el placer).
+      4. ACCIÓN (46-60s): Instrucción clara y directa de qué hacer a continuación.`,
+
+    'hso': `
+      ESTRUCTURA 'HSO' (HOOK-STORY-OFFER):
+      1. HOOK (0-3s): Una promesa fuerte o una declaración controversial.
+      2. STORY (4-40s): Cuenta una historia personal o del héroe. (Inicio -> Conflicto -> Punto de quiebre -> Éxito).
+      3. OFFER (41-60s): La lección aprendida o el recurso que ofreces como resultado de esa historia.`,
+      
+    'bab': `
+      ESTRUCTURA 'BAB' (BEFORE-AFTER-BRIDGE):
+      1. BEFORE (Antes) (0-10s): Muestra el mundo actual con el problema (infierno).
+      2. AFTER (Después) (11-30s): Muestra el mundo ideal donde el problema no existe (cielo).
+      3. BRIDGE (Puente) (31-60s): Tu contenido es el puente para cruzar del infierno al cielo.`
   };
 
   const selectedStructure = ARCHITECTURES[structureType] || ARCHITECTURES['winner_rocket'];
 
-  return `ERES EL MEJOR GUIONISTA DE CONTENIDO VIRAL Y ESTRATEGA PSICOLÓGICO DEL MUNDO.
-TU MISIÓN: Escribir un guion COMPLETO, palabra por palabra, aplicando la arquitectura seleccionada y la psicología del avatar.
+  // 3. CONSTRUCCIÓN DEL PROMPT MAESTRO
+  return `ERES EL MEJOR GUIONISTA DE CONTENIDO VIRAL Y ESTRATEGA DE PSICOLOGÍA DE MASAS DEL MUNDO.
+TU MISIÓN SUPREMA: Escribir un guion de video COMPLETO, palabra por palabra, diseñado para retener a la audiencia y convertir espectadores en seguidores.
 
---- CONTEXTO DEL EXPERTO (USUARIO) ---
+=========================================
+🎯 CONTEXTO DEL EXPERTO (CLIENTE)
+=========================================
 - Nicho: ${contexto.nicho || 'General'}
 - Avatar Ideal: ${contexto.avatar_ideal || 'Audiencia general'}
-- Dolor Principal: ${contexto.dolor_principal || 'N/A'}
-- Deseo Principal: ${contexto.deseo_principal || 'N/A'}
-- Enemigo Común: ${contexto.enemigo_comun || 'N/A'}${dnaContext}
+- Dolor Principal: ${contexto.dolor_principal || 'No especificado'}
+- Deseo Principal: ${contexto.deseo_principal || 'No especificado'}
+- Enemigo Común: ${contexto.enemigo_comun || 'El sistema / Lo convencional'}${dnaContext}
 
----  CONFIGURACIÓN PSICOLÓGICA (CRÍTICO) ---
-1. NIVEL DE CONCIENCIA: "${awarenessLevel}"
-   - Si es "Totalmente Inconsciente": Usa historias y metáforas, no hables del problema directo aún.
-   - Si es "Consciente del Problema": Agita el dolor y muestra empatía.
-   - Si es "Consciente de la Solución": Muestra por qué tu método es único.
-   
+=========================================
+🧠 MATRIZ PSICOLÓGICA (CALIBRACIÓN)
+=========================================
+1. NIVEL DE CONCIENCIA DEL PÚBLICO: "${awarenessLevel}"
+   - INSTRUCCIÓN: Adapta tu lenguaje a este nivel. Si son "Inconscientes", usa historias y metáforas. Si son "Conscientes", ve directo al grano técnico.
+
 2. OBJETIVO DEL CONTENIDO: "${contentObjective}"
-   - (Ej: Si es "Inspirar", usa tono emotivo. Si es "Persuadir", usa lógica y beneficios).
+   - INSTRUCCIÓN: Si es "Inspirar", usa tono emotivo y épico. Si es "Educar", sé didáctico y claro. Si es "Persuadir", usa lógica y beneficios.
 
 3. SITUACIÓN ACTUAL DEL AVATAR: "${avatarSituation}"
-   - El guion debe atacar específicamente este punto (miedo, objeción o anhelo).
+   - INSTRUCCIÓN: El guion debe validar esta emoción específica (Miedo, Deseo, Escepticismo) en los primeros 10 segundos.
 
----  ARQUITECTURA SELECCIONADA: ${structureType.toUpperCase()} ---
-Sigue ESTRICTAMENTE esta estructura de tiempos y contenido:
+=========================================
+🛠️ ARQUITECTURA SELECCIONADA: ${structureType.toUpperCase()}
+=========================================
+Sigue ESTRICTAMENTE, paso a paso, la siguiente estructura de tiempos y contenido:
 ${selectedStructure}
 
---- REGLAS DE ORO DE ESCRITURA (WINNER ROCKET STYLE) ---
-1. **LENGUAJE HUMANO:** Usa palabras emocionales, no técnicas. Habla de "tú a tú".
-2. **CURIOSITY LOOPS:** Incluye al menos 2 momentos de curiosidad que se resuelvan después.
-3. **NO RESUMAS:** Escribe EXACTAMENTE lo que la persona debe decir a la cámara.
-4. **FORMATO TELEPROMPTER:** Texto fluido, sin [corchetes] en la parte hablada.
+=========================================
+⚠️ REGLAS DE ORO DE ESCRITURA (NO LAS ROMPAS)
+=========================================
+1. **CERO RESÚMENES:** Escribe el texto EXACTO que el locutor va a leer en el teleprompter. No pongas "Explica aquí X", escribe la explicación completa.
+2. **LENGUAJE NATURAL:** Usa palabras sencillas, coloquiales y emocionales. Evita la jerga corporativa aburrida. Habla de "tú a tú".
+3. **FORMATO LIMPIO:** El campo "guion_completo" NO debe tener acotaciones de cámara, ni tiempos, ni [corchetes] dentro del texto hablado. Solo el texto fluido.
+4. **CURIOSITY LOOPS:** Asegúrate de abrir bucles de curiosidad ("Te cuento el secreto en un momento...") para mantener la retención alta.
 
---- FORMATO DE SALIDA JSON OBLIGATORIO ---
+=========================================
+SALIDA JSON REQUERIDA
+=========================================
+Responde ÚNICAMENTE con este objeto JSON válido:
+
 {
   "metadata_guion": {
     "nicho": "${contexto.nicho}",
-    "arquitectura": "${structureType}",
-    "psicologia": {
-      "nivel_conciencia": "${awarenessLevel}",
-      "objetivo": "${contentObjective}"
-    },
-    "duracion_estimada": "60 segundos"
+    "arquitectura_usada": "${structureType}",
+    "duracion_estimada": "60-90 segundos",
+    "tono_voz": "Empático y Autoritario"
   },
   "ganchos_opcionales": [
-    { "tipo": "Disruptivo", "texto": "Opción 1 (Directa al dolor)", "retencion_predicha": 95 },
-    { "tipo": "Curiosidad", "texto": "Opción 2 (Misteriosa)", "retencion_predicha": 92 }
+    { 
+      "tipo": "Disrupción Visual", 
+      "texto": "Escribe aquí una opción de primera frase muy agresiva o visual.", 
+      "retencion_predicha": 95 
+    },
+    { 
+      "tipo": "Curiosidad Intelectual", 
+      "texto": "Escribe aquí una opción que empiece con una pregunta extraña o dato loco.", 
+      "retencion_predicha": 92 
+    }
   ],
-  "guion_completo": "ESCRIBE AQUÍ EL GUION ENTERO CON SALTOS DE LÍNEA.\n\n[0-3s] GANCHO: (Escribe la frase exacta)...\n\n[4-10s] CONTEXTO: ...\n\n[11-20s] CONFLICTO: ...\n\n[21-23s] CURIOSITY LOOP: ...\n\n[24-35s] INSIGHT: ...\n\n[36-50s] RESOLUCIÓN: ...\n\n[51-60s] CIERRE EMOCIONAL: ...",
+  "guion_completo": "ESCRIBE AQUÍ EL GUION ENTERO.\\n\\nUsa saltos de línea (\\n\\n) para separar los párrafos visualmente.\\n\\nEmpieza con el Gancho.\\n\\nDesarrolla el Conflicto y la Agitación extensamente.\\n\\nEntrega la Solución con pasos claros.\\n\\nCierra con el CTA.\\n\\n(Asegúrate de que este texto tenga al menos 150-200 palabras).",
   "plan_visual": [
-    { "tiempo": "0-3s", "accion_en_pantalla": "Primer plano impactante", "instruccion_produccion": "Mirada directa a lente" },
-    { "tiempo": "4-20s", "accion_en_pantalla": "Cambio de ángulo o B-Roll ilustrativo", "instruccion_produccion": "Plano medio" },
-    { "tiempo": "21-End", "accion_en_pantalla": "Hablando a cámara con gestos naturales", "instruccion_produccion": "Cámara en mano suave" }
+    { 
+      "tiempo": "0-3s", 
+      "accion_en_pantalla": "Describe qué se ve (ej: Primer plano rompiendo un objeto)", 
+      "instruccion_produccion": "Cámara rápida / Zoom in",
+      "audio": "Efecto de sonido (Glitch)"
+    },
+    { 
+      "tiempo": "4-15s", 
+      "accion_en_pantalla": "Describe el contexto (ej: Persona frustrada frente al ordenador)", 
+      "instruccion_produccion": "Plano medio estático",
+      "audio": "Música suave de fondo"
+    },
+    { 
+      "tiempo": "Resto del video", 
+      "accion_en_pantalla": "Describe el desarrollo de la solución hablando a cámara", 
+      "instruccion_produccion": "Cámara en mano dinámica",
+      "audio": "Subida de volumen música épica"
+    }
   ],
   "analisis_psicologico": {
-    "gatillo_mental_usado": "Ej: Autoridad / Reciprocidad",
-    "emocion_objetivo": "Ej: Alivio / Esperanza"
+    "gatillo_mental_principal": "Ej: Autoridad",
+    "emocion_objetivo": "Ej: Esperanza y Alivio"
   }
-}`;
-};
-
-// EJECUTOR ACTUALIZADO (RECIBE SETTINGS COMPLETOS)
-async function ejecutarGeneradorGuiones(
-  contexto: any,
-  viralDNA: any | null,
-  openai: any,
-  settings: any = {} 
-): Promise<{ data: any; tokens: number }> {
-  console.log('[CEREBRO]  Generando Guion Winner Rocket...');
-  
-  const completion = await openai.chat.completions.create({
-    model: 'gpt-4o',
-    response_format: { type: 'json_object' },
-    messages: [
-      { 
-        role: 'system', 
-        content: 'Eres un guionista experto en psicología viral. REGLA SUPREMA: Escribe el guion COMPLETO palabra por palabra. Nunca resumas. Usa bucles de curiosidad.' 
-      },
-      { 
-        // Pasamos "settings" al prompt para que lea la estructura y la psicología
-        role: 'user', 
-        content: PROMPT_GENERADOR_GUIONES(contexto, viralDNA, settings) 
-      }
-    ],
-    temperature: 0.7,
-    max_tokens: 4000
-  });
-  
-  return {
-    data: JSON.parse(completion.choices[0].message.content || '{}'),
-    tokens: completion.usage?.total_tokens || 0
-  };
-}
-
-REGLA DE ORO: El guion debe ser tan bueno que el usuario solo necesite leerlo en cámara para crear un video viral.`;
-};
+}`; 
 
 // 4️ JUEZ VIRAL
 const PROMPT_JUEZ_VIRAL = (contexto: ContextoUsuario, contenido: string) => `ERES EL ALGORITMO HUMANO MÁS PRECISO PARA PREDECIR VIRALIDAD.
