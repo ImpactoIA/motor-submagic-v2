@@ -795,7 +795,7 @@ async function runIngestionPipeline(
 // ==================================================================================
 
 // 1️ IDEAS RÁPIDAS
-const PROMPT_IDEAS_RAPIDAS = (contexto: ContextoUsuario) => `ERES UN GENIO CREATIVO DE CONTENIDO VIRAL EN ESPAÑOL.
+const PROMPT_IDEAS = (contexto: ContextoUsuario) => `ERES UN GENIO CREATIVO DE CONTENIDO VIRAL EN ESPAÑOL.
 TU MISIÓN: Generar 10 ideas de video EXPLOSIVAS para el nicho del usuario en menos de 30 segundos.
 
 CONTEXTO DEL USUARIO:
@@ -1470,35 +1470,21 @@ FORMATO DE SALIDA JSON ESTRICTO:
 // FUNCIONES EJECUTORAS DE MÓDULOS
 // ==================================================================================
 
-async function ejecutarIdeasRapidas(
-  userInput: string,
-  contexto: any,
-  qty: number,
-  openai: any
-): Promise<{ data: any; tokens: number }> {
-  console.log(`[CEREBRO] 💡 Ejecutando Ideas Rápidas (${qty})...`);
-  
-  const promptDinamico = `
-    TEMA: "${userInput}".
-    CONTEXTO: ${contexto.nicho}.
-    TU MISIÓN: Generar EXACTAMENTE ${qty} ideas de video virales.
-    FORMATO JSON: { "ideas": [{ "titulo": "...", "concepto": "...", "gancho_sugerido": "...", "potencial_viral": 9.5 }] }
-  `;
-
+async function ejecutarIdeasRapidas(topic: string, ctx: any, openai: any) {
+  // Por defecto pedimos 10 ideas como dice tu prompt
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o',
     response_format: { type: 'json_object' },
     messages: [
-      { role: 'system', content: 'Eres un genio creativo de contenido viral.' },
-      { role: 'user', content: promptDinamico }
+      {role: 'system', content: 'Eres un genio creativo.'}, 
+      // 👇 Aquí pasamos el TOPIC y el CONTEXTO
+      {role: 'user', content: PROMPT_IDEAS(topic, ctx)}
     ],
-    temperature: 0.8,
-    max_tokens: qty === 10 ? 2500 : 1500
+    max_tokens: 2500
   });
-  
-  return {
-    data: JSON.parse(completion.choices[0].message.content || '{"ideas":[]}'),
-    tokens: completion.usage?.total_tokens || 0
+  return { 
+    data: JSON.parse(completion.choices[0].message.content || '{}'), 
+    tokens: completion.usage.total_tokens 
   };
 }
 
@@ -1905,15 +1891,16 @@ serve(async (req) => {
 
     switch (selectedMode) {
       case 'ideas_rapidas': {
-        const userTopic = processedContext || "Viralidad";
-        const quantity = (settings.quantity === 10 || userTopic.includes("10 ideas")) ? 10 : 3;
+        // Extraemos el tema que escribió el usuario
+        const topic = processedContext || "Viralidad General";
         
-        const res = await ejecutarIdeasRapidas(userTopic, userContext, quantity, openai);
-        result = res.data;
+        // 👇 Llamamos a la función pasando el topic
+        const res = await ejecutarIdeasRapidas(topic, userContext, openai);
+        
+        result = res.data; 
         tokensUsed = res.tokens;
         break;
       }
-
       case 'calendar_generator': {
         if (!settings.duration) settings.duration = 7;
         const res = await ejecutarCalendario(settings, userContext, openai);
