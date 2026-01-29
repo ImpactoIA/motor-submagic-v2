@@ -799,9 +799,11 @@ async function runIngestionPipeline(
 // 🧠 SISTEMA CEREBRAL - 9 MÓDULOS DE IA INTERCONECTADOS
 // ==================================================================================
 
-// 1️ IDEAS RÁPIDAS
-const PROMPT_IDEAS_RAPIDAS = (contexto: ContextoUsuario) => `ERES UN GENIO CREATIVO DE CONTENIDO VIRAL EN ESPAÑOL.
-TU MISIÓN: Generar 10 ideas de video EXPLOSIVAS para el nicho del usuario en menos de 30 segundos.
+// 1️ IDEAS RÁPIDAS (VERSIÓN TITAN POWER - SYNTAX FIXED)
+// Mantiene toda la potencia del prompt original pero dentro de las comillas correctas.
+const PROMPT_IDEAS = (topic: string, contexto: any) => `
+ERES UN GENIO CREATIVO DE CONTENIDO VIRAL EN ESPAÑOL.
+TU MISIÓN: Generar ideas de video EXPLOSIVAS sobre el tema: "${topic}".
 
 CONTEXTO DEL USUARIO:
 - Nicho: ${contexto.nicho || 'General'}
@@ -811,16 +813,16 @@ CONTEXTO DEL USUARIO:
 - Hooks exitosos previos: ${contexto.hooks_exitosos?.join(', ') || 'N/A'}
 - Patrones virales identificados: ${contexto.patrones_virales?.join(', ') || 'N/A'}
 
-BIBLIOTECAS DE CONOCIMIENTO:
+BIBLIOTECAS DE CONOCIMIENTO (ÚSALAS PARA MAXIMIZAR VIRALIDAD):
 ${MASTER_HOOKS_STR}
 ${VIDEO_FORMATS_STR}
 ${ALGORITHM_SECRETS_STR}
 
 PROTOCOLO DE GENERACIÓN:
-1. Analiza el contexto completo del usuario
-2. Aplica los 7 disparadores virales: Curiosidad, Miedo, Deseo, Urgencia, Identidad, Controversia, Transformación
-3. Combina los patrones exitosos detectados por el sistema
-4. Genera ideas que conecten con el dolor profundo del Avatar
+1. Analiza el contexto completo del usuario.
+2. Aplica los 7 disparadores virales: Curiosidad, Miedo, Deseo, Urgencia, Identidad, Controversia, Transformación.
+3. Combina los patrones exitosos detectados por el sistema.
+4. Genera ideas que conecten con el dolor profundo del Avatar.
 
 FORMATO DE SALIDA JSON ESTRICTO:
 {
@@ -837,12 +839,13 @@ FORMATO DE SALIDA JSON ESTRICTO:
     }
   ],
   "recomendacion_top": {
-    "idea_id": 3,
+    "idea_id": 1,
     "razon": "Explicación de por qué esta es la mejor opción ahora"
   }
 }
 
-⚠️ INSTRUCCIÓN CRÍTICA: Todas las ideas deben estar en ESPAÑOL NEUTRO y ser específicas para el nicho del usuario.`;
+⚠️ INSTRUCCIÓN CRÍTICA: Todas las ideas deben estar en ESPAÑOL NEUTRO y ser específicas para el nicho del usuario.
+`;
 
 // 2️ AUTOPSIA VIRAL (V113 - TITAN SHOWRUNNER & TRANSLATOR)
 // Requiere: platform (string) y contexto (objeto con nicho/avatar)
@@ -1628,7 +1631,7 @@ async function getUserContext(
 }
 
 // ==================================================================================
-// 🚀 SERVIDOR PRINCIPAL (SERVE)
+// 🚀 SERVIDOR PRINCIPAL (SERVE) - VERSIÓN FINAL CORREGIDA
 // ==================================================================================
 
 serve(async (req) => {
@@ -1686,30 +1689,26 @@ serve(async (req) => {
       }
     }
 
-    // 5. CARGA DE CONTEXTO INTELIGENTE (EL CEREBRO V300)
+    // 5. CARGA DE CONTEXTO INTELIGENTE
     let userContext: any = {
       nicho: 'General',
       avatar_ideal: 'Audiencia General',
       knowledge_base_content: ''
     };
 
-    // A. Cargar Experto
     if (expertId) {
       const { data: exp } = await supabase.from('expert_profiles').select('*').eq('id', expertId).single();
       if (exp) userContext.nicho = `Nicho: ${exp.nicho}. Misión: ${exp.mission}. Estilo: ${exp.tone}`;
     }
     
-    // B. Cargar Avatar
     if (avatarId) {
       const { data: av } = await supabase.from('avatars').select('*').eq('id', avatarId).single();
       if (av) userContext.avatar_ideal = `${av.name} (Dolor Principal: ${av.dolor})`;
     }
 
-    // C. Cargar Base de Conocimiento (RAG Simple)
     if (knowledgeBaseId) {
       const { data: doc } = await supabase.from('documents').select('content').eq('id', knowledgeBaseId).single();
       if (doc && doc.content) {
-        // Limitamos a ~3000 caracteres para el contexto
         userContext.knowledge_base_content = doc.content.substring(0, 3000);
       }
     }
@@ -1717,51 +1716,70 @@ serve(async (req) => {
     // 6. PIPELINE DE INGESTIÓN
     let processedContext = transcript || customPrompt || "";
 
-    // Caso A: Procesar URL Externa si no hay transcripción
     if (url && (!processedContext || processedContext.length < 50)) {
        console.log(`[PIPELINE] 🔗 URL detectada sin transcripción: ${url}`);
        processedContext = `Analiza el contenido de esta URL/Video: ${url}`;
     }
 
-     // ==================================================================================
-    // 9. LÓGICA DEL CEREBRO - SISTEMA MODULAR DE 9 FUNCIONES
+    // ==================================================================================
+    // 9. LÓGICA DEL CEREBRO
     // ==================================================================================
     
     let result: any;
     let tokensUsed = 0;
-    let whisperMinutes = 0; // <--- ESTA ES LA LÍNEA QUE FALTABA
-    
+    let whisperMinutes = 0; // ✅ CORRECCIÓN 1: Variable definida
+
     switch (selectedMode) {
       case 'ideas_rapidas':
         {
-          const ideasResult = await ejecutarIdeasRapidas(userContext, openai);
-          result = ideasResult.data;
-          tokensUsed = ideasResult.tokens;
+          // ✅ CORRECCIÓN 2: Usamos lo que escribiste (processedContext) como TEMA
+          const userTopic = processedContext || "Viralidad General";
+          console.log(`[CEREBRO] 💡 Generando 3 ideas sobre: "${userTopic}"`);
+
+          // ✅ CORRECCIÓN 3: Prompt para limitar a 3 ideas
+          const promptIdeas = `
+            CONTEXTO: ${userContext.nicho}. AVATAR: ${userContext.avatar_ideal}.
+            TEMA SOLICITADO POR EL USUARIO: "${userTopic}".
+            
+            TU MISIÓN: Generar EXACTAMENTE 3 ideas de video virales y potentes sobre "${userTopic}".
+            NO generes 10, solo 3.
+            
+            FORMATO JSON OBLIGATORIO:
+            {
+              "ideas": [
+                { 
+                  "titulo": "Título Gancho", 
+                  "concepto": "De qué trata", 
+                  "gancho_sugerido": "Primera frase", 
+                  "formato_visual": "Ej: Pantalla Verde",
+                  "potencial_viral": 9.5
+                }
+              ]
+            }
+          `;
+
+          const completion = await openai.chat.completions.create({
+            model: 'gpt-4o',
+            response_format: { type: 'json_object' },
+            messages: [
+              { role: 'system', content: 'Eres un genio creativo de contenido viral.' },
+              { role: 'user', content: promptIdeas }
+            ],
+            temperature: 0.8,
+            max_tokens: 1500
+          });
+          
+          result = JSON.parse(completion.choices[0].message.content || '{}');
+          tokensUsed = completion.usage?.total_tokens || 0;
         }
         break;
 
       case 'autopsia_viral':
       case 'recreate':
         {
-          // FASE A: Autopsia Viral (Extracción de ADN)
-          const autopsiaResult = await ejecutarAutopsiaViral(
-            processedContext,
-            platform || 'general',
-            openai
-          );
-          
-          // FASE B: Generador de Guiones (Adaptación)
-          const guionResult = await ejecutarGeneradorGuiones(
-            userContext,
-            autopsiaResult.data.adn_extraido,
-            openai
-          );
-          
-          result = {
-            autopsia_viral: autopsiaResult.data,
-            guion_adaptado: guionResult.data
-          };
-          
+          const autopsiaResult = await ejecutarAutopsiaViral(processedContext, platform || 'general', openai);
+          const guionResult = await ejecutarGeneradorGuiones(userContext, autopsiaResult.data.adn_extraido, openai);
+          result = { autopsia_viral: autopsiaResult.data, guion_adaptado: guionResult.data };
           tokensUsed = autopsiaResult.tokens + guionResult.tokens;
         }
         break;
@@ -1784,11 +1802,7 @@ serve(async (req) => {
 
       case 'auditar_avatar':
         {
-          const avatarResult = await ejecutarAuditorAvatar(
-            processedContext,
-            userContext.nicho,
-            openai
-          );
+          const avatarResult = await ejecutarAuditorAvatar(processedContext, userContext.nicho, openai);
           result = avatarResult.data;
           tokensUsed = avatarResult.tokens;
         }
@@ -1817,7 +1831,6 @@ serve(async (req) => {
       
       case 'calendar_generator':
         {
-           // Lógica directa para calendario usando el prompt definido arriba
            const calSettings = JSON.parse(processedContext || "{}"); 
            const completion = await openai.chat.completions.create({
             model: 'gpt-4o',
@@ -1834,21 +1847,12 @@ serve(async (req) => {
 
       default:
         result = {
-          message: 'Modo no implementado o desconocido',
-          modos_disponibles: [
-            'ideas_rapidas',
-            'autopsia_viral',
-            'recreate',
-            'generar_guion',
-            'juez_viral',
-            'auditar_avatar',
-            'auditar_experto',
-            'mentor_estrategico',
-            'calendar_generator'
-          ]
+          message: 'Modo no implementado',
+          modos_disponibles: [ 'ideas_rapidas', 'autopsia_viral', 'recreate', 'generar_guion', 'mentor_ia' ]
         };
     }
-// 10. CÁLCULO DE COSTO Y COBRO
+
+    // 10. CÁLCULO DE COSTO Y COBRO
     const realCost = calculateRealCost(tokensUsed, whisperMinutes);
     const finalCost = Math.max(estimatedCost || 0, realCost);
     
@@ -1861,7 +1865,6 @@ serve(async (req) => {
     }
 
     // 11. PERSISTENCIA EN BASE DE DATOS
-    // Guardamos el resultado en el historial (excepto chats efímeros)
     if (!['chat-avatar', 'mentor_ia', 'mentor', 'chat_expert'].includes(selectedMode)) {
       await supabase.from('viral_generations').insert({ 
         user_id: userId, 
@@ -1884,7 +1887,7 @@ serve(async (req) => {
         finalCost, 
         metadata: { 
           mode: selectedMode, 
-          version: 'V103_ULTIMATE_CEREBRO', 
+          version: 'V300_ULTIMATE_CEREBRO', 
           duration,
           memoria_sistema: {
             patrones_virales: MEMORIA_SISTEMA.patrones_virales.length,
