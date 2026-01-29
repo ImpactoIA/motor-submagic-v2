@@ -1,10 +1,10 @@
 // ==================================================================================
-// 🚀 TITAN ENGINE V103 ULTIMATE - CORRECCIÓN COMPLETA
+//  TITAN ENGINE V103 ULTIMATE - CORRECCIÓN COMPLETA
 // ==================================================================================
-// ✅ Sintaxis corregida (sin EOF errors)
-// ✅ Routing unificado para TODOS los modos
-// ✅ Costos alineados con frontend
-// ✅ Scrapers + Whisper + Cerebro completamente conectados
+//  Sintaxis corregida (sin EOF errors)
+//  Routing unificado para TODOS los modos
+//  Costos alineados con frontend
+//  Scrapers + Whisper + Cerebro completamente conectados
 // ==================================================================================
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
@@ -18,7 +18,7 @@ const corsHeaders = {
 }
 
 // ==================================================================================
-// 🔐 CONFIGURACIÓN DE SEGURIDAD
+// CONFIGURACIÓN DE SEGURIDAD
 // ==================================================================================
 
 const SECURITY_CONFIG = {
@@ -41,7 +41,7 @@ const SECURITY_CONFIG = {
 };
 
 // ==================================================================================
-// 🧠 NÚCLEO DE INTELIGENCIA
+// NÚCLEO DE INTELIGENCIA
 // ==================================================================================
 
 interface SystemMemory {
@@ -75,7 +75,7 @@ const MEMORIA_SISTEMA: SystemMemory = {
 };
 
 // ==================================================================================
-// 📚 BIBLIOTECAS DE CONOCIMIENTO WINNER ROCKET
+// BIBLIOTECAS DE CONOCIMIENTO WINNER ROCKET
 // ==================================================================================
 
 const VIDEO_FORMATS_STR = `12 FORMATOS VISUALES WINNER ROCKET:
@@ -92,7 +92,7 @@ INSTAGRAM: Carousels 3x alcance | Reels loop +60% shares | 3 hashtags grandes + 
 YOUTUBE: Títulos números mejor | Loop endscreen | Subtítulos +35% retención`;
 
 // ==================================================================================
-// 🛡️ FUNCIONES DE SEGURIDAD
+//  FUNCIONES DE SEGURIDAD
 // ==================================================================================
 
 function sanitizeUserContent(content: string): string {
@@ -104,7 +104,7 @@ function sanitizeUserContent(content: string): string {
   });
   
   if (sanitized.length > SECURITY_CONFIG.MAX_CONTENT_LENGTH) {
-    console.log(`[SECURITY] ⚠️ Contenido truncado: ${sanitized.length} -> ${SECURITY_CONFIG.MAX_CONTENT_LENGTH}`);
+    console.log(`[SECURITY]  Contenido truncado: ${sanitized.length} -> ${SECURITY_CONFIG.MAX_CONTENT_LENGTH}`);
     sanitized = sanitized.substring(0, SECURITY_CONFIG.MAX_CONTENT_LENGTH);
   }
   
@@ -131,7 +131,7 @@ function checkRateLimit(userId: string): boolean {
   }
   
   if (limit.count >= SECURITY_CONFIG.MAX_REQUESTS_PER_MINUTE) {
-    console.log(`[RATE_LIMIT] ❌ Usuario ${userId} excedió límite`);
+    console.log(`[RATE_LIMIT]  Usuario ${userId} excedió límite`);
     return false;
   }
   
@@ -159,7 +159,7 @@ async function validateUserCredits(
     const requiredCredits = estimatedCost + SECURITY_CONFIG.MIN_CREDITS_BUFFER;
     
     if (currentBalance < requiredCredits) {
-      console.log(`[CREDITS] ❌ Insuficientes: ${currentBalance} < ${requiredCredits}`);
+      console.log(`[CREDITS]  Insuficientes: ${currentBalance} < ${requiredCredits}`);
       return { 
         valid: false, 
         currentBalance, 
@@ -167,7 +167,7 @@ async function validateUserCredits(
       };
     }
     
-    console.log(`[CREDITS] ✅ Validación exitosa: ${currentBalance} créditos`);
+    console.log(`[CREDITS] Validación exitosa: ${currentBalance} créditos`);
     return { valid: true, currentBalance };
     
   } catch (error: any) {
@@ -188,7 +188,7 @@ function calculateRealCost(tokensUsed: number, whisperMinutes: number = 0): numb
 }
 
 // ==================================================================================
-// 🧩 CHUNKING INTELIGENTE
+// CHUNKING INTELIGENTE
 // ==================================================================================
 
 function smartChunk(text: string, maxChunkSize: number = 15000): string[] {
@@ -239,7 +239,7 @@ async function processLongContent(text: string, openai: any): Promise<string> {
 }
 
 // ==================================================================================
-// 🎤 CONFIGURACIÓN DE SCRAPERS (6 PLATAFORMAS)
+//  CONFIGURACIÓN DE SCRAPERS (6 PLATAFORMAS)
 // ==================================================================================
 
 interface ScraperConfig {
@@ -566,7 +566,7 @@ const PLATFORM_CONFIGS: Record<string, ScraperConfig> = {
 };
 
 // ==================================================================================
-// 🔧 FUNCIONES AUXILIARES
+//  FUNCIONES AUXILIARES
 // ==================================================================================
 
 function isValidUrl(urlString: string): boolean {
@@ -629,7 +629,7 @@ async function downloadWithRetry(url: string, platform: string, maxRetries = 3):
 }
 
 // ==================================================================================
-// 🎤 WHISPER TRANSCRIPTION
+//  WHISPER TRANSCRIPTION
 // ==================================================================================
 
 async function transcribeWithWhisper(
@@ -664,7 +664,7 @@ async function transcribeWithWhisper(
   
   const durationMinutes = data.duration ? data.duration / 60 : (blob.size / (1024 * 1024 * 2));
   
-  console.log(`[WHISPER] ✅ ${data.text.length} chars | Lang: ${data.language} | ${durationMinutes.toFixed(2)}min`);
+  console.log(`[WHISPER]  ${data.text.length} chars | Lang: ${data.language} | ${durationMinutes.toFixed(2)}min`);
   
   return { 
     text: data.text, 
@@ -675,7 +675,7 @@ async function transcribeWithWhisper(
 }
 
 // ==================================================================================
-// 📡 PIPELINE DE INGESTIÓN
+//  PIPELINE DE INGESTIÓN
 // ==================================================================================
 
 async function runIngestionPipeline(
@@ -705,16 +705,16 @@ async function runIngestionPipeline(
   let whisperMinutes = 0;
 
   try {
-    console.log(`[SCRAPER] 🔄 Primary: ${config.actorId}`);
+    console.log(`[SCRAPER]  Primary: ${config.actorId}`);
     const input = config.inputBuilder(url);
     const run = await client.actor(config.actorId).call(input);
     const { items } = await client.dataset(run.defaultDatasetId).listItems();
     scraperResult = items.length > 0 ? items[0] : null;
   } catch (error: any) {
-    console.error(`[SCRAPER] ❌ Primary falló: ${error.message}`);
+    console.error(`[SCRAPER]  Primary falló: ${error.message}`);
     
     if (config.fallbackActorId) {
-      console.log(`[SCRAPER] 🔄 Fallback: ${config.fallbackActorId}`);
+      console.log(`[SCRAPER]  Fallback: ${config.fallbackActorId}`);
       try {
         let fallbackInput = config.inputBuilder(url);
         if (config.fallbackActorId.includes('clockworks')) {
@@ -724,7 +724,7 @@ async function runIngestionPipeline(
         const { items } = await client.dataset(run.defaultDatasetId).listItems();
         scraperResult = items.length > 0 ? items[0] : null;
       } catch (e2: any) {
-        console.error(`[SCRAPER] ❌ Fallback falló: ${e2.message}`);
+        console.error(`[SCRAPER]  Fallback falló: ${e2.message}`);
       }
     }
   }
@@ -740,7 +740,7 @@ async function runIngestionPipeline(
     
     if (mediaBlob) {
       if (mediaBlob.size > 24 * 1024 * 1024) {
-        console.log("[PIPELINE] ⚠️ Archivo > 24MB, usando servicio externo...");
+        console.log("[PIPELINE]  Archivo > 24MB, usando servicio externo...");
         try {
           const run = await client.actor("vittuhy/audio-and-video-transcript").call({ 
             mediaUrl: audioUrl, 
@@ -791,10 +791,10 @@ async function runIngestionPipeline(
 }
 
 // ==================================================================================
-// 🧠 SISTEMA CEREBRAL - PROMPTS V300
+//  SISTEMA CEREBRAL - PROMPTS V300
 // ==================================================================================
 
-// 1️⃣ IDEAS RÁPIDAS
+// 1️ IDEAS RÁPIDAS
 const PROMPT_IDEAS_RAPIDAS = (contexto: ContextoUsuario) => `ERES UN GENIO CREATIVO DE CONTENIDO VIRAL EN ESPAÑOL.
 TU MISIÓN: Generar 10 ideas de video EXPLOSIVAS para el nicho del usuario en menos de 30 segundos.
 
@@ -839,7 +839,7 @@ FORMATO DE SALIDA JSON ESTRICTO:
 
 ⚠️ INSTRUCCIÓN CRÍTICA: Todas las ideas deben estar en ESPAÑOL NEUTRO y ser específicas para el nicho del usuario.`;
 
-// 2️⃣ AUTOPSIA VIRAL - Ingeniería inversa de videos exitosos
+// 2️ AUTOPSIA VIRAL - Ingeniería inversa de videos exitosos
 const PROMPT_AUTOPSIA_VIRAL = (platform: string) => `ERES EL FORENSE DE VIRALIDAD #1 DEL MUNDO.
 TU MISIÓN: Deconstruir videos virales hasta sus componentes atómicos y extraer el ADN replicable.
 
@@ -932,10 +932,10 @@ FORMATO DE SALIDA JSON ESTRICTO:
   }
 }
 
-⚠️ REGLA CRÍTICA: No describas el video, DECONSTRUYE su arquitectura.`;
+ REGLA CRÍTICA: No describas el video, DECONSTRUYE su arquitectura.`;
 
-// 3️⃣ // ==================================================================================
-// 🧠 3. GENERADOR DE GUIONES (MEGA PROMPT V300 - WINNER ROCKET & PSYCHOLOGY)
+// ==================================================================================
+//  3. GENERADOR DE GUIONES (MEGA PROMPT V300 - WINNER ROCKET & PSYCHOLOGY)
 // ==================================================================================
 
 const PROMPT_GENERADOR_GUIONES = (contexto: any, viralDNA: any, settings: any = {}) => {
@@ -947,7 +947,7 @@ const PROMPT_GENERADOR_GUIONES = (contexto: any, viralDNA: any, settings: any = 
   const contentObjective = settings.objective || 'Educar';
   const avatarSituation = settings.situation || 'Dolor Agudo';
 
-  // 📚 DICCIONARIO DE ARQUITECTURAS VIRALES (ACTUALIZADO)
+  //  DICCIONARIO DE ARQUITECTURAS VIRALES (ACTUALIZADO)
   const ARCHITECTURES: Record<string, string> = {
     'winner_rocket': `
       1. HOOK PODEROSO (0-3s): Dispara curiosidad o usa una afirmación disruptiva. Debe detener el scroll inmediatamente.
@@ -976,7 +976,7 @@ TU MISIÓN: Escribir un guion COMPLETO, palabra por palabra, aplicando la arquit
 - Deseo Principal: ${contexto.deseo_principal || 'N/A'}
 - Enemigo Común: ${contexto.enemigo_comun || 'N/A'}${dnaContext}
 
---- 🧠 CONFIGURACIÓN PSICOLÓGICA (CRÍTICO) ---
+---  CONFIGURACIÓN PSICOLÓGICA (CRÍTICO) ---
 1. NIVEL DE CONCIENCIA: "${awarenessLevel}"
    - Si es "Totalmente Inconsciente": Usa historias y metáforas, no hables del problema directo aún.
    - Si es "Consciente del Problema": Agita el dolor y muestra empatía.
@@ -988,7 +988,7 @@ TU MISIÓN: Escribir un guion COMPLETO, palabra por palabra, aplicando la arquit
 3. SITUACIÓN ACTUAL DEL AVATAR: "${avatarSituation}"
    - El guion debe atacar específicamente este punto (miedo, objeción o anhelo).
 
---- 🛠️ ARQUITECTURA SELECCIONADA: ${structureType.toUpperCase()} ---
+---  ARQUITECTURA SELECCIONADA: ${structureType.toUpperCase()} ---
 Sigue ESTRICTAMENTE esta estructura de tiempos y contenido:
 ${selectedStructure}
 
@@ -1026,14 +1026,14 @@ ${selectedStructure}
 }`;
 };
 
-// ⚡ EJECUTOR ACTUALIZADO (RECIBE SETTINGS COMPLETOS)
+// EJECUTOR ACTUALIZADO (RECIBE SETTINGS COMPLETOS)
 async function ejecutarGeneradorGuiones(
   contexto: any,
   viralDNA: any | null,
   openai: any,
   settings: any = {} 
 ): Promise<{ data: any; tokens: number }> {
-  console.log('[CEREBRO] 📝 Generando Guion Winner Rocket...');
+  console.log('[CEREBRO]  Generando Guion Winner Rocket...');
   
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o',
@@ -1059,10 +1059,10 @@ async function ejecutarGeneradorGuiones(
   };
 }
 
-⚠️ REGLA DE ORO: El guion debe ser tan bueno que el usuario solo necesite leerlo en cámara para crear un video viral.`;
+REGLA DE ORO: El guion debe ser tan bueno que el usuario solo necesite leerlo en cámara para crear un video viral.`;
 };
 
-// 4️⃣ JUEZ VIRAL
+// 4️ JUEZ VIRAL
 const PROMPT_JUEZ_VIRAL = (contexto: ContextoUsuario, contenido: string) => `ERES EL ALGORITMO HUMANO MÁS PRECISO PARA PREDECIR VIRALIDAD.
 TU MISIÓN: Evaluar guiones, ideas o videos ANTES de publicarlos y dar un veredicto científico.
 
@@ -1127,9 +1127,9 @@ FORMATO DE SALIDA JSON ESTRICTO:
   "decision_recomendada": "PUBLICAR / MEJORAR ANTES DE PUBLICAR / DESCARTAR"
 }
 
-⚠️ INSTRUCCIÓN CRÍTICA: Sé brutalmente honesto. Es mejor un 6/10 real que un 9/10 falso.`;
+ INSTRUCCIÓN CRÍTICA: Sé brutalmente honesto. Es mejor un 6/10 real que un 9/10 falso.`;
 
-// 5️⃣ TRANSCRIPTOR
+// 5️ TRANSCRIPTOR
 const PROMPT_TRANSCRIPTOR = (platform: string) => `ERES UN TRANSCRIPTOR EXPERTO CON ANÁLISIS CONTEXTUAL.
 TU MISIÓN: Convertir videos en texto estructurado Y añadir capas de análisis.
 
@@ -1198,7 +1198,7 @@ FORMATO DE SALIDA JSON ESTRICTO:
   ]
 }`;
 
-// 6️⃣ AUDITOR DE AVATAR
+// 6️ AUDITOR DE AVATAR
 const PROMPT_AUDITOR_AVATAR = (infoCliente: string, nicho: string) => `ERES UN PSICÓLOGO DE CONSUMIDOR Y ESTRATEGA DE AVATARES.
 TU MISIÓN: Crear el perfil más completo del Cliente Ideal para que TODO el contenido hable directo a su cerebro.
 
@@ -1256,9 +1256,9 @@ FORMATO DE SALIDA JSON ESTRICTO:
   ]
 }
 
-⚠️ REGLA DE ORO: Un Avatar bien definido hace que TODO el contenido sea 10x más efectivo.`;
+ REGLA DE ORO: Un Avatar bien definido hace que TODO el contenido sea 10x más efectivo.`;
 
-// 7️⃣ AUDITOR DE EXPERTO
+// 7️ AUDITOR DE EXPERTO
 const PROMPT_AUDITOR_EXPERTO = (contexto: ContextoUsuario) => `ERES UN ANALISTA COMPETITIVO Y ESTRATEGA DE POSICIONAMIENTO.
 TU MISIÓN: Analizar el perfil del usuario, su competencia y el mercado para encontrar su ÁNGULO ÚNICO.
 
@@ -1318,9 +1318,9 @@ FORMATO DE SALIDA JSON ESTRICTO:
   }
 }
 
-⚠️ OBJETIVO: El usuario debe saber QUIÉN es en su mercado y CÓMO destacar.`;
+ OBJETIVO: El usuario debe saber QUIÉN es en su mercado y CÓMO destacar.`;
 
-// 8️⃣ MENTOR ESTRATÉGICO
+// 8️ MENTOR ESTRATÉGICO
 const PROMPT_MENTOR_ESTRATEGICO = (contexto: ContextoUsuario, resultados?: any) => {
   const resultadosStr = resultados ? `\n\nRESULTADOS RECIENTES:\n${JSON.stringify(resultados)}` : '';
   
@@ -1389,10 +1389,10 @@ FORMATO DE SALIDA JSON ESTRICTO:
   }
 }
 
-⚠️ ROL: GUIAR con visión, EMPODERAR con confianza, OPTIMIZAR con datos.`;
+ ROL: GUIAR con visión, EMPODERAR con confianza, OPTIMIZAR con datos.`;
 };
 
-// 9️⃣ INGENIERÍA INVERSA
+// 9️ INGENIERÍA INVERSA
 const PROMPT_INGENIERIA_INVERSA = (contexto: ContextoUsuario, numVideos: number) => `ERES UN CIENTÍFICO DE DATOS DE CONTENIDO VIRAL.
 TU MISIÓN: Analizar múltiples videos virales y extraer PATRONES UNIVERSALES replicables.
 
@@ -1449,10 +1449,10 @@ FORMATO DE SALIDA JSON ESTRICTO:
   }
 }
 
-⚠️ OBJETIVO: Sistema probado de creación viral, no solo ideas sueltas.`;
+ OBJETIVO: Sistema probado de creación viral, no solo ideas sueltas.`;
 
 // ==================================================================================
-// 🧠 FUNCIONES EJECUTORAS DE MÓDULOS
+// FUNCIONES EJECUTORAS DE MÓDULOS
 // ==================================================================================
 
 async function ejecutarIdeasRapidas(
@@ -1493,7 +1493,7 @@ async function ejecutarAutopsiaViral(
   contexto: any,
   openai: any
 ): Promise<{ data: any; tokens: number }> {
-  console.log('[CEREBRO] 🔬 Ejecutando Autopsia Viral...');
+  console.log('[CEREBRO]  Ejecutando Autopsia Viral...');
   
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o',
@@ -1522,7 +1522,7 @@ async function ejecutarGeneradorGuiones(
   viralDNA: any | null,
   openai: any
 ): Promise<{ data: any; tokens: number }> {
-  console.log('[CEREBRO] 📝 Ejecutando Generador de Guiones (Modo Estricto)...');
+  console.log('[CEREBRO]  Ejecutando Generador de Guiones (Modo Estricto)...');
   
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o',
@@ -1530,7 +1530,7 @@ async function ejecutarGeneradorGuiones(
     messages: [
       { 
         role: 'system', 
-        // 👇 AQUÍ ESTÁ EL CAMBIO CLAVE: Le ordenamos escribir todo
+        //  AQUÍ ESTÁ EL CAMBIO CLAVE: Le ordenamos escribir todo
         content: 'Eres un guionista experto. TU REGLA #1: Escribir el guion COMPLETO palabra por palabra. Nunca uses resúmenes. El campo "guion_completo" debe tener todo el texto hablado.' 
       },
       { role: 'user', content: PROMPT_GENERADOR_GUIONES(contexto, viralDNA) }
@@ -1556,7 +1556,7 @@ async function ejecutarJuezViral(
   contenido: string,
   openai: any
 ): Promise<{ data: any; tokens: number }> {
-  console.log('[CEREBRO] ⚖️ Ejecutando Juez Viral...');
+  console.log('[CEREBRO]  Ejecutando Juez Viral...');
   
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o',
@@ -1579,7 +1579,7 @@ async function ejecutarAuditorAvatar(
   infoCliente: string,
   openai: any
 ): Promise<{ data: any; tokens: number }> {
-  console.log('[CEREBRO] 👤 Ejecutando Auditor de Avatar...');
+  console.log('[CEREBRO]  Ejecutando Auditor de Avatar...');
   
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o',
@@ -1603,7 +1603,7 @@ async function ejecutarAuditorExperto(
   contenidoExtra: string, 
   openai: any
 ): Promise<{ data: any; tokens: number }> {
-  console.log('[CEREBRO] 🎯 Ejecutando Auditor de Experto...');
+  console.log('[CEREBRO]  Ejecutando Auditor de Experto...');
   
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o',
@@ -1627,7 +1627,7 @@ async function ejecutarMentorEstrategico(
   contexto: any,
   openai: any
 ): Promise<{ data: any; tokens: number }> {
-  console.log('[CEREBRO] 🧭 Ejecutando Mentor Estratégico...');
+  console.log('[CEREBRO]  Ejecutando Mentor Estratégico...');
   
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o',
@@ -1651,7 +1651,7 @@ async function ejecutarCalendario(
   contexto: any,
   openai: any
 ): Promise<{ data: any; tokens: number }> {
-  console.log('[CEREBRO] 📅 Generando Calendario...');
+  console.log('[CEREBRO]  Generando Calendario...');
   
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o',
@@ -1671,7 +1671,7 @@ async function ejecutarCalendario(
 }
 
 // ==================================================================================
-// 🔄 CONTEXTO DE USUARIO
+// CONTEXTO DE USUARIO
 // ==================================================================================
 
 async function getUserContext(
@@ -1725,18 +1725,18 @@ async function getUserContext(
 }
 
 // ==================================================================================
-// 💰 CALCULADORA DE TARIFAS TITAN (100% ALINEADA CON FRONTEND)
+// CALCULADORA DE TARIFAS TITAN (100% ALINEADA CON FRONTEND)
 // ==================================================================================
 
 function calculateTitanCost(mode: string, inputContext: string, whisperMinutes: number, settings: any): number {
   
-  // 1️⃣ IDEAS RÁPIDAS (QuickIdeas.tsx)
+  // 1️ IDEAS RÁPIDAS (QuickIdeas.tsx)
   if (mode === 'ideas_rapidas') {
     if (inputContext.toLowerCase().includes("10 ideas") || settings?.quantity === 10) return 7;
     return 3; 
   }
 
-  // 2️⃣ CALENDARIO (Calendar.tsx)
+  // 2️ CALENDARIO (Calendar.tsx)
   if (mode === 'calendar_generator') {
     const days = settings?.duration || 7; 
     if (days <= 3) return 2;   // Frontend: COST_PLANNING_3 = 2
@@ -1744,19 +1744,19 @@ function calculateTitanCost(mode: string, inputContext: string, whisperMinutes: 
     return 10;                 // Frontend: COST_PLANNING_15 = 10
   }
 
-  // 3️⃣ AUTOPSIA VIRAL (AnalyzeViral.tsx)
+  // 3️ AUTOPSIA VIRAL (AnalyzeViral.tsx)
   if (mode === 'autopsia_viral') {
     return 5; // Frontend: ANALYSIS_COST = 5
   }
 
-  // 4️⃣ RECREATE (TitanViral.tsx) - Precio según duración del video procesado
+  // 4️ RECREATE (TitanViral.tsx) - Precio según duración del video procesado
   if (mode === 'recreate') {
     // Si procesó un video largo (detectado por Whisper)
     if (whisperMinutes > 30) return 45; // Video Largo = 45 CR
     return 5; // Video Corto = 5 CR
   }
 
-  // 5️⃣ GENERADOR DE GUIONES (ScriptGenerator.tsx)
+  // 5️ GENERADOR DE GUIONES (ScriptGenerator.tsx)
   // B. GUIONES DE TEXTO (CORREGIDO Y BLINDADO)
   if (mode === 'generar_guion') {
     
@@ -1775,12 +1775,12 @@ function calculateTitanCost(mode: string, inputContext: string, whisperMinutes: 
     return 5; // Antes cobraba 1, ahora 5 exactos (tarifa base)
   }
 
-  // 6️⃣ JUEZ VIRAL (ViralCalculator.tsx)
+  // 6️ JUEZ VIRAL (ViralCalculator.tsx)
   if (mode === 'juez_viral') {
     return 2; // Frontend: AUDIT_COST = 2
   }
 
-  // 7️⃣ AUDITORÍAS DE AVATAR Y EXPERTO
+  // 7️ AUDITORÍAS DE AVATAR Y EXPERTO
   if (['audit_avatar', 'auditar_avatar'].includes(mode)) {
     return 2; // Frontend: COSTO_AUDITORIA = 2 (AvatarProfile.tsx)
   }
@@ -1789,7 +1789,7 @@ function calculateTitanCost(mode: string, inputContext: string, whisperMinutes: 
     return 2; // Frontend: COSTO_AUDITORIA = 2 (ExpertProfile.tsx)
   }
 
-  // 8️⃣ MENTOR / CHAT (AiAssistant.tsx)
+  // 8️ MENTOR / CHAT (AiAssistant.tsx)
   if (['mentor_ia', 'mentor_estrategico'].includes(mode)) {
     return 2; // Frontend: COSTO_MENTOR = 2
   }
@@ -1798,7 +1798,7 @@ function calculateTitanCost(mode: string, inputContext: string, whisperMinutes: 
     return 1; // Frontend: COSTO_CHAT = 1 (en los componentes Avatar/Expert)
   }
 
-  // 9️⃣ TRANSCRIPTOR Y HERRAMIENTAS DE TEXTO (TranscribeVideo.tsx)
+  // 9️ TRANSCRIPTOR Y HERRAMIENTAS DE TEXTO (TranscribeVideo.tsx)
   if (['transcribe', 'transcriptor'].includes(mode)) {
     // Lógica de video según duración
     if (whisperMinutes > 60) return 45;  // Masterclass (+1h)
@@ -1811,12 +1811,12 @@ function calculateTitanCost(mode: string, inputContext: string, whisperMinutes: 
     return 2; // Costo fijo bajo para transformaciones de texto puro
   }
 
-  // 🔟 DEFAULT (Seguridad)
+  //  DEFAULT (Seguridad)
   return 1; 
 }
 
 // ==================================================================================
-// 🚀 SERVIDOR PRINCIPAL
+//  SERVIDOR PRINCIPAL
 // ==================================================================================
 
 serve(async (req) => {
@@ -1862,7 +1862,7 @@ serve(async (req) => {
       }
     } catch (e) {}
 
-    console.log(`[TITAN V300] 🧠 MODE: ${selectedMode} | INPUT LEN: ${processedContext.length} | USER: ${userId}`);
+    console.log(`[TITAN V300]  MODE: ${selectedMode} | INPUT LEN: ${processedContext.length} | USER: ${userId}`);
 
     if (estimatedCost > 0) {
       const { data: p } = await supabase.from('profiles').select('credits, tier').eq('id', userId).single();
@@ -2015,7 +2015,7 @@ serve(async (req) => {
          }
          
          const { error: creditError } = await supabase.rpc('decrement_credits', { user_uuid: userId, amount: finalCost });
-         if (creditError) console.error(`[COBROS] ⚠️ Error al restar créditos: ${creditError.message}`);
+         if (creditError) console.error(`[COBROS]  Error al restar créditos: ${creditError.message}`);
          else console.log(`[COBROS] ✅ Cobrados ${finalCost} créditos a ${userId}`);
       }
     }
