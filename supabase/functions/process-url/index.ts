@@ -1396,35 +1396,48 @@ TU MISIÓN: Crear un plan de acción de ${settings.duration} días.
 `;
 
 // ==================================================================================
-// 🧠 FUNCIONES EJECUTORAS DE MÓDULOS
+// 🧠 FUNCIONES EJECUTORAS DE MÓDULOS (ACTUALIZADO V300)
 // ==================================================================================
 
+// ejecutarIdeasRapidas por esta:
 async function ejecutarIdeasRapidas(
-  contexto: ContextoUsuario,
+  userInput: string,
+  contexto: any,
+  qty: number, // <--- AHORA ACEPTA CANTIDAD
   openai: any
 ): Promise<{ data: any; tokens: number }> {
-  console.log('[CEREBRO] 💡 Ejecutando Ideas Rápidas...');
+  console.log(`[CEREBRO] 💡 Ejecutando Ideas Rápidas (${qty})...`);
   
+  // Prompt interno dinámico para asegurar la cantidad
+  const promptDinamico = `
+    TEMA: "${userInput}".
+    CONTEXTO: ${contexto.nicho}.
+    TU MISIÓN: Generar EXACTAMENTE ${qty} ideas de video virales.
+    NO generes más ni menos.
+    FORMATO JSON: { "ideas": [{ "titulo": "...", "concepto": "...", "gancho_sugerido": "...", "potencial_viral": 9.5 }] }
+  `;
+
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o',
     response_format: { type: 'json_object' },
     messages: [
-      { role: 'system', content: 'Eres un genio creativo de contenido viral en español.' },
-      { role: 'user', content: PROMPT_IDEAS_RAPIDAS(contexto) }
+      { role: 'system', content: 'Eres un genio creativo de contenido viral.' },
+      { role: 'user', content: promptDinamico }
     ],
     temperature: 0.8,
-    max_tokens: 3000
+    max_tokens: qty === 10 ? 2500 : 1500
   });
   
   return {
-    data: JSON.parse(completion.choices[0].message.content || '{}'),
+    data: JSON.parse(completion.choices[0].message.content || '{"ideas":[]}'),
     tokens: completion.usage?.total_tokens || 0
   };
 }
-
+// 2. AUTOPSIA VIRAL (Ahora recibe Contexto para adaptar)
 async function ejecutarAutopsiaViral(
   content: string,
   platform: string,
+  contexto: any,
   openai: any
 ): Promise<{ data: any; tokens: number }> {
   console.log('[CEREBRO] 🔬 Ejecutando Autopsia Viral...');
@@ -1434,7 +1447,7 @@ async function ejecutarAutopsiaViral(
     response_format: { type: 'json_object' },
     messages: [
       { role: 'system', content: 'Eres el forense de viralidad #1 del mundo.' },
-      { role: 'user', content: `${PROMPT_AUTOPSIA_VIRAL(platform)}\n\nCONTENIDO A ANALIZAR:\n${content}` }
+      { role: 'user', content: `${PROMPT_AUTOPSIA_VIRAL(platform, contexto)}\n\nCONTENIDO A ANALIZAR:\n${content}` }
     ],
     temperature: 0.3,
     max_tokens: 4096
@@ -1442,12 +1455,10 @@ async function ejecutarAutopsiaViral(
   
   const data = JSON.parse(completion.choices[0].message.content || '{}');
   
-  // Guardar en memoria del sistema
-  if (data.patron_replicable) {
-    MEMORIA_SISTEMA.patrones_virales.push(data.patron_replicable.nombre_patron);
-  }
-  if (data.adn_extraido?.formula_gancho) {
-    MEMORIA_SISTEMA.hooks_alto_rendimiento.push(data.adn_extraido.formula_gancho);
+  // Guardamos patrones en memoria si existen (Opcional)
+  if (typeof MEMORIA_SISTEMA !== 'undefined') {
+      if (data.patron_replicable) MEMORIA_SISTEMA.patrones_virales.push(data.patron_replicable.nombre_patron);
+      if (data.adn_extraido?.formula_gancho) MEMORIA_SISTEMA.hooks_alto_rendimiento.push(data.adn_extraido.formula_gancho);
   }
   
   return {
@@ -1456,8 +1467,9 @@ async function ejecutarAutopsiaViral(
   };
 }
 
+// 3. GENERADOR DE GUIONES
 async function ejecutarGeneradorGuiones(
-  contexto: ContextoUsuario,
+  contexto: any,
   viralDNA: any | null,
   openai: any
 ): Promise<{ data: any; tokens: number }> {
@@ -1480,8 +1492,9 @@ async function ejecutarGeneradorGuiones(
   };
 }
 
+// 4. JUEZ VIRAL
 async function ejecutarJuezViral(
-  contexto: ContextoUsuario,
+  contexto: any,
   contenido: string,
   openai: any
 ): Promise<{ data: any; tokens: number }> {
@@ -1504,6 +1517,7 @@ async function ejecutarJuezViral(
   };
 }
 
+// 5. AUDITOR DE AVATAR
 async function ejecutarAuditorAvatar(
   infoCliente: string,
   nicho: string,
@@ -1519,7 +1533,7 @@ async function ejecutarAuditorAvatar(
       { role: 'user', content: PROMPT_AUDITOR_AVATAR(infoCliente, nicho) }
     ],
     temperature: 0.5,
-    max_tokens: 4096
+    max_tokens: 3000
   });
   
   return {
@@ -1528,8 +1542,10 @@ async function ejecutarAuditorAvatar(
   };
 }
 
+// 6. AUDITOR DE EXPERTO
 async function ejecutarAuditorExperto(
-  contexto: ContextoUsuario,
+  contexto: any, // Pasamos el contexto completo (expertProfile)
+  contenidoExtra: string, 
   openai: any
 ): Promise<{ data: any; tokens: number }> {
   console.log('[CEREBRO] 🎯 Ejecutando Auditor de Experto...');
@@ -1539,29 +1555,22 @@ async function ejecutarAuditorExperto(
     response_format: { type: 'json_object' },
     messages: [
       { role: 'system', content: 'Eres un analista competitivo y estratega de posicionamiento.' },
-      { role: 'user', content: PROMPT_AUDITOR_EXPERTO(contexto) }
+      { role: 'user', content: PROMPT_AUDITOR_EXPERTO(contexto, contenidoExtra) }
     ],
     temperature: 0.5,
-    max_tokens: 4096
+    max_tokens: 3000
   });
   
-  const data = JSON.parse(completion.choices[0].message.content || '{}');
-  
-  // Actualizar contexto con posicionamiento
-  if (data.posicionamiento_estrategico) {
-    contexto.posicionamiento = data.posicionamiento_estrategico.declaracion_posicionamiento;
-    contexto.enemigo_comun = data.posicionamiento_estrategico.enemigo_comun;
-  }
-  
   return {
-    data,
+    data: JSON.parse(completion.choices[0].message.content || '{}'),
     tokens: completion.usage?.total_tokens || 0
   };
 }
 
+// 7. MENTOR ESTRATÉGICO
 async function ejecutarMentorEstrategico(
-  contexto: ContextoUsuario,
-  resultados: any,
+  query: string,
+  contexto: any,
   openai: any
 ): Promise<{ data: any; tokens: number }> {
   console.log('[CEREBRO] 🧭 Ejecutando Mentor Estratégico...');
@@ -1571,10 +1580,10 @@ async function ejecutarMentorEstrategico(
     response_format: { type: 'json_object' },
     messages: [
       { role: 'system', content: 'Eres un mentor de élite y estratega de crecimiento.' },
-      { role: 'user', content: PROMPT_MENTOR_ESTRATEGICO(contexto, resultados) }
+      { role: 'user', content: PROMPT_MENTOR_ESTRATEGICO(query, contexto) }
     ],
     temperature: 0.6,
-    max_tokens: 4096
+    max_tokens: 3000
   });
   
   return {
@@ -1583,6 +1592,30 @@ async function ejecutarMentorEstrategico(
   };
 }
 
+// 8. GENERADOR DE CALENDARIO (¡NUEVO!)
+async function ejecutarCalendario(
+  settings: any,
+  contexto: any,
+  openai: any
+): Promise<{ data: any; tokens: number }> {
+  console.log('[CEREBRO] 📅 Generando Calendario...');
+  
+  const completion = await openai.chat.completions.create({
+    model: 'gpt-4o',
+    response_format: { type: 'json_object' },
+    messages: [
+      { role: 'system', content: 'Eres un estratega de contenidos CMO.' },
+      { role: 'user', content: PROMPT_CALENDAR_GENERATOR(settings, contexto) }
+    ],
+    temperature: 0.7,
+    max_tokens: 4000
+  });
+  
+  return {
+    data: JSON.parse(completion.choices[0].message.content || '{}'),
+    tokens: completion.usage?.total_tokens || 0
+  };
+}
 // ==================================================================================
 // 🔄 CONTEXTO DE USUARIO (Carga de perfil)
 // ==================================================================================
@@ -1629,277 +1662,298 @@ async function getUserContext(
   
   return contexto;
 }
+// ==================================================================================
+// 💰 CALCULADORA DE TARIFAS TITAN (VERSIÓN COMPLETA - TODAS LAS FUNCIONES)
+// ==================================================================================
+function calculateTitanCost(mode: string, inputContext: string, whisperMinutes: number, settings: any): number {
+  
+  // 1. IDEAS RÁPIDAS (Dinámico: 3 o 7 créditos)
+  if (mode === 'ideas_rapidas') {
+    if (inputContext.toLowerCase().includes("10 ideas") || settings?.quantity === 10) return 7;
+    return 3; 
+  }
+
+  // 2. PROCESAMIENTO DE VIDEO / AUDIO (Dinámico por duración)
+  // Aplica para: Autopsia, Recreate, Transcriptor, Shorts (video), Structure (video), Ingeniería
+  if (['autopsia_viral', 'recreate', 'transcribe', 'transcriptor', 'ingenieria_inversa', 'shorts', 'structure'].includes(mode)) {
+    // Regla de duración real (si se procesó con Whisper)
+    if (whisperMinutes > 60) return 45; // Masterclass (+1h)
+    if (whisperMinutes > 30) return 15; // Largo (30m-1h)
+    
+    // Regla de seguridad por texto (si no hubo whisper pero el usuario pegó un texto largo o keywords)
+    if (inputContext.toLowerCase().includes("masterclass") || inputContext.toLowerCase().includes("1 hora")) return 45;
+    if (inputContext.toLowerCase().includes("30 minutos")) return 15;
+    
+    // Tarifa base para videos cortos (<30min) o análisis simples
+    // 'shorts' costaba 3 en tu tabla vieja, pero si procesa video real, 5 es más seguro.
+    return 5; 
+  }
+
+  // 3. CALENDARIO (Dinámico por días: 2, 5, 10 créditos)
+  if (mode === 'calendar_generator') {
+    const days = settings?.duration || 7; 
+    if (days <= 3) return 2;
+    if (days <= 7) return 5;
+    return 10; // 15 días
+  }
+
+  // 4. HERRAMIENTAS DE TEXTO (Precios Fijos Específicos)
+  if (mode === 'clean') return 2;
+  if (mode === 'authority') return 2;
+  if (mode === 'carousel') return 2;
+  if (mode === 'generar_guion') return 5; // Guiones de texto
+
+  // 5. MENTORES Y AUDITORÍAS (Standard: 5 créditos)
+  if ([
+    'juez_viral', 
+    'auditar_avatar', 
+    'auditar_experto', 
+    'mentor_ia', 
+    'mentor_estrategico', 
+    'chat_avatar', 
+    'chat_expert',
+    'audit_avatar', // Alias
+    'audit_expert'  // Alias
+  ].includes(mode)) {
+    return 5;
+  }
+
+  // 6. DEFAULT (Seguridad)
+  return 1; 
+}
 
 // ==================================================================================
-// 🚀 SERVIDOR PRINCIPAL (SERVE) - VERSIÓN FINAL CORREGIDA
+// 🚀 SERVIDOR PRINCIPAL (LÓGICA PROFESIONAL INTEGRADA)
 // ==================================================================================
 
 serve(async (req) => {
-  // 0. CORS Preflight
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
   const startTime = Date.now();
   let userId: string | null = null;
 
   try {
-    // 1. CONFIGURACIÓN E INSTANCIAS
+    // 1. SETUP
     const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
     const openaiKey = Deno.env.get('OPENAI_API_KEY');
+    const apifyToken = Deno.env.get('APIFY_API_TOKEN');
     
-    if (!supabaseUrl || !supabaseKey || !openaiKey) {
-      throw new Error('ENV_ERROR: Variables críticas faltantes');
-    }
+    if (!supabaseUrl || !supabaseKey || !openaiKey) throw new Error('Faltan variables de entorno');
     
     const supabase = createClient(supabaseUrl, supabaseKey);
     const openai = new OpenAI({ apiKey: openaiKey });
     
-    // 2. AUTENTICACIÓN
+    // 2. AUTH
     const authHeader = req.headers.get('Authorization');
-    const { data: { user }, error: authError } = await supabase.auth.getUser(
-      authHeader?.replace('Bearer ', '') || ''
-    );
-    
-    if (authError || !user) throw new Error('AUTH_ERROR: Usuario no autenticado');
+    const { data: { user }, error: authError } = await supabase.auth.getUser(authHeader?.replace('Bearer ', '') || '');
+    if (authError || !user) throw new Error('Usuario no autenticado');
     userId = user.id;
 
-    // 3. PARSEO DE DATOS
-    const { 
-      selectedMode, 
-      url, 
-      platform, 
-      transcript, 
-      expertId, 
-      avatarId, 
-      knowledgeBaseId, 
-      estimatedCost,
-      customPrompt
-    } = await req.json();
+    // 3. RATE LIMITING (Tu seguridad original)
+    if (!checkRateLimit(userId)) throw new Error('RATE_LIMIT: Demasiadas solicitudes');
 
-    console.log(`\n${'='.repeat(50)}`);
-    console.log(`[TITAN V300] 🧠 PROCESANDO: ${selectedMode}`);
-    console.log(`[USER]: ${user.email}`);
-    console.log(`${'='.repeat(50)}`);
+    // 4. PARSEO DE DATOS (LA "ASPIRADORA" QUE ARREGLA EL INPUT)
+    const body = await req.json();
+    const { selectedMode, url, expertId, avatarId, knowledgeBaseId, estimatedCost } = body;
 
-    // 4. VALIDACIÓN DE CRÉDITOS
-    if (estimatedCost > 0) {
-      const { data: profile } = await supabase.from('profiles').select('credits, tier').eq('id', userId).single();
-      if (profile.tier !== 'admin' && (profile.credits || 0) < estimatedCost) {
-        throw new Error(`CREDITS_ERROR: Saldo insuficiente. Requerido: ${estimatedCost}`);
-      }
-    }
-
-    // 5. CARGA DE CONTEXTO INTELIGENTE
-    let userContext: any = {
-      nicho: 'General',
-      avatar_ideal: 'Audiencia General',
-      knowledge_base_content: ''
-    };
-
-    if (expertId) {
-      const { data: exp } = await supabase.from('expert_profiles').select('*').eq('id', expertId).single();
-      if (exp) userContext.nicho = `Nicho: ${exp.nicho}. Misión: ${exp.mission}. Estilo: ${exp.tone}`;
-    }
+    // Buscamos el texto donde sea que venga (transcript, text, userInput, customPrompt, etc.)
+    let processedContext = body.transcript || body.text || body.userInput || body.customPrompt || body.topic || body.query || "";
     
-    if (avatarId) {
-      const { data: av } = await supabase.from('avatars').select('*').eq('id', avatarId).single();
-      if (av) userContext.avatar_ideal = `${av.name} (Dolor Principal: ${av.dolor})`;
-    }
+    // Detectamos configuración extra
+    let settings: any = {};
+    if (body.quantity) settings.quantity = body.quantity;
+    if (body.duration) settings.duration = body.duration;
+    if (body.format) settings.format = body.format;
 
-    if (knowledgeBaseId) {
-      const { data: doc } = await supabase.from('documents').select('content').eq('id', knowledgeBaseId).single();
-      if (doc && doc.content) {
-        userContext.knowledge_base_content = doc.content.substring(0, 3000);
+    // Parseo si el texto es JSON string
+    try {
+      if (processedContext.trim().startsWith('{')) {
+         const parsed = JSON.parse(processedContext);
+         settings = { ...settings, ...parsed };
+         if (parsed.topic) processedContext = parsed.topic;
       }
+    } catch (e) {}
+
+    console.log(`[TITAN V300] 🧠 MODE: ${selectedMode} | INPUT LEN: ${processedContext.length}`);
+
+    // 5. VALIDACIÓN DE CRÉDITOS (PRE-CHECK)
+    if (estimatedCost > 0) {
+      const { data: p } = await supabase.from('profiles').select('credits, tier').eq('id', userId).single();
+      if (p?.tier !== 'admin' && (p?.credits || 0) < estimatedCost) throw new Error('Saldo insuficiente');
     }
 
-    // 6. PIPELINE DE INGESTIÓN
-    let processedContext = transcript || customPrompt || "";
+    // 6. CARGA DE CONTEXTO (Tu función original)
+    const userContext = await getUserContext(supabase, expertId || '', avatarId || '', knowledgeBaseId || '');
 
-    if (url && (!processedContext || processedContext.length < 50)) {
-       console.log(`[PIPELINE] 🔗 URL detectada sin transcripción: ${url}`);
-       processedContext = `Analiza el contenido de esta URL/Video: ${url}`;
+    // 7. INGESTIÓN INTELIGENTE (Tus scrapers originales)
+    let whisperMinutes = 0;
+    if (url && processedContext.length < 50 && apifyToken) {
+       try {
+         // Llamamos a tu función original de pipeline
+         const ingestion = await runIngestionPipeline(url, apifyToken, openaiKey);
+         processedContext = ingestion.content;
+         whisperMinutes = ingestion.whisperMinutes;
+       } catch (e: any) { 
+         console.error("[INGESTION] Falló, usando fallback:", e.message);
+         if (!processedContext) processedContext = `Analizar URL: ${url}`;
+       }
     }
 
     // ==================================================================================
-    // 9. LÓGICA DEL CEREBRO
+    // 9. EJECUCIÓN DEL CEREBRO
     // ==================================================================================
     
     let result: any;
     let tokensUsed = 0;
-    let whisperMinutes = 0; // ✅ CORRECCIÓN 1: Variable definida
 
     switch (selectedMode) {
-      case 'ideas_rapidas':
-        {
-          // ✅ CORRECCIÓN 2: Usamos lo que escribiste (processedContext) como TEMA
-          const userTopic = processedContext || "Viralidad General";
-          console.log(`[CEREBRO] 💡 Generando 3 ideas sobre: "${userTopic}"`);
-
-          // ✅ CORRECCIÓN 3: Prompt para limitar a 3 ideas
-          const promptIdeas = `
-            CONTEXTO: ${userContext.nicho}. AVATAR: ${userContext.avatar_ideal}.
-            TEMA SOLICITADO POR EL USUARIO: "${userTopic}".
-            
-            TU MISIÓN: Generar EXACTAMENTE 3 ideas de video virales y potentes sobre "${userTopic}".
-            NO generes 10, solo 3.
-            
-            FORMATO JSON OBLIGATORIO:
-            {
-              "ideas": [
-                { 
-                  "titulo": "Título Gancho", 
-                  "concepto": "De qué trata", 
-                  "gancho_sugerido": "Primera frase", 
-                  "formato_visual": "Ej: Pantalla Verde",
-                  "potencial_viral": 9.5
-                }
-              ]
-            }
-          `;
-
-          const completion = await openai.chat.completions.create({
-            model: 'gpt-4o',
-            response_format: { type: 'json_object' },
-            messages: [
-              { role: 'system', content: 'Eres un genio creativo de contenido viral.' },
-              { role: 'user', content: promptIdeas }
-            ],
-            temperature: 0.8,
-            max_tokens: 1500
-          });
-          
-          result = JSON.parse(completion.choices[0].message.content || '{}');
-          tokensUsed = completion.usage?.total_tokens || 0;
-        }
+      
+      // CASO ESPECIAL: IDEAS (3 vs 10)
+      case 'ideas_rapidas': {
+        const userTopic = processedContext || "Viralidad";
+        const quantity = (settings.quantity === 10 || userTopic.includes("10 ideas")) ? 10 : 3;
+        // Llamamos a la función actualizada que acepta qty
+        const res = await ejecutarIdeasRapidas(userTopic, userContext, quantity, openai);
+        result = res.data;
+        tokensUsed = res.tokens;
         break;
+      }
 
+      // CASO ESPECIAL: CALENDARIO
+      case 'calendar_generator': {
+        if (!settings.duration) settings.duration = 7;
+        const res = await ejecutarCalendario(settings, userContext, openai);
+        result = res.data;
+        tokensUsed = res.tokens;
+        break;
+      }
+
+      // CASOS ESTÁNDAR (Usan tus funciones originales)
       case 'autopsia_viral':
-      case 'recreate':
-        {
-          const autopsiaResult = await ejecutarAutopsiaViral(processedContext, platform || 'general', openai);
-          const guionResult = await ejecutarGeneradorGuiones(userContext, autopsiaResult.data.adn_extraido, openai);
-          result = { autopsia_viral: autopsiaResult.data, guion_adaptado: guionResult.data };
-          tokensUsed = autopsiaResult.tokens + guionResult.tokens;
+      case 'recreate': {
+        const autopsiaResponse = await ejecutarAutopsiaViral(processedContext, body.platform || 'General', userContext, openai);
+        if (selectedMode === 'recreate') {
+            const guionResponse = await ejecutarGeneradorGuiones(userContext, autopsiaResponse.data.adn_extraido, openai);
+            result = { autopsia_viral: autopsiaResponse.data, guion_adaptado: guionResponse.data };
+            tokensUsed = autopsiaResponse.tokens + guionResponse.tokens;
+        } else {
+            result = autopsiaResponse.data;
+            tokensUsed = autopsiaResponse.tokens;
         }
         break;
+      }
 
-      case 'generar_guion':
-        {
-          const guionResult = await ejecutarGeneradorGuiones(userContext, null, openai);
-          result = guionResult.data;
-          tokensUsed = guionResult.tokens;
-        }
+      case 'generar_guion': {
+        const res = await ejecutarGeneradorGuiones(userContext, null, openai);
+        result = res.data;
+        tokensUsed = res.tokens;
         break;
+      }
 
-      case 'juez_viral':
-        {
-          const juezResult = await ejecutarJuezViral(userContext, processedContext, openai);
-          result = juezResult.data;
-          tokensUsed = juezResult.tokens;
-        }
+      case 'juez_viral': {
+        const res = await ejecutarJuezViral(userContext, processedContext, openai);
+        result = res.data;
+        tokensUsed = res.tokens;
         break;
+      }
 
       case 'auditar_avatar':
-        {
-          const avatarResult = await ejecutarAuditorAvatar(processedContext, userContext.nicho, openai);
-          result = avatarResult.data;
-          tokensUsed = avatarResult.tokens;
-        }
+      case 'audit_avatar': {
+        const res = await ejecutarAuditorAvatar(processedContext, userContext.nicho, openai);
+        result = res.data;
+        tokensUsed = res.tokens;
         break;
+      }
 
       case 'auditar_experto':
-        {
-          const expertoResult = await ejecutarAuditorExperto(userContext, openai);
-          result = expertoResult.data;
-          tokensUsed = expertoResult.tokens;
-        }
+      case 'audit_expert': {
+        const res = await ejecutarAuditorExperto(userContext, processedContext, openai);
+        result = res.data;
+        tokensUsed = res.tokens;
         break;
+      }
 
       case 'mentor_estrategico':
       case 'mentor_ia':
-        {
-          const mentorResult = await ejecutarMentorEstrategico(
-            userContext,
-            { memoria: MEMORIA_SISTEMA, query: processedContext },
-            openai
-          );
-          result = mentorResult.data;
-          tokensUsed = mentorResult.tokens;
-        }
-        break;
-      
-      case 'calendar_generator':
-        {
-           const calSettings = JSON.parse(processedContext || "{}"); 
-           const completion = await openai.chat.completions.create({
-            model: 'gpt-4o',
-            response_format: { type: 'json_object' },
-            messages: [
-              { role: 'system', content: 'Eres un estratega de contenidos.' },
-              { role: 'user', content: PROMPT_CALENDAR_GENERATOR(calSettings, userContext) }
-            ]
-           });
-           result = JSON.parse(completion.choices[0].message.content || '{}');
-           tokensUsed = completion.usage?.total_tokens || 0;
-        }
-        break;
+      case 'chat_expert':
+      case 'chat_avatar': {
+         const res = await ejecutarMentorEstrategico(processedContext, userContext, openai);
+         result = res.data;
+         tokensUsed = res.tokens;
+         break;
+      }
 
-      default:
-        result = {
-          message: 'Modo no implementado',
-          modos_disponibles: [ 'ideas_rapidas', 'autopsia_viral', 'recreate', 'generar_guion', 'mentor_ia' ]
+      // HERRAMIENTAS DE TEXTO (Recuperadas)
+      case 'transcribe':
+      case 'clean':
+      case 'authority':
+      case 'shorts':
+      case 'carousel':
+      case 'structure': {
+        const prompts: any = {
+          clean: 'Limpia y corrige el texto.',
+          authority: 'Transforma en artículo de autoridad.',
+          shorts: 'Extrae 3 guiones de 60s.',
+          carousel: 'Crea estructura de carrusel.',
+          structure: 'Analiza la estructura viral.',
+          transcribe: 'Mejora la transcripción.'
         };
+        const completion = await openai.chat.completions.create({
+          model: 'gpt-4o',
+          messages: [{ role: 'system', content: prompts[selectedMode] }, { role: 'user', content: processedContext }]
+        });
+        result = { text_output: completion.choices[0].message.content, mode: selectedMode };
+        tokensUsed = completion.usage.total_tokens;
+        break;
+      }
+
+      default: {
+        result = { message: 'Modo desconocido' };
+      }
     }
 
-    // 10. CÁLCULO DE COSTO Y COBRO
-    const realCost = calculateRealCost(tokensUsed, whisperMinutes);
-    const finalCost = Math.max(estimatedCost || 0, realCost);
+    // ==================================================================================
+    // 10. COBRO REAL (USANDO LA CALCULADORA NUEVA)
+    // ==================================================================================
     
+    // Aquí es donde ocurre la magia del precio dinámico
+    const calculatedPrice = calculateTitanCost(selectedMode, processedContext, whisperMinutes, settings);
+    
+    // Seguridad: Cobramos lo mayor entre lo calculado y lo que dijo el frontend
+    const finalCost = Math.max(calculatedPrice, estimatedCost || 0);
+
+    // Ejecutar cobro
     if (finalCost > 0) {
-      const { error: creditError } = await supabase.rpc('decrement_credits', { 
-        user_uuid: userId, 
-        amount: finalCost 
-      });
-      if (creditError) console.error(`[CREDITS] ⚠️ Error: ${creditError.message}`);
+      const { data: profile } = await supabase.from('profiles').select('credits, tier').eq('id', userId).single();
+      
+      if (profile?.tier !== 'admin') {
+         if ((profile?.credits || 0) < finalCost) throw new Error(`Saldo insuficiente. Costo real: ${finalCost}`);
+         
+         const { error: payErr } = await supabase.rpc('decrement_credits', { user_uuid: userId, amount: finalCost });
+         if (payErr) console.error("Error cobrando:", payErr);
+      }
     }
 
-    // 11. PERSISTENCIA EN BASE DE DATOS
+    // 11. PERSISTENCIA
     if (!['chat-avatar', 'mentor_ia', 'mentor', 'chat_expert'].includes(selectedMode)) {
       await supabase.from('viral_generations').insert({ 
-        user_id: userId, 
-        type: selectedMode, 
-        content: result, 
-        original_url: url || null, 
-        cost_credits: finalCost, 
-        platform: platform || 'general',
-        tokens_used: tokensUsed,
-        whisper_minutes: whisperMinutes
+        user_id: userId, type: selectedMode, content: result, original_url: url || null, 
+        cost_credits: finalCost, platform: platform || 'general', tokens_used: tokensUsed, whisper_minutes: whisperMinutes
       });
     }
 
-    // 12. RESPUESTA FINAL
-    const duration = Date.now() - startTime;
+    // 12. RESPUESTA
     return new Response(
       JSON.stringify({ 
-        success: true,
-        generatedData: result, 
-        finalCost, 
-        metadata: { 
-          mode: selectedMode, 
-          version: 'V300_ULTIMATE_CEREBRO', 
-          duration,
-          memoria_sistema: {
-            patrones_virales: MEMORIA_SISTEMA.patrones_virales.length,
-            hooks_alto_rendimiento: MEMORIA_SISTEMA.hooks_alto_rendimiento.length
-          }
-        }
+        success: true, generatedData: result, finalCost, 
+        metadata: { mode: selectedMode, duration: Date.now() - startTime } 
       }), 
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
     );
 
   } catch (error: any) {
-    console.error(`[ERROR]: ${error.message}`);
+    console.error(`[ERROR CRÍTICO]: ${error.message}`);
     return new Response(
       JSON.stringify({ success: false, error: error.message }), 
       { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

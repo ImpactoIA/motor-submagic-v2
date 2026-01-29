@@ -24,7 +24,7 @@ export const QuickIdeas = () => {
     // --- ESTADOS UI ---
     const [topic, setTopic] = useState('');
     const [selectedPlatform, setSelectedPlatform] = useState(PLATFORMS[0]);
-    const [amount, setAmount] = useState(5); // Default a 5 para dar valor
+    const [amount, setAmount] = useState(3); // Default a 3 para coincidir con tarifa base
     const [isGenerating, setIsGenerating] = useState(false);
     const [ideas, setIdeas] = useState<any[]>([]);
     const [error, setError] = useState<string | null>(null);
@@ -38,7 +38,9 @@ export const QuickIdeas = () => {
     const [selectedAvatarId, setSelectedAvatarId] = useState<string>('');
     const [selectedKbId, setSelectedKbId] = useState<string>('');
 
-    const COSTO_IDEAS = 2;
+    // 🔥 CÁLCULO DE COSTO DINÁMICO (Sincronizado con Backend V300)
+    // Si pide 10 ideas = 7 créditos. Si pide 3 o 5 = 3 créditos.
+    const currentCost = amount === 10 ? 7 : 3;
 
     // --- CARGAR PERFILES ---
     useEffect(() => {
@@ -62,7 +64,7 @@ export const QuickIdeas = () => {
                     })));
                 }
 
-                // Defaults desde el perfil de usuario si existen
+                // Defaults
                 if (userProfile?.active_expert_id) setSelectedExpertId(userProfile.active_expert_id);
                 if (userProfile?.active_avatar_id) setSelectedAvatarId(userProfile.active_avatar_id);
             } catch (e) { console.error("Error loading profiles", e); }
@@ -70,14 +72,14 @@ export const QuickIdeas = () => {
         fetchProfiles();
     }, [user, userProfile]);
 
-    // --- 🤖 FUNCIÓN DE GENERACIÓN CONECTADA A TITAN V106 ---
+    // --- 🤖 FUNCIÓN DE GENERACIÓN CONECTADA A TITAN V300 ---
     const handleGenerate = async () => {
         if (!topic || !user || !userProfile) return;
         setError(null);
 
-        // Validación de Créditos Local
-        if (userProfile.tier !== 'admin' && (userProfile.credits || 0) < COSTO_IDEAS) {
-            if(confirm(`⚠️ Saldo insuficiente. Esta herramienta cuesta ${COSTO_IDEAS} créditos. ¿Deseas recargar?`)) navigate('/settings');
+        // 1. Validación de Créditos (Usando el costo dinámico)
+        if (userProfile.tier !== 'admin' && (userProfile.credits || 0) < currentCost) {
+            if(confirm(`⚠️ Saldo insuficiente. Generar ${amount} ideas cuesta ${currentCost} créditos. ¿Recargar?`)) navigate('/settings');
             return;
         }
 
@@ -85,18 +87,25 @@ export const QuickIdeas = () => {
         setIdeas([]);
 
         try {
-            // Construimos el input del usuario para el prompt
-            const userPrompt = `Tema: ${topic}\nPlataforma: ${selectedPlatform.label}\nCantidad: ${amount}`;
-
-            // LLAMADA AL MOTOR TITAN V106
+            // 2. LLAMADA AL MOTOR TITAN V300 (Estructura Correcta)
             const { data, error } = await supabase.functions.invoke('process-url', {
                 body: {
-                    selectedMode: 'ideas_rapidas', // Coincide con el switch del backend V106
-                    userInput: userPrompt,         // Usamos userInput para texto libre
+                    selectedMode: 'ideas_rapidas', 
+                    
+                    // 🔥 CLAVE: Enviamos quantity por separado para que el Backend cobre bien
+                    quantity: amount, 
+                    
+                    // Enviamos el tema limpio
+                    userInput: topic,
+                    platform: selectedPlatform.label, 
+                    
+                    // Contexto
                     expertId: selectedExpertId,
                     avatarId: selectedAvatarId,
                     knowledgeBaseId: selectedKbId,
-                    estimatedCost: COSTO_IDEAS
+                    
+                    // Costo estimado para validación del backend
+                    estimatedCost: currentCost
                 },
             });
 
@@ -114,18 +123,15 @@ export const QuickIdeas = () => {
             } else if (Array.isArray(responseData)) {
                 cleanIdeas = responseData;
             } else {
-                console.warn("Formato de respuesta inesperado:", responseData);
-                // Intento de recuperación o mostrar error
-                throw new Error("La IA no devolvió el formato esperado. Intenta de nuevo.");
+                console.warn("Formato inesperado:", responseData);
+                throw new Error("La IA no devolvió el formato esperado.");
             }
 
-            if (cleanIdeas.length === 0) {
-                throw new Error("No se generaron ideas. Intenta con un tema diferente.");
-            }
+            if (cleanIdeas.length === 0) throw new Error("No se generaron ideas.");
 
             setIdeas(cleanIdeas);
             
-            // Actualizar créditos en la UI
+            // Actualizar créditos en la UI inmediatamente
             if(refreshProfile) refreshProfile(); 
 
         } catch (e: any) {
@@ -147,7 +153,6 @@ export const QuickIdeas = () => {
             </div>
 
             <div className="bg-[#0B0E14] border border-gray-800 rounded-3xl p-8 shadow-2xl space-y-8 relative overflow-hidden">
-                {/* Fondo sutil */}
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-yellow-500/50 to-transparent opacity-50"></div>
 
                 {/* 1. PLATAFORMA */}
@@ -192,9 +197,9 @@ export const QuickIdeas = () => {
                                 onChange={(e) => setAmount(Number(e.target.value))}
                                 className="w-full bg-gray-900 border border-gray-700 rounded-2xl p-4 text-white outline-none min-w-[140px] cursor-pointer font-bold focus:border-yellow-500 transition-all"
                            >
-                                <option value={3}>3 Ideas</option>
-                                <option value={5}>5 Ideas</option>
-                                <option value={10}>10 Ideas</option>
+                                <option value={3}>3 Ideas (3 Créditos)</option>
+                                <option value={5}>5 Ideas (3 Créditos)</option>
+                                <option value={10}>10 Ideas (7 Créditos)</option>
                            </select>
                     </div>
                 </div>
@@ -245,13 +250,14 @@ export const QuickIdeas = () => {
                         {isGenerating ? (
                             <><RefreshCw className="animate-spin" size={20}/> Generando Ideas...</>
                         ) : (
-                            <><Rocket size={20} className="group-hover:animate-bounce" /> GENERAR ({COSTO_IDEAS} Cr)</>
+                            // Muestra el costo dinámico en el botón
+                            <><Rocket size={20} className="group-hover:animate-bounce" /> GENERAR ({currentCost} Cr)</>
                         )}
                     </button>
                     
                     <div className="flex items-center gap-2 px-4 py-2 bg-gray-900 rounded-full border border-gray-800">
                         <Wallet size={14} className="text-yellow-500"/>
-                        <span className="text-xs font-bold text-gray-400">Costo: <span className="text-white">{COSTO_IDEAS} créditos</span></span>
+                        <span className="text-xs font-bold text-gray-400">Costo: <span className="text-white">{currentCost} créditos</span></span>
                     </div>
                 </div>
             </div>
@@ -262,13 +268,12 @@ export const QuickIdeas = () => {
                     {ideas.map((idea, idx) => (
                         <div key={idx} className="bg-[#0B0E14] border border-gray-800 rounded-3xl p-6 hover:border-yellow-500/50 transition-all duration-300 group flex flex-col justify-between h-full hover:shadow-2xl hover:shadow-yellow-900/10 shadow-lg relative overflow-hidden">
                             
-                            {/* Efecto hover */}
                             <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
                             <div className="space-y-5 relative z-10">
                                 <div className="flex justify-between items-start">
                                     <span className="text-[10px] font-black bg-gray-800/80 text-yellow-500 px-3 py-1 rounded-full uppercase tracking-widest border border-yellow-500/10 backdrop-blur-sm">
-                                        {idea.angulo || "Viral"}
+                                        {idea.angulo || idea.disparador_principal || "Viral"}
                                     </span>
                                     <div className={`p-2 rounded-xl ${selectedPlatform.bg} border border-white/5`}>
                                         <selectedPlatform.icon size={18} className={selectedPlatform.color}/>
@@ -280,11 +285,10 @@ export const QuickIdeas = () => {
                                         "{idea.titulo}"
                                     </h3>
                                     <p className="text-xs text-gray-400 leading-relaxed font-medium line-clamp-3">
-                                        {idea.explicacion}
+                                        {idea.concepto || idea.explicacion}
                                     </p>
                                 </div>
 
-                                {/* SCORE VIRAL (Si viene del backend) */}
                                 {idea.viral_score && (
                                     <div className="flex items-center gap-2">
                                         <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
@@ -297,18 +301,15 @@ export const QuickIdeas = () => {
 
                             <div className="flex gap-3 mt-6 pt-5 border-t border-gray-800/50 relative z-10">
                                 <button
-                                    onClick={() => {
-                                        navigator.clipboard.writeText(`${idea.titulo}\n${idea.explicacion}`);
-                                        // Aquí podrías mostrar un toast notification
-                                    }}
+                                    onClick={() => navigator.clipboard.writeText(`${idea.titulo}\n${idea.concepto}`)}
                                     className="p-3 bg-gray-900 rounded-xl hover:text-white text-gray-500 transition-all border border-gray-800 hover:border-gray-600 shadow-sm hover:bg-gray-800"
-                                    title="Copiar al portapapeles"
+                                    title="Copiar"
                                 >
                                     <Copy size={18}/>
                                 </button>
 
                                 <button
-                                    onClick={() => navigate('/dashboard/script-generator', { state: { topic: idea.titulo, context: idea.explicacion } })}
+                                    onClick={() => navigate('/dashboard/script-generator', { state: { topic: idea.titulo, context: idea.concepto } })}
                                     className="flex-1 py-3 bg-indigo-600/10 text-indigo-400 border border-indigo-500/20 rounded-xl hover:bg-indigo-600 hover:text-white text-xs font-black flex justify-center items-center gap-2 transition-all shadow-sm uppercase tracking-wider group/btn"
                                 >
                                     Crear Guion <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform"/>
