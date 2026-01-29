@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { supabase } from '../../lib/supabase';
-import { useAuth } from '../../context/AuthContext';
+// 👇 CORRECCIÓN AQUÍ: Quita un "../" en ambas líneas
+import { supabase } from '../lib/supabase'; 
+import { useAuth } from '../context/AuthContext';
 import { 
     RefreshCw, Wand2, Zap, Copy, Save,
     Video, Instagram, Youtube, Linkedin, CheckCircle2, Clock, AlignLeft,
     User, Users, BookOpen, AlertCircle, PenTool, Layout, Brain, Target
 } from 'lucide-react';
-
 // ==================================================================================
 // 1. CONFIGURACIÓN Y LISTAS ESTÁTICAS
 // ==================================================================================
