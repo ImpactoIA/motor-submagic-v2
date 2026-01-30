@@ -12,7 +12,7 @@ import {
 const COST_FULL_PROCESS = 10; // Autopsia + Adaptación
 const COST_ONLY_SCRIPT = 5;   // Solo Adaptación (si ya hay ADN)
 
-export const ReverseEngineering = () => {
+export const TitanViral = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { user, userProfile, refreshProfile } = useAuth();
