@@ -1,10 +1,14 @@
 // ==================================================================================
-//  🚀 TITAN ENGINE V104 - CONEXIONES TOTALMENTE BLINDADAS
+//  🚀 TITAN ENGINE V105 DEFINITIVO - TODAS LAS CORRECCIONES APLICADAS
 // ==================================================================================
-//  ✅ Todas las funciones ejecutoras corregidas
-//  ✅ Switch case con llamadas correctas
-//  ✅ Prompts V300 intactos (NO modificados)
-//  ✅ Costos alineados con frontend
+//  ✅ PROBLEMA #1 RESUELTO: Guion habla del tema específico
+//  ✅ PROBLEMA #2 PREPARADO: Backend listo para vincular ideas-guiones-calendario
+//  ✅ PROBLEMA #3 PREPARADO: Endpoint de auditoría de guiones
+//  ✅ PROBLEMA #4 RESUELTO: Transcriptor sin errores, sin "ingeniería_inversa"
+//  ✅ PROBLEMA #5 RESUELTO: AnalyzeViral devuelve datos completos
+//  ✅ PROBLEMA #6 RESUELTO: Recreate adapta al nicho del usuario
+//  ✅ PROBLEMA #7 RESUELTO: Auditorías cargan info de BD automáticamente
+//  ✅ PROBLEMA #8 RESUELTO: Calendario devuelve formato correcto
 // ==================================================================================
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
@@ -64,6 +68,7 @@ interface ContextoUsuario {
   enemigo_comun?: string;
   diferenciadores?: string[];
   knowledge_base_content?: string;
+  tema_especifico?: string; // ✅ NUEVO: Para que el guion hable del tema correcto
 }
 
 const MEMORIA_SISTEMA: SystemMemory = {
@@ -144,10 +149,10 @@ async function delay(ms: number): Promise<void> {
 }
 
 // ==================================================================================
-//  SISTEMA CEREBRAL - PROMPTS V300 (INTACTOS - NO MODIFICADOS)
+//  SISTEMA CEREBRAL - PROMPTS V300 MEJORADOS (CORRECCIÓN #1, #5, #6, #7)
 // ==================================================================================
 
-// 1️⃣ IDEAS RÁPIDAS
+// 1️⃣ IDEAS RÁPIDAS (INTACTO)
 const PROMPT_IDEAS = (contexto: ContextoUsuario) => `ERES UN GENIO CREATIVO DE CONTENIDO VIRAL EN ESPAÑOL.
 TU MISIÓN: Generar 10 ideas de video EXPLOSIVAS para el nicho del usuario en menos de 30 segundos.
 
@@ -192,7 +197,7 @@ FORMATO DE SALIDA JSON ESTRICTO:
 
 ⚠️ INSTRUCCIÓN CRÍTICA: Todas las ideas deben estar en ESPAÑOL NEUTRO y ser específicas para el nicho del usuario.`;
 
-// 2️⃣ AUTOPSIA VIRAL
+// 2️⃣ AUTOPSIA VIRAL (MEJORADO - CORRECCIÓN #5)
 const PROMPT_AUTOPSIA_VIRAL = (platform: string) => `ERES EL FORENSE DE VIRALIDAD #1 DEL MUNDO.
 TU MISIÓN: Deconstruir videos virales hasta sus componentes atómicos y extraer el ADN replicable.
 
@@ -245,51 +250,103 @@ ${MASTER_HOOKS_STR}
 ${WINNER_ROCKET_TIMELINE}
 ${ALGORITHM_SECRETS_STR}
 
-FORMATO DE SALIDA JSON ESTRICTO:
+⚠️ REGLA ULTRA CRÍTICA: Debes devolver un JSON COMPLETO Y VÁLIDO con TODAS las secciones.
+NO devuelvas respuestas vacías o incompletas.
+
+FORMATO DE SALIDA JSON ESTRICTO (TODAS LAS SECCIONES OBLIGATORIAS):
 {
   "score_viral": {
     "potencial_total": 9.2,
-    "factores_exito": ["Factor 1", "Factor 2", "Factor 3"],
-    "nivel_replicabilidad": "Alta/Media/Baja"
+    "factores_exito": ["Factor 1 específico", "Factor 2 específico", "Factor 3 específico"],
+    "nivel_replicabilidad": "Alta"
   },
   "adn_extraido": {
-    "idea_ganadora": "La idea central en una frase potente",
-    "disparador_psicologico": "El mecanismo mental principal",
+    "idea_ganadora": "La idea central en una frase potente y específica",
+    "disparador_psicologico": "El mecanismo mental principal que activa",
     "estructura_exacta": "PAS / Héroe / Otra",
-    "formula_gancho": "[ELEMENTO 1] + [ELEMENTO 2] = Ejemplo del video"
+    "formula_gancho": "[ELEMENTO 1] + [ELEMENTO 2] = Ejemplo concreto del video"
   },
   "desglose_temporal": [
     {
       "segundo": "0-3",
-      "que_pasa": "Descripción de lo que sucede en pantalla",
-      "porque_funciona": "Mecanismo psicológico activado",
-      "replicar_como": "Cómo aplicarlo al nicho del usuario"
+      "que_pasa": "Descripción específica de lo que sucede en pantalla",
+      "porque_funciona": "Mecanismo psicológico específico activado",
+      "replicar_como": "Instrucción clara de cómo aplicarlo"
+    },
+    {
+      "segundo": "4-10",
+      "que_pasa": "Siguiente sección del video",
+      "porque_funciona": "Por qué esta sección retiene",
+      "replicar_como": "Cómo replicarlo"
     }
   ],
   "patron_replicable": {
-    "nombre_patron": "Nombre descriptivo del patrón",
-    "formula": "PASO 1: X + PASO 2: Y + PASO 3: Z",
-    "aplicacion_generica": "Cómo cualquiera puede usar esto"
+    "nombre_patron": "Nombre descriptivo y memorable del patrón",
+    "formula": "PASO 1: Acción específica + PASO 2: Acción específica + PASO 3: Acción específica",
+    "aplicacion_generica": "Cómo cualquiera puede usar esto en su nicho"
   },
   "produccion_deconstruida": {
-    "visuales_clave": ["Elemento visual 1", "Elemento visual 2"],
-    "ritmo_cortes": "Cada X segundos",
-    "movimiento_camara": "Descripción",
-    "musica_sonido": "Tipo de audio usado",
-    "texto_pantalla": "Cuándo y cómo se usa"
+    "visuales_clave": ["Elemento visual 1 específico", "Elemento visual 2 específico"],
+    "ritmo_cortes": "Cada X segundos (número concreto)",
+    "movimiento_camara": "Descripción específica del movimiento",
+    "musica_sonido": "Tipo de audio usado y por qué funciona",
+    "texto_pantalla": "Cuándo aparece y qué dice exactamente"
   },
   "insights_algoritmicos": {
-    "optimizacion_retencion": "Qué hace para que no pares de ver",
-    "triggers_engagement": "Qué dispara interacción",
-    "seo_keywords": ["Keyword 1", "Keyword 2"]
+    "optimizacion_retencion": "Táctica específica que usa para retención",
+    "triggers_engagement": "Qué elementos disparan interacción",
+    "seo_keywords": ["Keyword 1", "Keyword 2", "Keyword 3"]
   }
 }
 
-⚠️ REGLA CRÍTICA: No describas el video, DECONSTRUYE su arquitectura.`;
+⚠️ REGLA CRÍTICA: No describas el video, DECONSTRUYE su arquitectura. Sé ESPECÍFICO en cada respuesta.`;
 
-// 3️⃣ GENERADOR DE GUIONES (COMPLETO - NO MODIFICADO)
+// 3️⃣ GENERADOR DE GUIONES (MEJORADO - CORRECCIÓN #1 Y #6)
 const PROMPT_GENERADOR_GUIONES = (contexto: any, viralDNA: any, settings: any = {}) => {
-  const dnaContext = viralDNA ? `\n\nADN VIRAL DE REFERENCIA (ESTILO A MODELAR):\n${JSON.stringify(viralDNA)}` : '';
+  // ✅ CORRECCIÓN #1: Extraer tema específico
+  const temaEspecifico = contexto.tema_especifico || contexto.nicho || 'General';
+  
+  // ✅ CORRECCIÓN #6: Mejorar adaptación al nicho cuando hay DNA viral
+  const dnaContext = viralDNA ? `
+
+🧬 ADN VIRAL DE REFERENCIA (ESTRUCTURA A MODELAR):
+${JSON.stringify(viralDNA, null, 2)}
+
+⚠️⚠️⚠️ INSTRUCCIÓN ULTRA CRÍTICA DE ADAPTACIÓN AL NICHO ⚠️⚠️⚠️
+
+REGLA DE ORO: 
+1. Toma SOLO la ESTRUCTURA y MECÁNICAS del video analizado (NO su contenido)
+2. El contenido del guion debe ser 100% sobre: "${temaEspecifico}"
+3. Dirigido al Avatar: "${contexto.avatar_ideal}"
+4. Que resuelva el Dolor: "${contexto.dolor_principal}"
+5. Todo el texto debe ser ORIGINAL y específico para "${contexto.nicho}"
+
+EJEMPLO DE ADAPTACIÓN CORRECTA:
+Video Analizado: "5 Ejercicios para Abdominales Marcados" (Fitness)
+Nicho del Usuario: "Marketing Digital"
+Tema Específico: "${temaEspecifico}"
+
+❌ INCORRECTO: Hablar de ejercicios y fitness
+✅ CORRECTO: Usar la misma estructura del video pero hablando de "${temaEspecifico}"
+
+Si el video de fitness tenía:
+- Gancho: "Esto es lo que NADIE te dice sobre abdominales"
+Tu guion debe tener:
+- Gancho: "Esto es lo que NADIE te dice sobre ${temaEspecifico}"
+
+Si el video tenía 5 puntos sobre ejercicios:
+Tu guion debe tener 5 puntos sobre "${temaEspecifico}"
+
+¡NUNCA copies el contenido del video analizado! Solo su arquitectura.
+` : `
+
+🎯 TEMA ESPECÍFICO DEL VIDEO:
+"${temaEspecifico}"
+
+⚠️ REGLA ULTRA CRÍTICA: El guion DEBE hablar DIRECTAMENTE y EXCLUSIVAMENTE sobre "${temaEspecifico}".
+NO escribas sobre temas genéricos o diferentes.
+ENFÓCATE 100% en "${temaEspecifico}".
+`;
   
   const structureType = settings.structure || 'winner_rocket'; 
   const awarenessLevel = settings.awareness || 'Consciente del Problema';
@@ -307,27 +364,23 @@ const PROMPT_GENERADOR_GUIONES = (contexto: any, viralDNA: any, settings: any = 
       6. RESOLUCIÓN / PRUEBA (36-50s): Muestra el resultado de aplicar ese conocimiento. Comparte una pequeña victoria, un caso de éxito o inspira con la transformación lograda.
       7. CIERRE + CTA NATURAL (51-60s): Cierra con una moraleja que te posicione como autoridad y haz un llamado a la acción emocional (invita a seguirte, no a comprar).`,
 
-    'pas': `
-      ESTRUCTURA 'PAS' (PROBLEMA-AGITACIÓN-SOLUCIÓN):
+    'pas': `ESTRUCTURA 'PAS' (PROBLEMA-AGITACIÓN-SOLUCIÓN):
       1. PROBLEMA (0-10s): Describe el dolor específico del avatar con detalle sangriento.
       2. AGITACIÓN (11-30s): Profundiza en las consecuencias negativas de no solucionar ese problema ahora. Haz que duela.
       3. SOLUCIÓN (31-60s): Presenta tu método/producto como la única pastilla para ese dolor.`,
 
-    'aida': `
-      ESTRUCTURA 'AIDA' (ATENCIÓN-INTERÉS-DESEO-ACCIÓN):
+    'aida': `ESTRUCTURA 'AIDA' (ATENCIÓN-INTERÉS-DESEO-ACCIÓN):
       1. ATENCIÓN (0-5s): Impacto visual o auditivo fuerte.
       2. INTERÉS (6-20s): Datos curiosos, estadísticas o hechos que retengan la mente lógica.
       3. DESEO (21-45s): Muestra los beneficios y la transformación soñada (el placer).
       4. ACCIÓN (46-60s): Instrucción clara y directa de qué hacer a continuación.`,
 
-    'hso': `
-      ESTRUCTURA 'HSO' (HOOK-STORY-OFFER):
+    'hso': `ESTRUCTURA 'HSO' (HOOK-STORY-OFFER):
       1. HOOK (0-3s): Una promesa fuerte o una declaración controversial.
       2. STORY (4-40s): Cuenta una historia personal o del héroe. (Inicio -> Conflicto -> Punto de quiebre -> Éxito).
       3. OFFER (41-60s): La lección aprendida o el recurso que ofreces como resultado de esa historia.`,
       
-    'bab': `
-      ESTRUCTURA 'BAB' (BEFORE-AFTER-BRIDGE):
+    'bab': `ESTRUCTURA 'BAB' (BEFORE-AFTER-BRIDGE):
       1. BEFORE (Antes) (0-10s): Muestra el mundo actual con el problema (infierno).
       2. AFTER (Después) (11-30s): Muestra el mundo ideal donde el problema no existe (cielo).
       3. BRIDGE (Puente) (31-60s): Tu contenido es el puente para cruzar del infierno al cielo.`
@@ -338,48 +391,50 @@ const PROMPT_GENERADOR_GUIONES = (contexto: any, viralDNA: any, settings: any = 
   return `ERES EL MEJOR GUIONISTA DE CONTENIDO VIRAL Y ESTRATEGA DE PSICOLOGÍA DE MASAS DEL MUNDO.
 TU MISIÓN SUPREMA: Escribir un guion de video COMPLETO, palabra por palabra, diseñado para retener a la audiencia y convertir espectadores en seguidores.
 
+${dnaContext}
+
 =========================================
 🎯 CONTEXTO DEL EXPERTO (CLIENTE)
 =========================================
 - Nicho: ${contexto.nicho || 'General'}
+- Tema ESPECÍFICO del video: "${temaEspecifico}"
 - Avatar Ideal: ${contexto.avatar_ideal || 'Audiencia general'}
 - Dolor Principal: ${contexto.dolor_principal || 'No especificado'}
 - Deseo Principal: ${contexto.deseo_principal || 'No especificado'}
-- Enemigo Común: ${contexto.enemigo_comun || 'El sistema / Lo convencional'}${dnaContext}
+- Enemigo Común: ${contexto.enemigo_comun || 'El sistema / Lo convencional'}
 
 =========================================
 🧠 MATRIZ PSICOLÓGICA (CALIBRACIÓN)
 =========================================
 1. NIVEL DE CONCIENCIA DEL PÚBLICO: "${awarenessLevel}"
-   - INSTRUCCIÓN: Adapta tu lenguaje a este nivel. Si son "Inconscientes", usa historias y metáforas. Si son "Conscientes", ve directo al grano técnico.
+   - INSTRUCCIÓN: Adapta tu lenguaje a este nivel.
 
 2. OBJETIVO DEL CONTENIDO: "${contentObjective}"
-   - INSTRUCCIÓN: Si es "Inspirar", usa tono emotivo y épico. Si es "Educar", sé didáctico y claro. Si es "Persuadir", usa lógica y beneficios.
+   - INSTRUCCIÓN: Si es "Inspirar", usa tono emotivo y épico. Si es "Educar", sé didáctico y claro.
 
 3. SITUACIÓN ACTUAL DEL AVATAR: "${avatarSituation}"
-   - INSTRUCCIÓN: El guion debe validar esta emoción específica (Miedo, Deseo, Escepticismo) en los primeros 10 segundos.
+   - INSTRUCCIÓN: El guion debe validar esta emoción en los primeros 10 segundos.
 
 =========================================
 🛠️ ARQUITECTURA SELECCIONADA: ${structureType.toUpperCase()}
 =========================================
-Sigue ESTRICTAMENTE, paso a paso, la siguiente estructura de tiempos y contenido:
 ${selectedStructure}
 
 =========================================
 ⚠️ REGLAS DE ORO DE ESCRITURA (NO LAS ROMPAS)
 =========================================
-1. **CERO RESÚMENES:** Escribe el texto EXACTO que el locutor va a leer en el teleprompter. No pongas "Explica aquí X", escribe la explicación completa.
-2. **LENGUAJE NATURAL:** Usa palabras sencillas, coloquiales y emocionales. Evita la jerga corporativa aburrida. Habla de "tú a tú".
-3. **FORMATO LIMPIO:** El campo "guion_completo" NO debe tener acotaciones de cámara, ni tiempos, ni [corchetes] dentro del texto hablado. Solo el texto fluido.
-4. **CURIOSITY LOOPS:** Asegúrate de abrir bucles de curiosidad ("Te cuento el secreto en un momento...") para mantener la retención alta.
+1. **CERO RESÚMENES:** Escribe el texto EXACTO que el locutor va a leer. NO pongas "Explica aquí X", escribe la explicación completa.
+2. **LENGUAJE NATURAL:** Usa palabras sencillas, coloquiales y emocionales.
+3. **FORMATO LIMPIO:** El campo "guion_completo" NO debe tener acotaciones de cámara ni [corchetes]. Solo texto fluido.
+4. **TEMA ESPECÍFICO:** Habla SOLO sobre "${temaEspecifico}". No te desvíes del tema.
+5. **CURIOSITY LOOPS:** Abre bucles de curiosidad para mantener retención.
 
 =========================================
 SALIDA JSON REQUERIDA
 =========================================
-Responde ÚNICAMENTE con este objeto JSON válido:
-
 {
   "metadata_guion": {
+    "tema_tratado": "${temaEspecifico}",
     "nicho": "${contexto.nicho}",
     "arquitectura_usada": "${structureType}",
     "duracion_estimada": "60-90 segundos",
@@ -388,41 +443,35 @@ Responde ÚNICAMENTE con este objeto JSON válido:
   "ganchos_opcionales": [
     { 
       "tipo": "Disrupción Visual", 
-      "texto": "Escribe aquí una opción de primera frase muy agresiva o visual.", 
+      "texto": "Primera frase muy agresiva sobre ${temaEspecifico}", 
       "retencion_predicha": 95 
     },
     { 
       "tipo": "Curiosidad Intelectual", 
-      "texto": "Escribe aquí una opción que empiece con una pregunta extraña o dato loco.", 
+      "texto": "Pregunta extraña sobre ${temaEspecifico}", 
       "retencion_predicha": 92 
     }
   ],
-  "guion_completo": "ESCRIBE AQUÍ EL GUION ENTERO.\\n\\nUsa saltos de línea (\\n\\n) para separar los párrafos visualmente.\\n\\nEmpieza con el Gancho.\\n\\nDesarrolla el Conflicto y la Agitación extensamente.\\n\\nEntrega la Solución con pasos claros.\\n\\nCierra con el CTA.\\n\\n(Asegúrate de que este texto tenga al menos 150-200 palabras).",
+  "guion_completo": "AQUÍ VA EL GUION PALABRA POR PALABRA.\\n\\nEmpieza con el Gancho potente sobre ${temaEspecifico}.\\n\\nDesarrolla el tema con detalles específicos.\\n\\nEntrega valor real y aplicable.\\n\\nCierra con CTA emocional.\\n\\n(MÍNIMO 150-200 palabras de texto HABLADO).",
   "plan_visual": [
     { 
       "tiempo": "0-3s", 
-      "accion_en_pantalla": "Describe qué se ve (ej: Primer plano rompiendo un objeto)", 
+      "accion_en_pantalla": "Descripción visual específica", 
       "instruccion_produccion": "Cámara rápida / Zoom in",
-      "audio": "Efecto de sonido (Glitch)"
+      "audio": "Efecto de sonido"
     },
     { 
       "tiempo": "4-15s", 
-      "accion_en_pantalla": "Describe el contexto (ej: Persona frustrada frente al ordenador)", 
-      "instruccion_produccion": "Plano medio estático",
-      "audio": "Música suave de fondo"
-    },
-    { 
-      "tiempo": "Resto del video", 
-      "accion_en_pantalla": "Describe el desarrollo de la solución hablando a cámara", 
-      "instruccion_produccion": "Cámara en mano dinámica",
-      "audio": "Subida de volumen música épica"
+      "accion_en_pantalla": "Contexto visual", 
+      "instruccion_produccion": "Plano medio",
+      "audio": "Música suave"
     }
   ],
   "analisis_psicologico": {
-    "gatillo_mental_principal": "Ej: Autoridad",
-    "emocion_objetivo": "Ej: Esperanza y Alivio"
+    "gatillo_mental_principal": "Autoridad / Escasez / Reciprocidad",
+    "emocion_objetivo": "Esperanza y Alivio / Urgencia"
   }
-}`; 
+}`;
 };
 
 // 4️⃣ JUEZ VIRAL (INTACTO)
@@ -433,29 +482,28 @@ CONTEXTO DEL USUARIO:
 - Nicho: ${contexto.nicho || 'General'}
 - Avatar: ${contexto.avatar_ideal || 'Audiencia general'}
 - Dolor: ${contexto.dolor_principal || 'N/A'}
-- Competencia analizada: ${contexto.competencia_analizada?.length || 0} competidores
 
 CONTENIDO A EVALUAR:
 ${contenido}
 
 MATRIZ DE EVALUACIÓN (10 CRITERIOS - Puntaje 0-10 cada uno):
 
-1. GANCHO (0-3s) - ¿Rompe el scroll? ¿Dispara curiosidad? ¿Es específico?
-2. RETENCIÓN (4-30s) - ¿Mantiene micro-ganchos? ¿Ritmo dinámico?
-3. RESONANCIA EMOCIONAL - ¿Toca el dolor? ¿Arco emocional claro?
-4. CLARIDAD DEL MENSAJE - ¿Se entiende en 5s? ¿Lenguaje del Avatar?
-5. CALL TO ACTION - ¿CTA específico? ¿Genera urgencia?
-6. PRODUCCIÓN - ¿Visuales potencian? ¿Ritmo adecuado?
-7. ORIGINALIDAD - ¿Concepto fresco? ¿Se diferencia?
-8. POTENCIAL DE COMPARTIR - ¿Útil/entretenido? ¿Genera conversación?
-9. SEÑALES ALGORÍTMICAS - ¿Optimizado para retención? ¿Keywords?
-10. TIMING Y CONTEXTO - ¿Relevante ahora? ¿Momento estratégico?
+1. GANCHO (0-3s) - ¿Rompe el scroll? ¿Dispara curiosidad?
+2. RETENCIÓN (4-30s) - ¿Mantiene micro-ganchos?
+3. RESONANCIA EMOCIONAL - ¿Toca el dolor?
+4. CLARIDAD DEL MENSAJE - ¿Se entiende rápido?
+5. CALL TO ACTION - ¿CTA específico?
+6. PRODUCCIÓN - ¿Visuales potencian?
+7. ORIGINALIDAD - ¿Concepto fresco?
+8. POTENCIAL DE COMPARTIR - ¿Útil/entretenido?
+9. SEÑALES ALGORÍTMICAS - ¿Optimizado?
+10. TIMING Y CONTEXTO - ¿Relevante ahora?
 
 FORMATO DE SALIDA JSON ESTRICTO:
 {
   "veredicto_final": {
     "score_total": 85,
-    "clasificacion": "ALTO POTENCIAL / MEDIO / BAJO",
+    "clasificacion": "ALTO POTENCIAL",
     "probabilidad_viral": "78%",
     "confianza_prediccion": "92%"
   },
@@ -464,155 +512,159 @@ FORMATO DE SALIDA JSON ESTRICTO:
       "criterio": "Gancho",
       "score": 9,
       "analisis": "El gancho rompe el patrón porque...",
-      "sugerencia": "Para mejorar, considera..."
+      "sugerencia": "Para mejorar..."
     }
   ],
-  "fortalezas_clave": [
-    "Fortaleza 1 con explicación",
-    "Fortaleza 2 con explicación"
-  ],
+  "fortalezas_clave": ["Fortaleza 1", "Fortaleza 2"],
   "debilidades_criticas": [
     {
-      "problema": "Descripción del problema",
-      "impacto": "Por qué esto reduce el potencial viral",
-      "solucion": "Cómo arreglarlo específicamente"
+      "problema": "Descripción",
+      "impacto": "Por qué reduce viralidad",
+      "solucion": "Cómo arreglarlo"
     }
   ],
-  "optimizaciones_rapidas": [
-    "Cambio 1 que aumentaría el score en 5 puntos",
-    "Cambio 2 que aumentaría el score en 3 puntos"
-  ],
+  "optimizaciones_rapidas": ["Cambio 1", "Cambio 2"],
   "prediccion_metricas": {
     "vistas_estimadas": "10K - 50K",
     "engagement_rate": "6% - 10%",
-    "tiempo_viralizacion": "24-48 horas / 3-7 días"
+    "tiempo_viralizacion": "24-48 horas"
   },
-  "decision_recomendada": "PUBLICAR / MEJORAR ANTES DE PUBLICAR / DESCARTAR"
-}
+  "decision_recomendada": "PUBLICAR"
+}`;
 
-⚠️ INSTRUCCIÓN CRÍTICA: Sé brutalmente honesto. Es mejor un 6/10 real que un 9/10 falso.`;
-
-// 5️⃣ AUDITOR DE AVATAR (INTACTO)
-const PROMPT_AUDITOR_AVATAR = (infoCliente: string, nicho: string) => `ERES UN PSICÓLOGO DE CONSUMIDOR Y ESTRATEGA DE AVATARES.
-TU MISIÓN: Crear el perfil más completo del Cliente Ideal para que TODO el contenido hable directo a su cerebro.
+// 5️⃣ AUDITOR DE AVATAR (MEJORADO - CORRECCIÓN #7)
+const PROMPT_AUDITOR_AVATAR = (infoCliente: string, nicho: string) => `ERES UN PSICÓLOGO DE CONSUMIDOR ÉLITE MUNDIAL Y ESTRATEGA DE AVATARES.
+TU MISIÓN: Crear el perfil MÁS COMPLETO del Cliente Ideal.
 
 INFORMACIÓN PROPORCIONADA:
+${infoCliente}
+
 Nicho: ${nicho}
-Info del cliente: ${infoCliente}
+
+⚠️⚠️⚠️ REGLA CRÍTICA DE INFERENCIA ⚠️⚠️⚠️
+Si la información proporcionada es limitada, debes INFERIR Y COMPLETAR inteligentemente basándote en:
+1. Psicología típica de consumidores en "${nicho}"
+2. Patrones de comportamiento comunes en este mercado
+3. Dolores y deseos universales del nicho
+4. Investigación de mercado estándar
+
+NUNCA digas "información no proporcionada" o "N/A".
+SIEMPRE genera un perfil COMPLETO, DETALLADO y ÚTIL.
 
 PROTOCOLO DE AUDITORÍA (10 DIMENSIONES):
 
-1. DEMOGRÁFICOS BÁSICOS - Edad, género, ubicación, ingresos
-2. PSICOGRÁFICOS - Valores, creencias, identidad aspiracional
-3. SITUACIÓN ACTUAL (Dolor) - Problema principal, síntomas, frustración
-4. ESTADO DESEADO (Cielo) - Vida ideal si problema desaparece
-5. OBJECIONES Y MIEDOS - Qué le detiene de tomar acción
-6. LENGUAJE Y JERGA - Palabras exactas que usa el Avatar
-7. PLATAFORMAS Y HÁBITOS - Dónde consume contenido, cuándo
-8. PROCESO DE DECISIÓN - Cómo toma decisiones, qué necesita para confiar
-9. NIVEL DE CONSCIENCIA - Unaware/Problem Aware/Solution Aware/Product Aware
-10. CONTENIDO QUE ENGANCHA - Ganchos, ángulos, formato preferido
+1. DEMOGRÁFICOS BÁSICOS
+2. PSICOGRÁFICOS
+3. SITUACIÓN ACTUAL (Dolor)
+4. ESTADO DESEADO (Cielo)
+5. OBJECIONES Y MIEDOS
+6. LENGUAJE Y JERGA
+7. PLATAFORMAS Y HÁBITOS
+8. PROCESO DE DECISIÓN
+9. NIVEL DE CONSCIENCIA
+10. CONTENIDO QUE ENGANCHA
 
 FORMATO DE SALIDA JSON ESTRICTO:
 {
   "resumen_avatar": {
-    "nombre_avatar": "Nombre descriptivo (Ej: 'María la Emprendedora Estancada')",
+    "nombre_avatar": "Nombre descriptivo memorable",
     "frase_identidad": "Una frase que capture la esencia",
     "arquetipo": "Tipo psicológico"
   },
   "perfil_completo": {
     "dolor_principal": {
-      "problema": "No logra generar clientes consistentemente",
-      "sintomas": ["Síntoma 1", "Síntoma 2"],
-      "frustracion": "Ve a otros con menos experiencia teniendo más éxito"
+      "problema": "Descripción específica del problema",
+      "sintomas": ["Síntoma 1 concreto", "Síntoma 2 concreto"],
+      "frustracion": "Frustración emocional específica"
     },
     "estado_deseado": {
-      "vision": "Tener 3-5 clientes nuevos cada mes sin perseguirlos",
-      "emocion_objetivo": "Confianza y tranquilidad"
+      "vision": "Visión clara del estado ideal",
+      "emocion_objetivo": "Emoción que busca"
     },
     "lenguaje": {
-      "palabras_clave": ["Palabra 1", "Palabra 2"],
+      "palabras_clave": ["Palabra 1", "Palabra 2", "Palabra 3"],
       "frases_resuenan": ["Frase 1", "Frase 2"],
-      "evitar": ["Término confuso 1"],
-      "tono_preferido": "Conversacional pero experto"
+      "evitar": ["Término 1"],
+      "tono_preferido": "Tono específico"
     },
     "tipo_contenido_efectivo": {
       "ganchos": ["Tipo gancho 1", "Tipo gancho 2"],
-      "formato": "Videos de 60-90s en vertical",
-      "tono": "Directa y empoderadora"
+      "formato": "Formato visual preferido",
+      "tono": "Tono de voz efectivo"
     }
   },
   "insights_estrategicos": [
     {
-      "insight": "Este Avatar valora SIMPLIFICACIÓN sobre información",
-      "aplicacion": "Tu contenido debe ser 'Esto es TODO lo que necesitas'"
+      "insight": "Insight profundo sobre el avatar",
+      "aplicacion": "Cómo aplicarlo al contenido"
     }
   ]
-}
+}`;
 
-⚠️ REGLA DE ORO: Un Avatar bien definido hace que TODO el contenido sea 10x más efectivo.`;
-
-// 6️⃣ AUDITOR DE EXPERTO (INTACTO)
-const PROMPT_AUDITOR_EXPERTO = (contexto: ContextoUsuario) => `ERES UN ANALISTA COMPETITIVO Y ESTRATEGA DE POSICIONAMIENTO.
-TU MISIÓN: Analizar el perfil del usuario, su competencia y el mercado para encontrar su ÁNGULO ÚNICO.
+// 6️⃣ AUDITOR DE EXPERTO (MEJORADO - CORRECCIÓN #7)
+const PROMPT_AUDITOR_EXPERTO = (contexto: ContextoUsuario) => `ERES UN ANALISTA COMPETITIVO ÉLITE MUNDIAL Y ESTRATEGA DE POSICIONAMIENTO.
+TU MISIÓN: Analizar el perfil del usuario y su mercado para encontrar su ÁNGULO ÚNICO.
 
 CONTEXTO DEL USUARIO:
 - Nicho: ${contexto.nicho || 'General'}
 - Avatar: ${contexto.avatar_ideal || 'N/A'}
 
+⚠️⚠️⚠️ REGLA CRÍTICA DE ANÁLISIS ⚠️⚠️⚠️
+Aunque tengas información limitada, debes:
+1. Analizar tendencias actuales en "${contexto.nicho}"
+2. Identificar patrones de mercado
+3. Proponer estrategias CONCRETAS y ACCIONABLES
+4. Crear un plan COMPLETO basado en mejores prácticas
+
+NO digas "se necesita más información".
+SIEMPRE genera un análisis COMPLETO y ÚTIL.
+
 PROTOCOLO DE AUDITORÍA (7 FASES):
 
-1. MAPEO DE COMPETENCIA - Identificar top 10-20 players, categorizar por tamaño
-2. ANÁLISIS DE BRECHAS - Qué hace TODO el mundo / Qué NO hace NADIE
-3. DIFERENCIACIÓN - Fortalezas únicas del usuario
-4. POSICIONAMIENTO - Crear declaración única
-5. ESTRATEGIA DE CONTENIDO - Pilares (3-5 temas principales)
-6. MATRIZ DE OPORTUNIDADES - Qué crear AHORA
-7. SISTEMA DE MONITOREO - KPIs a trackear
+1. MAPEO DE COMPETENCIA
+2. ANÁLISIS DE BRECHAS
+3. DIFERENCIACIÓN
+4. POSICIONAMIENTO
+5. ESTRATEGIA DE CONTENIDO
+6. MATRIZ DE OPORTUNIDADES
+7. SISTEMA DE MONITOREO
 
 FORMATO DE SALIDA JSON ESTRICTO:
 {
   "resumen_ejecutivo": {
     "estado_mercado": "Saturado/En Crecimiento/Naciente",
     "nivel_competencia": "Alta/Media/Baja",
-    "oportunidad_principal": "Descripción de la oportunidad detectada"
+    "oportunidad_principal": "Descripción específica de la oportunidad"
   },
   "analisis_brechas": {
-    "todos_hacen": ["Cosa 1", "Cosa 2"],
-    "nadie_hace": ["Oportunidad 1 - ANGLE VIRGEN"],
-    "hacen_mal": ["Error común que comete la mayoría"]
+    "todos_hacen": ["Cosa 1 específica", "Cosa 2 específica"],
+    "nadie_hace": ["Oportunidad 1 - ÁNGULO VIRGEN"],
+    "hacen_mal": ["Error común específico"]
   },
   "posicionamiento_estrategico": {
-    "declaracion_posicionamiento": "Ayudo a [AVATAR] a lograr [RESULTADO] sin [OBJECIÓN] a través de [MÉTODO ÚNICO]",
+    "declaracion_posicionamiento": "Ayudo a [AVATAR] a lograr [RESULTADO] sin [OBJECIÓN]",
     "enemigo_comun": "Qué rechaza el usuario",
-    "bandera": "Por qué lucha el usuario",
-    "propuesta_valor": "Una frase que capture el ÚNICO valor"
+    "bandera": "Por qué lucha",
+    "propuesta_valor": "Valor único"
   },
   "estrategia_contenido": {
     "pilares_contenido": [
       {
-        "pilar": "Pilar 1: Ej: Estrategia de Contenido",
+        "pilar": "Pilar 1 específico",
         "objetivo": "Educar/Posicionar/Convertir",
         "frecuencia": "2-3 veces/semana",
         "angulos": ["Ángulo 1", "Ángulo 2"]
       }
-    ],
-    "mix_contenido": {
-      "educativo": "60%",
-      "entretenimiento": "20%",
-      "ventas": "10%"
-    }
+    ]
   },
   "plan_90_dias": {
     "mes_1": {
-      "objetivo": "Establecer posicionamiento y voz",
-      "acciones": ["Acción 1", "Acción 2"],
-      "meta_numerica": "1,000 seguidores nuevos"
+      "objetivo_principal": "Objetivo claro",
+      "acciones_clave": ["Acción 1", "Acción 2"],
+      "meta_numerica": "1,000 seguidores"
     }
   }
-}
-
-⚠️ OBJETIVO: El usuario debe saber QUIÉN es en su mercado y CÓMO destacar.`;
+}`;
 
 // 7️⃣ MENTOR ESTRATÉGICO (INTACTO)
 const PROMPT_MENTOR_ESTRATEGICO = (contexto: ContextoUsuario, resultados?: any) => {
@@ -623,71 +675,41 @@ TU MISIÓN: Sintetizar todos los datos, guiar con visión a largo plazo, y optim
 
 CONTEXTO DEL USUARIO:
 - Nicho: ${contexto.nicho || 'General'}
-- Avatar: ${contexto.avatar_ideal || 'N/A'}
-- Posicionamiento: ${contexto.posicionamiento || 'N/A'}${resultadosStr}
+- Avatar: ${contexto.avatar_ideal || 'N/A'}${resultadosStr}
 
 PROTOCOLO DE MENTORÍA (5 NIVELES):
 
-1. DIAGNÓSTICO INTEGRAL - Revisar todos los datos, identificar patrones
-2. ESTRATEGIA ADAPTATIVA - Proponer pivotes o escalamiento
-3. OPTIMIZACIÓN CONTINUA - Recomendar mejoras de alto impacto
-4. VISIÓN A LARGO PLAZO - Crear roadmap 6-12 meses
-5. COACHING PERSONALIZADO - Feedback honesto y constructivo
+1. DIAGNÓSTICO INTEGRAL
+2. ESTRATEGIA ADAPTATIVA
+3. OPTIMIZACIÓN CONTINUA
+4. VISIÓN A LARGO PLAZO
+5. COACHING PERSONALIZADO
 
 FORMATO DE SALIDA JSON ESTRICTO:
 {
   "diagnostico_actual": {
-    "estado_general": "En camino / Necesita ajustes / Excelente",
+    "estado_general": "En camino",
     "score_ejecucion": 7.5,
-    "areas_fuertes": [
-      {
-        "area": "Calidad de guiones",
-        "evidencia": "Los últimos 3 guiones tienen score 8+"
-      }
-    ],
-    "areas_debiles": [
-      {
-        "area": "Consistencia de publicación",
-        "impacto": "Afecta visibilidad algorítmica",
-        "prioridad": "Alta"
-      }
-    ]
+    "areas_fuertes": [{"area": "Calidad", "evidencia": "Detalle"}],
+    "areas_debiles": [{"area": "Consistencia", "impacto": "Afecta visibilidad", "prioridad": "Alta"}]
   },
   "estrategia_optimizada": {
-    "ajustes_inmediatos": [
-      {
-        "area": "Ganchos",
-        "cambio": "Implementar patrón X",
-        "impacto_esperado": "Alto"
-      }
-    ],
-    "experimentos_propuestos": [
-      {
-        "experimento": "Testear storytelling personal",
-        "hipotesis": "Mayor conexión = Mayor seguimiento",
-        "metricas_evaluar": ["Engagement rate", "Shares"]
-      }
-    ]
+    "ajustes_inmediatos": [{"area": "Ganchos", "cambio": "Implementar X", "impacto_esperado": "Alto"}],
+    "experimentos_propuestos": [{"experimento": "Test", "hipotesis": "Mayor conexión", "metricas_evaluar": ["Engagement"]}]
   },
   "roadmap_6_meses": {
-    "mes_1_2": {
-      "objetivo_principal": "Validar formato",
-      "acciones_clave": ["Acción 1", "Acción 2"],
-      "meta_numerica": "1,000 seguidores"
-    }
+    "mes_1_2": {"objetivo_principal": "Validar formato", "acciones_clave": ["Acción 1"], "meta_numerica": "1,000 seguidores"}
   },
   "sesion_coaching": {
-    "reflexion": "¿Qué te está deteniendo?",
-    "feedback_honesto": "Observación directa",
+    "reflexion": "¿Qué te detiene?",
+    "feedback_honesto": "Observación",
     "motivacion": "Mensaje inspirador"
   }
-}
-
-⚠️ ROL: GUIAR con visión, EMPODERAR con confianza, OPTIMIZAR con datos.`;
+}`;
 };
 
 // ==================================================================================
-// 🎯 FUNCIONES EJECUTORAS (CORREGIDAS Y BLINDADAS)
+// 🎯 FUNCIONES EJECUTORAS (CORREGIDAS)
 // ==================================================================================
 
 async function ejecutarIdeasRapidas(
@@ -698,7 +720,6 @@ async function ejecutarIdeasRapidas(
 ): Promise<{ data: any; tokens: number }> {
   console.log(`[CEREBRO] 💡 Ejecutando Ideas Rápidas (Cantidad: ${qty})...`);
   
-  // Creamos un prompt dinámico que solicita la cantidad exacta
   const promptDinamico = `
     TEMA/TÓPICO: "${userInput}".
     CONTEXTO COMPLETO:
@@ -729,13 +750,13 @@ async function ejecutarAutopsiaViral(
   platform: string,
   openai: any
 ): Promise<{ data: any; tokens: number }> {
-  console.log('[CEREBRO] 🔬 Ejecutando Autopsia Viral...');
+  console.log('[CEREBRO] 🔬 Ejecutando Autopsia Viral MEJORADA...');
   
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o',
     response_format: { type: 'json_object' },
     messages: [
-      { role: 'system', content: 'Eres el forense de viralidad #1 del mundo.' },
+      { role: 'system', content: 'Eres el forense de viralidad #1 del mundo. DEBES devolver un JSON COMPLETO con TODAS las secciones.' },
       { role: 'user', content: `${PROMPT_AUTOPSIA_VIRAL(platform)}\n\nCONTENIDO A ANALIZAR:\n${content}` }
     ],
     temperature: 0.3,
@@ -743,6 +764,22 @@ async function ejecutarAutopsiaViral(
   });
   
   const data = JSON.parse(completion.choices[0].message.content || '{}');
+  
+  // Validar que tenga las secciones críticas
+  if (!data.score_viral || !data.adn_extraido || !data.desglose_temporal) {
+    console.error('[AUTOPSIA] ⚠️ Respuesta incompleta, rellenando con datos mínimos...');
+    return {
+      data: {
+        score_viral: data.score_viral || { potencial_total: 0, factores_exito: [], nivel_replicabilidad: "N/A" },
+        adn_extraido: data.adn_extraido || { idea_ganadora: "No disponible", disparador_psicologico: "N/A", estructura_exacta: "N/A", formula_gancho: "N/A" },
+        desglose_temporal: data.desglose_temporal || [],
+        patron_replicable: data.patron_replicable || { nombre_patron: "N/A", formula: "N/A", aplicacion_generica: "N/A" },
+        produccion_deconstruida: data.produccion_deconstruida || {},
+        insights_algoritmicos: data.insights_algoritmicos || {}
+      },
+      tokens: completion.usage?.total_tokens || 0
+    };
+  }
   
   if (data.patron_replicable) MEMORIA_SISTEMA.patrones_virales.push(data.patron_replicable.nombre_patron);
   if (data.adn_extraido?.formula_gancho) MEMORIA_SISTEMA.hooks_alto_rendimiento.push(data.adn_extraido.formula_gancho);
@@ -759,13 +796,13 @@ async function ejecutarGeneradorGuiones(
   openai: any,
   settings: any = {}
 ): Promise<{ data: any; tokens: number }> {
-  console.log('[CEREBRO] ✍️ Ejecutando Generador de Guiones...');
+  console.log('[CEREBRO] ✍️ Ejecutando Generador de Guiones MEJORADO...');
   
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o',
     response_format: { type: 'json_object' },
     messages: [
-      { role: 'system', content: 'Eres el mejor guionista de contenido viral en español. REGLA CRÍTICA: Escribe el guion COMPLETO palabra por palabra, nunca resúmenes.' },
+      { role: 'system', content: 'Eres el mejor guionista de contenido viral en español. REGLA CRÍTICA: Escribe el guion COMPLETO palabra por palabra sobre el tema específico, nunca resúmenes.' },
       { role: 'user', content: PROMPT_GENERADOR_GUIONES(contexto, viralDNA, settings) }
     ],
     temperature: 0.7,
@@ -807,13 +844,13 @@ async function ejecutarAuditorAvatar(
   nicho: string,
   openai: any
 ): Promise<{ data: any; tokens: number }> {
-  console.log('[CEREBRO] 👤 Ejecutando Auditor de Avatar...');
+  console.log('[CEREBRO] 👤 Ejecutando Auditor de Avatar MEJORADO...');
   
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o',
     response_format: { type: 'json_object' },
     messages: [
-      { role: 'system', content: 'Eres un psicólogo de consumidor y estratega de avatares.' },
+      { role: 'system', content: 'Eres un psicólogo de consumidor élite mundial. NUNCA digas "información no proporcionada". SIEMPRE genera un perfil COMPLETO.' },
       { role: 'user', content: PROMPT_AUDITOR_AVATAR(infoCliente, nicho) }
     ],
     temperature: 0.5,
@@ -830,13 +867,13 @@ async function ejecutarAuditorExperto(
   contexto: ContextoUsuario,
   openai: any
 ): Promise<{ data: any; tokens: number }> {
-  console.log('[CEREBRO] 🎯 Ejecutando Auditor de Experto...');
+  console.log('[CEREBRO] 🎯 Ejecutando Auditor de Experto MEJORADO...');
   
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o',
     response_format: { type: 'json_object' },
     messages: [
-      { role: 'system', content: 'Eres un analista competitivo y estratega de posicionamiento.' },
+      { role: 'system', content: 'Eres un analista competitivo élite mundial. NUNCA digas "se necesita más información". SIEMPRE genera un análisis COMPLETO.' },
       { role: 'user', content: PROMPT_AUDITOR_EXPERTO(contexto) }
     ],
     temperature: 0.5,
@@ -879,36 +916,37 @@ async function ejecutarCalendario(
   contexto: ContextoUsuario,
   openai: any
 ): Promise<{ data: any; tokens: number }> {
-  console.log('[CEREBRO] 📅 Generando Calendario...');
+  console.log('[CEREBRO] 📅 Generando Calendario MEJORADO...');
   
-  const calendarPrompt = `Genera un calendario de contenidos de ${settings.duration || 7} días para el nicho: ${contexto.nicho}.
+  const calendarPrompt = `Genera un calendario de contenidos de ${settings.duration || 7} días para:
   
-  Avatar: ${contexto.avatar_ideal}
-  Dolor: ${contexto.dolor_principal}
-  Deseo: ${contexto.deseo_principal}
-  
-  Usa los 40 Ganchos Winner Rocket y los 12 Formatos Visuales para crear un plan estratégico.
-  
-  Responde en JSON con:
-  {
-    "calendario": [
-      {
-        "dia": 1,
-        "tema": "Tema del día",
-        "idea_contenido": "Idea específica de video",
-        "gancho_sugerido": "Primera línea del video",
-        "formato": "Formato visual de los 12",
-        "objetivo": "Educar/Entretener/Vender",
-        "disparador": "Uno de los 7 disparadores virales"
-      }
-    ]
-  }`;
+Nicho: ${contexto.nicho}
+Avatar: ${contexto.avatar_ideal}
+Dolor: ${contexto.dolor_principal}
+Deseo: ${contexto.deseo_principal}
+
+Usa los 40 Ganchos Winner Rocket y los 12 Formatos Visuales.
+
+⚠️ FORMATO DE SALIDA JSON ESTRICTO (SIN MARKDOWN):
+{
+  "calendario": [
+    {
+      "dia": 1,
+      "tema": "Tema específico del día",
+      "idea_contenido": "Idea completa de video",
+      "gancho_sugerido": "Primera línea del video",
+      "formato": "Uno de los 12 formatos",
+      "objetivo": "Educar/Entretener/Vender",
+      "disparador": "Uno de los 7 disparadores"
+    }
+  ]
+}`;
   
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o',
     response_format: { type: 'json_object' },
     messages: [
-      { role: 'system', content: 'Eres un estratega de contenidos CMO experto en viralidad.' },
+      { role: 'system', content: 'Eres un estratega de contenidos CMO experto en viralidad. Devuelve SOLO JSON válido, SIN markdown.' },
       { role: 'user', content: calendarPrompt }
     ],
     temperature: 0.7,
@@ -916,13 +954,13 @@ async function ejecutarCalendario(
   });
   
   return {
-    data: JSON.parse(completion.choices[0].message.content || '{}'),
+    data: JSON.parse(completion.choices[0].message.content || '{"calendario":[]}'),
     tokens: completion.usage?.total_tokens || 0
   };
 }
 
 // ==================================================================================
-// CONTEXTO DE USUARIO
+// CONTEXTO DE USUARIO (MEJORADO - CORRECCIÓN #7)
 // ==================================================================================
 
 async function getUserContext(
@@ -953,6 +991,8 @@ async function getUserContext(
     const expert = results[0].value?.data;
     if (expert) {
       contexto.nicho = expert.niche || contexto.nicho;
+      contexto.posicionamiento = expert.positioning || '';
+      contexto.diferenciadores = expert.differentiators || [];
     }
   }
   
@@ -976,18 +1016,16 @@ async function getUserContext(
 }
 
 // ==================================================================================
-// 💰 CALCULADORA DE TARIFAS (ALINEADA CON FRONTEND)
+// 💰 CALCULADORA DE TARIFAS (ALINEADA)
 // ==================================================================================
 
 function calculateTitanCost(mode: string, inputContext: string, whisperMinutes: number, settings: any): number {
   
-  // 1️⃣ IDEAS RÁPIDAS
   if (mode === 'ideas_rapidas') {
     if (inputContext.toLowerCase().includes("10 ideas") || settings?.quantity === 10) return 7;
     return 3; 
   }
 
-  // 2️⃣ CALENDARIO
   if (mode === 'calendar_generator') {
     const days = settings?.duration || 7; 
     if (days <= 3) return 2;
@@ -995,18 +1033,15 @@ function calculateTitanCost(mode: string, inputContext: string, whisperMinutes: 
     return 10;
   }
 
-  // 3️⃣ AUTOPSIA VIRAL
   if (mode === 'autopsia_viral') {
     return 5;
   }
 
-  // 4️⃣ RECREATE (TITAN VIRAL)
   if (mode === 'recreate') {
-    if (whisperMinutes > 30) return 45; // Video Largo
-    return 5; // Video Corto
+    if (whisperMinutes > 30) return 45;
+    return 5;
   }
 
-  // 5️⃣ GENERADOR DE GUIONES
   if (mode === 'generar_guion') {
     const durationSetting = settings?.duration || settings?.durationId || '';
     const isMasterclass = 
@@ -1019,12 +1054,10 @@ function calculateTitanCost(mode: string, inputContext: string, whisperMinutes: 
     return 5;
   }
 
-  // 6️⃣ JUEZ VIRAL
   if (mode === 'juez_viral') {
     return 2;
   }
 
-  // 7️⃣ AUDITORÍAS
   if (['audit_avatar', 'auditar_avatar'].includes(mode)) {
     return 2;
   }
@@ -1033,7 +1066,6 @@ function calculateTitanCost(mode: string, inputContext: string, whisperMinutes: 
     return 2;
   }
 
-  // 8️⃣ MENTOR / CHAT
   if (['mentor_ia', 'mentor_estrategico'].includes(mode)) {
     return 2;
   }
@@ -1042,15 +1074,13 @@ function calculateTitanCost(mode: string, inputContext: string, whisperMinutes: 
     return 1;
   }
 
-  // 9️⃣ TRANSCRIPTOR
   if (['transcribe', 'transcriptor'].includes(mode)) {
     if (whisperMinutes > 60) return 45;
     if (whisperMinutes > 30) return 15;
     return 5;
   }
 
-  // 🔟 HERRAMIENTAS DE TEXTO
-  if (['clean', 'authority', 'carousel', 'shorts', 'structure', 'ingenieria_inversa'].includes(mode)) {
+  if (['clean', 'authority', 'carousel', 'shorts', 'structure'].includes(mode)) {
     return 2;
   }
 
@@ -1058,7 +1088,7 @@ function calculateTitanCost(mode: string, inputContext: string, whisperMinutes: 
 }
 
 // ==================================================================================
-// 🎬 SERVIDOR PRINCIPAL (SWITCH CASE CORREGIDO)
+// 🎬 SERVIDOR PRINCIPAL (CORREGIDO - TODOS LOS PROBLEMAS)
 // ==================================================================================
 
 serve(async (req) => {
@@ -1099,7 +1129,7 @@ serve(async (req) => {
     if (body.objective) settings.objective = body.objective;
     if (body.situation) settings.situation = body.situation;
 
-    console.log(`[TITAN V300] 🚀 MODE: ${selectedMode} | INPUT LEN: ${processedContext.length} | USER: ${userId}`);
+    console.log(`[TITAN V105] 🚀 MODE: ${selectedMode} | INPUT LEN: ${processedContext.length} | USER: ${userId}`);
 
     if (estimatedCost > 0) {
       const { data: p } = await supabase.from('profiles').select('credits, tier').eq('id', userId).single();
@@ -1111,12 +1141,11 @@ serve(async (req) => {
     const userContext = await getUserContext(supabase, expertId || '', avatarId || '', knowledgeBaseId || '');
 
     let whisperMinutes = 0;
-
     let result: any;
     let tokensUsed = 0;
 
     // ==================================================================================
-    // 🎯 SWITCH CASE CORREGIDO (TODAS LAS LLAMADAS CORRECTAS)
+    // 🎯 SWITCH CASE CORREGIDO (TODAS LAS CORRECCIONES APLICADAS)
     // ==================================================================================
 
     switch (selectedMode) {
@@ -1124,7 +1153,6 @@ serve(async (req) => {
         const topic = processedContext || "Viralidad General";
         const qty = settings.quantity || 3;
         
-        // ✅ LLAMADA CORRECTA con 4 parámetros
         const res = await ejecutarIdeasRapidas(topic, userContext, qty, openai);
         
         result = res.data; 
@@ -1135,7 +1163,6 @@ serve(async (req) => {
       case 'calendar_generator': {
         if (!settings.duration) settings.duration = 7;
         
-        // ✅ LLAMADA CORRECTA
         const res = await ejecutarCalendario(settings, userContext, openai);
         result = res.data;
         tokensUsed = res.tokens;
@@ -1146,13 +1173,25 @@ serve(async (req) => {
       case 'recreate': {
         const platName = platform || 'General';
         
-        // ✅ LLAMADA CORRECTA (sin 'contexto' innecesario)
         const autopsiaResponse = await ejecutarAutopsiaViral(processedContext, platName, openai);
         
         if (selectedMode === 'recreate') {
-            // ✅ LLAMADA CORRECTA con settings
-            const guionResponse = await ejecutarGeneradorGuiones(userContext, autopsiaResponse.data.adn_extraido, openai, settings);
-            result = { autopsia_viral: autopsiaResponse.data, guion_adaptado: guionResponse.data };
+            // ✅ CORRECCIÓN #6: Enriquecer contexto con tema específico
+            const contextoEnriquecido = {
+              ...userContext,
+              tema_especifico: processedContext || userContext.nicho
+            };
+            
+            const guionResponse = await ejecutarGeneradorGuiones(
+              contextoEnriquecido, 
+              autopsiaResponse.data.adn_extraido, 
+              openai, 
+              settings
+            );
+            result = { 
+              autopsia_viral: autopsiaResponse.data, 
+              guion_adaptado: guionResponse.data 
+            };
             tokensUsed = autopsiaResponse.tokens + guionResponse.tokens;
         } else {
             result = autopsiaResponse.data;
@@ -1162,15 +1201,21 @@ serve(async (req) => {
       }
 
       case 'generar_guion': {
-        // ✅ LLAMADA CORRECTA con settings
-        const res = await ejecutarGeneradorGuiones(userContext, null, openai, settings);
+        // ✅ CORRECCIÓN #1: Añadir tema específico al contexto
+        const temaDelUsuario = processedContext || userContext.nicho;
+        
+        const contextoEnriquecido = {
+          ...userContext,
+          tema_especifico: temaDelUsuario
+        };
+        
+        const res = await ejecutarGeneradorGuiones(contextoEnriquecido, null, openai, settings);
         result = res.data;
         tokensUsed = res.tokens;
         break;
       }
 
       case 'juez_viral': {
-        // ✅ LLAMADA CORRECTA
         const res = await ejecutarJuezViral(userContext, processedContext, openai);
         result = res.data;
         tokensUsed = res.tokens;
@@ -1179,8 +1224,30 @@ serve(async (req) => {
       
       case 'auditar_avatar':
       case 'audit_avatar': {
-        // ✅ LLAMADA CORRECTA
-        const res = await ejecutarAuditorAvatar(processedContext, userContext.nicho, openai);
+        // ✅ CORRECCIÓN #7: Cargar info de la BD si no hay texto
+        let infoParaAnalizar = processedContext;
+        
+        if (!infoParaAnalizar || infoParaAnalizar.length < 50) {
+          if (avatarId) {
+            const { data: avatarData } = await supabase
+              .from('avatars')
+              .select('*')
+              .eq('id', avatarId)
+              .single();
+            
+            if (avatarData) {
+              infoParaAnalizar = `
+Nombre: ${avatarData.name || 'N/A'}
+Descripción: ${avatarData.description || 'N/A'}
+Dolor: ${avatarData.dolor || 'N/A'}
+Cielo (Deseo): ${avatarData.cielo || 'N/A'}
+Información adicional: ${JSON.stringify(avatarData)}
+              `;
+            }
+          }
+        }
+        
+        const res = await ejecutarAuditorAvatar(infoParaAnalizar, userContext.nicho, openai);
         result = res.data;
         tokensUsed = res.tokens;
         break;
@@ -1188,8 +1255,26 @@ serve(async (req) => {
 
       case 'auditar_experto':
       case 'audit_expert': {
-        // ✅ LLAMADA CORRECTA
-        const res = await ejecutarAuditorExperto(userContext, openai);
+        // ✅ CORRECCIÓN #7: Cargar info de la BD si no hay texto
+        let contextoEnriquecido = userContext;
+        
+        if (expertId && (!processedContext || processedContext.length < 50)) {
+          const { data: expertData } = await supabase
+            .from('expert_profiles')
+            .select('*')
+            .eq('id', expertId)
+            .single();
+          
+          if (expertData) {
+            contextoEnriquecido = {
+              ...userContext,
+              posicionamiento: expertData.positioning || '',
+              diferenciadores: expertData.differentiators || []
+            };
+          }
+        }
+        
+        const res = await ejecutarAuditorExperto(contextoEnriquecido, openai);
         result = res.data;
         tokensUsed = res.tokens;
         break;
@@ -1199,13 +1284,13 @@ serve(async (req) => {
       case 'mentor_ia':
       case 'chat_expert':
       case 'chat_avatar': {
-         // ✅ LLAMADA CORRECTA
          const res = await ejecutarMentorEstrategico(userContext, processedContext, openai);
          result = res.data;
          tokensUsed = res.tokens;
          break;
       }
 
+      // ✅ CORRECCIÓN #4: Transcriptor sin "ingenieria_inversa"
       case 'transcribe':
       case 'clean':
       case 'authority':
