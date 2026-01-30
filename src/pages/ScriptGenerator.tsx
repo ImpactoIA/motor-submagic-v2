@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../lib/supabase';
 import { useAuth } from '../../context/AuthContext';
 import { 
     RefreshCw, Wand2, Zap, Copy, Save, Calendar as CalendarIcon, Gavel,
