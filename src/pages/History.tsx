@@ -1,253 +1,350 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { 
-    FileText, Lightbulb, Zap, Trash2, Eye, X, Copy, 
-    Calendar, User, MessageSquare, Database, RefreshCw, CheckCircle2
+    FileText, Lightbulb, Calendar as CalendarIcon, Search, 
+    Trash2, Copy, Eye, X, Filter, Clock, ArrowRight, Video
 } from 'lucide-react';
+
+// ==================================================================================
+// 1. TIPOS UNIFICADOS
+// ==================================================================================
 
 interface HistoryItem {
     id: string;
+    source_table: 'viral_generations' | 'content_items';
+    type: string; // 'script', 'idea', 'event'
     title: string;
-    date: string;
-    type: 'GUION' | 'MENTOR' | 'CALENDARIO' | 'VIRAL' | 'OTRO';
-    data: any; 
+    content: any; // El JSON completo
+    created_at: string;
+    platform: string;
 }
 
 export const History = () => {
     const { user } = useAuth();
-    const [activeTab, setActiveTab] = useState<'GUION' | 'MENTOR' | 'CALENDARIO' | 'VIRAL'>('GUION');
+    
+    // --- ESTADOS ---
     const [items, setItems] = useState<HistoryItem[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [filter, setFilter] = useState<'all' | 'scripts' | 'ideas'>('all');
+    const [searchTerm, setSearchTerm] = useState('');
+    
+    // --- ESTADOS DEL VISOR (MODAL) ---
     const [selectedItem, setSelectedItem] = useState<HistoryItem | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
+    // ==================================================================================
+    // 2. CARGA DE DATOS (FUSIÓN DE TABLAS)
+    // ==================================================================================
+    
     useEffect(() => {
         if (user) fetchHistory();
-    }, [user, activeTab]);
+    }, [user]);
 
     const fetchHistory = async () => {
-        setLoading(true);
-        setItems([]);
+        setIsLoading(true);
         try {
-            let data: any[] = [];
-            
-            // Lógica de Selección de Tablas V300
-            if (activeTab === 'GUION') {
-                const { data: scripts } = await supabase.from('scripts').select('*').eq('user_id', user?.id).order('created_at', { ascending: false });
-                data = (scripts || []).map(s => ({ ...s, type: 'GUION', title: s.topic }));
-            } 
-            else if (activeTab === 'MENTOR') {
-                const { data: chats } = await supabase.from('mentor_chats').select('*').eq('user_id', user?.id).order('created_at', { ascending: false });
-                data = (chats || []).map(c => ({ ...c, type: 'MENTOR', title: c.title || 'Sesión de Mentoría' }));
-            } 
-            else if (activeTab === 'CALENDARIO') {
-                const { data: events } = await supabase.from('calendar_events').select('*').eq('user_id', user?.id).order('created_at', { ascending: false });
-                data = (events || []).map(e => ({ ...e, type: 'CALENDARIO', title: e.title }));
-            }
-            else if (activeTab === 'VIRAL') {
-                // Viral Analyses & Recreations
-                const { data: viral } = await supabase.from('viral_analyses').select('*').eq('user_id', user?.id).order('created_at', { ascending: false });
-                data = (viral || []).map(v => ({ ...v, type: 'VIRAL', title: v.title || 'Análisis Viral' }));
-            }
+            // 1. Traer Guiones (viral_generations)
+            const { data: scripts, error: err1 } = await supabase
+                .from('viral_generations')
+                .select('*')
+                .eq('user_id', user?.id)
+                .order('created_at', { ascending: false });
 
-            // Normalizar para la UI
-            const formattedItems: HistoryItem[] = data.map(item => ({
-                id: item.id,
-                title: item.title || "Sin Título",
-                date: new Date(item.created_at).toLocaleDateString(),
-                type: activeTab,
-                data: item
+            if (err1) console.error("Error fetching scripts:", err1);
+
+            // 2. Traer Ideas y Eventos (content_items)
+            const { data: content, error: err2 } = await supabase
+                .from('content_items')
+                .select('*')
+                .eq('user_id', user?.id)
+                .order('created_at', { ascending: false });
+
+            if (err2) console.error("Error fetching content:", err2);
+
+            // 3. Normalizar y Unir Guiones
+            const normalizedScripts: HistoryItem[] = (scripts || []).map(s => ({
+                id: s.id,
+                source_table: 'viral_generations',
+                type: 'script',
+                // Intentamos sacar el título del metadata, si no, del tema directo
+                title: s.content?.metadata_guion?.tema_tratado || s.content?.topic || "Guion Sin Título",
+                content: s.content,
+                created_at: s.created_at,
+                platform: s.platform || 'General'
             }));
 
-            setItems(formattedItems);
+            // 4. Normalizar y Unir Contenido
+            const normalizedContent: HistoryItem[] = (content || []).map(c => ({
+                id: c.id,
+                source_table: 'content_items',
+                type: c.type === 'idea' ? 'idea' : 'event',
+                title: c.title || "Sin Título",
+                content: c.content,
+                created_at: c.created_at,
+                platform: c.platform || 'General'
+            }));
 
-        } catch (error) {
-            console.error("Error historial:", error);
+            // 5. Combinar y ordenar por fecha descendente
+            const combined = [...normalizedScripts, ...normalizedContent].sort(
+                (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+            );
+
+            setItems(combined);
+
+        } catch (e) {
+            console.error("Error general en historial:", e);
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     };
 
-    const handleDelete = async (id: string) => {
-        if (!confirm("¿Eliminar permanentemente?")) return;
-        
-        let table = '';
-        if (activeTab === 'GUION') table = 'scripts';
-        if (activeTab === 'MENTOR') table = 'mentor_chats';
-        if (activeTab === 'CALENDARIO') table = 'calendar_events';
-        if (activeTab === 'VIRAL') table = 'viral_analyses';
+    // ==================================================================================
+    // 3. ACCIONES
+    // ==================================================================================
 
-        if(table) {
+    const handleDelete = async (id: string, table: string) => {
+        if (!confirm("¿Estás seguro de eliminar este ítem? No se puede deshacer.")) return;
+
+        try {
             await supabase.from(table).delete().eq('id', id);
-            setItems(prev => prev.filter(i => i.id !== id));
-            setSelectedItem(null);
+            // Actualizar estado local
+            setItems(prev => prev.filter(item => item.id !== id));
+            setIsModalOpen(false);
+        } catch (e) {
+            alert("Error al eliminar");
         }
     };
 
-    // --- RENDERIZADO INTELIGENTE ---
-    const renderModalContent = () => {
-        if (!selectedItem) return null;
-        const { type, data } = selectedItem;
+    const handleCopy = (text: string) => {
+        navigator.clipboard.writeText(text);
+        alert("Copiado al portapapeles");
+    };
 
-        // Helper seguro para JSON
-        const safeParse = (content: any) => {
-            if (typeof content === 'object') return content;
-            try { return JSON.parse(content); } catch { return null; }
-        };
+    const openDetails = (item: HistoryItem) => {
+        setSelectedItem(item);
+        setIsModalOpen(true);
+    };
 
-        // 1. GUION (SCRIPT)
-        if (type === 'GUION') {
-            const content = safeParse(data.content) || {};
-            const structure = content.script_structure || content; // Soporte legacy
-            return (
-                <div className="space-y-6">
-                    <div className="bg-indigo-900/10 p-4 rounded-xl border border-indigo-500/20">
-                        <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest block mb-2">Gancho (0-3s)</span>
-                        <p className="text-xl font-bold text-white leading-snug">{structure.hook || "Sin gancho detectado"}</p>
+    // Filtrado local
+    const filteredItems = items.filter(item => {
+        const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesType = 
+            filter === 'all' ? true :
+            filter === 'scripts' ? item.type === 'script' :
+            filter === 'ideas' ? (item.type === 'idea' || item.type === 'event') : true;
+        
+        return matchesSearch && matchesType;
+    });
+
+    // ==================================================================================
+    // 4. RENDERIZADO
+    // ==================================================================================
+
+    return (
+        <div className="max-w-7xl mx-auto space-y-8 pb-20 p-6 font-sans text-white animate-in fade-in">
+            
+            {/* HEADER & CONTROLES */}
+            <div className="flex flex-col md:flex-row justify-between items-end gap-4 border-b border-gray-800 pb-6">
+                <div>
+                    <h1 className="text-3xl font-black flex items-center gap-2 text-white">
+                        <Clock className="text-indigo-500" size={32}/> 
+                        BAÚL CREATIVO
+                    </h1>
+                    <p className="text-gray-400 text-sm mt-1">
+                        Tu historial de viralidad. Todo lo que has creado está aquí.
+                    </p>
+                </div>
+
+                <div className="flex gap-2 w-full md:w-auto flex-col md:flex-row">
+                    <div className="relative flex-1 md:w-64">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={16}/>
+                        <input 
+                            type="text" 
+                            placeholder="Buscar..." 
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full bg-gray-900 border border-gray-800 rounded-xl pl-10 pr-4 py-2 text-sm text-white focus:border-indigo-500 outline-none"
+                        />
                     </div>
-                    <div className="bg-gray-900/50 p-6 rounded-xl border border-gray-800">
-                        <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest block mb-4">Cuerpo del Guion</span>
-                        <div className="text-gray-300 whitespace-pre-wrap leading-relaxed font-mono text-sm">{structure.body || structure.script_body || "Sin contenido"}</div>
-                    </div>
-                    <div className="bg-green-900/10 p-4 rounded-xl border border-green-500/20">
-                        <span className="text-[10px] font-black text-green-400 uppercase tracking-widest block mb-2">Call to Action</span>
-                        <p className="text-white font-bold">{structure.cta || "Sígueme para más."}</p>
+                    <div className="flex bg-gray-900 rounded-xl p-1 border border-gray-800">
+                        <button onClick={() => setFilter('all')} className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${filter === 'all' ? 'bg-gray-700 text-white' : 'text-gray-500 hover:text-white'}`}>Todo</button>
+                        <button onClick={() => setFilter('scripts')} className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${filter === 'scripts' ? 'bg-indigo-600 text-white' : 'text-gray-500 hover:text-white'}`}>Guiones</button>
+                        <button onClick={() => setFilter('ideas')} className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${filter === 'ideas' ? 'bg-yellow-600 text-white' : 'text-gray-500 hover:text-white'}`}>Ideas</button>
                     </div>
                 </div>
-            );
-        }
+            </div>
 
-        // 2. MENTOR (CHAT)
-        if (type === 'MENTOR') {
-            const messages = safeParse(data.messages) || [];
-            if (!Array.isArray(messages)) return <div className="text-red-400">Error: Formato de chat no válido.</div>;
+            {/* LISTA DE ITEMS */}
+            {isLoading ? (
+                <div className="text-center py-20">
+                    <div className="animate-spin w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+                    <p className="text-gray-500 text-sm">Recuperando archivos...</p>
+                </div>
+            ) : filteredItems.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredItems.map((item) => (
+                        <div key={item.id} className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-5 hover:border-gray-600 transition-all group relative overflow-hidden flex flex-col justify-between h-full">
+                            
+                            {/* Icono de fondo decorativo */}
+                            <div className="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
+                                {item.type === 'script' ? <FileText size={100}/> : item.type === 'idea' ? <Lightbulb size={100}/> : <CalendarIcon size={100}/>}
+                            </div>
 
-            return (
-                <div className="space-y-4">
-                    {messages.map((msg: any, i: number) => (
-                        <div key={i} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
-                            <div className={`max-w-[85%] p-4 rounded-2xl text-sm ${msg.role === 'user' ? 'bg-indigo-600 text-white rounded-tr-none' : 'bg-gray-800 text-gray-300 rounded-tl-none border border-gray-700'}`}>
-                                <strong className="block text-[9px] uppercase mb-1 opacity-50 tracking-widest">{msg.role === 'user' ? 'TÚ' : 'MENTOR TITAN'}</strong>
-                                {typeof msg.content === 'string' ? (
-                                    <p className="whitespace-pre-wrap">{msg.content}</p>
-                                ) : (
-                                    <div>
-                                        <p className="mb-3">{msg.content.answer}</p>
-                                        {msg.content.action_steps && (
-                                            <div className="bg-black/20 p-3 rounded-lg border border-white/5 space-y-2">
-                                                {msg.content.action_steps.map((step: string, idx: number) => (
-                                                    <div key={idx} className="flex gap-2 text-xs"><CheckCircle2 size={12} className="mt-0.5 text-green-400 shrink-0"/> {step}</div>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
+                            <div>
+                                <div className="flex justify-between items-start mb-4">
+                                    <span className={`px-2 py-1 rounded text-[10px] font-black uppercase tracking-wider border ${
+                                        item.type === 'script' ? 'bg-indigo-900/30 text-indigo-400 border-indigo-500/30' : 
+                                        item.type === 'idea' ? 'bg-yellow-900/30 text-yellow-400 border-yellow-500/30' : 
+                                        'bg-purple-900/30 text-purple-400 border-purple-500/30'
+                                    }`}>
+                                        {item.type === 'script' ? 'GUION IA' : item.type === 'idea' ? 'IDEA RÁPIDA' : 'EVENTO'}
+                                    </span>
+                                    <span className="text-[10px] text-gray-500 font-mono">
+                                        {new Date(item.created_at).toLocaleDateString()}
+                                    </span>
+                                </div>
+
+                                <h3 className="font-bold text-white mb-2 line-clamp-2 leading-tight min-h-[3rem]">
+                                    {item.title}
+                                </h3>
+                                
+                                <p className="text-xs text-gray-400 line-clamp-3 mb-4 min-h-[3rem]">
+                                    {/* Preview inteligente del contenido */}
+                                    {item.type === 'script' 
+                                        ? (item.content?.guion_completo ? item.content.guion_completo.substring(0, 100) + "..." : "Guion generado.")
+                                        : (item.content?.concepto || item.content?.description || "Sin descripción previa.")}
+                                </p>
+                            </div>
+
+                            <div className="flex items-center gap-2 pt-4 border-t border-gray-800/50">
+                                <button 
+                                    onClick={() => openDetails(item)}
+                                    className="flex-1 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-colors"
+                                >
+                                    <Eye size={14}/> Ver Todo
+                                </button>
+                                <button 
+                                    onClick={() => handleDelete(item.id, item.source_table)}
+                                    className="p-2 hover:bg-red-900/20 text-gray-500 hover:text-red-500 rounded-lg transition-colors"
+                                    title="Eliminar"
+                                >
+                                    <Trash2 size={16}/>
+                                </button>
                             </div>
                         </div>
                     ))}
                 </div>
-            );
-        }
-
-        // 3. CALENDARIO
-        if (type === 'CALENDARIO') {
-            return (
-                <div className="bg-gray-900 p-8 rounded-xl border border-gray-800 text-center">
-                    <span className="text-6xl mb-4 block">📅</span>
-                    <h3 className="text-2xl font-black text-white mb-2">{data.title}</h3>
-                    <div className="inline-flex gap-2 mb-6">
-                        <span className="px-3 py-1 bg-gray-800 rounded text-xs font-bold text-gray-400 border border-gray-700">{data.platform}</span>
-                        <span className="px-3 py-1 bg-purple-900/20 rounded text-xs font-bold text-purple-400 border border-purple-500/20">{data.type}</span>
-                    </div>
-                    <div className="bg-black/30 p-4 rounded-lg text-left border border-gray-800">
-                        <span className="text-[10px] uppercase text-gray-500 font-bold block mb-2">Notas Estratégicas</span>
-                        <p className="text-gray-300 text-sm italic">"{data.notes}"</p>
-                    </div>
+            ) : (
+                <div className="text-center py-20 bg-gray-900/20 rounded-3xl border border-dashed border-gray-800">
+                    <Filter size={48} className="mx-auto text-gray-700 mb-4"/>
+                    <h3 className="text-xl font-bold text-white mb-2">No se encontraron ítems</h3>
+                    <p className="text-gray-500 text-sm">Prueba cambiando los filtros o genera nuevo contenido.</p>
                 </div>
-            );
-        }
+            )}
 
-        // Default: JSON Viewer
-        return <pre className="bg-gray-900 p-4 rounded-lg overflow-auto text-xs text-green-400 font-mono">{JSON.stringify(data, null, 2)}</pre>;
-    };
-
-    return (
-        <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in pb-20 p-4 font-sans text-white">
-            
-            {/* HEADER */}
-            <div>
-                <h1 className="text-3xl font-black text-white flex items-center gap-2">
-                    <Database className="text-yellow-500"/> BAÚL CREATIVO
-                </h1>
-                <p className="text-gray-400 text-sm">Tu repositorio de activos digitales.</p>
-            </div>
-
-            {/* TABS */}
-            <div className="flex gap-2 overflow-x-auto pb-2 border-b border-gray-800 scrollbar-hide">
-                {[
-                    { id: 'GUION', label: 'Guiones', icon: FileText },
-                    { id: 'MENTOR', label: 'Mentoría', icon: MessageSquare },
-                    { id: 'CALENDARIO', label: 'Estrategia', icon: Calendar },
-                    { id: 'VIRAL', label: 'Análisis Viral', icon: Zap },
-                ].map((tab) => (
-                    <button key={tab.id} onClick={() => setActiveTab(tab.id as any)} className={`flex items-center gap-2 px-6 py-3 rounded-t-xl whitespace-nowrap transition-all font-black text-xs uppercase tracking-wider ${activeTab === tab.id ? 'bg-[#1A1D24] text-white border-b-2 border-indigo-500' : 'text-gray-500 hover:text-gray-300'}`}>
-                        <tab.icon size={14}/> {tab.label}
-                    </button>
-                ))}
-            </div>
-
-            {/* LISTA */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {loading ? (
-                    <div className="col-span-full py-20 flex justify-center text-indigo-500"><RefreshCw className="animate-spin"/></div>
-                ) : items.length === 0 ? (
-                    <div className="col-span-full py-20 bg-[#0B0E14] border-2 border-dashed border-gray-800 rounded-2xl text-center text-gray-600 font-bold uppercase tracking-widest text-sm">
-                        Vacío
-                    </div>
-                ) : (
-                    items.map((item) => (
-                        <div key={item.id} onClick={() => setSelectedItem(item)} className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-5 hover:border-indigo-500/50 transition-all cursor-pointer group hover:bg-gray-900/30">
-                            <div className="flex justify-between items-start mb-3">
-                                <span className="text-[10px] font-mono text-gray-500 bg-gray-900 px-2 py-1 rounded">{item.date}</span>
-                                <span className="bg-indigo-900/20 text-indigo-400 text-[9px] font-black px-2 py-1 rounded border border-indigo-500/20 uppercase">{item.type}</span>
-                            </div>
-                            <h3 className="text-white font-bold text-sm line-clamp-2 leading-snug group-hover:text-indigo-300 transition-colors">{item.title}</h3>
-                            <div className="flex justify-end mt-4 opacity-0 group-hover:opacity-100 transition-opacity gap-2">
-                                <button onClick={(e) => { e.stopPropagation(); handleDelete(item.id); }} className="p-2 text-gray-600 hover:text-red-500"><Trash2 size={14}/></button>
-                                <button className="p-2 text-gray-600 hover:text-white"><Eye size={14}/></button>
-                            </div>
-                        </div>
-                    ))
-                )}
-            </div>
-
-            {/* MODAL */}
-            {selectedItem && (
+            {/* MODAL DETALLES */}
+            {isModalOpen && selectedItem && (
                 <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in">
-                    <div className="bg-[#0f1115] border border-gray-800 w-full max-w-3xl max-h-[85vh] rounded-3xl shadow-2xl flex flex-col">
-                        <div className="p-6 border-b border-gray-800 flex justify-between items-center bg-gray-900/50 rounded-t-3xl">
+                    <div className="bg-[#0B0E14] border border-gray-800 rounded-2xl w-full max-w-3xl max-h-[85vh] flex flex-col shadow-2xl">
+                        
+                        <div className="p-6 border-b border-gray-800 flex justify-between items-center bg-gray-900/50">
                             <div>
-                                <span className="text-[10px] font-black text-indigo-500 uppercase tracking-widest block mb-1">{selectedItem.type}</span>
-                                <h2 className="text-lg font-bold text-white line-clamp-1">{selectedItem.title}</h2>
+                                <span className="text-xs text-indigo-400 font-black uppercase tracking-widest block mb-1">
+                                    {selectedItem.type === 'script' ? 'Detalle del Guion' : 'Detalle de la Idea'}
+                                </span>
+                                <h2 className="text-xl font-bold text-white max-w-md truncate">{selectedItem.title}</h2>
                             </div>
-                            <button onClick={() => setSelectedItem(null)} className="bg-gray-800 p-2 rounded-full hover:bg-white hover:text-black transition-colors"><X size={18}/></button>
+                            <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-gray-800 rounded-full text-gray-400 hover:text-white transition-colors">
+                                <X size={24}/>
+                            </button>
                         </div>
-                        <div className="p-8 overflow-y-auto custom-scrollbar flex-1">
-                            {renderModalContent()}
+
+                        <div className="p-8 overflow-y-auto custom-scrollbar flex-1 space-y-6">
+                            
+                            {/* CONTENIDO DINÁMICO SEGÚN TIPO */}
+                            {selectedItem.type === 'script' ? (
+                                <>
+                                    <div className="bg-gray-900/50 p-4 rounded-xl border border-gray-800">
+                                        <div className="grid grid-cols-2 gap-4 text-xs">
+                                            <div>
+                                                <span className="text-gray-500 block mb-1">Estructura</span>
+                                                <span className="text-white font-bold">{selectedItem.content?.metadata_guion?.arquitectura || "N/A"}</span>
+                                            </div>
+                                            <div>
+                                                <span className="text-gray-500 block mb-1">Plataforma</span>
+                                                <span className="text-white font-bold">{selectedItem.platform}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-black text-gray-500 uppercase tracking-widest">Guion Completo</label>
+                                        <div className="bg-black p-6 rounded-xl border border-gray-800 text-gray-300 whitespace-pre-wrap font-mono text-sm leading-relaxed">
+                                            {selectedItem.content?.guion_completo || "Contenido no disponible"}
+                                        </div>
+                                    </div>
+
+                                    {selectedItem.content?.plan_visual && (
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-black text-gray-500 uppercase tracking-widest flex items-center gap-2"><Video size={12}/> Plan Visual</label>
+                                            <div className="space-y-2">
+                                                {selectedItem.content.plan_visual.map((sc: any, idx: number) => (
+                                                    <div key={idx} className="flex gap-4 p-3 bg-gray-900/30 rounded border border-gray-800/50">
+                                                        <span className="text-xs font-mono text-gray-500 w-12">{sc.tiempo}</span>
+                                                        <span className="text-xs text-white">{sc.accion_en_pantalla}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </>
+                            ) : (
+                                // VISTA PARA IDEAS / EVENTOS
+                                <div className="space-y-6">
+                                    <div className="bg-yellow-900/10 p-6 rounded-xl border border-yellow-500/20">
+                                        <h3 className="text-lg font-bold text-yellow-400 mb-2">Concepto Principal</h3>
+                                        <p className="text-white text-lg leading-relaxed">
+                                            {selectedItem.content?.concepto || selectedItem.content?.description || "Sin descripción"}
+                                        </p>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="bg-gray-900 p-4 rounded-xl border border-gray-800">
+                                            <span className="text-gray-500 text-xs block mb-1">Ángulo / Objetivo</span>
+                                            <span className="text-white font-bold text-sm">
+                                                {selectedItem.content?.angulo || selectedItem.content?.objetivo || "General"}
+                                            </span>
+                                        </div>
+                                        <div className="bg-gray-900 p-4 rounded-xl border border-gray-800">
+                                            <span className="text-gray-500 text-xs block mb-1">Formato</span>
+                                            <span className="text-white font-bold text-sm">
+                                                {selectedItem.content?.formato || "Video Corto"}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
                         </div>
-                        <div className="p-4 border-t border-gray-800 bg-gray-900/30 flex justify-end rounded-b-3xl">
-                            <button onClick={() => { 
-                                const content = document.querySelector('.custom-scrollbar')?.textContent;
-                                if(content) { navigator.clipboard.writeText(content); alert("Copiado"); }
-                            }} className="flex items-center gap-2 px-6 py-3 bg-white text-black font-black text-xs rounded-xl hover:bg-gray-200 transition-all uppercase tracking-wide">
-                                <Copy size={14}/> Copiar Todo
+
+                        <div className="p-6 border-t border-gray-800 bg-gray-900/30 flex justify-end gap-3">
+                            <button 
+                                onClick={() => handleCopy(
+                                    selectedItem.type === 'script' 
+                                    ? selectedItem.content?.guion_completo 
+                                    : `${selectedItem.title}\n${selectedItem.content?.concepto || ''}`
+                                )}
+                                className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-sm flex items-center gap-2 transition-colors shadow-lg shadow-indigo-500/20"
+                            >
+                                <Copy size={18}/> Copiar Contenido
                             </button>
                         </div>
                     </div>
                 </div>
             )}
             
-            <style>{`.custom-scrollbar::-webkit-scrollbar { width: 4px; } .custom-scrollbar::-webkit-scrollbar-track { background: transparent; } .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }`}</style>
+            <style>{`.custom-scrollbar::-webkit-scrollbar { width: 6px; } .custom-scrollbar::-webkit-scrollbar-track { background: #111; } .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }`}</style>
         </div>
     );
 };

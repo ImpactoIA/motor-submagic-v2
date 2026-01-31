@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext'; 
 import { 
     Plus, X, BarChart3, Save, Rocket, RefreshCw, Zap, Calendar as CalendarIcon,
-    Trash2, User, Users, BookOpen, Target, CheckCircle2, AlertCircle, Layout
+    Trash2, User, Users, BookOpen, Target, ChevronLeft, ChevronRight, Filter
 } from 'lucide-react';
 
 // ==================================================================================
@@ -13,14 +13,13 @@ import {
 
 interface CalendarEvent {
     id?: string;
-    day_index: number; // Para mostrar en el grid (1-30)
     title: string;
     platform: string;
     type: string; // Viral, Venta, Autoridad
     format?: string;
     notes?: string;
     status: string;
-    scheduled_date?: string; // Fecha real DB
+    scheduled_date: string; // Fecha exacta YYYY-MM-DD
 }
 
 const COST_PLANNING_3 = 2;   
@@ -38,15 +37,18 @@ export const Calendar = () => {
     const navigate = useNavigate();
     const { user, userProfile, refreshProfile } = useAuth();
     
+    // --- ESTADOS DE FECHA Y NAVEGACIÓN ---
+    const [currentDate, setCurrentDate] = useState(new Date()); // Fecha base del calendario visual
+    const [selectedDateStr, setSelectedDateStr] = useState<string>(''); // Fecha seleccionada para editar
+
     // --- ESTADOS UI ---
-    const [selectedDay, setSelectedDay] = useState<number | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
     const [events, setEvents] = useState<CalendarEvent[]>([]);
     const [stats, setStats] = useState({ viral: 0, authority: 0, sales: 0 });
     
     // --- ESTADOS GENERADOR IA ---
-    const [planTopic, setPlanTopic] = useState(''); // ✅ NUEVO: Para dar contexto al Backend
+    const [planTopic, setPlanTopic] = useState(''); 
     const [planDuration, setPlanDuration] = useState<3 | 7 | 15>(7);
     const [planFocus, setPlanFocus] = useState(FOCUS_OPTIONS[0]);
     const [planFormat, setPlanFormat] = useState(FORMAT_OPTIONS[0]);
@@ -64,60 +66,92 @@ export const Calendar = () => {
 
     // --- ESTADO EVENTO (EDICIÓN) ---
     const [currentEvent, setCurrentEvent] = useState<CalendarEvent>({ 
-        day_index: 1, title: '', platform: 'TikTok', type: 'Viralidad', format: 'Video Corto', notes: '', status: 'pending'
+        title: '', platform: 'TikTok', type: 'Viralidad', format: 'Video Corto', notes: '', status: 'planned', scheduled_date: ''
     });
     const [isEditing, setIsEditing] = useState(false);
 
-    // Grid de 30 días visuales
-    const days = Array.from({ length: 30 }, (_, i) => i + 1);
+    // ==================================================================================
+    // 3. LÓGICA DE CALENDARIO REAL
+    // ==================================================================================
+
+    const getDaysInMonth = (date: Date) => {
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const firstDayOfMonth = new Date(year, month, 1).getDay(); // 0 = Domingo
+        
+        // Ajustar para que Lunes sea 0 (opcional, depende de preferencia visual)
+        // Aquí usaremos Domingo como inicio estándar del grid visual
+        
+        const days = [];
+        // Rellenar espacios vacíos antes del día 1
+        for (let i = 0; i < firstDayOfMonth; i++) {
+            days.push(null);
+        }
+        // Rellenar días del mes
+        for (let i = 1; i <= daysInMonth; i++) {
+            days.push(new Date(year, month, i));
+        }
+        return days;
+    };
+
+    const changeMonth = (offset: number) => {
+        const newDate = new Date(currentDate);
+        newDate.setMonth(newDate.getMonth() + offset);
+        setCurrentDate(newDate);
+    };
+
+    const formatDateISO = (date: Date) => {
+        const offset = date.getTimezoneOffset();
+        const localDate = new Date(date.getTime() - (offset*60*1000));
+        return localDate.toISOString().split('T')[0];
+    };
+
+    const calendarDays = getDaysInMonth(currentDate);
 
     // ==================================================================================
-    // 3. CARGA DE DATOS (CONECTADO A 'content_items')
+    // 4. CARGA DE DATOS
     // ==================================================================================
+    
     useEffect(() => {
         if(user) {
             fetchEvents();
             fetchContextData();
         }
-    }, [user]);
+    }, [user, currentDate]); // Recargar al cambiar de mes
 
     const fetchEvents = async () => {
         try {
-            // ✅ CORRECCIÓN: Usamos la nueva tabla maestra
+            // Calcular rango del mes actual para filtrar
+            const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).toISOString();
+            const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).toISOString();
+
             const { data } = await supabase
-                .from('content_items')
+                .from('content_items') // O 'viral_generations' si guardas ahí también
                 .select('*')
                 .eq('user_id', user?.id)
-                .eq('type', 'calendar_event')
-                .gte('scheduled_date', new Date().toISOString().split('T')[0]); // Solo futuros o actuales
+                .in('type', ['calendar_event', 'scheduled_script']) // Traer eventos y guiones agendados
+                .gte('scheduled_date', startOfMonth)
+                .lte('scheduled_date', endOfMonth);
 
             if (data) {
-                // Mapeamos content_items a la estructura visual del calendario
-                const mappedEvents = data.map((item: any) => {
-                    const date = new Date(item.scheduled_date);
-                    const today = new Date();
-                    // Calculamos el índice del día relativo a hoy (simple visualización)
-                    const diffTime = Math.abs(date.getTime() - today.getTime());
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-                    
-                    return {
-                        id: item.id,
-                        day_index: diffDays > 30 ? 30 : diffDays, // Visual simple
-                        title: item.title,
-                        platform: item.platform || 'General',
-                        type: item.content?.objetivo || 'General',
-                        format: item.content?.formato,
-                        notes: item.content?.gancho_sugerido || item.content?.description,
-                        status: item.status,
-                        scheduled_date: item.scheduled_date
-                    };
-                });
+                const mappedEvents = data.map((item: any) => ({
+                    id: item.id,
+                    title: item.title || item.content?.titulo || 'Evento sin título',
+                    platform: item.platform || 'General',
+                    type: item.content?.objetivo || 'General',
+                    format: item.content?.formato,
+                    notes: item.content?.gancho_sugerido || item.content?.description,
+                    status: item.status,
+                    scheduled_date: item.scheduled_date // YYYY-MM-DD directo de DB
+                }));
                 setEvents(mappedEvents);
             }
         } catch (error) { console.error("Error loading events:", error); }
     };
 
     const fetchContextData = async () => {
+        // ... (Tu lógica original de carga de contexto está bien, la mantengo igual)
         try {
             const { data: exp } = await supabase.from('expert_profiles').select('id, name').eq('user_id', user?.id);
             if(exp) setExperts(exp);
@@ -132,13 +166,11 @@ export const Calendar = () => {
         } catch (e) { console.error(e); }
     };
 
-    // --- ESTADÍSTICAS EN TIEMPO REAL ---
+    // Estadísticas
     useEffect(() => {
         const total = events.length;
         if (total === 0) { setStats({ viral: 0, authority: 0, sales: 0 }); return; }
-        
         const countType = (str: string) => events.filter(e => e.type?.toLowerCase().includes(str)).length;
-        
         setStats({
             viral: Math.round((countType('viral') / total) * 100),
             authority: Math.round(((countType('autoridad') + countType('educar')) / total) * 100),
@@ -147,36 +179,27 @@ export const Calendar = () => {
     }, [events]);
 
     // ==================================================================================
-    // 4. GENERADOR IA (BACKEND V105)
+    // 5. GENERADOR IA (Agendamiento Inteligente)
     // ==================================================================================
+    
     const handleGeneratePlan = async () => {
         if (!user || !userProfile) return;
-        if (!planTopic.trim()) return alert("Por favor escribe un Tema o Nicho para la estrategia.");
+        if (!planTopic.trim()) return alert("Escribe un tema para la estrategia.");
         
-        // Calcular Costo
-        let cost = COST_PLANNING_7;
-        if (planDuration === 3) cost = COST_PLANNING_3;
-        if (planDuration === 15) cost = COST_PLANNING_15;
+        let cost = planDuration === 3 ? COST_PLANNING_3 : planDuration === 7 ? COST_PLANNING_7 : COST_PLANNING_15;
 
-        // Validar Saldo
         if (userProfile.credits < cost && userProfile.tier !== 'admin') {
-            if(confirm(`⚠️ Saldo insuficiente (${cost} créditos). ¿Recargar?`)) navigate('/settings');
+            if(confirm(`⚠️ Saldo insuficiente (${cost} cr). ¿Recargar?`)) navigate('/dashboard/settings');
             return;
         }
 
         setIsGeneratingPlan(true);
         try {
-            // ✅ LLAMADA CORRECTA A BACKEND V105
             const { data, error } = await supabase.functions.invoke('process-url', {
                 body: {
                     selectedMode: 'calendar_generator', 
-                    userInput: planTopic, // ✅ Enviamos el tema como userInput
-                    settings: {
-                        duration: planDuration, 
-                        focus: planFocus, 
-                        format: planFormat 
-                    },
-                    // Contexto
+                    userInput: planTopic,
+                    settings: { duration: planDuration, focus: planFocus, format: planFormat },
                     expertId: selectedExpertId,
                     avatarId: selectedAvatarId,
                     knowledgeBaseId: selectedKbId,
@@ -185,24 +208,21 @@ export const Calendar = () => {
             });
 
             if (error) throw error;
-
             const generatedCalendar = data.generatedData.calendar;
-            if (!generatedCalendar || !Array.isArray(generatedCalendar)) throw new Error("La IA no devolvió un calendario válido.");
+            if (!generatedCalendar) throw new Error("Error en IA");
 
-            // ✅ GUARDADO EN 'content_items' (NUEVA TABLA)
-            // Primero borramos eventos planificados viejos para evitar duplicados masivos (opcional)
-            // await supabase.from('content_items').delete().eq('user_id', user.id).eq('type', 'calendar_event');
-
+            // ✅ AGENDAMIENTO CORRECTO: Usamos fechas reales
+            const baseDate = new Date(startDate);
             const newEvents = generatedCalendar.map((item: any, index: number) => {
-                const date = new Date(startDate);
-                date.setDate(date.getDate() + index); // Fecha real secuencial
-
+                const eventDate = new Date(baseDate);
+                eventDate.setDate(baseDate.getDate() + index); // Sumar días correctamente
+                
                 return {
                     user_id: user.id,
                     type: 'calendar_event',
                     title: item.idea_contenido || item.tema || item.title,
-                    content: item, // Guardamos todo el objeto JSON del día
-                    scheduled_date: date.toISOString().split('T')[0],
+                    content: item, 
+                    scheduled_date: formatDateISO(eventDate), // YYYY-MM-DD
                     status: 'planned',
                     platform: planFormat.includes('TikTok') ? 'TikTok' : 'Instagram'
                 };
@@ -211,34 +231,26 @@ export const Calendar = () => {
             const { error: insertError } = await supabase.from('content_items').insert(newEvents);
             if (insertError) throw insertError;
 
-            await fetchEvents(); // Recargar vista
+            await fetchEvents();
             setIsPlanModalOpen(false);
             if(refreshProfile) refreshProfile();
-            alert(`✅ Plan Estratégico de ${planDuration} días desplegado.`);
+            alert(`✅ Plan desplegado desde el ${startDate}.`);
 
-        } catch (e: any) { 
-            console.error("Calendar Error:", e);
-            alert(`Error: ${e.message}`); 
-        } finally { 
-            setIsGeneratingPlan(false); 
-        }
+        } catch (e: any) { alert(`Error: ${e.message}`); } 
+        finally { setIsGeneratingPlan(false); }
     };
 
     // ==================================================================================
-    // 5. GESTIÓN DE EVENTOS (CRUD)
+    // 6. GESTIÓN DE EVENTOS (CRUD)
     // ==================================================================================
-    
-    const handleDayClick = (dayIndex: number) => {
+
+    const handleDayClick = (date: Date) => {
+        const dateStr = formatDateISO(date);
         setIsEditing(false);
-        setSelectedDay(dayIndex);
+        setSelectedDateStr(dateStr);
         setCurrentEvent({ 
-            day_index: dayIndex, 
-            title: '', 
-            platform: 'TikTok', 
-            type: 'Viralidad', 
-            format: 'Video Corto', 
-            notes: '', 
-            status: 'pending' 
+            title: '', platform: 'TikTok', type: 'Viralidad', format: 'Video Corto', 
+            notes: '', status: 'planned', scheduled_date: dateStr 
         });
         setIsModalOpen(true);
     };
@@ -246,23 +258,19 @@ export const Calendar = () => {
     const handleEventClick = (e: React.MouseEvent, event: CalendarEvent) => {
         e.stopPropagation();
         setIsEditing(true);
-        setSelectedDay(event.day_index);
+        setSelectedDateStr(event.scheduled_date);
         setCurrentEvent(event);
         setIsModalOpen(true);
     };
 
     const handleSaveEvent = async () => {
-        if (!selectedDay || !currentEvent.title || !user) return alert("Falta título");
+        if (!currentEvent.title) return alert("Falta título");
         
-        // Calculamos la fecha basada en el índice visual (Solo para nuevos eventos manuales)
-        const date = new Date();
-        date.setDate(date.getDate() + (selectedDay - 1));
-
         const payload = {
-            user_id: user.id,
+            user_id: user?.id,
             type: 'calendar_event',
             title: currentEvent.title,
-            scheduled_date: currentEvent.scheduled_date || date.toISOString().split('T')[0],
+            scheduled_date: currentEvent.scheduled_date, // Usamos la fecha real seleccionada
             platform: currentEvent.platform,
             content: {
                 objetivo: currentEvent.type,
@@ -288,14 +296,13 @@ export const Calendar = () => {
         setIsModalOpen(false);
     };
 
-    // --- IR A GENERAR GUION (CONECTADO) ---
+    // --- CONEXIÓN CON SCRIPT GENERATOR ---
     const handleGoToScript = (event: CalendarEvent) => {
-        navigate('/tools/script-generator', { 
+        navigate('/dashboard/script-generator', { 
             state: { 
-                topic: event.title, // Pasa el título como tema
-                context: event.notes, // Pasa las notas como contexto
-                expertId: selectedExpertId,
-                avatarId: selectedAvatarId
+                topic: event.title,
+                hook: event.notes, 
+                fromIdeas: true // Reutilizamos la lógica que ya arreglamos
             } 
         });
     };
@@ -304,11 +311,11 @@ export const Calendar = () => {
         const t = type?.toLowerCase() || '';
         if (t.includes('viral') || t.includes('alcance')) return 'bg-purple-500/20 text-purple-300 border-purple-500/30';
         if (t.includes('venta') || t.includes('conversión')) return 'bg-green-500/20 text-green-300 border-green-500/30';
-        return 'bg-blue-500/20 text-blue-300 border-blue-500/30'; // Autoridad/Educar
+        return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
     };
 
     // ==================================================================================
-    // 6. RENDERIZADO
+    // 7. RENDERIZADO
     // ==================================================================================
     return (
         <div className="max-w-7xl mx-auto space-y-6 pb-20 relative font-sans animate-in fade-in p-4 text-white">
@@ -321,14 +328,21 @@ export const Calendar = () => {
                     </h1>
                     <p className="text-gray-400 text-sm mt-1">Estrategia de contenidos V300.</p>
                 </div>
-                <button onClick={() => setIsPlanModalOpen(true)} className="bg-white text-black px-6 py-3 rounded-xl font-black hover:bg-gray-200 transition-all flex items-center gap-2 text-sm uppercase tracking-wider shadow-lg shadow-white/10 group">
+                <div className="flex items-center gap-4 bg-gray-900 p-2 rounded-xl border border-gray-800">
+                    <button onClick={() => changeMonth(-1)} className="p-2 hover:bg-gray-800 rounded-lg"><ChevronLeft size={20}/></button>
+                    <span className="font-bold w-32 text-center uppercase tracking-widest text-sm">
+                        {currentDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}
+                    </span>
+                    <button onClick={() => changeMonth(1)} className="p-2 hover:bg-gray-800 rounded-lg"><ChevronRight size={20}/></button>
+                </div>
+                <button onClick={() => setIsPlanModalOpen(true)} className="bg-white text-black px-6 py-3 rounded-xl font-black hover:bg-gray-200 transition-all flex items-center gap-2 text-sm uppercase tracking-wider shadow-lg group">
                     <Rocket size={18} className="group-hover:-translate-y-1 transition-transform"/> Generar Plan IA
                 </button>
             </div>
 
             {/* METRICS */}
             <div className="bg-[#0B0E14] border border-gray-800 rounded-xl p-4 flex items-center justify-between text-xs overflow-x-auto shadow-md">
-                <div className="flex items-center gap-2 text-gray-400 font-bold uppercase tracking-widest"><BarChart3 size={14} className="text-indigo-500"/> Balance de Estrategia:</div>
+                <div className="flex items-center gap-2 text-gray-400 font-bold uppercase tracking-widest"><BarChart3 size={14} className="text-indigo-500"/> Balance Mensual:</div>
                 <div className="flex gap-6 font-mono font-bold">
                     <span className="text-purple-400 flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-purple-500"></div>Viral: {stats.viral}%</span>
                     <span className="text-blue-400 flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-blue-500"></div>Autoridad: {stats.authority}%</span>
@@ -336,22 +350,29 @@ export const Calendar = () => {
                 </div>
             </div>
 
-            {/* CALENDAR GRID */}
+            {/* CALENDAR GRID REAL */}
             <div className="bg-[#0B0E14] border border-gray-800 rounded-2xl overflow-hidden shadow-2xl">
                 <div className="grid grid-cols-7 border-b border-gray-800 bg-gray-900/50">
-                    {['LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB', 'DOM'].map(d => (
+                    {['DOM', 'LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB'].map(d => (
                         <div key={d} className="p-3 text-center text-[10px] font-black text-gray-500 tracking-widest">{d}</div>
                     ))}
                 </div>
                 
                 <div className="grid grid-cols-7 auto-rows-[140px] md:auto-rows-[160px]">
-                    {days.map(dayIndex => {
-                        const dayEvents = events.filter(e => e.day_index === dayIndex); // Filtramos por día visual
+                    {calendarDays.map((date, index) => {
+                        if (!date) return <div key={index} className="bg-gray-900/20 border-r border-b border-gray-800/50"></div>; // Días vacíos
+
+                        const dateStr = formatDateISO(date);
+                        const dayEvents = events.filter(e => e.scheduled_date === dateStr);
+                        const isToday = dateStr === formatDateISO(new Date());
+
                         return (
-                            <div key={dayIndex} onClick={() => handleDayClick(dayIndex)} className="border-r border-b border-gray-800 p-2 hover:bg-gray-900/30 transition-colors relative group cursor-pointer">
-                                <span className={`text-xs font-bold absolute top-2 left-2 ${dayEvents.length > 0 ? 'text-white' : 'text-gray-700'}`}>{dayIndex}</span>
+                            <div key={dateStr} onClick={() => handleDayClick(date)} className={`border-r border-b border-gray-800 p-2 hover:bg-gray-900/30 transition-colors relative group cursor-pointer ${isToday ? 'bg-indigo-900/10' : ''}`}>
+                                <span className={`text-xs font-bold absolute top-2 left-2 w-6 h-6 flex items-center justify-center rounded-full ${isToday ? 'bg-indigo-500 text-white' : 'text-gray-500'}`}>
+                                    {date.getDate()}
+                                </span>
                                 
-                                <div className="mt-6 space-y-1.5 overflow-y-auto max-h-[110px] custom-scrollbar pr-1">
+                                <div className="mt-8 space-y-1.5 overflow-y-auto max-h-[100px] custom-scrollbar pr-1">
                                     {dayEvents.map((ev, i) => (
                                         <div key={i} onClick={(e) => handleEventClick(e, ev)} className={`p-2 rounded-lg border text-[10px] group/item hover:scale-[1.02] transition-transform cursor-pointer relative shadow-sm ${getTypeColor(ev.type)}`}>
                                             <div className="font-bold truncate leading-tight mb-1 pr-5">{ev.title}</div>
@@ -381,27 +402,11 @@ export const Calendar = () => {
                             <button onClick={() => setIsPlanModalOpen(false)}><X size={18} className="text-gray-500 hover:text-white"/></button>
                         </div>
                         <div className="p-6 space-y-5">
-                            
-                            {/* TEMA DE LA ESTRATEGIA (NUEVO) */}
                             <div>
                                 <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block tracking-widest">Tema de la Estrategia (Obligatorio)</label>
-                                <input 
-                                    type="text" 
-                                    value={planTopic} 
-                                    onChange={(e) => setPlanTopic(e.target.value)} 
-                                    placeholder="Ej: Lanzamiento de Curso de Inglés..." 
-                                    className="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white text-sm outline-none focus:border-purple-500"
-                                />
+                                <input type="text" value={planTopic} onChange={(e) => setPlanTopic(e.target.value)} placeholder="Ej: Lanzamiento de Curso de Inglés..." className="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white text-sm outline-none focus:border-purple-500"/>
                             </div>
-
-                            {/* Contexto */}
-                            <div className="grid grid-cols-3 gap-2">
-                                <div className="relative"><select value={selectedExpertId} onChange={(e) => setSelectedExpertId(e.target.value)} className="w-full bg-gray-900 border border-gray-800 text-gray-300 text-xs rounded-lg p-2.5 outline-none focus:border-indigo-500 appearance-none"><option value="">Experto</option>{experts.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}</select><User size={12} className="absolute right-2 top-3 text-gray-600 pointer-events-none"/></div>
-                                <div className="relative"><select value={selectedAvatarId} onChange={(e) => setSelectedAvatarId(e.target.value)} className="w-full bg-gray-900 border border-gray-800 text-gray-300 text-xs rounded-lg p-2.5 outline-none focus:border-pink-500 appearance-none"><option value="">Avatar</option>{avatars.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}</select><Users size={12} className="absolute right-2 top-3 text-gray-600 pointer-events-none"/></div>
-                                <div className="relative"><select value={selectedKbId} onChange={(e) => setSelectedKbId(e.target.value)} className="w-full bg-gray-900 border border-gray-800 text-gray-300 text-xs rounded-lg p-2.5 outline-none focus:border-yellow-500 appearance-none"><option value="">Cerebro</option>{knowledgeBases.map(kb => <option key={kb.id} value={kb.id}>{kb.title}</option>)}</select><BookOpen size={12} className="absolute right-2 top-3 text-gray-600 pointer-events-none"/></div>
-                            </div>
-
-                            {/* Configuración Plan */}
+                            
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block tracking-widest">Enfoque</label>
@@ -417,7 +422,6 @@ export const Calendar = () => {
                                 </div>
                             </div>
 
-                            {/* Duración */}
                             <div>
                                 <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block tracking-widest">Duración</label>
                                 <div className="grid grid-cols-3 gap-3">
@@ -449,7 +453,9 @@ export const Calendar = () => {
                 <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in">
                     <div className="bg-[#0B0E14] border border-gray-800 rounded-2xl w-full max-w-md shadow-2xl">
                         <div className="p-5 border-b border-gray-800 flex justify-between items-center">
-                            <span className="text-xs font-black text-gray-500 uppercase tracking-widest">Día {selectedDay}</span>
+                            <span className="text-xs font-black text-gray-500 uppercase tracking-widest">
+                                {selectedDateStr}
+                            </span>
                             <button onClick={() => setIsModalOpen(false)}><X size={18} className="text-gray-500 hover:text-white"/></button>
                         </div>
                         <div className="p-6 space-y-4">
