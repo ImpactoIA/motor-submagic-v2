@@ -17,9 +17,9 @@ import { AvatarProfile } from './pages/AvatarProfile';
 // Herramientas de Creación
 import { ScriptGenerator } from './pages/ScriptGenerator';
 import { AnalyzeViral } from './pages/AnalyzeViral';
-import { ReverseEngineering } from './pages/ReverseEngineering'; // <-- NUEVA IMPORTACIÓN
+// import { ReverseEngineering } from './pages/ReverseEngineering'; // 🗑️ ELIMINADO: No existe
 import { ViralCalculator } from './pages/ViralCalculator';
-import { TitanViral } from './pages/TitanViral'; 
+import { TitanViral } from './pages/TitanViral'; // ✅ ESTA ES LA INGENIERÍA INVERSA
 import { QuickIdeas } from './pages/QuickIdeas';
 import { TranscribeVideo } from './pages/TranscribeVideo';
 
@@ -75,7 +75,10 @@ function AppContent() {
           {/* Herramientas de Producción */}
           <Route path="script-generator" element={<ScriptGenerator />} />
           <Route path="analyze-viral" element={<AnalyzeViral />} />
-          <Route path="reverse-engineering" element={<ReverseEngineering />} /> {/* <-- RUTA ACTIVA */}
+          
+          {/* 🛠️ CORRECCIÓN: La ruta apunta a TitanViral porque ese es el archivo real */}
+          <Route path="reverse-engineering" element={<TitanViral />} /> 
+          
           <Route path="viral-calculator" element={<ViralCalculator />} />
           <Route path="recreate-viral" element={<TitanViral />} />
           <Route path="quick-ideas" element={<QuickIdeas />} />
