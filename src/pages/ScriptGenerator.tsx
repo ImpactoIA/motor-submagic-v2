@@ -208,43 +208,52 @@ export const ScriptGenerator = () => {
     const [isSaving, setIsSaving] = useState(false);
     const [saveSuccess, setSaveSuccess] = useState(false);
 
+   // ==================================================================================
+    // 🔄 EFECTOS (Carga inicial y Navegación desde Ideas)
     // ==================================================================================
-    // 🔄 EFECTOS
-    // ==================================================================================
-
-    // Carga inicial de expertos
     useEffect(() => {
         if (!user) return;
         
+        // 1. Cargar Expertos
         const loadExperts = async () => {
-            const { data, error } = await supabase
+            const { data } = await supabase
                 .from('expert_profiles')
                 .select('id, niche, name')
                 .eq('user_id', user.id);
             
-            if (data && !error) setExperts(data);
+            if (data) setExperts(data);
         };
-        
         loadExperts();
-        
-        // Cargar tema desde navegación
-        if (location.state?.topic) setTopic(location.state.topic);
-        
-        // Seleccionar experto activo
-        if (userProfile?.active_expert_id) setSelectedExpertId(userProfile.active_expert_id);
-    }, [user, userProfile, location]);
 
-    // Calcular costo dinámicamente
-    useEffect(() => {
-        const duration = DURATIONS.find(d => d.id === durationId);
-        if (duration) setCost(duration.cost);
-    }, [durationId]);
+        // 2. CAPTURA DE DATOS (Esta es la corrección clave)
+        if (location.state) {
+            // Creamos una variable temporal para armar el texto completo
+            let fullText = location.state.topic || '';
+
+            // Si hay descripción (hook), la sumamos con un salto de línea
+            if (location.state.hook && !fullText.includes(location.state.hook)) {
+                fullText += `\n\nContexto: ${location.state.hook}`;
+            }
+
+            // Guardamos todo de una sola vez
+            if (fullText) {
+                setTopic(fullText);
+            }
+
+            // Limpiamos el historial para que no se repita al recargar
+            window.history.replaceState({}, document.title);
+        }
+        
+        // 3. Seleccionar experto activo si existe
+        if (userProfile?.active_expert_id) setSelectedExpertId(userProfile.active_expert_id);
+
+    }, [user, userProfile, location]);
 
     // ==================================================================================
     // 🎯 FUNCIONES PRINCIPALES
     // ==================================================================================
 
-    /**
+   /**
      * Generar guion usando el backend V105
      */
     const handleGenerate = async () => {
@@ -259,7 +268,7 @@ export const ScriptGenerator = () => {
             const shouldRecharge = confirm(
                 `⚠️ Saldo insuficiente. Necesitas ${cost} créditos pero tienes ${userProfile?.credits || 0}.\n\n¿Deseas recargar?`
             );
-            if (shouldRecharge) navigate('/settings');
+            if (shouldRecharge) navigate('/dashboard/settings');
             return;
         }
 
@@ -274,14 +283,14 @@ export const ScriptGenerator = () => {
             const { data, error: apiError } = await supabase.functions.invoke('process-url', {
                 body: {
                     selectedMode: 'generar_guion',
-                    topic: topic.trim(), // ✅ CORREGIDO: Enviamos como 'topic'
-                    text: topic.trim(),  // ✅ ALTERNATIVA: Por si el backend usa 'text'
+                    userInput: topic.trim(), // 👈 ESTA ES LA CLAVE: El backend necesita 'userInput'
+                    topic: topic.trim(),     // Lo mantenemos como respaldo
                     settings: {
                         structure: selectedStructure,
                         awareness,
                         objective,
                         situation,
-                        durationId: durationId, // ✅ AÑADIDO
+                        durationId: durationId,
                         duration: durationId,
                         hook_type: hookType,
                         platform: selectedPlatform.label
@@ -292,25 +301,18 @@ export const ScriptGenerator = () => {
                 }
             });
 
-            // Validación robusta de respuesta
-            if (apiError) {
-                throw new Error(apiError.message || 'Error al conectar con el backend');
-            }
+            if (apiError) throw new Error(apiError.message || 'Error al conectar con el backend');
+            if (!data?.success && !data?.generatedData) throw new Error(data?.error || 'El backend devolvió un error desconocido');
 
-            if (!data?.success) {
-                throw new Error(data?.error || 'El backend devolvió un error desconocido');
-            }
-
-            if (!data?.generatedData) {
-                throw new Error('No se generaron datos. Intenta de nuevo.');
-            }
-
-            // Validar que tenga el guion completo
-            if (!data.generatedData.guion_completo) {
+            // Soporte flexible para la respuesta del backend
+            const finalResult = data.generatedData || data;
+            
+            // Validación final para asegurar que llegó el guion
+            if (!finalResult.guion_completo) {
                 throw new Error('El backend no devolvió un guion completo. Intenta de nuevo.');
             }
 
-            setResult(data.generatedData);
+            setResult(finalResult);
             
             // Refrescar perfil para actualizar créditos
             if (refreshProfile) await refreshProfile();
@@ -322,7 +324,7 @@ export const ScriptGenerator = () => {
             setIsGenerating(false);
         }
     };
-
+    
     /**
      * Guardar guion en la biblioteca (viral_generations)
      */

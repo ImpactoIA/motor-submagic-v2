@@ -50,7 +50,7 @@ export const QuickIdeas = () => {
     const [isGenerating, setIsGenerating] = useState(false);
     const [ideas, setIdeas] = useState<IdeaItem[]>([]);
     const [error, setError] = useState<string | null>(null);
-    const [savingId, setSavingId] = useState<number | null>(null); // Para indicar cuál se está guardando
+    const [savingId, setSavingId] = useState<number | null>(null); 
 
     // 🔥 CÁLCULO DE COSTO EXACTO
     const currentCost = amount === 10 ? 7 : 3;
@@ -83,7 +83,7 @@ export const QuickIdeas = () => {
 
         // 1. Validar Saldo
         if (userProfile?.tier !== 'admin' && (userProfile?.credits || 0) < currentCost) {
-            if(confirm(`⚠️ Saldo insuficiente (${userProfile?.credits} cr). Necesitas ${currentCost}. ¿Recargar?`)) navigate('/settings');
+            if(confirm(`⚠️ Saldo insuficiente (${userProfile?.credits} cr). Necesitas ${currentCost}. ¿Recargar?`)) navigate('/dashboard/settings');
             return;
         }
 
@@ -95,19 +95,14 @@ export const QuickIdeas = () => {
             const { data, error: apiError } = await supabase.functions.invoke('process-url', {
                 body: {
                     selectedMode: 'ideas_rapidas',
-                    userInput: topic, // ✅ Contexto principal
-                    
-                    // ✅ ESTO ES LO QUE ARREGLA EL COBRO Y LA CANTIDAD
+                    userInput: topic, 
                     settings: {
-                        quantity: amount, // El backend lee settings.quantity
+                        quantity: amount, 
                         platform: selectedPlatform.label
                     },
-                    
-                    // Contexto Auxiliar
                     expertId: selectedExpertId,
                     avatarId: selectedAvatarId,
                     knowledgeBaseId: selectedKbId,
-                    
                     estimatedCost: currentCost
                 },
             });
@@ -116,7 +111,7 @@ export const QuickIdeas = () => {
             if (!data?.generatedData?.ideas) throw new Error("No se recibieron ideas válidas.");
 
             setIdeas(data.generatedData.ideas);
-            if(refreshProfile) refreshProfile(); // Actualizar créditos en UI
+            if(refreshProfile) refreshProfile(); 
 
         } catch (e: any) {
             console.error("Error:", e);
@@ -135,11 +130,10 @@ export const QuickIdeas = () => {
                 user_id: user.id,
                 type: 'idea',
                 title: idea.titulo,
-                content: idea, // Guardamos todo el objeto idea
+                content: idea, 
                 status: 'draft',
                 platform: selectedPlatform.label
             });
-            // Simular feedback visual rápido
             setTimeout(() => setSavingId(null), 1000);
         } catch (e) {
             alert("Error al guardar");
@@ -148,11 +142,17 @@ export const QuickIdeas = () => {
     };
 
     // --- ENVIAR AL GENERADOR DE GUIONES ---
-    const handleToScript = (idea: IdeaItem) => {
-        navigate('/tools/script-generator', { 
+    const handleGoToEditor = (idea: any) => {
+        // 1. Extraemos los textos de la idea
+        const cleanTitle = idea.titulo || idea.title || "Idea Viral";
+        const cleanDesc = idea.concepto || idea.descripcion || idea.description || ""; // Ajustado para leer 'concepto'
+
+        // 2. Navegamos a la ruta exacta de App.tsx con el prefijo /dashboard/
+        navigate('/dashboard/script-generator', { 
             state: { 
-                topic: idea.titulo, // Pasamos el título como tema
-                context: idea.concepto // Pasamos el concepto (aunque V105 prioriza topic)
+                topic: cleanTitle,
+                hook: cleanDesc,
+                fromIdeas: true 
             } 
         });
     };
@@ -203,9 +203,9 @@ export const QuickIdeas = () => {
                     <div className="w-full md:w-auto">
                            <label className="text-xs font-black text-gray-500 uppercase mb-3 block tracking-widest">3. Cantidad</label>
                            <select
-                                value={amount}
-                                onChange={(e) => setAmount(Number(e.target.value))}
-                                className="w-full bg-gray-900 border border-gray-700 rounded-2xl p-4 text-white outline-none min-w-[180px] cursor-pointer font-bold focus:border-yellow-500 transition-all"
+                               value={amount}
+                               onChange={(e) => setAmount(Number(e.target.value))}
+                               className="w-full bg-gray-900 border border-gray-700 rounded-2xl p-4 text-white outline-none min-w-[180px] cursor-pointer font-bold focus:border-yellow-500 transition-all"
                            >
                                 <option value={3}>3 Ideas (3 Créditos)</option>
                                 <option value={5}>5 Ideas (3 Créditos)</option>
@@ -323,8 +323,9 @@ export const QuickIdeas = () => {
                                     {savingId === idx ? <CheckCircle2 size={18} className="text-green-500"/> : <Save size={18}/>}
                                 </button>
 
+                                {/* 🛑 AQUÍ ESTABA EL ERROR: AHORA LLAMA A LA FUNCIÓN CORRECTA */}
                                 <button
-                                    onClick={() => handleToScript(idea)}
+                                    onClick={() => handleGoToEditor(idea)}
                                     className="flex-1 py-3 bg-indigo-600/10 text-indigo-400 border border-indigo-500/20 rounded-xl hover:bg-indigo-600 hover:text-white text-xs font-black flex justify-center items-center gap-2 transition-all shadow-sm uppercase tracking-wider group/btn"
                                 >
                                     Crear Guion <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform"/>

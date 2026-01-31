@@ -17,8 +17,9 @@ import { AvatarProfile } from './pages/AvatarProfile';
 // Herramientas de Creación
 import { ScriptGenerator } from './pages/ScriptGenerator';
 import { AnalyzeViral } from './pages/AnalyzeViral';
+import { ReverseEngineering } from './pages/ReverseEngineering'; // <-- NUEVA IMPORTACIÓN
 import { ViralCalculator } from './pages/ViralCalculator';
-import { TitanViral } from './pages/TitanViral'; // Recreate Viral
+import { TitanViral } from './pages/TitanViral'; 
 import { QuickIdeas } from './pages/QuickIdeas';
 import { TranscribeVideo } from './pages/TranscribeVideo';
 
@@ -74,6 +75,7 @@ function AppContent() {
           {/* Herramientas de Producción */}
           <Route path="script-generator" element={<ScriptGenerator />} />
           <Route path="analyze-viral" element={<AnalyzeViral />} />
+          <Route path="reverse-engineering" element={<ReverseEngineering />} /> {/* <-- RUTA ACTIVA */}
           <Route path="viral-calculator" element={<ViralCalculator />} />
           <Route path="recreate-viral" element={<TitanViral />} />
           <Route path="quick-ideas" element={<QuickIdeas />} />
@@ -87,15 +89,13 @@ function AppContent() {
       </Route>
 
       {/* 3. REDIRECCIONES DE COMPATIBILIDAD */}
-      {/* Si entran a la raíz, enviarlos al dashboard */}
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
       
-      {/* Redirecciones de rutas antiguas para no romper enlaces viejos */}
+      {/* Redirecciones automáticas para evitar errores 404 en navegación directa */}
       <Route path="/settings" element={<Navigate to="/dashboard/settings" replace />} />
       <Route path="/script-generator" element={<Navigate to="/dashboard/script-generator" replace />} />
-      <Route path="/calendar" element={<Navigate to="/dashboard/calendar" replace />} />
-
-      {/* Catch-all: Cualquier ruta desconocida va al dashboard */}
+      
+      {/* Catch-all: Si algo falla, volver al centro de mando */}
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
   );
