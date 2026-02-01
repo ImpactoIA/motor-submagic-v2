@@ -5,7 +5,8 @@ import { useAuth } from '../context/AuthContext';
 import { 
     RefreshCw, Wand2, Zap, Copy, Save, Calendar as CalendarIcon, Gavel,
     Video, Instagram, Youtube, Linkedin, CheckCircle2, AlignLeft,
-    User, AlertCircle, PenTool, Layout, Brain, Target, XCircle
+    User, AlertCircle, PenTool, Layout, Brain, Target, XCircle,
+    X, ChevronRight 
 } from 'lucide-react';
 
 // ==================================================================================
@@ -208,6 +209,10 @@ export const ScriptGenerator = () => {
     const [isSaving, setIsSaving] = useState(false);
     const [saveSuccess, setSaveSuccess] = useState(false);
 
+    // --- NUEVO: ESTADOS PARA EL POP-UP DE AGENDAR ---
+    const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+    const [scheduleDate, setScheduleDate] = useState(new Date().toISOString().split('T')[0]);
+
    // ==================================================================================
     // 🔄 EFECTOS (Carga inicial y Navegación desde Ideas)
     // ==================================================================================
@@ -324,7 +329,7 @@ export const ScriptGenerator = () => {
             setIsGenerating(false);
         }
     };
-    
+
     /**
      * Guardar guion en la biblioteca (viral_generations)
      */
@@ -359,45 +364,41 @@ export const ScriptGenerator = () => {
         }
     };
 
-    /**
-     * Agendar guion para una fecha específica
-     */
-    const handleAddToCalendar = async () => {
+   // --- FUNCIÓN PARA GUARDAR EN CALENDARIO DESDE EL POP-UP ---
+    const handleConfirmSchedule = async () => {
+        // 1. Validamos que haya fecha seleccionada en el modal
+        if (!scheduleDate) return alert("Selecciona una fecha.");
         if (!result || !user) return;
-        
-        const dateStr = prompt(
-            "¿Para qué fecha quieres agendar este guion? (formato: YYYY-MM-DD)", 
-            new Date().toISOString().split('T')[0]
-        );
-        
-        if (!dateStr) return;
-
-        // Validar formato de fecha
-        if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
-            alert("❌ Formato de fecha inválido. Usa: YYYY-MM-DD (ej: 2026-02-15)");
-            return;
-        }
 
         try {
-            const { error } = await supabase.from('viral_generations').insert({
+            // 2. Guardamos en 'content_items' (La tabla del Nuevo Calendario)
+            const { error } = await supabase.from('content_items').insert({
                 user_id: user.id,
-                type: 'scheduled_script',
-                content: { 
-                    ...result, 
-                    scheduled_date: dateStr, 
-                    topic: topic,
-                    platform: selectedPlatform.label
-                },
-                platform: selectedPlatform.label,
-                cost_credits: 0 // Ya se cobró al generar
+                type: 'calendar_event',
+                title: result.metadata_guion?.tema_tratado || topic, // Usamos el tema como título
+                scheduled_date: scheduleDate, // La fecha del selector visual
+                platform: selectedPlatform.label, 
+                status: 'planned',
+                content: {
+                    objetivo: objective, 
+                    formato: 'Video Corto',
+                    description: "Agendado desde Script Generator",
+                    // 👇 AQUÍ GUARDAMOS EL GUION PARA QUE EL CALENDARIO LO PUEDA VER
+                    guion_completo: result.guion_completo, 
+                    metadata: result.metadata_guion
+                }
             });
 
             if (error) throw error;
+
+            // 3. Éxito: Cerramos el modal y avisamos
+            alert(`✅ Guion agendado exitosamente para el ${scheduleDate}`);
+            setIsScheduleModalOpen(false);
             
-            alert(`✅ ¡Guion agendado para el ${dateStr}!`);
+            // Opcional: Si quieres que al agendar te lleve al calendario, descomenta la siguiente línea:
+            // navigate('/dashboard/calendar'); 
 
         } catch (e: any) {
-            console.error("[ScriptGenerator] Error agendando:", e);
             alert("Error al agendar: " + e.message);
         }
     };
@@ -701,9 +702,10 @@ export const ScriptGenerator = () => {
                                 </div>
                                 <div className="flex gap-2 flex-wrap justify-end">
                                     <button 
-                                        onClick={handleAddToCalendar} 
-                                        className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-bold text-xs flex items-center gap-2 transition-colors shadow-lg shadow-indigo-500/20"
+                                       onClick={() => setIsScheduleModalOpen(true)} // 👈 CAMBIA ESTO
+                                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-bold text-xs flex items-center gap-2 shadow-lg shadow-indigo-500/20 transition-all"
                                     >
+                                    
                                         <CalendarIcon size={16}/> Agendar
                                     </button>
                                     <button 
@@ -919,6 +921,55 @@ export const ScriptGenerator = () => {
                     )}
                 </div>
             </div>
-        </div>
+   {/* --- MODAL POP-UP PARA AGENDAR (NUEVO & CORREGIDO) --- */}
+            {isScheduleModalOpen && (
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in">
+                    <div className="bg-[#0B0E14] border border-gray-800 rounded-2xl w-full max-w-md shadow-2xl p-6 relative">
+                        {/* Botón Cerrar */}
+                        <button 
+                            onClick={() => setIsScheduleModalOpen(false)} 
+                            className="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors"
+                        >
+                            <X size={18}/>
+                        </button>
+                        
+                        {/* Encabezado */}
+                        <div className="text-center mb-6">
+                            <div className="w-12 h-12 bg-indigo-600/20 rounded-full flex items-center justify-center mx-auto mb-3 text-indigo-500 border border-indigo-500/30">
+                                <CalendarIcon size={24}/>
+                            </div>
+                            <h3 className="text-lg font-black text-white">Agendar Publicación</h3>
+                            <p className="text-xs text-gray-400 mt-1">Elige cuándo quieres publicar este guion.</p>
+                        </div>
+
+                        {/* Formulario */}
+                        <div className="space-y-4">
+                            <div>
+                                <label className="text-[10px] font-bold text-gray-500 uppercase mb-2 block tracking-wider">Fecha de Publicación</label>
+                                <input 
+                                    type="date" 
+                                    value={scheduleDate} 
+                                    onChange={(e) => setScheduleDate(e.target.value)} 
+                                    className="w-full bg-black border border-gray-700 rounded-xl p-3 text-white text-sm outline-none focus:border-indigo-500 transition-colors"
+                                />
+                            </div>
+                            
+                            <div className="p-3 bg-gray-900 rounded-xl border border-gray-800">
+                                <span className="text-[10px] font-bold text-gray-500 uppercase block mb-1 tracking-wider">Resumen del Guion</span>
+                                <p className="text-xs text-gray-300 line-clamp-2 italic">"{topic}"</p>
+                            </div>
+
+                            <button 
+                                onClick={handleConfirmSchedule}
+                                className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-black rounded-xl text-sm flex justify-center items-center gap-2 transition-all shadow-lg shadow-indigo-900/20 hover:scale-[1.02]"
+                            >
+                                Confirmar y Agendar <ChevronRight size={16}/>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+        </div> // 👈 CIERRE DEL CONTENEDOR PRINCIPAL
     );
 };
