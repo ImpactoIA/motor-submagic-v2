@@ -113,20 +113,41 @@ export const Calendar = () => {
 
     const fetchEvents = async () => {
         try {
-            const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).toISOString();
-            const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).toISOString();
-            const { data } = await supabase.from('content_items').select('*').eq('user_id', user?.id).gte('scheduled_date', startOfMonth).lte('scheduled_date', endOfMonth);
+            // Calculamos primer y último día del mes en formato UTC para que Supabase entienda
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            const startDate = new Date(year, month, 1);
+            const endDate = new Date(year, month + 1, 0); // Último día del mes
+
+            // Convertimos a string YYYY-MM-DD para comparar texto simple (más seguro)
+            const startStr = startDate.toISOString().split('T')[0];
+            const endStr = endDate.toISOString().split('T')[0];
+
+            const { data, error } = await supabase
+                .from('content_items')
+                .select('*')
+                .eq('user_id', user?.id)
+                .gte('scheduled_date', startStr)
+                .lte('scheduled_date', endStr);
+
+            if (error) throw error;
 
             if (data) {
                 const mapped = data.map((item: any) => ({
-                    id: item.id, title: item.title || "Sin Título", platform: item.platform || 'Instagram',
-                    type: item.content?.objetivo || 'Viral', format: item.content?.formato || 'Video',
-                    notes: item.content?.description || item.content?.concepto || '',
-                    script: item.content?.guion_completo || '', status: item.status, scheduled_date: item.scheduled_date
+                    id: item.id,
+                    title: item.title || "Sin Título",
+                    platform: item.platform || 'Instagram',
+                    type: item.content?.objetivo || 'Viral',
+                    format: item.content?.formato || 'Video',
+                    notes: item.content?.description || '',
+                    script: item.content?.guion_completo || '', 
+                    status: item.status,
+                    scheduled_date: item.scheduled_date // Debe ser YYYY-MM-DD
                 }));
                 setEvents(mapped);
             }
-        } catch (e) { console.error(e); }
+        } catch (e) { console.error("Error fetching events:", e); }
     };
 
     useEffect(() => {

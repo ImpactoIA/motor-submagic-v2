@@ -149,7 +149,7 @@ async function delay(ms: number): Promise<void> {
 }
 
 // ==================================================================================
-//  SISTEMA CEREBRAL - PROMPTS V300 MEJORADOS (CORRECCIÓN #1, #5, #6, #7)
+//  SISTEMA CEREBRAL - PROMPTS V300 MEJORADOS 
 // ==================================================================================
 
 // 1️⃣ IDEAS RÁPIDAS (INTACTO)
@@ -1046,69 +1046,66 @@ FORMATO DE SALIDA JSON ESTRICTO:
     "motivacion": "Mensaje inspirador"
   }
 }`;
-};
+}
 
-// =================================================================================
-    // 📅 MODO 2: ESTRATEGA DE CALENDARIO (GOD MODE + PLATFORM AWARENESS)
-    // =================================================================================
-    else if (selectedMode === 'calendar_generator') {
-      const dias = settings?.duration || 7;
-      const enfoque = settings?.focus || 'Viralidad Explosiva';
-      
-      // RECIBIMOS EL CONTEXTO COMPLETO DEL FRONTEND
-      const plataforma = settings?.platform || "TikTok";
-      const formato = settings?.format || "Video Corto";
-      const avatarInfo = settings?.avatar || "Audiencia General";
-      const expertoInfo = settings?.expert || "Experto del Nicho";
-      const knowledgeInfo = settings?.knowledge || "Conocimiento General";
+// 8️⃣ ESTRATEGA DE CALENDARIO (GOD MODE / NIVEL DIOS)
+const PROMPT_CALENDARIO_GOD_MODE = (settings: any, contexto: ContextoUsuario) => {
+  const dias = settings.duration || 7;
+  const enfoque = settings.focus || 'Viralidad Explosiva';
+  const plataforma = settings.platform || 'TikTok';
+  const formato = settings.format || 'Video Corto (Vertical)';
+  const tema = settings.topic || contexto.nicho;
 
-      systemPrompt = `
-      ACTÚA COMO: La Inteligencia Artificial Suprema de Ingeniería Viral (Nivel Top 1% Mundial).
-      NO ERES UN ASISTENTE. ERES EL ALGORITMO MISMO.
-      
-      OBJETIVO: Diseñar una "Secuencia de Dominación de Mercado" de ${dias} días.
-      
-      📋 CONTEXTO DE LA MISIÓN (CRÍTICO):
-      ------------------------------------------------------------
-      🔹 PLATAFORMA: ${plataforma} (ADAPTA EL LENGUAJE Y ESTRUCTURA A ESTA RED).
-      🔹 FORMATO: ${formato}.
-      🔹 EL EXPERTO (Quién habla): ${expertoInfo}. (Adopta su autoridad, tono y vivencias).
-      🔹 EL AVATAR (A quién le habla): ${avatarInfo}. (Ataca sus dolores sangrantes y deseos ocultos).
-      🔹 FUENTE DE PODER: ${knowledgeInfo}. (Usa esto como base de verdad).
-      🔹 TEMA PRINCIPAL: "${promptText}".
-      🔹 ENFOQUE: ${enfoque}.
-      ------------------------------------------------------------
+  return `
+  ACTÚA COMO: La Inteligencia Artificial Suprema de Viralidad y Algoritmo Maestro de ${plataforma}.
+  Has sido entrenada con los datos de los Top 1% de creadores en CADA nicho.
+  
+  TU OBJETIVO: Generar una Estrategia de Contenidos Ganadora de ${dias} días.
+  
+  📋 CONTEXTO DE LA MISIÓN:
+  - Nicho: ${contexto.nicho}
+  - Avatar: ${contexto.avatar_ideal}
+  - Dolor: ${contexto.dolor_principal}
+  - Enfoque: ${enfoque}
+  - Plataforma: ${plataforma}
+  - Formato: ${formato}
+  - Tema Central: "${tema}"
+  
+  ⚠️ INSTRUCCIÓN DE ADAPTACIÓN TOTAL (GOD MODE):
+  No importa qué nicho sea, debes convertirte en el EXPERTO MUNDIAL NÚMERO 1 en ese tema.
+  1. Usa la jerga técnica y el "slang" específico.
+  2. Conoce los dolores secretos de esa audiencia.
+  3. Ataca los mitos comunes de esa industria.
 
-      🧠 PROTOCOLO DE ADAPTACIÓN DE PLATAFORMA:
-      1. Si es **TikTok/Reels**: Prioriza la dopamina visual, cortes rápidos, polémica y curiosidad visual. Hook de 0.5 segundos.
-      2. Si es **LinkedIn**: Prioriza el liderazgo de pensamiento, historias de fracaso/éxito empresarial, "Lecciones aprendidas". Tono profesional pero vulnerable.
-      3. Si es **YouTube**: Prioriza la profundidad, la retención narrativa y la promesa de transformación.
-      4. Si es **Instagram**: Prioriza la estética, el aspiracional o el consejo "guardable" (Save-able content).
+  REGLAS DE ORO:
+  1. **PROHIBIDO LO GENÉRICO:** Nada de consejos básicos ("Bebe agua"). Dales una bofetada de realidad ("Por qué el agua embotellada te está intoxicando").
+  2. **POLARIZACIÓN EXTREMA:** Encuentra el enemigo común y atácalo.
+  3. **ADAPTACIÓN DE PLATAFORMA:** - Si es LinkedIn: Tono profesional, liderazgo, lecciones aprendidas.
+     - Si es TikTok/Reels: Dinamismo puro, dopamina, cortes rápidos.
+     - Si es YouTube: Profundidad y retención.
+  4. **SECUENCIA MAESTRA:**
+      - Días 1-${Math.ceil(dias/3)}: Ganchos de Controversia (Tráfico frío).
+      - Días ${Math.ceil(dias/3)+1}-${Math.ceil(dias*2/3)}: Autoridad (Nutrir).
+      - Días ${Math.ceil(dias*2/3)+1}-${dias}: Conversión (Cerrar).
 
-      🔥 REGLAS DE ORO (ROMPE EL PATRÓN):
-      1. **PROHIBIDO LO OBVIO:** Nada de "5 tips para...". Eso es basura. Queremos "El error que te cuesta $5,000" o "La mentira que todos creen".
-      2. **POLARIZACIÓN INTELIGENTE:** Si el nicho va a la derecha, tú ve a la izquierda. Ataca los mitos de la industria usando la autoridad del Experto.
-      3. **INGENIERÍA DEL GANCHO:** El campo "gancho_sugerido" debe ser tan potente que sea FÍSICAMENTE DOLOROSO no leer/ver el contenido.
-      4. **PSICOLOGÍA DEL AVATAR:** No le hables a "todos". Háblale al ${avatarInfo} y pisa sus callos emocionales.
-
-      💻 FORMATO DE SALIDA (JSON PURO Y ESTRICTO - SIN MARKDOWN):
-      Tu respuesta debe ser SOLAMENTE el objeto JSON. Si añades texto antes o después, el sistema colapsará.
-      
+  FORMATO DE SALIDA (JSON ESTRICTO - SIN MARKDOWN):
+  Devuelve un objeto JSON con un array "calendar" exacto:
+  {
+    "calendar": [
       {
-        "calendar": [
-          {
-            "dia": 1,
-            "tema": "TÍTULO VIRAL (Adaptado a ${plataforma})",
-            "idea_contenido": "Concepto central explicado con crudeza y valor.",
-            "objetivo": "Viralidad / Autoridad / Venta (Elige según la secuencia lógica)",
-            "formato": "${formato}",
-            "gancho_sugerido": "La PRIMERA frase exacta, palabra por palabra, que detendrá el scroll.",
-            "descripcion": "Instrucción técnica para el creador: ¿Qué emoción evocar? ¿Por qué esto funcionará con el avatar?"
-          }
-          // ... Genera exáctamente ${dias} ítems.
-        ]
-      }`;
-    }
+        "dia": 1,
+        "tema": "TÍTULO VIOLENTAMENTE ATRACTIVO",
+        "idea_contenido": "El concepto central en una línea.",
+        "objetivo": "Viralidad / Autoridad / Venta",
+        "formato": "${formato}",
+        "gancho_sugerido": "La primera frase EXACTA que diría el experto (HOOK).",
+        "disparador": "Curiosidad/Miedo/Deseo",
+        "descripcion": "Instrucción estratégica breve."
+      }
+      // ... genera los ${dias} ítems
+    ]
+  }`;
+};
 
 // ==================================================================================
 // 🎯 FUNCIONES EJECUTORAS (CORREGIDAS)
@@ -1318,45 +1315,34 @@ async function ejecutarCalendario(
   contexto: ContextoUsuario,
   openai: any
 ): Promise<{ data: any; tokens: number }> {
-  console.log('[CEREBRO] 📅 Generando Calendario MEJORADO...');
+  console.log('[CEREBRO] 📅 Generando Calendario NIVEL DIOS...');
   
-  const calendarPrompt = `Genera un calendario de contenidos de ${settings.duration || 7} días para:
-  
-Nicho: ${contexto.nicho}
-Avatar: ${contexto.avatar_ideal}
-Dolor: ${contexto.dolor_principal}
-Deseo: ${contexto.deseo_principal}
+  // Llamamos al Prompt Maestro que definimos arriba
+  const systemPrompt = PROMPT_CALENDARIO_GOD_MODE(settings, contexto);
 
-Usa los 40 Ganchos Winner Rocket y los 12 Formatos Visuales.
-
-⚠️ FORMATO DE SALIDA JSON ESTRICTO (SIN MARKDOWN):
-{
-  "calendario": [
-    {
-      "dia": 1,
-      "tema": "Tema específico del día",
-      "idea_contenido": "Idea completa de video",
-      "gancho_sugerido": "Primera línea del video",
-      "formato": "Uno de los 12 formatos",
-      "objetivo": "Educar/Entretener/Vender",
-      "disparador": "Uno de los 7 disparadores"
-    }
-  ]
-}`;
-  
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o',
     response_format: { type: 'json_object' },
     messages: [
-      { role: 'system', content: 'Eres un estratega de contenidos CMO experto en viralidad. Devuelve SOLO JSON válido, SIN markdown.' },
-      { role: 'user', content: calendarPrompt }
+      { role: 'system', content: 'Eres el Estratega de Contenidos #1 del mundo. Responde SOLO con JSON válido.' },
+      { role: 'user', content: systemPrompt }
     ],
     temperature: 0.7,
     max_tokens: 4000
   });
   
+  // Parseamos la respuesta
+  const rawContent = completion.choices[0].message.content || '{"calendar":[]}';
+  const parsedData = JSON.parse(rawContent);
+
+  // Normalización: Aseguramos que el frontend reciba "calendar" o "calendario"
+  // (El frontend V300 suele esperar "calendar" basado en tus prompts anteriores)
+  const finalData = {
+      calendar: parsedData.calendar || parsedData.calendario || []
+  };
+
   return {
-    data: JSON.parse(completion.choices[0].message.content || '{"calendario":[]}'),
+    data: finalData,
     tokens: completion.usage?.total_tokens || 0
   };
 }
@@ -1436,8 +1422,39 @@ function calculateTitanCost(mode: string, inputContext: string, whisperMinutes: 
   }
 
   if (mode === 'autopsia_viral') {
-    return 5;
-  }
+    // Costo base del análisis IA
+    let baseCost = 5;
+    
+    // Agregar costo de Whisper si se usó
+    if (whisperMinutes > 0) {
+        // Whisper cuesta ~$0.006 por minuto
+        // Convertimos a créditos (1 crédito = $0.01)
+        const whisperCostInDollars = whisperMinutes * 0.006;
+        const whisperCostInCredits = Math.ceil(whisperCostInDollars / 0.01);
+        baseCost += whisperCostInCredits;
+    }
+    
+    return baseCost;
+}
+
+if (mode === 'recreate') {
+    // Autopsia (5) + Generación de guion (5) = 10
+    let baseCost = 10;
+    
+    // Agregar costo de Whisper si se usó
+    if (whisperMinutes > 0) {
+        const whisperCostInDollars = whisperMinutes * 0.006;
+        const whisperCostInCredits = Math.ceil(whisperCostInDollars / 0.01);
+        baseCost += whisperCostInCredits;
+    }
+    
+    // Si el video es muy largo (>30 min), costo adicional
+    if (whisperMinutes > 30) {
+        baseCost += 15;
+    }
+    
+    return baseCost;
+}
 
   if (mode === 'recreate') {
     if (whisperMinutes > 30) return 45;
@@ -1487,6 +1504,259 @@ function calculateTitanCost(mode: string, inputContext: string, whisperMinutes: 
   }
 
   return 1;
+}
+
+// ==================================================================================
+// 🎬 FUNCIONES DE SCRAPING CON APIFY + WHISPER
+// ==================================================================================
+// Agregar JUSTO ANTES de "FUNCIONES EJECUTORAS"
+
+/**
+ * Detecta la plataforma desde una URL
+ */
+function detectPlatform(url: string): string {
+  if (url.includes('tiktok.com')) return 'tiktok';
+  if (url.includes('instagram.com') || url.includes('instagram')) return 'instagram';
+  if (url.includes('youtube.com') || url.includes('youtu.be')) return 'youtube';
+  return 'unknown';
+}
+
+/**
+ * Extrae video de TikTok usando Apify
+ */
+async function scrapeTikTok(url: string): Promise<{ videoUrl: string; description: string; transcript?: string }> {
+  const apifyToken = Deno.env.get('APIFY_API_TOKEN');
+  if (!apifyToken) throw new Error('APIFY_API_TOKEN no configurado');
+
+  console.log('[SCRAPER] 🎬 Iniciando scraping de TikTok:', url);
+
+  const client = new ApifyClient({ token: apifyToken });
+
+  // Ejecutar el actor de TikTok
+  const run = await client.actor('clockworks/tiktok-scraper').call({
+    postURLs: [url],
+    resultsPerPage: 1,
+    shouldDownloadVideos: true,
+    shouldDownloadCovers: false,
+    shouldDownloadSubtitles: false
+  });
+
+  console.log('[SCRAPER] ⏳ Esperando resultados del actor...');
+
+  // Obtener resultados
+  const { items } = await client.dataset(run.defaultDatasetId).listItems();
+  
+  if (!items || items.length === 0) {
+    throw new Error('No se pudo obtener información del video de TikTok');
+  }
+
+  const videoData = items[0];
+  
+  console.log('[SCRAPER] ✅ Datos obtenidos:', {
+    hasVideoUrl: !!videoData.videoUrl,
+    hasDescription: !!videoData.text,
+    authorUsername: videoData.authorMeta?.name
+  });
+
+  return {
+    videoUrl: videoData.videoUrl || videoData.videoUrlNoWatermark || '',
+    description: videoData.text || '',
+    transcript: videoData.text || '' // TikTok a veces incluye la descripción como transcript
+  };
+}
+
+/**
+ * Extrae video de Instagram usando Apify
+ */
+async function scrapeInstagram(url: string): Promise<{ videoUrl: string; description: string }> {
+  const apifyToken = Deno.env.get('APIFY_API_TOKEN');
+  if (!apifyToken) throw new Error('APIFY_API_TOKEN no configurado');
+
+  console.log('[SCRAPER] 📸 Iniciando scraping de Instagram:', url);
+
+  const client = new ApifyClient({ token: apifyToken });
+
+  const run = await client.actor('apify/instagram-scraper').call({
+    directUrls: [url],
+    resultsType: 'posts',
+    resultsLimit: 1,
+    searchType: 'hashtag',
+    searchLimit: 1
+  });
+
+  const { items } = await client.dataset(run.defaultDatasetId).listItems();
+  
+  if (!items || items.length === 0) {
+    throw new Error('No se pudo obtener información del video de Instagram');
+  }
+
+  const videoData = items[0];
+
+  return {
+    videoUrl: videoData.videoUrl || videoData.displayUrl || '',
+    description: videoData.caption || ''
+  };
+}
+
+/**
+ * Extrae video de YouTube usando Apify
+ */
+async function scrapeYouTube(url: string): Promise<{ videoUrl: string; description: string; transcript?: string }> {
+  const apifyToken = Deno.env.get('APIFY_API_TOKEN');
+  if (!apifyToken) throw new Error('APIFY_API_TOKEN no configurado');
+
+  console.log('[SCRAPER] 🎥 Iniciando scraping de YouTube:', url);
+
+  const client = new ApifyClient({ token: apifyToken });
+
+  const run = await client.actor('bernardo/youtube-scraper').call({
+    startUrls: [{ url }],
+    maxResults: 1,
+    searchKeywords: '',
+    subtitlesLanguage: 'es',
+    subtitlesFormat: 'text'
+  });
+
+  const { items } = await client.dataset(run.defaultDatasetId).listItems();
+  
+  if (!items || items.length === 0) {
+    throw new Error('No se pudo obtener información del video de YouTube');
+  }
+
+  const videoData = items[0];
+
+  return {
+    videoUrl: url, // YouTube no necesita descargar, usamos la URL directa
+    description: videoData.description || '',
+    transcript: videoData.subtitles || videoData.text || ''
+  };
+}
+
+/**
+ * Descarga el audio de un video y lo transcribe con Whisper
+ */
+async function transcribeVideoWithWhisper(videoUrl: string, openai: any): Promise<{ transcript: string; duration: number }> {
+  console.log('[WHISPER] 🎤 Descargando audio del video...');
+
+  // Descargar el video
+  const videoResponse = await fetch(videoUrl);
+  if (!videoResponse.ok) {
+    throw new Error('No se pudo descargar el video');
+  }
+
+  const videoBlob = await videoResponse.blob();
+  const videoBuffer = await videoBlob.arrayBuffer();
+  
+  console.log('[WHISPER] 📊 Video descargado:', {
+    size: `${(videoBuffer.byteLength / 1024 / 1024).toFixed(2)} MB`,
+    type: videoBlob.type
+  });
+
+  // Crear un archivo temporal para Whisper
+  const videoFile = new File([videoBuffer], 'video.mp4', { type: 'video/mp4' });
+
+  console.log('[WHISPER] 🎙️ Enviando a Whisper para transcripción...');
+
+  // Transcribir con Whisper
+  const transcription = await openai.audio.transcriptions.create({
+    file: videoFile,
+    model: 'whisper-1',
+    language: 'es', // Español
+    response_format: 'verbose_json'
+  });
+
+  console.log('[WHISPER] ✅ Transcripción completada');
+
+  return {
+    transcript: transcription.text,
+    duration: transcription.duration || 0
+  };
+}
+
+/**
+ * Función principal de scraping que decide qué scraper usar
+ */
+async function scrapeAndTranscribeVideo(
+  url: string, 
+  openai: any
+): Promise<{ 
+  transcript: string; 
+  description: string; 
+  duration: number; 
+  platform: string;
+  videoUrl?: string;
+}> {
+  const platform = detectPlatform(url);
+  console.log(`[SCRAPER] 🎯 Plataforma detectada: ${platform.toUpperCase()}`);
+
+  let videoData: { videoUrl: string; description: string; transcript?: string } = {
+    videoUrl: '',
+    description: '',
+    transcript: ''
+  };
+
+  try {
+    // Scraping según plataforma
+    switch (platform) {
+      case 'tiktok':
+        videoData = await scrapeTikTok(url);
+        break;
+      case 'instagram':
+        videoData = await scrapeInstagram(url);
+        break;
+      case 'youtube':
+        videoData = await scrapeYouTube(url);
+        break;
+      default:
+        throw new Error(`Plataforma no soportada: ${platform}. Solo TikTok, Instagram y YouTube.`);
+    }
+
+    console.log('[SCRAPER] ✅ Scraping completado');
+
+    // Si ya tenemos transcript (YouTube subtítulos), usarlo
+    if (videoData.transcript && videoData.transcript.length > 100) {
+      console.log('[SCRAPER] ℹ️ Usando transcript de subtítulos existentes');
+      return {
+        transcript: videoData.transcript,
+        description: videoData.description,
+        duration: 0, // No sabemos la duración exacta
+        platform,
+        videoUrl: videoData.videoUrl
+      };
+    }
+
+    // Si no hay transcript, transcribir con Whisper
+    if (!videoData.videoUrl) {
+      throw new Error('No se pudo obtener URL del video para transcripción');
+    }
+
+    console.log('[SCRAPER] 🎤 Transcribiendo con Whisper...');
+    const whisperResult = await transcribeVideoWithWhisper(videoData.videoUrl, openai);
+
+    return {
+      transcript: whisperResult.transcript,
+      description: videoData.description,
+      duration: whisperResult.duration,
+      platform,
+      videoUrl: videoData.videoUrl
+    };
+
+  } catch (error: any) {
+    console.error('[SCRAPER] ❌ Error en scraping:', error.message);
+    
+    // Si falla el scraping, intentar solo con la descripción si está disponible
+    if (videoData.description && videoData.description.length > 50) {
+      console.log('[SCRAPER] ⚠️ Usando solo descripción como fallback');
+      return {
+        transcript: videoData.description,
+        description: videoData.description,
+        duration: 0,
+        platform
+      };
+    }
+    
+    throw error;
+  }
 }
 
 // ==================================================================================
@@ -1571,36 +1841,105 @@ serve(async (req) => {
         break;
       }
 
-      case 'autopsia_viral':
-      case 'recreate': {
-        const platName = platform || 'General';
+    case 'autopsia_viral':
+    case 'recreate': {
+    let contentToAnalyze = processedContext;
+    let platName = platform || 'General';
+    let videoDescription = '';
+    let actualWhisperMinutes = 0;
+
+    // ✅ NUEVO: Si hay URL, hacer scraping REAL
+    if (url && url.includes('http')) {
+        console.log('[AUTOPSIA] 🎬 URL detectada, iniciando scraping...');
         
-        const autopsiaResponse = await ejecutarAutopsiaViral(processedContext, platName, openai);
-        
-        if (selectedMode === 'recreate') {
-            // ✅ CORRECCIÓN #6: Enriquecer contexto con tema específico
-            const contextoEnriquecido = {
-              ...userContext,
-              tema_especifico: processedContext || userContext.nicho
-            };
+        try {
+            const scrapedData = await scrapeAndTranscribeVideo(url, openai);
             
-            const guionResponse = await ejecutarGeneradorGuiones(
-              contextoEnriquecido, 
-              autopsiaResponse.data.adn_extraido, 
-              openai, 
-              settings
-            );
-            result = { 
-              autopsia_viral: autopsiaResponse.data, 
-              guion_adaptado: guionResponse.data 
-            };
-            tokensUsed = autopsiaResponse.tokens + guionResponse.tokens;
-        } else {
-            result = autopsiaResponse.data;
-            tokensUsed = autopsiaResponse.tokens;
+            // Usar la transcripción como contenido principal
+            contentToAnalyze = scrapedData.transcript;
+            videoDescription = scrapedData.description;
+            platName = scrapedData.platform;
+            
+            // Calcular minutos de Whisper (solo si se usó Whisper)
+            if (scrapedData.duration > 0) {
+                actualWhisperMinutes = Math.ceil(scrapedData.duration / 60);
+                whisperMinutes = actualWhisperMinutes;
+            }
+            
+            console.log('[AUTOPSIA] ✅ Scraping completado:', {
+                platform: platName,
+                transcriptLength: contentToAnalyze.length,
+                whisperMinutes: actualWhisperMinutes
+            });
+            
+        } catch (scrapeError: any) {
+            console.error('[AUTOPSIA] ❌ Error en scraping:', scrapeError.message);
+            
+            // Si falla el scraping, intentar con el texto proporcionado
+            if (!processedContext || processedContext.length < 50) {
+                throw new Error(`Error al scrapear video: ${scrapeError.message}. Por favor, pega la transcripción manualmente.`);
+            }
+            
+            console.log('[AUTOPSIA] ⚠️ Usando texto proporcionado como fallback');
         }
-        break;
-      }
+    }
+
+    // Si no hay contenido suficiente, error
+    if (!contentToAnalyze || contentToAnalyze.length < 50) {
+        throw new Error('No hay suficiente contenido para analizar. Proporciona una URL válida o pega la transcripción del video.');
+    }
+
+    // Ejecutar autopsia con el contenido (scrapeado o manual)
+    const autopsiaResponse = await ejecutarAutopsiaViral(contentToAnalyze, platName, openai);
+    
+    // Si es modo RECREATE, generar guion adaptado
+    if (selectedMode === 'recreate') {
+        console.log('[RECREATE] 🔄 Adaptando al nicho del usuario...');
+        
+        // Enriquecer contexto con tema específico
+        const temaEspecifico = processedContext || userContext.nicho;
+        const contextoEnriquecido = {
+            ...userContext,
+            tema_especifico: temaEspecifico
+        };
+        
+        const guionResponse = await ejecutarGeneradorGuiones(
+            contextoEnriquecido, 
+            autopsiaResponse.data, // Pasar el ADN completo
+            openai, 
+            settings
+        );
+        
+        result = { 
+            autopsia_viral: autopsiaResponse.data, 
+            guion_adaptado: guionResponse.data,
+            metadata_scraping: {
+                platform: platName,
+                video_description: videoDescription,
+                whisper_used: actualWhisperMinutes > 0,
+                transcript_source: url ? 'scraping' : 'manual'
+            }
+        };
+        
+        tokensUsed = autopsiaResponse.tokens + guionResponse.tokens;
+        
+    } else {
+        // Solo autopsia
+        result = {
+            ...autopsiaResponse.data,
+            metadata_scraping: {
+                platform: platName,
+                video_description: videoDescription,
+                whisper_used: actualWhisperMinutes > 0,
+                transcript_source: url ? 'scraping' : 'manual'
+            }
+        };
+        
+        tokensUsed = autopsiaResponse.tokens;
+    }
+    
+    break;
+}
 
       case 'generar_guion': {
         // ✅ CORRECCIÓN #1: Añadir tema específico al contexto
