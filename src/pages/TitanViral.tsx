@@ -8,9 +8,11 @@ import {
     Layout, AlignLeft, Video, Brain, BookOpen, ArrowRight
 } from 'lucide-react';
 
-// Costos
-const COST_FULL_PROCESS = 10; // Autopsia + Adaptación
-const COST_ONLY_SCRIPT = 5;   // Solo Adaptación (si ya hay ADN)
+// ==================================================================================
+// 💰 CONFIGURACIÓN DE COSTOS
+// ==================================================================================
+const COST_FULL_PROCESS = 10; // Autopsia (5) + Adaptación (5)
+const COST_ONLY_SCRIPT = 5;   // Solo Adaptación (si ya vienes con el ADN listo)
 
 export const TitanViral = () => {
     const navigate = useNavigate();
@@ -25,7 +27,7 @@ export const TitanViral = () => {
     const [myNiche, setMyNiche] = useState('');
     const [myTopic, setMyTopic] = useState('');
     
-    // --- CONTEXTO ---
+    // --- CONTEXTO (PERFILES) ---
     const [experts, setExperts] = useState<any[]>([]);
     const [avatars, setAvatars] = useState<any[]>([]);
     const [kbs, setKbs] = useState<any[]>([]);
@@ -34,34 +36,44 @@ export const TitanViral = () => {
     const [selectedAvatarId, setSelectedAvatarId] = useState('');
     const [selectedKbId, setSelectedKbId] = useState('');
 
-    // --- PROCESO ---
+    // --- ESTADOS DEL PROCESO ---
     const [status, setStatus] = useState<'idle' | 'analyzing' | 'adapting' | 'done'>('idle');
     const [resultScript, setResultScript] = useState<any>(null);
     const [activeTab, setActiveTab] = useState<'script' | 'visual' | 'analysis'>('script');
     const [isSaving, setIsSaving] = useState(false);
 
-    // 1. CARGA INICIAL
+    // ==================================================================================
+    // 1. CARGA INICIAL DE DATOS
+    // ==================================================================================
     useEffect(() => {
-        // Si venimos de AnalyzeViral, cargamos el ADN
+        // A. Si venimos de la herramienta de Análisis, cargamos el ADN automáticamente
         if (location.state?.viralDNA) {
             setViralDNA(location.state.viralDNA);
             if(location.state.originalUrl) setUrlInput(location.state.originalUrl);
         } 
         
-        // Cargar Perfiles de Supabase
+        // B. Cargar Perfiles de Supabase (Experto, Avatar, KB)
         if (user) {
             const loadData = async () => {
+                // 1. Expertos
                 const { data: exp } = await supabase.from('expert_profiles').select('id, niche, name').eq('user_id', user.id);
                 if(exp) {
                     setExperts(exp);
-                    // Auto-seleccionar si hay perfil activo
+                    // Auto-seleccionar si el usuario tiene uno activo por defecto
                     if(userProfile?.active_expert_id) {
                         const active = exp.find(e => e.id === userProfile.active_expert_id);
                         if (active) { setSelectedExpertId(active.id); setMyNiche(active.niche); }
                     }
                 }
+
+                // 2. Avatares
                 const { data: av } = await supabase.from('avatars').select('id, name').eq('user_id', user.id);
-                if(av) { setAvatars(av); if(userProfile?.active_avatar_id) setSelectedAvatarId(userProfile.active_avatar_id); }
+                if(av) { 
+                    setAvatars(av); 
+                    if(userProfile?.active_avatar_id) setSelectedAvatarId(userProfile.active_avatar_id); 
+                }
+
+                // 3. Bases de Conocimiento
                 const { data: kb } = await supabase.from('documents').select('id, title').eq('user_id', user.id);
                 if(kb) setKbs(kb);
             };
@@ -69,8 +81,11 @@ export const TitanViral = () => {
         }
     }, [location, user, userProfile]);
 
-    // 2. EL PROCESADOR MAESTRO
+    // ==================================================================================
+    // 2. EL PROCESADOR MAESTRO (FIXED: INGENIERÍA INVERSA REAL)
+    // ==================================================================================
     const handleProcess = async () => {
+        // Validaciones básicas
         if (!myTopic.trim()) return alert("⚠️ Define el tema de tu video.");
         if (!myNiche.trim()) return alert("⚠️ Define tu nicho.");
 
@@ -79,6 +94,7 @@ export const TitanViral = () => {
 
         if (needsAutopsy && !urlInput.includes('http')) return alert("⚠️ URL inválida.");
 
+        // Verificación de créditos (NO TOCAR)
         if (userProfile?.tier !== 'admin' && (userProfile?.credits || 0) < totalCost) {
             if(confirm(`Saldo insuficiente (${totalCost} cr). ¿Recargar?`)) navigate('/settings');
             return;
@@ -89,7 +105,9 @@ export const TitanViral = () => {
         try {
             let dnaToUse = viralDNA;
 
-            // PASO A: EXTRAER EL ADN (Si no existe)
+            // ------------------------------------------------------------------
+            // PASO A: EXTRAER EL ADN (Si no existe, hacemos la autopsia)
+            // ------------------------------------------------------------------
             if (needsAutopsy) {
                 setStatus('analyzing');
                 const { data: autopsyData, error: autopsyError } = await supabase.functions.invoke('process-url', {
@@ -106,39 +124,32 @@ export const TitanViral = () => {
                 setViralDNA(dnaToUse); 
             }
 
-            // PASO B: ADAPTACIÓN AL NICHO (La Magia)
+            // ------------------------------------------------------------------
+            // PASO B: ADAPTACIÓN AL NICHO (CORREGIDO PARA PROMPT V600)
+            // ------------------------------------------------------------------
             setStatus('adapting');
             
-            // Construimos el "Manual de Instrucciones" para la IA
-            const adaptationPrompt = `
-            🚨 MODO: INGENIERÍA INVERSA (ADAPTACIÓN DE NICHO) 🚨
-            
-            OBJETIVO: Escribir un guion viral para el NICHO: "${myNiche}"
-            SOBRE EL TEMA: "${myTopic}"
-
-            INPUT MATEMÁTICO (ESTRUCTURA A REPLICAR):
-            ${JSON.stringify({
-                gancho_tipo: dnaToUse.adn_extraido?.formula_gancho,
-                estructura_tiempos: dnaToUse.desglose_temporal,
-                patron_viral: dnaToUse.patron_replicable
-            })}
-
-            INSTRUCCIONES DE TRADUCCIÓN (CRÍTICO):
-            1. NO copies el texto del video original. Solo copia la LÓGICA.
-            2. Si el video original (Cocina) dice: "No laves el pollo", y el nuevo nicho es (Bienes Raíces), tú escribe: "No vendas sin agente".
-            3. Mantén los mismos tiempos de corte (ej: cambio de plano al segundo 3).
-            4. Usa el tono del Experto y el dolor del Avatar proporcionados.
-            `;
+            // ✅ CORRECCIÓN CRÍTICA:
+            // Enviamos el objeto 'viralDNA' separado para que el Backend active el "Modo Clonación".
+            // Enviamos 'myTopic' como 'userInput' para que sea la "Nueva Piel".
 
             const { data: scriptData, error: scriptError } = await supabase.functions.invoke('process-url', {
                 body: {
-                    selectedMode: 'generar_guion',
-                    userInput: adaptationPrompt, // Enviamos el prompt diseñado
+                    selectedMode: 'generar_guion', // Usamos el generador
+                    
+                    // 1. EL TEMA NUEVO (Solo el tema, sin instrucciones extra)
+                    userInput: myTopic, 
+                    
+                    // 2. EL ADN VIRAL (El objeto puro, esto activa el Clonador Matemático en el Backend)
+                    viralDNA: dnaToUse, 
+                    
+                    // 3. CONTEXTO DE USUARIO (Tus perfiles)
                     expertId: selectedExpertId,
                     avatarId: selectedAvatarId,
                     knowledgeBaseId: selectedKbId,
+                    
                     estimatedCost: 5,
-                    settings: { structure: 'winner_rocket', duration: 'medium' }
+                    settings: { structure: 'winner_rocket' } // Fallback por si acaso
                 }
             });
 
@@ -146,6 +157,8 @@ export const TitanViral = () => {
 
             setResultScript(scriptData.generatedData);
             setStatus('done');
+            
+            // Descontar créditos visualmente
             if(refreshProfile) refreshProfile();
 
         } catch (e: any) {
@@ -155,6 +168,9 @@ export const TitanViral = () => {
         }
     };
 
+    // ==================================================================================
+    // 3. GUARDADO EN BIBLIOTECA
+    // ==================================================================================
     const handleSave = async () => {
         if (!resultScript || !user) return;
         setIsSaving(true);
@@ -163,7 +179,7 @@ export const TitanViral = () => {
                 user_id: user.id,
                 type: 'script',
                 title: `CLON: ${myTopic}`,
-                content: resultScript,
+                content: resultScript, // Guardamos el JSON completo generado
                 status: 'draft',
                 platform: 'General'
             });
@@ -239,7 +255,7 @@ export const TitanViral = () => {
                         </h3>
 
                         <div className="space-y-5">
-                            {/* Contexto Inteligente */}
+                            {/* Contexto Inteligente (SELECTORES) */}
                             <div className="grid grid-cols-3 gap-2">
                                 <div className="relative group">
                                     <select value={selectedExpertId} onChange={(e) => {
@@ -347,7 +363,7 @@ export const TitanViral = () => {
                                                 <div className="flex-1">
                                                     <p className="text-sm text-white font-bold mb-1">{scene.accion_en_pantalla}</p>
                                                     <div className="flex gap-3 mt-2">
-                                                        <span className="text-[10px] bg-fuchsia-500/10 text-fuchsia-300 px-2 py-0.5 rounded border border-fuchsia-500/20">🎥 {scene.instruccion_produccion}</span>
+                                                        <span className="text-[10px] bg-fuchsia-500/10 text-fuchsia-300 px-2 py-0.5 rounded border border-fuchsia-500/20">🎥 {scene.instruccion_produccion || "Visual"}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -357,14 +373,13 @@ export const TitanViral = () => {
 
                                 {activeTab === 'analysis' && (
                                     <div className="grid grid-cols-2 gap-4 animate-in fade-in">
-                                        <div className="bg-gray-900/30 p-4 rounded-xl border border-gray-800"><span className="text-[10px] font-bold text-gray-500 uppercase block mb-1">Gatillo Mental</span><p className="text-white font-medium">{resultScript.analisis_psicologico?.gatillo_mental_principal}</p></div>
-                                        <div className="bg-gray-900/30 p-4 rounded-xl border border-gray-800"><span className="text-[10px] font-bold text-gray-500 uppercase block mb-1">Emoción</span><p className="text-white font-medium">{resultScript.analisis_psicologico?.emocion_objetivo}</p></div>
-                                        <div className="col-span-2 mt-4"><h4 className="text-xs font-bold text-gray-500 uppercase mb-3">Ganchos Alternativos</h4>
-                                            <div className="grid grid-cols-1 gap-3">
-                                                {resultScript.ganchos_opcionales?.map((hook: any, i: number) => (
-                                                    <div key={i} className="p-3 bg-gray-900 rounded-lg border border-gray-800 flex justify-between items-center"><span className="text-xs text-gray-300 italic">"{hook.texto}"</span><span className="text-[10px] font-bold text-green-400 ml-2">{hook.retencion_predicha}%</span></div>
-                                                ))}
-                                            </div>
+                                        <div className="bg-gray-900/30 p-4 rounded-xl border border-gray-800"><span className="text-[10px] font-bold text-gray-500 uppercase block mb-1">Estrategia</span><p className="text-white font-medium">{resultScript.metadata_guion?.estrategia || "Clonación"}</p></div>
+                                        <div className="bg-gray-900/30 p-4 rounded-xl border border-gray-800"><span className="text-[10px] font-bold text-gray-500 uppercase block mb-1">Tema Original</span><p className="text-white font-medium">{resultScript.metadata_guion?.tema_original || "Desconocido"}</p></div>
+                                        
+                                        {/* Si el backend V600 devuelve ganchos o análisis extra, se verían aquí, pero la estructura V600 es más simple para evitar errores */}
+                                        <div className="col-span-2 mt-4 bg-blue-500/10 p-4 rounded-xl border border-blue-500/20">
+                                            <h4 className="text-xs font-bold text-blue-400 uppercase mb-2">Nota del Arquitecto</h4>
+                                            <p className="text-sm text-blue-200">Este guion ha sido generado utilizando una arquitectura de clonación matemática V600.</p>
                                         </div>
                                     </div>
                                 )}

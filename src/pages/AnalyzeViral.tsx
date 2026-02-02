@@ -73,13 +73,15 @@ export const AnalyzeViral = () => {
         }
     };
 
-    // --- 🚀 EL PUENTE HACIA INGENIERÍA INVERSA ---
+    // --- 🚀 EL PUENTE HACIA INGENIERÍA INVERSA (CORREGIDO) ---
     const handleSendToReverseEngineering = () => {
         if (!result) return;
         
-        // Navegamos llevando el PAQUETE COMPLETO DE DATOS (El ADN)
-        // Esto pre-llenará la siguiente pantalla automáticamente.
-        navigate('/tools/reverse-engineering', { 
+        // ✅ CORRECCIÓN APLICADA (OPCIÓN B):
+        // Apuntamos a la ruta '/dashboard/reverse-engineering' que es la que existe en App.tsx.
+        // Esto evita el error 404 y mantiene la navegación segura dentro del dashboard.
+        
+        navigate('/dashboard/reverse-engineering', { 
             state: { 
                 viralDNA: result, 
                 originalUrl: url,

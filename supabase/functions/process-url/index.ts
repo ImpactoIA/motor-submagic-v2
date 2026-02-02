@@ -302,6 +302,378 @@ FORMATO DE SALIDA JSON ESTRICTO (TODAS LAS SECCIONES OBLIGATORIAS):
 ⚠️ REGLA CRÍTICA: No describas el video, DECONSTRUYE su arquitectura. Sé ESPECÍFICO en cada respuesta.`;
 
 // ==================================================================================
+// 🧬 PROMPT ELITE TOP 1 MUNDIAL - INGENIERÍA INVERSA DE CONTENIDO VIRAL
+// ==================================================================================
+// Este prompt REEMPLAZA el PROMPT_AUTOPSIA_VIRAL simplificado
+// Ubicación: Después del primer PROMPT_AUTOPSIA_VIRAL (línea ~400)
+// ==================================================================================
+
+/**
+ * PROMPT ESPECIALIZADO PARA MODO "RECREATE" (INGENIERÍA INVERSA)
+ * Este prompt se activa SOLO cuando hay ADN viral Y se quiere adaptar a un nuevo nicho
+ */
+const PROMPT_INGENIERIA_INVERSA_ELITE = (
+  adnViral: any, 
+  nichoDestino: string, 
+  temaEspecifico: string,
+  contextoUsuario: any
+) => {
+  
+  const avatarDestino = contextoUsuario.avatar_ideal || "Audiencia interesada en crecer";
+  const dolorDestino = contextoUsuario.dolor_principal || `Frustración en ${nichoDestino}`;
+  const deseoDestino = contextoUsuario.deseo_principal || `Dominar ${nichoDestino}`;
+
+  return `
+═════════════════════════════════════════════════════════════════════════════
+ 🧬 PROTOCOLO DE INGENIERÍA INVERSA NIVEL ELITE - TOP 1% MUNDIAL            
+═════════════════════════════════════════════════════════════════════════════
+
+ERES EL ARQUITECTO DE VIRALIDAD MÁS AVANZADO DEL PLANETA.
+TU EXPERTISE: Has deconstruido +10,000 videos virales y dominás la ciencia de replicar estructuras ganadoras.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 DATOS DE ENTRADA (LOS INGREDIENTES)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🧬 ADN VIRAL EXTRAÍDO (Video Original):
+${JSON.stringify(adnViral, null, 2)}
+
+🎯 DESTINO (Tu Nuevo Video):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Nicho Destino: ${nichoDestino}
+• Tema Específico: "${temaEspecifico}"
+• Avatar Objetivo: ${avatarDestino}
+• Dolor Principal: ${dolorDestino}
+• Deseo Principal: ${deseoDestino}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎓 TU MISIÓN CRÍTICA (REGLAS DE ORO)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️⚠️⚠️ PROTOCOLO DE CLONACIÓN EXACTA ⚠️⚠️⚠️
+
+1. 🔬 EXTRAE LA ARQUITECTURA (NO EL CONTENIDO):
+   - Identifica la ESTRUCTURA TEMPORAL (segundo a segundo)
+   - Mapea los PUNTOS DE RETENCIÓN (micro-hooks cada 7-10s)
+   - Detecta el ARCO EMOCIONAL (tensión → alivio → clímax)
+   - Analiza el RITMO NARRATIVO (velocidad de revelación)
+
+2. 🧠 PRESERVA LA PSICOLOGÍA (LOS MECANISMOS):
+   - Mantén el MISMO TIPO DE GANCHO (pregunta/shock/promesa/estadística)
+   - Conserva el MISMO FLUJO EMOCIONAL (curiosidad→miedo→esperanza)
+   - Replica los MISMOS TRIGGERS MENTALES (escasez/autoridad/prueba social)
+   - Usa la MISMA CURVA DE TENSIÓN (cuándo sube, cuándo baja)
+
+3. 🎨 TRADUCE EL CONTENIDO (CAMBIA LAS PALABRAS):
+   - Si el video original dice: "El 90% falla en fitness por esto"
+   - Tu video dirá: "El 90% falla en ${nichoDestino} por esto"
+   
+   - Si el video original muestra: "Antes tenía 60kg, ahora 75kg de músculo"
+   - Tu video mostrará: "Antes tenía X en ${temaEspecifico}, ahora tengo Y"
+   
+   - Si el video original revela: "El secreto son 3 ejercicios que nadie hace"
+   - Tu video revelará: "El secreto son 3 estrategias en ${temaEspecifico} que nadie usa"
+
+4. ⏱️ RESPETA EL TIMING (MATEMÁTICA EXACTA):
+   - Si el gancho original dura 3 segundos → Tu gancho dura 3 segundos
+   - Si el conflicto aparece al segundo 12 → Tu conflicto aparece al segundo 12
+   - Si el loop se abre al segundo 21 → Tu loop se abre al segundo 21
+   - Si la solución empieza al 25 → Tu solución empieza al 25
+
+5. 🎯 ADAPTA AL DOLOR/DESEO DEL NUEVO AVATAR:
+   - El video original habla al dolor de SU audiencia
+   - Tu video debe hablar al dolor de: ${avatarDestino}
+   - Conecta CADA frase con: ${dolorDestino}
+   - Inspira hacia: ${deseoDestino}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔥 EJEMPLOS DE TRADUCCIÓN MAESTRA (APRENDE DE ESTOS)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📌 EJEMPLO 1: Gancho Tipo Pregunta Retórica
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Video Original (Fitness):
+"¿Por qué entrenas 2 horas al día y no ves resultados? Es porque..."
+
+Tu Adaptación (${nichoDestino}):
+"¿Por qué trabajas en ${temaEspecifico} todos los días y no ves resultados? Es porque..."
+
+📌 EJEMPLO 2: Gancho Tipo Estadística Impactante
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Video Original (Finanzas):
+"El 87% de las personas que invierten en bolsa pierden dinero. ¿Por qué?"
+
+Tu Adaptación (${nichoDestino}):
+"El 87% de las personas que intentan ${temaEspecifico} fracasan. ¿Por qué?"
+
+📌 EJEMPLO 3: Conflicto (Segundo 10-20)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Video Original (Nutrición):
+"Y el problema no es que comas mucho. Es que te han mentido sobre las calorías."
+
+Tu Adaptación (${nichoDestino}):
+"Y el problema no es que te falte talento en ${temaEspecifico}. Es que te han mentido sobre cómo funciona."
+
+📌 EJEMPLO 4: Solución (Segundo 25-40)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Video Original (Productividad):
+"La clave es hacer UNA sola cosa antes de las 9am. Yo llamo a esto 'La Regla del Uno'."
+
+Tu Adaptación (${nichoDestino}):
+"La clave es dominar UNA sola estrategia en ${temaEspecifico}. Yo llamo a esto 'La Regla del Uno'."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚡ MAPA DE TRADUCCIÓN SEGUNDO A SEGUNDO (USA ESTO COMO PLANTILLA)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Analiza el 'desglose_temporal' del ADN viral y construye TU versión así:
+
+SEGUNDO 0-3 (GANCHO):
+Original: [Extrae del ADN]
+Función: [Qué hace psicológicamente]
+Tu Adaptación: [ESCRIBE TU VERSIÓN EXACTA sobre ${temaEspecifico}]
+
+SEGUNDO 4-10 (CONTEXTO EMPÁTICO):
+Original: [Extrae del ADN]
+Función: [Validar dolor/crear identificación]
+Tu Adaptación: [ESCRIBE conectando con ${dolorDestino}]
+
+SEGUNDO 11-20 (CONFLICTO/AGITACIÓN):
+Original: [Extrae del ADN]
+Función: [Aumentar tensión/revelar error]
+Tu Adaptación: [ESCRIBE mostrando el error común en ${nichoDestino}]
+
+SEGUNDO 21-23 (CURIOSITY LOOP):
+Original: [Extrae del ADN]
+Función: [Abrir loop antes de solución]
+Tu Adaptación: [ESCRIBE tu loop sobre ${temaEspecifico}]
+
+SEGUNDO 24-35 (SOLUCIÓN/INSIGHT):
+Original: [Extrae del ADN]
+Función: [Entregar valor/método]
+Tu Adaptación: [ESCRIBE tu solución específica para ${nichoDestino}]
+
+SEGUNDO 36-50 (PRUEBA/RESOLUCIÓN):
+Original: [Extrae del ADN]
+Función: [Mostrar resultado/caso de éxito]
+Tu Adaptación: [ESCRIBE tu resultado en ${temaEspecifico}]
+
+SEGUNDO 51-60 (CTA/CIERRE):
+Original: [Extrae del ADN]
+Función: [Posicionar autoridad/invitar a seguir]
+Tu Adaptación: [ESCRIBE tu CTA sobre ${nichoDestino}]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚫 PROHIBICIONES ABSOLUTAS (NUNCA HAGAS ESTO)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ NO copies el contenido literal del video original
+❌ NO uses ejemplos del nicho original (fitness/finanzas/etc)
+❌ NO cambies el orden de las secciones
+❌ NO agregues pasos que el original no tiene
+❌ NO quites pasos que el original sí tiene
+❌ NO cambies el tipo de gancho (si es pregunta, debe ser pregunta)
+❌ NO modifiques el timing (si algo pasa al 12s, debe pasar al 12s)
+❌ NO uses frases genéricas ("es importante", "debes saber")
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ MANDAMIENTOS DE EXCELENCIA (SIEMPRE HAZ ESTO)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ SÍ respeta el ADN estructural al 100%
+✅ SÍ usa números y especificidad en ${temaEspecifico}
+✅ SÍ mantén el mismo nivel de energía/tono
+✅ SÍ conecta con ${dolorDestino} en cada sección
+✅ SÍ usa lenguaje coloquial y natural
+✅ SÍ escribe el texto EXACTO palabra por palabra
+✅ SÍ replica los mismos triggers psicológicos
+✅ SÍ mantén la misma curva emocional
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 FORMATO DE SALIDA JSON (ESTRUCTURA EXACTA)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Debes devolver un JSON con esta estructura EXACTA:
+
+{
+  "metadata_clonacion": {
+    "video_original_nicho": "[Nicho del video que analizaste]",
+    "video_nuevo_nicho": "${nichoDestino}",
+    "tema_especifico": "${temaEspecifico}",
+    "arquitectura_replicada": "[Nombre de la estructura del ADN]",
+    "nivel_fidelidad_estructural": "98%",
+    "adaptaciones_clave": [
+      "Cambio 1: De [original] a [adaptado]",
+      "Cambio 2: De [original] a [adaptado]",
+      "Cambio 3: De [original] a [adaptado]"
+    ]
+  },
+  
+  "analisis_pre_clonacion": {
+    "patron_identificado": "[Nombre del patrón viral detectado]",
+    "mecanismo_psicologico_principal": "[Trigger principal usado]",
+    "estructura_temporal_original": "[Winner Rocket / PAS / AIDA / HSO / Custom]",
+    "puntos_criticos_retencion": [
+      "Segundo X: [Qué hace el video original]",
+      "Segundo Y: [Qué hace el video original]"
+    ],
+    "formula_matematica": "[Ecuación del ADN: Gancho + Contexto + Conflicto...]"
+  },
+  
+  "guion_completo_adaptado": "AQUÍ VA EL GUION COMPLETO PALABRA POR PALABRA.\\n\\nSECCIÓN POR SECCIÓN, RESPETANDO EL TIMING DEL ADN VIRAL.\\n\\n[GANCHO - 0-3s]\\n[Tu texto exacto adaptado a ${temaEspecifico}]\\n\\n[CONTEXTO - 4-10s]\\n[Tu texto exacto conectando con ${dolorDestino}]\\n\\n[CONFLICTO - 11-20s]\\n[Tu texto exacto revelando error en ${nichoDestino}]\\n\\n[LOOP - 21-23s]\\n[Tu loop exacto sobre ${temaEspecifico}]\\n\\n[SOLUCIÓN - 24-35s]\\n[Tu solución exacta para ${nichoDestino}]\\n\\n[PRUEBA - 36-50s]\\n[Tu resultado/caso en ${temaEspecifico}]\\n\\n[CTA - 51-60s]\\n[Tu cierre exacto para ${nichoDestino}]\\n\\nMÍNIMO 180-220 PALABRAS DE TEXTO HABLADO COMPLETO.",
+  
+  "plan_visual_adaptado": [
+    {
+      "tiempo": "0-3s",
+      "accion_original": "[Qué hacía el video original]",
+      "accion_adaptada": "[Tu adaptación visual para ${nichoDestino}]",
+      "texto_pantalla": "[Texto adaptado a ${temaEspecifico}]",
+      "transicion": "[Tipo de corte/efecto del original]",
+      "razon_psicologica": "[Por qué esto retiene en este momento]"
+    },
+    {
+      "tiempo": "4-10s",
+      "accion_original": "[Qué hacía el video original]",
+      "accion_adaptada": "[Tu adaptación visual]",
+      "texto_pantalla": "[Texto adaptado]",
+      "transicion": "[Corte/efecto]",
+      "razon_psicologica": "[Por qué funciona]"
+    }
+    // ... continúa segundo a segundo hasta el final
+  ],
+  
+  "mapa_de_traduccion": {
+    "ganchos_traducidos": [
+      {
+        "original": "[Frase exacta del video original]",
+        "adaptado": "[Tu versión para ${temaEspecifico}]",
+        "tipo_gancho": "[Pregunta/Estadística/Promesa/Shock]",
+        "retencion_predicha": 92
+      }
+    ],
+    "analogias_traducidas": [
+      {
+        "concepto_original": "[Ejemplo del nicho original]",
+        "concepto_adaptado": "[Tu ejemplo en ${nichoDestino}]",
+        "razon": "[Por qué esta analogía funciona igual]"
+      }
+    ],
+    "triggers_preservados": [
+      {
+        "trigger": "[Escasez/Autoridad/Curiosidad/etc]",
+        "momento": "Segundo X",
+        "implementacion_original": "[Cómo lo usaba el video]",
+        "implementacion_adaptada": "[Cómo lo usas tú]"
+      }
+    ]
+  },
+  
+  "analisis_psicologico": {
+    "arco_emocional_replicado": "[Descripción del viaje emocional mantenido]",
+    "gatillos_mentales_clonados": [
+      "Trigger 1: [Nombre] - Implementado en segundo X",
+      "Trigger 2: [Nombre] - Implementado en segundo Y"
+    ],
+    "puntos_criticos_retencion_nuevos": [
+      "Segundo X: [Qué hace TU video en ese momento]",
+      "Segundo Y: [Qué hace TU video en ese momento]"
+    ],
+    "nivel_fidelidad_psicologica": "96%",
+    "probabilidad_viral_estimada": "80-90%",
+    "score_clonacion": "9.5/10"
+  },
+  
+  "comparativa_lado_a_lado": {
+    "estructura": {
+      "original": "[Descripción de la estructura del video original]",
+      "adaptado": "[Descripción de TU estructura replicada]",
+      "fidelidad": "98%"
+    },
+    "timing": {
+      "original": "[Desglose segundo a segundo del original]",
+      "adaptado": "[Desglose segundo a segundo de tu versión]",
+      "fidelidad": "100%"
+    },
+    "psicologia": {
+      "original": "[Triggers del video original]",
+      "adaptado": "[Triggers de tu video]",
+      "fidelidad": "95%"
+    }
+  },
+  
+  "validacion_calidad": {
+    "checklist_clonacion": [
+      { "criterio": "Timing respetado", "cumple": true, "nota": "100% fiel" },
+      { "criterio": "Estructura preservada", "cumple": true, "nota": "Arquitectura idéntica" },
+      { "criterio": "Triggers replicados", "cumple": true, "nota": "Psicología mantenida" },
+      { "criterio": "Contenido 100% nuevo", "cumple": true, "nota": "Cero plagio" },
+      { "criterio": "Adaptado al nicho destino", "cumple": true, "nota": "Totalmente relevante" }
+    ],
+    "nivel_maestria": "Elite",
+    "confianza_exito": "95%",
+    "recomendacion": "Publicar inmediatamente"
+  },
+  
+  "notas_del_arquitecto": {
+    "decisiones_clave": [
+      "Decisión 1: [Por qué hiciste X adaptación]",
+      "Decisión 2: [Por qué mantuviste Y elemento]"
+    ],
+    "optimizaciones_aplicadas": [
+      "Optimización 1: [Qué mejoraste del original]",
+      "Optimización 2: [Qué ajustaste para ${nichoDestino}]"
+    ],
+    "advertencias": [
+      "Advertencia 1: [Qué tener en cuenta al grabar]",
+      "Advertencia 2: [Qué NO cambiar de este guion]"
+    ]
+  }
+}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 ÚLTIMO RECORDATORIO ULTRA CRÍTICO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TU TRABAJO NO ES:
+❌ Crear un video nuevo desde cero
+❌ Interpretar o resumir
+❌ Mejorar la estructura original
+❌ Cambiar el orden de las cosas
+
+TU TRABAJO ES:
+✅ Clonar la arquitectura matemáticamente
+✅ Traducir el contenido al nuevo nicho
+✅ Preservar la psicología al 100%
+✅ Escribir el guion completo palabra por palabra
+✅ Garantizar que SI el original fue viral, ESTE también lo será
+
+PIENSA COMO UN INGENIERO INVERSO:
+- El video original es un PLANO ARQUITECTÓNICO
+- Tu trabajo es CONSTRUIR LA MISMA CASA pero en otro terreno
+- Mismo diseño, mismos materiales, mismo orden
+- SOLO cambian los ladrillos (las palabras específicas del nicho)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚀 EJECUTA AHORA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Analiza el ADN viral proporcionado.
+Identifica cada segundo del video original.
+Traduce matemáticamente al nuevo nicho: "${nichoDestino}".
+Escribe el guion completo sobre: "${temaEspecifico}".
+Conecta con el avatar: ${avatarDestino}.
+Ataca el dolor: ${dolorDestino}.
+Inspira hacia: ${deseoDestino}.
+
+QUE EL RESULTADO SEA TAN POTENTE QUE EL USUARIO DIGA:
+"ESTO ES EXACTAMENTE LO QUE NECESITABA. ES COMO SI HUBIERA CLONADO EL ÉXITO DEL VIDEO ORIGINAL PERO PARA MI NICHO."
+
+¡ADELANTE, ARQUITECTO! 🔥🧬
+`;
+};
+
+// ==================================================================================
 // 🧠 GENERADOR DE GUIONES V400 - ULTRA MEJORADO CON CONOCIMIENTO EXPERTO
 // ==================================================================================
 // ✅ Funciona CON o SIN perfil de experto/avatar
@@ -1843,104 +2215,98 @@ serve(async (req) => {
 
     case 'autopsia_viral':
     case 'recreate': {
-    let contentToAnalyze = processedContext;
-    let platName = platform || 'General';
-    let videoDescription = '';
-    let actualWhisperMinutes = 0;
+      console.log(`[TITAN ENGINE] 🚀 Iniciando modo: ${selectedMode}`);
 
-    // ✅ NUEVO: Si hay URL, hacer scraping REAL
-    if (url && url.includes('http')) {
-        console.log('[AUTOPSIA] 🎬 URL detectada, iniciando scraping...');
-        
-        try {
-            const scrapedData = await scrapeAndTranscribeVideo(url, openai);
-            
-            // Usar la transcripción como contenido principal
-            contentToAnalyze = scrapedData.transcript;
-            videoDescription = scrapedData.description;
-            platName = scrapedData.platform;
-            
-            // Calcular minutos de Whisper (solo si se usó Whisper)
-            if (scrapedData.duration > 0) {
+      // 1. DEFINIR VARIABLES
+      let contentToAnalyze = "";       // Aquí guardaremos el texto del video original (Origen)
+      let targetTopic = processedContext; // Aquí guardamos TU tema nuevo (Destino)
+      let platName = platform || 'TikTok';
+      let videoDescription = '';
+      let actualWhisperMinutes = 0;
+
+      // 2. OBTENER EL CONTENIDO (¿VIENE DE URL O DE TEXTO PEGADO?)
+      if (url && url.includes('http')) {
+         console.log('[SCRAPER] 🔗 URL detectada, iniciando extracción...');
+         try {
+             // AQUI LLAMA A TU FUNCIÓN DE SCRAPING
+             const scrapedData = await scrapeAndTranscribeVideo(url, openai);
+             
+             contentToAnalyze = scrapedData.transcript; // El guion del video viral
+             videoDescription = scrapedData.description;
+             platName = scrapedData.platform;
+             
+             if (scrapedData.duration > 0) {
                 actualWhisperMinutes = Math.ceil(scrapedData.duration / 60);
                 whisperMinutes = actualWhisperMinutes;
-            }
-            
-            console.log('[AUTOPSIA] ✅ Scraping completado:', {
-                platform: platName,
-                transcriptLength: contentToAnalyze.length,
-                whisperMinutes: actualWhisperMinutes
-            });
-            
-        } catch (scrapeError: any) {
-            console.error('[AUTOPSIA] ❌ Error en scraping:', scrapeError.message);
-            
-            // Si falla el scraping, intentar con el texto proporcionado
-            if (!processedContext || processedContext.length < 50) {
-                throw new Error(`Error al scrapear video: ${scrapeError.message}. Por favor, pega la transcripción manualmente.`);
-            }
-            
-            console.log('[AUTOPSIA] ⚠️ Usando texto proporcionado como fallback');
-        }
-    }
+             }
+             console.log('[SCRAPER] ✅ Video procesado con éxito.');
 
-    // Si no hay contenido suficiente, error
-    if (!contentToAnalyze || contentToAnalyze.length < 50) {
-        throw new Error('No hay suficiente contenido para analizar. Proporciona una URL válida o pega la transcripción del video.');
-    }
+         } catch (e: any) {
+             console.error("[SCRAPER] ❌ Error extrayendo video:", e.message);
+             // FALLBACK: Si falla el scraping, revisamos si pegaste el texto
+             if (processedContext.length > 50) {
+                 console.log('[FALLBACK] Usando el texto manual como fuente del video viral.');
+                 contentToAnalyze = processedContext;
+                 // Si pegó el texto del video viral, el tema objetivo debe ser el nicho del usuario
+                 targetTopic = userContext.nicho; 
+             } else {
+                 throw new Error("No se pudo extraer el video de la URL. Por favor verifica el link.");
+             }
+         }
+      } else {
+         // Si NO hay URL, asumimos que el usuario pegó el guion viral manualmente
+         console.log('[INPUT] Usando texto manual como fuente.');
+         contentToAnalyze = processedContext;
+         targetTopic = userContext.nicho; // Asumimos que quiere adaptarlo a su nicho general
+      }
 
-    // Ejecutar autopsia con el contenido (scrapeado o manual)
-    const autopsiaResponse = await ejecutarAutopsiaViral(contentToAnalyze, platName, openai);
-    
-    // Si es modo RECREATE, generar guion adaptado
-    if (selectedMode === 'recreate') {
-        console.log('[RECREATE] 🔄 Adaptando al nicho del usuario...');
-        
-        // Enriquecer contexto con tema específico
-        const temaEspecifico = processedContext || userContext.nicho;
-        const contextoEnriquecido = {
-            ...userContext,
-            tema_especifico: temaEspecifico
-        };
-        
-        const guionResponse = await ejecutarGeneradorGuiones(
-            contextoEnriquecido, 
-            autopsiaResponse.data, // Pasar el ADN completo
-            openai, 
-            settings
-        );
-        
-        result = { 
-            autopsia_viral: autopsiaResponse.data, 
-            guion_adaptado: guionResponse.data,
-            metadata_scraping: {
-                platform: platName,
-                video_description: videoDescription,
-                whisper_used: actualWhisperMinutes > 0,
-                transcript_source: url ? 'scraping' : 'manual'
-            }
-        };
-        
-        tokensUsed = autopsiaResponse.tokens + guionResponse.tokens;
-        
-    } else {
-        // Solo autopsia
-        result = {
-            ...autopsiaResponse.data,
-            metadata_scraping: {
-                platform: platName,
-                video_description: videoDescription,
-                whisper_used: actualWhisperMinutes > 0,
-                transcript_source: url ? 'scraping' : 'manual'
-            }
-        };
-        
-        tokensUsed = autopsiaResponse.tokens;
+      // Validación final de seguridad
+      if (!contentToAnalyze || contentToAnalyze.length < 20) {
+          throw new Error("No hay contenido suficiente para analizar. Necesito una URL válida o el texto del video viral.");
+      }
+
+      // 3. EJECUTAR AUTOPSIA (PASO COMÚN PARA AMBOS)
+      // Esto extrae el "Esqueleto" del video
+      const autopsiaRes = await ejecutarAutopsiaViral(contentToAnalyze, platName, openai);
+      const adnViral = autopsiaRes.data;
+
+      // 4. BIFURCACIÓN DE LÓGICA
+      if (selectedMode === 'recreate') {
+          // === MODO INGENIERÍA INVERSA ===
+          // Usa el ADN extraído + Tu Tema para crear un guion nuevo
+          console.log(`[RECREATE] 🧬 Clonando estructura viral para el tema: "${targetTopic}"...`);
+          
+          const contextoRecreate = { 
+              ...userContext, 
+              tema_especifico: targetTopic || userContext.nicho 
+          };
+          
+          // AQUÍ OCURRE LA MAGIA: Pasamos el 'adnViral' al generador
+          const guionRes = await ejecutarGeneradorGuiones(contextoRecreate, adnViral, openai, settings);
+          
+          result = {
+              autopsia: adnViral,         // Te mostramos qué analizó
+              guion_generado: guionRes.data, // Y el resultado final
+              modo: "ingenieria_inversa_exitosa"
+          };
+          tokensUsed = autopsiaRes.tokens + guionRes.tokens;
+
+      } else {
+          // === MODO AUTOPSIA VIRAL ===
+          // Solo devuelve el análisis
+          console.log('[AUTOPSIA] 🔬 Devolviendo análisis puro...');
+          result = {
+              ...adnViral,
+              metadata_scraping: {
+                  platform: platName,
+                  video_description: videoDescription
+              }
+          };
+          tokensUsed = autopsiaRes.tokens;
+      }
+      break;
     }
     
-    break;
-}
-
       case 'generar_guion': {
         // ✅ CORRECCIÓN #1: Añadir tema específico al contexto
         const temaDelUsuario = processedContext || userContext.nicho;
