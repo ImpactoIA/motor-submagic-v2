@@ -2132,6 +2132,120 @@ async function scrapeAndTranscribeVideo(
 }
 
 // ==================================================================================
+// 🎬 FUNCIONES PARA PROCESAR VIDEOS SUBIDOS (ARCHIVOS)
+// ==================================================================================
+// Agregar DESPUÉS de las funciones de scraping existentes (línea ~1200)
+
+/**
+ * Procesa un video subido directamente (archivo)
+ * Extrae el audio y lo transcribe con Whisper
+ */
+async function processUploadedVideo(
+  fileBase64: string,
+  fileName: string,
+  openai: any
+): Promise<{ 
+  transcript: string; 
+  duration: number; 
+  fileType: string;
+}> {
+  console.log('[UPLOAD] 📁 Procesando video subido:', fileName);
+
+  try {
+    // Convertir base64 a buffer
+    const base64Data = fileBase64.split(',')[1] || fileBase64;
+    const videoBuffer = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
+    
+    console.log('[UPLOAD] 📊 Video cargado:', {
+      size: `${(videoBuffer.length / 1024 / 1024).toFixed(2)} MB`,
+      fileName
+    });
+
+    // Detectar tipo de archivo
+    const fileExtension = fileName.split('.').pop()?.toLowerCase() || 'mp4';
+    const mimeType = 
+      fileExtension === 'mov' ? 'video/quicktime' :
+      fileExtension === 'avi' ? 'video/x-msvideo' :
+      fileExtension === 'webm' ? 'video/webm' :
+      'video/mp4';
+
+    // Crear archivo para Whisper
+    const videoFile = new File([videoBuffer], fileName, { type: mimeType });
+
+    console.log('[UPLOAD] 🎙️ Enviando a Whisper para transcripción...');
+
+    // Transcribir con Whisper
+    const transcription = await openai.audio.transcriptions.create({
+      file: videoFile,
+      model: 'whisper-1',
+      language: 'es',
+      response_format: 'verbose_json'
+    });
+
+    console.log('[UPLOAD] ✅ Transcripción completada');
+
+    return {
+      transcript: transcription.text,
+      duration: transcription.duration || 0,
+      fileType: fileExtension
+    };
+
+  } catch (error: any) {
+    console.error('[UPLOAD] ❌ Error procesando video:', error.message);
+    throw new Error(`Error al procesar video subido: ${error.message}`);
+  }
+}
+
+/**
+ * Función unificada que decide si scrapear URL o procesar archivo subido
+ */
+async function getVideoContent(
+  url: string | null,
+  uploadedFile: string | null,
+  fileName: string | null,
+  openai: any
+): Promise<{
+  transcript: string;
+  description: string;
+  duration: number;
+  platform: string;
+  source: 'url' | 'upload';
+}> {
+  
+  // CASO 1: Video subido
+  if (uploadedFile && fileName) {
+    console.log('[VIDEO] 📁 Procesando video subido...');
+    
+    const result = await processUploadedVideo(uploadedFile, fileName, openai);
+    
+    return {
+      transcript: result.transcript,
+      description: `Video subido: ${fileName}`,
+      duration: result.duration,
+      platform: 'upload',
+      source: 'upload'
+    };
+  }
+  
+  // CASO 2: URL
+  if (url && url.includes('http')) {
+    console.log('[VIDEO] 🔗 Procesando URL...');
+    
+    const result = await scrapeAndTranscribeVideo(url, openai);
+    
+    return {
+      transcript: result.transcript,
+      description: result.description,
+      duration: result.duration,
+      platform: result.platform,
+      source: 'url'
+    };
+  }
+  
+  throw new Error('Debes proporcionar una URL o subir un video');
+}
+
+// ==================================================================================
 // 🎬 SERVIDOR PRINCIPAL (CORREGIDO - TODOS LOS PROBLEMAS)
 // ==================================================================================
 
@@ -2213,99 +2327,162 @@ serve(async (req) => {
         break;
       }
 
-    case 'autopsia_viral':
-    case 'recreate': {
-      console.log(`[TITAN ENGINE] 🚀 Iniciando modo: ${selectedMode}`);
+    
+      case 'autopsia_viral':
+      case 'recreate': {
+    console.log(`[TITAN] 🚀 Modo: ${selectedMode}`);
 
-      // 1. DEFINIR VARIABLES
-      let contentToAnalyze = "";       // Aquí guardaremos el texto del video original (Origen)
-      let targetTopic = processedContext; // Aquí guardamos TU tema nuevo (Destino)
-      let platName = platform || 'TikTok';
-      let videoDescription = '';
-      let actualWhisperMinutes = 0;
+    // 1. VARIABLES
+    let contentToAnalyze = "";
+    let targetTopic = processedContext;
+    let platName = platform || 'General';
+    let videoDescription = '';
+    let actualWhisperMinutes = 0;
+    let videoSource: 'url' | 'upload' | 'manual' = 'manual';
 
-      // 2. OBTENER EL CONTENIDO (¿VIENE DE URL O DE TEXTO PEGADO?)
-      if (url && url.includes('http')) {
-         console.log('[SCRAPER] 🔗 URL detectada, iniciando extracción...');
-         try {
-             // AQUI LLAMA A TU FUNCIÓN DE SCRAPING
-             const scrapedData = await scrapeAndTranscribeVideo(url, openai);
-             
-             contentToAnalyze = scrapedData.transcript; // El guion del video viral
-             videoDescription = scrapedData.description;
-             platName = scrapedData.platform;
-             
-             if (scrapedData.duration > 0) {
-                actualWhisperMinutes = Math.ceil(scrapedData.duration / 60);
+    // 2. OBTENER CONTENIDO DEL VIDEO
+    
+    // Extraer datos del body
+    const videoUrl = url || body.url || null;
+    const uploadedFile = body.uploadedVideo || null;
+    const uploadedFileName = body.uploadedFileName || 'video.mp4';
+
+    try {
+        // ──────────────────────────────────────────────────────────
+        // CASO A: URL o ARCHIVO SUBIDO
+        // ──────────────────────────────────────────────────────────
+        if (videoUrl || uploadedFile) {
+            console.log('[TITAN] 🎬 Obteniendo contenido del video...');
+            
+            const videoData = await getVideoContent(
+                videoUrl,
+                uploadedFile,
+                uploadedFileName,
+                openai
+            );
+            
+            contentToAnalyze = videoData.transcript;
+            videoDescription = videoData.description;
+            platName = videoData.platform;
+            videoSource = videoData.source;
+            
+            if (videoData.duration > 0) {
+                actualWhisperMinutes = Math.ceil(videoData.duration / 60);
                 whisperMinutes = actualWhisperMinutes;
-             }
-             console.log('[SCRAPER] ✅ Video procesado con éxito.');
+            }
+            
+            console.log('[TITAN] ✅ Contenido obtenido:', {
+                source: videoSource,
+                platform: platName,
+                transcriptLength: contentToAnalyze.length,
+                whisperMinutes: actualWhisperMinutes
+            });
+        }
+        // ──────────────────────────────────────────────────────────
+        // CASO B: TEXTO MANUAL (FALLBACK)
+        // ──────────────────────────────────────────────────────────
+        else if (processedContext && processedContext.length > 50) {
+            console.log('[TITAN] 📝 Usando texto manual');
+            contentToAnalyze = processedContext;
+            videoDescription = 'Transcripción manual';
+            videoSource = 'manual';
+        }
+        // ──────────────────────────────────────────────────────────
+        // ERROR: SIN DATOS
+        // ──────────────────────────────────────────────────────────
+        else {
+            throw new Error('Proporciona: URL, video subido, o transcripción manual.');
+        }
 
-         } catch (e: any) {
-             console.error("[SCRAPER] ❌ Error extrayendo video:", e.message);
-             // FALLBACK: Si falla el scraping, revisamos si pegaste el texto
-             if (processedContext.length > 50) {
-                 console.log('[FALLBACK] Usando el texto manual como fuente del video viral.');
-                 contentToAnalyze = processedContext;
-                 // Si pegó el texto del video viral, el tema objetivo debe ser el nicho del usuario
-                 targetTopic = userContext.nicho; 
-             } else {
-                 throw new Error("No se pudo extraer el video de la URL. Por favor verifica el link.");
-             }
-         }
-      } else {
-         // Si NO hay URL, asumimos que el usuario pegó el guion viral manualmente
-         console.log('[INPUT] Usando texto manual como fuente.');
-         contentToAnalyze = processedContext;
-         targetTopic = userContext.nicho; // Asumimos que quiere adaptarlo a su nicho general
-      }
-
-      // Validación final de seguridad
-      if (!contentToAnalyze || contentToAnalyze.length < 20) {
-          throw new Error("No hay contenido suficiente para analizar. Necesito una URL válida o el texto del video viral.");
-      }
-
-      // 3. EJECUTAR AUTOPSIA (PASO COMÚN PARA AMBOS)
-      // Esto extrae el "Esqueleto" del video
-      const autopsiaRes = await ejecutarAutopsiaViral(contentToAnalyze, platName, openai);
-      const adnViral = autopsiaRes.data;
-
-      // 4. BIFURCACIÓN DE LÓGICA
-      if (selectedMode === 'recreate') {
-          // === MODO INGENIERÍA INVERSA ===
-          // Usa el ADN extraído + Tu Tema para crear un guion nuevo
-          console.log(`[RECREATE] 🧬 Clonando estructura viral para el tema: "${targetTopic}"...`);
-          
-          const contextoRecreate = { 
-              ...userContext, 
-              tema_especifico: targetTopic || userContext.nicho 
-          };
-          
-          // AQUÍ OCURRE LA MAGIA: Pasamos el 'adnViral' al generador
-          const guionRes = await ejecutarGeneradorGuiones(contextoRecreate, adnViral, openai, settings);
-          
-          result = {
-              autopsia: adnViral,         // Te mostramos qué analizó
-              guion_generado: guionRes.data, // Y el resultado final
-              modo: "ingenieria_inversa_exitosa"
-          };
-          tokensUsed = autopsiaRes.tokens + guionRes.tokens;
-
-      } else {
-          // === MODO AUTOPSIA VIRAL ===
-          // Solo devuelve el análisis
-          console.log('[AUTOPSIA] 🔬 Devolviendo análisis puro...');
-          result = {
-              ...adnViral,
-              metadata_scraping: {
-                  platform: platName,
-                  video_description: videoDescription
-              }
-          };
-          tokensUsed = autopsiaRes.tokens;
-      }
-      break;
+    } catch (videoError: any) {
+        console.error('[TITAN] ❌ Error obteniendo video:', videoError.message);
+        
+        // FALLBACK FINAL: Texto manual
+        if (processedContext && processedContext.length > 50) {
+            console.log('[TITAN] ⚠️ Usando texto manual como último recurso');
+            contentToAnalyze = processedContext;
+            videoSource = 'manual';
+        } else {
+            throw new Error(`Error: ${videoError.message}`);
+        }
     }
+
+    // Validación
+    if (!contentToAnalyze || contentToAnalyze.length < 20) {
+        throw new Error('Contenido insuficiente para análisis (mínimo 20 caracteres).');
+    }
+
+    // 3. AUTOPSIA (EXTRAER ADN)
+    console.log('[TITAN] 🔬 Ejecutando autopsia viral...');
+    
+    const autopsiaRes = await ejecutarAutopsiaViral(
+        contentToAnalyze, 
+        platName, 
+        openai
+    );
+    
+    const adnViral = autopsiaRes.data;
+
+    // 4. BIFURCACIÓN
+    if (selectedMode === 'recreate') {
+        // ═══════════════════════════════════════════════════
+        // MODO INGENIERÍA INVERSA
+        // ═══════════════════════════════════════════════════
+        console.log(`[RECREATE] 🧬 Clonando al nicho: "${targetTopic}"...`);
+        
+        const contextoRecreate = { 
+            ...userContext, 
+            tema_especifico: targetTopic || userContext.nicho 
+        };
+        
+        const guionRes = await ejecutarGeneradorGuiones(
+            contextoRecreate, 
+            adnViral, 
+            openai, 
+            settings
+        );
+        
+        result = {
+            autopsia: adnViral,
+            guion_generado: guionRes.data,
+            modo: "ingenieria_inversa_exitosa",
+            metadata_video: {
+                source: videoSource,
+                platform: platName,
+                description: videoDescription,
+                whisper_used: actualWhisperMinutes > 0,
+                whisper_minutes: actualWhisperMinutes,
+                original_url: videoUrl || null,
+                uploaded_file: uploadedFileName || null
+            }
+        };
+        
+        tokensUsed = autopsiaRes.tokens + guionRes.tokens;
+
+    } else {
+        // ═══════════════════════════════════════════════════
+        // MODO AUTOPSIA PURA
+        // ═══════════════════════════════════════════════════
+        console.log('[AUTOPSIA] 📊 Devolviendo análisis...');
+        
+        result = {
+            ...adnViral,
+            metadata_video: {
+                source: videoSource,
+                platform: platName,
+                description: videoDescription,
+                whisper_used: actualWhisperMinutes > 0,
+                whisper_minutes: actualWhisperMinutes,
+                original_url: videoUrl || null,
+                uploaded_file: uploadedFileName || null
+            }
+        };
+        
+        tokensUsed = autopsiaRes.tokens;
+    }
+    
+    break;
+      }
     
       case 'generar_guion': {
         // ✅ CORRECCIÓN #1: Añadir tema específico al contexto
@@ -2344,11 +2521,11 @@ serve(async (req) => {
             
             if (avatarData) {
               infoParaAnalizar = `
-Nombre: ${avatarData.name || 'N/A'}
-Descripción: ${avatarData.description || 'N/A'}
-Dolor: ${avatarData.dolor || 'N/A'}
-Cielo (Deseo): ${avatarData.cielo || 'N/A'}
-Información adicional: ${JSON.stringify(avatarData)}
+        Nombre: ${avatarData.name || 'N/A'}
+        Descripción: ${avatarData.description || 'N/A'}
+        Dolor: ${avatarData.dolor || 'N/A'}
+        Cielo (Deseo): ${avatarData.cielo || 'N/A'}
+        Información adicional: ${JSON.stringify(avatarData)}
               `;
             }
           }
