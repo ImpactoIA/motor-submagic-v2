@@ -4,8 +4,117 @@ import { useAuth } from '../context/AuthContext';
 import { 
     Save, Plus, Trash2, Target, Heart, 
     Flame, Zap, MessageSquare, Send, Search, Users, RefreshCw, 
-    User, BookOpen, Brain, Activity, AlertTriangle, CheckCircle2
+    User, BookOpen, Brain, Activity, AlertTriangle, CheckCircle2,
+    XCircle, ArrowRight, ShieldAlert 
 } from 'lucide-react';
+
+// ==================================================================================
+// 🎨 SUB-COMPONENTE: REPORTE DE AUDITORÍA VISUAL (NUEVO)
+// ==================================================================================
+const AuditReport = ({ data }: { data: any }) => {
+  if (!data || !data.auditoria_calidad) {
+    // Fallback simple si el formato de datos no es el esperado (por si acaso)
+    return (
+        <div className="bg-yellow-900/10 p-4 rounded-xl border border-yellow-500/20 text-yellow-200 text-xs">
+            <p className="font-bold mb-1">Resultado recibido, pero formato no estándar.</p>
+            <pre className="text-[10px] opacity-70 whitespace-pre-wrap">{JSON.stringify(data, null, 2)}</pre>
+        </div>
+    );
+  }
+
+  const { auditoria_calidad, analisis_campo_por_campo, perfil_final_optimizado } = data;
+  
+  const getStatusColor = (status: string) => {
+    if (status?.includes('Excelente') || status?.includes('🟢')) return 'text-green-400 border-green-500/30 bg-green-500/10';
+    if (status?.includes('Mejorable') || status?.includes('🟡')) return 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10';
+    return 'text-red-400 border-red-500/30 bg-red-500/10';
+  };
+
+  return (
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      
+      {/* 1. SCOREBOARD */}
+      <div className="bg-gradient-to-r from-gray-900 to-black border border-gray-800 rounded-2xl p-5 relative overflow-hidden">
+        <div className="flex justify-between items-start relative z-10">
+          <div>
+            <h3 className="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1">CALIDAD DEL AVATAR</h3>
+            <div className="flex items-baseline gap-2">
+              <span className={`text-4xl font-black ${auditoria_calidad.score_global > 80 ? 'text-green-400' : auditoria_calidad.score_global > 50 ? 'text-yellow-400' : 'text-red-500'}`}>
+                {auditoria_calidad.score_global}
+              </span>
+              <span className="text-gray-600 text-xs font-bold">/ 100</span>
+            </div>
+            <p className="text-white font-bold text-sm mt-1">{auditoria_calidad.nivel_actual}</p>
+          </div>
+          
+          <div className="bg-white/5 p-3 rounded-lg max-w-[140px] backdrop-blur-sm border border-white/10">
+            <div className="flex items-center gap-1 mb-1 text-fuchsia-400">
+              <ShieldAlert size={12} />
+              <span className="text-[9px] font-bold uppercase">Veredicto Titan</span>
+            </div>
+            <p className="text-[10px] text-gray-300 italic leading-tight">"{auditoria_calidad.veredicto_brutal}"</p>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. ANÁLISIS CAMPO POR CAMPO */}
+      <div className="space-y-3">
+        <h4 className="text-[10px] font-bold text-gray-400 uppercase flex items-center gap-2 tracking-widest pl-1">
+          <Activity size={12}/> Análisis Forense
+        </h4>
+        
+        {analisis_campo_por_campo?.map((item: any, idx: number) => (
+          <div key={idx} className="bg-[#0a0a0a] border border-gray-800 rounded-xl p-4 hover:border-gray-600 transition-colors group">
+            <div className="flex justify-between items-center mb-3">
+              <h5 className="font-bold text-white text-xs">{item.campo}</h5>
+              <span className={`text-[9px] font-black uppercase px-1.5 py-0.5 rounded border ${getStatusColor(item.calificacion)}`}>
+                {item.calificacion?.split(' ')[1] || item.calificacion}
+              </span>
+            </div>
+
+            <div className="space-y-3">
+              {/* Input Usuario */}
+              <div className="relative pl-3 border-l-2 border-red-500/20">
+                <span className="text-[9px] text-red-400 font-bold block mb-0.5 uppercase">Tu Input</span>
+                <p className="text-gray-400 text-[10px] line-clamp-2 italic">"{item.lo_que_escribio_usuario}"</p>
+                <p className="text-[9px] text-red-300 mt-1 flex items-start gap-1">
+                    <XCircle size={10} className="shrink-0 mt-0.5"/> {item.critica}
+                </p>
+              </div>
+
+              {/* Corrección Titan */}
+              <div className="relative pl-3 border-l-2 border-green-500/40 bg-green-500/5 py-1 rounded-r-lg">
+                <span className="text-[9px] text-green-400 font-bold block mb-0.5 uppercase">Corrección Titan</span>
+                <p className="text-gray-200 text-[10px] font-medium leading-relaxed">"{item.correccion_maestra}"</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* 3. PERFIL OPTIMIZADO */}
+      <div className="bg-indigo-900/10 border border-indigo-500/20 rounded-2xl p-4">
+        <h4 className="text-center text-[10px] font-black text-indigo-300 uppercase tracking-widest mb-3">💎 PERFIL DE AVATAR PULIDO</h4>
+        
+        <div className="space-y-2">
+          <div className="bg-black/40 p-2.5 rounded-lg border border-white/5">
+            <span className="block text-[9px] text-gray-500 uppercase font-bold mb-1">Identidad</span>
+            <p className="text-white text-xs font-bold">{perfil_final_optimizado.identidad}</p>
+          </div>
+          <div className="bg-black/40 p-2.5 rounded-lg border border-white/5">
+             <span className="block text-[9px] text-gray-500 uppercase font-bold mb-1">Insight Secreto</span>
+             <p className="text-indigo-200 text-xs italic">"{perfil_final_optimizado.insight_psicologico}"</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  );
+};
+
+// ==================================================================================
+// 🧩 COMPONENTE PRINCIPAL: AVATAR PROFILE
+// ==================================================================================
 
 export const AvatarProfile = () => {
     const { user, userProfile, refreshProfile } = useAuth();
@@ -16,8 +125,8 @@ export const AvatarProfile = () => {
 
     // --- ESTADOS IA ---
     const [chatInput, setChatInput] = useState('');
-    const [chatResponse, setChatResponse] = useState(''); // Ahora puede ser HTML/Markdown
-    const [auditResult, setAuditResult] = useState<any>(null); // NUEVO: Resultado estructurado
+    const [chatResponse, setChatResponse] = useState(''); 
+    const [auditResult, setAuditResult] = useState<any>(null); 
     const [isChatting, setIsChatting] = useState(false);
     const [isAuditing, setIsAuditing] = useState(false);
 
@@ -142,7 +251,6 @@ export const AvatarProfile = () => {
             if(refreshProfile) refreshProfile();
             setSelectedAvatarId(newId);
             await fetchAvatars(); 
-            // Feedback sutil en lugar de alert
         } catch (e: any) { alert(`Error: ${e.message}`); } 
         finally { setLoading(false); }
     };
@@ -169,14 +277,13 @@ export const AvatarProfile = () => {
         }
 
         setIsAuditing(true);
-        setAuditResult(null);
+        setAuditResult(null); // Limpiar resultado previo
         
         try {
             const { data, error } = await supabase.functions.invoke('process-url', {
                 body: {
-                    // Modo específico para auditoría
                     selectedMode: 'audit_avatar', 
-                    transcript: JSON.stringify(formData), // Enviamos el JSON del formulario
+                    transcript: JSON.stringify(formData), // Enviamos datos como string para compatibilidad
                     expertId: selectedExpertId,
                     knowledgeBaseId: selectedKbId,
                     estimatedCost: COSTO_AUDITORIA
@@ -185,15 +292,13 @@ export const AvatarProfile = () => {
 
             if (error) throw error;
             
-            // Esperamos un JSON estructurado del backend
-            const result = data.generatedData.audit_result || {
-                score: 50,
-                feedback: "Falta información para un análisis profundo.",
-                blind_spots: ["No has definido el miedo oculto"],
-                suggestions: ["Define qué le quita el sueño"]
-            };
+            // Aquí es donde conectamos con la respuesta estructurada del nuevo prompt
+            // La IA devuelve: { auditoria_calidad: {...}, analisis_campo_por_campo: [...], ... }
+            // Verificamos si la respuesta viene anidada en 'generatedData'
+            const resultData = data.generatedData || data;
             
-            setAuditResult(result);
+            setAuditResult(resultData);
+            
             if(refreshProfile) refreshProfile();
 
         } catch (e: any) { 
@@ -211,7 +316,7 @@ export const AvatarProfile = () => {
         try {
             const { data, error } = await supabase.functions.invoke('process-url', {
                 body: {
-                    selectedMode: 'chat_avatar', // Modo Chat
+                    selectedMode: 'chat_avatar', 
                     transcript: `Usuario pregunta: "${chatInput}". \nContexto del Avatar: ${JSON.stringify(formData)}`,
                     expertId: selectedExpertId,
                     knowledgeBaseId: selectedKbId,
@@ -358,31 +463,9 @@ export const AvatarProfile = () => {
                         {/* Pantalla de Resultados (Chat o Auditoría) */}
                         <div className="flex-1 overflow-y-auto custom-scrollbar bg-[#0a0a0a] rounded-2xl p-4 border border-gray-800 mb-4 shadow-inner relative">
                             
-                            {/* Si hay resultado de Auditoría */}
+                            {/* LOGICA DE VISUALIZACIÓN */}
                             {auditResult ? (
-                                <div className="space-y-4 animate-in fade-in">
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-xs text-gray-500 uppercase font-bold">Claridad del Avatar</span>
-                                        <span className={`text-xl font-black ${auditResult.score >= 80 ? 'text-green-400' : 'text-yellow-400'}`}>{auditResult.score}/100</span>
-                                    </div>
-                                    <div className="h-1 w-full bg-gray-800 rounded-full overflow-hidden">
-                                        <div className={`h-full ${auditResult.score >= 80 ? 'bg-green-500' : 'bg-yellow-500'}`} style={{width: `${auditResult.score}%`}}></div>
-                                    </div>
-                                    
-                                    <div className="bg-red-900/10 p-3 rounded-xl border border-red-500/20">
-                                        <h4 className="text-[10px] font-black text-red-400 uppercase mb-2 flex items-center gap-1"><AlertTriangle size={10}/> Puntos Ciegos</h4>
-                                        <ul className="space-y-1">
-                                            {auditResult.blind_spots?.map((bs: string, i: number) => (
-                                                <li key={i} className="text-xs text-gray-300">• {bs}</li>
-                                            ))}
-                                        </ul>
-                                    </div>
-
-                                    <div className="bg-green-900/10 p-3 rounded-xl border border-green-500/20">
-                                        <h4 className="text-[10px] font-black text-green-400 uppercase mb-2 flex items-center gap-1"><CheckCircle2 size={10}/> Sugerencias</h4>
-                                        <p className="text-xs text-gray-300 leading-relaxed">{auditResult.feedback}</p>
-                                    </div>
-                                </div>
+                                <AuditReport data={auditResult} />
                             ) : chatResponse ? (
                                 // Si hay respuesta de Chat
                                 <div className="bg-purple-900/10 p-4 rounded-xl border border-purple-500/20 animate-in zoom-in-95">
