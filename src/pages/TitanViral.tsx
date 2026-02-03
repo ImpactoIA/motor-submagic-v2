@@ -306,7 +306,7 @@ export const TitanViral = () => {
                 <div>
                     <h1 className="text-3xl font-black text-white tracking-tight flex items-center gap-2">
                         INGENIERÍA INVERSA
-                        <span className="text-xs font-bold bg-gradient-to-r from-fuchsia-500 to-indigo-500 text-white px-2 py-0.5 rounded">ELITE</span>
+                        <span className="text-xs font-bold ...">V3 UPLOAD</span>
                     </h1>
                     <p className="text-gray-400 text-sm">Clona estructuras virales matemáticamente y adáptalas a tu nicho.</p>
                 </div>
