@@ -4,8 +4,124 @@ import { useAuth } from '../context/AuthContext';
 import { 
     Save, Plus, Trash2, MessageSquare, 
     Zap, Search, RefreshCw, Send, User, Users, BookOpen, 
-    Fingerprint, Mic, Globe, ShieldCheck, Activity, AlertTriangle, CheckCircle2
+    Fingerprint, Mic, Globe, ShieldCheck, Activity, AlertTriangle, CheckCircle2,
+    XCircle, ArrowRight, ShieldAlert, Award, Star
 } from 'lucide-react';
+
+// ==================================================================================
+// 🎨 SUB-COMPONENTE: REPORTE DE AUDITORÍA EXPERTA (NUEVO)
+// ==================================================================================
+const ExpertAuditReport = ({ data }: { data: any }) => {
+  if (!data || !data.auditoria_calidad) {
+    // Fallback simple
+    return (
+        <div className="bg-yellow-900/10 p-4 rounded-xl border border-yellow-500/20 text-yellow-200 text-xs">
+            <p className="font-bold mb-1">Resultado recibido, formato no estándar.</p>
+            <pre className="text-[10px] opacity-70 whitespace-pre-wrap">{JSON.stringify(data, null, 2)}</pre>
+        </div>
+    );
+  }
+
+  const { auditoria_calidad, analisis_campo_por_campo, perfil_experto_optimizado } = data;
+  
+  const getStatusColor = (status: string) => {
+    if (status?.includes('Magnética') || status?.includes('Único') || status?.includes('Irresistible') || status?.includes('🟢')) 
+        return 'text-green-400 border-green-500/30 bg-green-500/10';
+    if (status?.includes('Común') || status?.includes('Confuso') || status?.includes('Débil') || status?.includes('🟡')) 
+        return 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10';
+    return 'text-red-400 border-red-500/30 bg-red-500/10';
+  };
+
+  return (
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      
+      {/* 1. VELOCÍMETRO DE AUTORIDAD */}
+      <div className="bg-gradient-to-r from-gray-900 to-black border border-gray-800 rounded-2xl p-5 relative overflow-hidden">
+        <div className="flex justify-between items-start relative z-10">
+          <div>
+            <h3 className="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1">NIVEL DE AUTORIDAD</h3>
+            <div className="flex items-baseline gap-2">
+              <span className={`text-4xl font-black ${auditoria_calidad.score_global > 80 ? 'text-green-400' : auditoria_calidad.score_global > 50 ? 'text-yellow-400' : 'text-red-500'}`}>
+                {auditoria_calidad.score_global}
+              </span>
+              <span className="text-gray-600 text-xs font-bold">/ 100</span>
+            </div>
+            <p className="text-white font-bold text-sm mt-1 flex items-center gap-1">
+                <Award size={14} className="text-indigo-400"/> {auditoria_calidad.nivel_autoridad}
+            </p>
+          </div>
+          
+          <div className="bg-white/5 p-3 rounded-lg max-w-[140px] backdrop-blur-sm border border-white/10">
+            <div className="flex items-center gap-1 mb-1 text-indigo-400">
+              <ShieldAlert size={12} />
+              <span className="text-[9px] font-bold uppercase">Titan Strategy</span>
+            </div>
+            <p className="text-[10px] text-gray-300 italic leading-tight">"{auditoria_calidad.veredicto_brutal}"</p>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. ANÁLISIS TÁCTICO (HISTORIA - MÉTODO - OFERTA) */}
+      <div className="space-y-3">
+        <h4 className="text-[10px] font-bold text-gray-400 uppercase flex items-center gap-2 tracking-widest pl-1">
+          <Activity size={12}/> Auditoría Táctica
+        </h4>
+        
+        {analisis_campo_por_campo?.map((item: any, idx: number) => (
+          <div key={idx} className="bg-[#0a0a0a] border border-gray-800 rounded-xl p-4 hover:border-indigo-500/30 transition-colors group">
+            <div className="flex justify-between items-center mb-3">
+              <h5 className="font-bold text-white text-xs">{item.campo}</h5>
+              <span className={`text-[9px] font-black uppercase px-1.5 py-0.5 rounded border ${getStatusColor(item.calificacion)}`}>
+                {item.calificacion?.split(' ')[1] || item.calificacion}
+              </span>
+            </div>
+
+            <div className="space-y-3">
+              {/* Input Usuario */}
+              <div className="relative pl-3 border-l-2 border-red-500/20">
+                <span className="text-[9px] text-red-400 font-bold block mb-0.5 uppercase">Debilidad Detectada</span>
+                <p className="text-[9px] text-red-300 mt-1 flex items-start gap-1 leading-relaxed">
+                    <XCircle size={10} className="shrink-0 mt-0.5"/> {item.critica}
+                </p>
+              </div>
+
+              {/* Corrección Titan */}
+              <div className="relative pl-3 border-l-2 border-green-500/40 bg-green-500/5 py-1 rounded-r-lg">
+                <span className="text-[9px] text-green-400 font-bold block mb-0.5 uppercase">Estrategia High-Ticket</span>
+                <p className="text-gray-200 text-[10px] font-medium leading-relaxed">"{item.correccion_maestra}"</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* 3. PERFIL OPTIMIZADO */}
+      <div className="bg-indigo-900/10 border border-indigo-500/20 rounded-2xl p-4">
+        <h4 className="text-center text-[10px] font-black text-indigo-300 uppercase tracking-widest mb-3">💎 MARCA PERSONAL PULIDA</h4>
+        
+        <div className="space-y-2">
+          <div className="bg-black/40 p-2.5 rounded-lg border border-white/5">
+            <span className="block text-[9px] text-gray-500 uppercase font-bold mb-1">Nueva Bio (Posicionamiento)</span>
+            <p className="text-white text-xs font-bold">{perfil_experto_optimizado.posicionamiento_unico}</p>
+          </div>
+          <div className="bg-black/40 p-2.5 rounded-lg border border-white/5">
+             <span className="block text-[9px] text-gray-500 uppercase font-bold mb-1">Tu "Mecanismo Único"</span>
+             <p className="text-indigo-200 text-xs italic font-bold">✨ {perfil_experto_optimizado.nombre_metodo_comercial}</p>
+          </div>
+           <div className="bg-black/40 p-2.5 rounded-lg border border-white/5">
+             <span className="block text-[9px] text-gray-500 uppercase font-bold mb-1">Factor Diferencial</span>
+             <p className="text-gray-300 text-[10px]">{perfil_experto_optimizado.factor_diferencial}</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  );
+};
+
+// ==================================================================================
+// 🧩 COMPONENTE PRINCIPAL: EXPERT PROFILE
+// ==================================================================================
 
 export const ExpertProfile = () => {
     const { user, userProfile, refreshProfile } = useAuth();
@@ -142,7 +258,7 @@ export const ExpertProfile = () => {
     // --- IA: AUDITORÍA DE EXPERTO (V300) ---
     const handleAudit = async () => {
         if (!formData.niche || !formData.mission) return alert("Define Nicho y Misión.");
-        if ((userProfile?.credits || 0) < COSTO_AUDITORIA) return alert("Saldo insuficiente.");
+        if (userProfile?.tier !== 'admin' && (userProfile?.credits || 0) < COSTO_AUDITORIA) return alert("Saldo insuficiente.");
 
         setIsAuditing(true);
         setAuditResult(null);
@@ -159,13 +275,9 @@ export const ExpertProfile = () => {
 
             if (error) throw error;
             
-            // Esperamos JSON
-            const result = data.generatedData.audit_result || {
-                score: 50,
-                feedback: "Falta información.",
-                blind_spots: ["Nicho muy amplio"],
-                suggestions: ["Especifícate más"]
-            };
+            // CONEXIÓN CON EL NUEVO FORMATO DEL PROMPT "TITAN STRATEGY"
+            // Esperamos: { auditoria_calidad: {...}, analisis_campo_por_campo: [...], ... }
+            const result = data.generatedData || data;
 
             setAuditResult(result);
             if(refreshProfile) refreshProfile();
@@ -177,7 +289,7 @@ export const ExpertProfile = () => {
     // --- IA: CHAT DE PRUEBA (V300) ---
     const handleChat = async () => {
         if (!chatInput) return;
-        if ((userProfile?.credits || 0) < COSTO_CHAT) return alert("Saldo insuficiente.");
+        if (userProfile?.tier !== 'admin' && (userProfile?.credits || 0) < COSTO_CHAT) return alert("Saldo insuficiente.");
         
         setIsChatting(true);
         try {
@@ -314,25 +426,9 @@ export const ExpertProfile = () => {
                         {/* Pantalla Resultados */}
                         <div className="flex-1 overflow-y-auto custom-scrollbar bg-[#0a0a0a] rounded-2xl p-4 border border-gray-800 mb-4 shadow-inner relative">
                             
-                            {/* Auditoría */}
+                            {/* LOGICA DE VISUALIZACIÓN */}
                             {auditResult ? (
-                                <div className="space-y-4 animate-in fade-in">
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-xs text-gray-500 uppercase font-bold">Autoridad Percibida</span>
-                                        <span className={`text-xl font-black ${auditResult.score >= 80 ? 'text-green-400' : 'text-yellow-400'}`}>{auditResult.score}/100</span>
-                                    </div>
-                                    <div className="h-1 w-full bg-gray-800 rounded-full overflow-hidden">
-                                        <div className={`h-full ${auditResult.score >= 80 ? 'bg-green-500' : 'bg-yellow-500'}`} style={{width: `${auditResult.score}%`}}></div>
-                                    </div>
-                                    <div className="bg-red-900/10 p-3 rounded-xl border border-red-500/20">
-                                        <h4 className="text-[10px] font-black text-red-400 uppercase mb-2 flex items-center gap-1"><AlertTriangle size={10}/> Brechas</h4>
-                                        <ul className="space-y-1">{auditResult.blind_spots?.map((bs: string, i: number) => <li key={i} className="text-xs text-gray-300">• {bs}</li>)}</ul>
-                                    </div>
-                                    <div className="bg-green-900/10 p-3 rounded-xl border border-green-500/20">
-                                        <h4 className="text-[10px] font-black text-green-400 uppercase mb-2 flex items-center gap-1"><CheckCircle2 size={10}/> Oportunidades</h4>
-                                        <p className="text-xs text-gray-300 leading-relaxed">{auditResult.feedback}</p>
-                                    </div>
-                                </div>
+                                <ExpertAuditReport data={auditResult} />
                             ) : chatResponse ? (
                                 <div className="space-y-2">
                                     <div className="flex gap-2 items-center mb-2">

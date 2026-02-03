@@ -1303,70 +1303,62 @@ Debes devolver un análisis crítico + la versión perfeccionada.
 }
 `;
 
-// 6️⃣ AUDITOR DE EXPERTO (MEJORADO - CORRECCIÓN #7)
-const PROMPT_AUDITOR_EXPERTO = (contexto: ContextoUsuario) => `ERES UN ANALISTA COMPETITIVO ÉLITE MUNDIAL Y ESTRATEGA DE POSICIONAMIENTO.
-TU MISIÓN: Analizar el perfil del usuario y su mercado para encontrar su ÁNGULO ÚNICO.
+// 6️⃣ AUDITOR DE EXPERTO (EVOLUCIÓN TITAN V2 - ESTRATEGA IMPLACABLE)
+const PROMPT_AUDITOR_EXPERTO = (infoExperto: string, nicho: string) => `
+ERES "TITAN STRATEGY", EL ESTRATEGA DE POSICIONAMIENTO Y MARCA PERSONAL MÁS IMPLACABLE DEL MUNDO.
+TU MISIÓN: Auditar el Perfil de Experto del usuario para determinar si es una "Commodity" (uno más del montón) o un "Monopolio Personal" (único e incomparable).
 
-CONTEXTO DEL USUARIO:
-- Nicho: ${contexto.nicho || 'General'}
-- Avatar: ${contexto.avatar_ideal || 'N/A'}
+INFORMACIÓN QUE EL USUARIO LLENÓ SOBRE SÍ MISMO:
+${infoExperto}
 
-⚠️⚠️⚠️ REGLA CRÍTICA DE ANÁLISIS ⚠️⚠️⚠️
-Aunque tengas información limitada, debes:
-1. Analizar tendencias actuales en "${contexto.nicho}"
-2. Identificar patrones de mercado
-3. Proponer estrategias CONCRETAS y ACCIONABLES
-4. Crear un plan COMPLETO basado en mejores prácticas
+NICHO DECLARADO: ${nicho}
 
-NO digas "se necesita más información".
-SIEMPRE genera un análisis COMPLETO y ÚTIL.
+⚠️ TU TRABAJO ES JUZGAR, CRITICAR Y ELEVAR ⚠️
+No te limites a completar información. Analiza la calidad de lo que el usuario escribió:
+1. AUTORIDAD: ¿Su historia demuestra experiencia o solo intención?
+2. DIFERENCIACIÓN: ¿Su "Método" suena genérico (ej: "Ayudo con marketing") o único (ej: "El Protocolo Titan")?
+3. CLARIDAD: ¿Se entiende qué vende en 3 segundos?
 
-PROTOCOLO DE AUDITORÍA (7 FASES):
+FORMATO DE SALIDA JSON (ESTRICTO):
+Debes devolver un análisis crítico campo por campo + la versión de Alta Gama (High Ticket).
 
-1. MAPEO DE COMPETENCIA
-2. ANÁLISIS DE BRECHAS
-3. DIFERENCIACIÓN
-4. POSICIONAMIENTO
-5. ESTRATEGIA DE CONTENIDO
-6. MATRIZ DE OPORTUNIDADES
-7. SISTEMA DE MONITOREO
-
-FORMATO DE SALIDA JSON ESTRICTO:
 {
-  "resumen_ejecutivo": {
-    "estado_mercado": "Saturado/En Crecimiento/Naciente",
-    "nivel_competencia": "Alta/Media/Baja",
-    "oportunidad_principal": "Descripción específica de la oportunidad"
+  "auditoria_calidad": {
+    "score_global": 0, // Del 0 al 100. Sé duro. Si es genérico, ponle bajo puntaje.
+    "nivel_autoridad": "Novato / Generalista / Especialista / Referente de Mercado",
+    "veredicto_brutal": "Resumen directo de 2 líneas sobre su posicionamiento actual."
   },
-  "analisis_brechas": {
-    "todos_hacen": ["Cosa 1 específica", "Cosa 2 específica"],
-    "nadie_hace": ["Oportunidad 1 - ÁNGULO VIRGEN"],
-    "hacen_mal": ["Error común específico"]
-  },
-  "posicionamiento_estrategico": {
-    "declaracion_posicionamiento": "Ayudo a [AVATAR] a lograr [RESULTADO] sin [OBJECIÓN]",
-    "enemigo_comun": "Qué rechaza el usuario",
-    "bandera": "Por qué lucha",
-    "propuesta_valor": "Valor único"
-  },
-  "estrategia_contenido": {
-    "pilares_contenido": [
-      {
-        "pilar": "Pilar 1 específico",
-        "objetivo": "Educar/Posicionar/Convertir",
-        "frecuencia": "2-3 veces/semana",
-        "angulos": ["Ángulo 1", "Ángulo 2"]
-      }
-    ]
-  },
-  "plan_90_dias": {
-    "mes_1": {
-      "objetivo_principal": "Objetivo claro",
-      "acciones_clave": ["Acción 1", "Acción 2"],
-      "meta_numerica": "1,000 seguidores"
+  "analisis_campo_por_campo": [
+    {
+      "campo": "Historia de Origen",
+      "lo_que_escribio_usuario": "Resumen breve...",
+      "calificacion": "🟢 Magnética / 🟡 Común / 🔴 Aburrida",
+      "critica": "Por qué conecta o falla (ej: 'Demasiado victimismo, falta el momento de epifanía')",
+      "correccion_maestra": "Cómo narrar su historia para generar autoridad instantánea."
+    },
+    {
+      "campo": "Método Único / Vehículo",
+      "lo_que_escribio_usuario": "Resumen...",
+      "calificacion": "🟢 Único / 🟡 Confuso / 🔴 Genérico",
+      "critica": "Análisis del nombre y la lógica de su método.",
+      "correccion_maestra": "Un nombre sexy y comercial para su metodología."
+    },
+    {
+      "campo": "Oferta / Promesa",
+      "lo_que_escribio_usuario": "Resumen...",
+      "calificacion": "🟢 Irresistible / 🟡 Débil / 🔴 Invisible",
+      "critica": "Análisis de la promesa.",
+      "correccion_maestra": "La promesa reescrita para vender High Ticket."
     }
+  ],
+  "perfil_experto_optimizado": {
+    "posicionamiento_unico": "Su nueva bio de Instagram/LinkedIn en 1 frase potente",
+    "nombre_metodo_comercial": "El nombre marketinero de su sistema",
+    "factor_diferencial": "Lo que realmente lo hace único (El Ángulo)",
+    "pilares_contenido_sugeridos": ["Pilar 1", "Pilar 2", "Pilar 3"]
   }
-}`;
+}
+`;
 
 // 7️⃣ MENTOR ESTRATÉGICO (INTACTO)
 const PROMPT_MENTOR_ESTRATEGICO = (contexto: ContextoUsuario, resultados?: any) => {
@@ -1625,17 +1617,18 @@ async function ejecutarAuditorAvatar(
 }
 
 async function ejecutarAuditorExperto(
-  contexto: ContextoUsuario,
+  infoExperto: string, // <-- Ahora recibe TEXTO, no objeto contexto
+  nicho: string,
   openai: any
 ): Promise<{ data: any; tokens: number }> {
-  console.log('[CEREBRO] 🎯 Ejecutando Auditor de Experto MEJORADO...');
+  console.log('[CEREBRO] 🎯 Ejecutando Auditor de Experto TITAN STRATEGY...');
   
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o',
     response_format: { type: 'json_object' },
     messages: [
-      { role: 'system', content: 'Eres un analista competitivo élite mundial. NUNCA digas "se necesita más información". SIEMPRE genera un análisis COMPLETO.' },
-      { role: 'user', content: PROMPT_AUDITOR_EXPERTO(contexto) }
+      { role: 'system', content: 'Eres Titan Strategy, el consultor de marca personal más implacable. NUNCA digas "información insuficiente", juzga lo que hay.' },
+      { role: 'user', content: PROMPT_AUDITOR_EXPERTO(infoExperto, nicho) }
     ],
     temperature: 0.5,
     max_tokens: 3000
@@ -2529,26 +2522,49 @@ serve(async (req) => {
 
       case 'auditar_experto':
       case 'audit_expert': {
-        // ✅ CORRECCIÓN #7: Cargar info de la BD si no hay texto
-        let contextoEnriquecido = userContext;
-        
-        if (expertId && (!processedContext || processedContext.length < 50)) {
-          const { data: expertData } = await supabase
-            .from('expert_profiles')
-            .select('*')
-            .eq('id', expertId)
-            .single();
-          
-          if (expertData) {
-            contextoEnriquecido = {
-              ...userContext,
-              posicionamiento: expertData.positioning || '',
-              diferenciadores: expertData.differentiators || []
-            };
+        console.log('[TITAN] 🎯 Iniciando Auditoría de Experto V2...');
+
+        // 1. Intentamos obtener el texto directamente del Frontend (transcript)
+        let infoParaAnalizar = processedContext;
+
+        // 2. Si no hay texto (ej: auditoría desde botón sin formulario activo), armamos el texto desde la BD
+        if (!infoParaAnalizar || infoParaAnalizar.length < 50) {
+          if (expertId) {
+            const { data: expertData } = await supabase
+              .from('expert_profiles')
+              .select('*')
+              .eq('id', expertId)
+              .single();
+            
+            if (expertData) {
+              // Construimos el "Expediente" para el Juez
+              infoParaAnalizar = `
+                NOMBRE: ${expertData.name || 'N/A'}
+                NICHO: ${expertData.niche || 'N/A'}
+                
+                HISTORIA DE ORIGEN:
+                ${expertData.story || expertData.backstory || 'No especificada'}
+                
+                MÉTODO ÚNICO / VEHÍCULO:
+                ${expertData.unique_mechanism || expertData.vehicle || 'No especificado'}
+                
+                PROMESA / OFERTA:
+                ${expertData.promise || expertData.results || 'No especificada'}
+                
+                POSICIONAMIENTO ACTUAL:
+                ${expertData.positioning || 'No especificado'}
+              `;
+            }
           }
         }
+
+        // Validación de seguridad
+        if (!infoParaAnalizar || infoParaAnalizar.length < 20) {
+            throw new Error("No hay suficiente información del experto para auditar. Completa el perfil primero.");
+        }
         
-        const res = await ejecutarAuditorExperto(contextoEnriquecido, openai);
+        // 3. Llamamos al Ejecutor con el texto preparado
+        const res = await ejecutarAuditorExperto(infoParaAnalizar, userContext.nicho, openai);
         result = res.data;
         tokensUsed = res.tokens;
         break;
