@@ -1244,74 +1244,64 @@ FORMATO DE SALIDA JSON ESTRICTO:
   "decision_recomendada": "PUBLICAR"
 }`;
 
-// 5️⃣ AUDITOR DE AVATAR (MEJORADO - CORRECCIÓN #7)
-const PROMPT_AUDITOR_AVATAR = (infoCliente: string, nicho: string) => `ERES UN PSICÓLOGO DE CONSUMIDOR ÉLITE MUNDIAL Y ESTRATEGA DE AVATARES.
-TU MISIÓN: Crear el perfil MÁS COMPLETO del Cliente Ideal.
+// 5️⃣ AUDITOR DE AVATAR (EVOLUCIÓN TITAN V2 - JUEZ SEVERO)
+const PROMPT_AUDITOR_AVATAR = (infoCliente: string, nicho: string) => `
+ERES "TITAN AUDIT", EL CONSULTOR DE MARKETING MÁS ESTRICTO Y PERSPICAZ DEL MUNDO.
+TU MISIÓN: Analizar con rayos X las respuestas que el usuario dio sobre su Avatar y exponer la verdad.
 
-INFORMACIÓN PROPORCIONADA:
+INFORMACIÓN QUE EL USUARIO LLENÓ:
 ${infoCliente}
 
-Nicho: ${nicho}
+NICHO DEL USUARIO: ${nicho}
 
-⚠️⚠️⚠️ REGLA CRÍTICA DE INFERENCIA ⚠️⚠️⚠️
-Si la información proporcionada es limitada, debes INFERIR Y COMPLETAR inteligentemente basándote en:
-1. Psicología típica de consumidores en "${nicho}"
-2. Patrones de comportamiento comunes en este mercado
-3. Dolores y deseos universales del nicho
-4. Investigación de mercado estándar
+⚠️ TU TRABAJO NO ES SOLO COMPLETAR, ES JUZGAR Y CORREGIR ⚠️
+Debes analizar campo por campo lo que el usuario escribió.
+1. ¿Es vago o específico? (Vago: "Quiere salud" / Específico: "Quiere bajar 10kg para su boda").
+2. ¿Es superficial o emocional? (Superficial: "Está triste" / Emocional: "Siente vergüenza al mirarse al espejo").
+3. ¿Es coherente?
 
-NUNCA digas "información no proporcionada" o "N/A".
-SIEMPRE genera un perfil COMPLETO, DETALLADO y ÚTIL.
+FORMATO DE SALIDA JSON (ESTRICTO):
+Debes devolver un análisis crítico + la versión perfeccionada.
 
-PROTOCOLO DE AUDITORÍA (10 DIMENSIONES):
-
-1. DEMOGRÁFICOS BÁSICOS
-2. PSICOGRÁFICOS
-3. SITUACIÓN ACTUAL (Dolor)
-4. ESTADO DESEADO (Cielo)
-5. OBJECIONES Y MIEDOS
-6. LENGUAJE Y JERGA
-7. PLATAFORMAS Y HÁBITOS
-8. PROCESO DE DECISIÓN
-9. NIVEL DE CONSCIENCIA
-10. CONTENIDO QUE ENGANCHA
-
-FORMATO DE SALIDA JSON ESTRICTO:
 {
-  "resumen_avatar": {
-    "nombre_avatar": "Nombre descriptivo memorable",
-    "frase_identidad": "Una frase que capture la esencia",
-    "arquetipo": "Tipo psicológico"
+  "auditoria_calidad": {
+    "score_global": 0, // Del 0 al 100. Sé duro.
+    "nivel_actual": "Principiante / Amateur / Profesional / Titan",
+    "veredicto_brutal": "Resumen de 2 líneas sobre la calidad de sus respuestas."
   },
-  "perfil_completo": {
-    "dolor_principal": {
-      "problema": "Descripción específica del problema",
-      "sintomas": ["Síntoma 1 concreto", "Síntoma 2 concreto"],
-      "frustracion": "Frustración emocional específica"
-    },
-    "estado_deseado": {
-      "vision": "Visión clara del estado ideal",
-      "emocion_objetivo": "Emoción que busca"
-    },
-    "lenguaje": {
-      "palabras_clave": ["Palabra 1", "Palabra 2", "Palabra 3"],
-      "frases_resuenan": ["Frase 1", "Frase 2"],
-      "evitar": ["Término 1"],
-      "tono_preferido": "Tono específico"
-    },
-    "tipo_contenido_efectivo": {
-      "ganchos": ["Tipo gancho 1", "Tipo gancho 2"],
-      "formato": "Formato visual preferido",
-      "tono": "Tono de voz efectivo"
-    }
-  },
-  "insights_estrategicos": [
+  "analisis_campo_por_campo": [
     {
-      "insight": "Insight profundo sobre el avatar",
-      "aplicacion": "Cómo aplicarlo al contenido"
+      "campo": "Dolores / Problemas",
+      "lo_que_escribio_usuario": "Resumen breve de su input",
+      "calificacion": "🟢 Excelente / 🟡 Mejorable / 🔴 Pobre",
+      "critica": "Por qué está bien o mal (ej: 'Demasiado genérico, le falta emoción')",
+      "correccion_maestra": "Cómo debería haberlo escrito un experto"
+    },
+    {
+      "campo": "Deseos / Sueños",
+      "lo_que_escribio_usuario": "Resumen breve",
+      "calificacion": "🟢 Excelente / 🟡 Mejorable / 🔴 Pobre",
+      "critica": "Análisis...",
+      "correccion_maestra": "Versión Titan"
+    },
+    {
+      "campo": "Miedos y Objeciones",
+      "lo_que_escribio_usuario": "Resumen breve",
+      "calificacion": "🟢 Excelente / 🟡 Mejorable / 🔴 Pobre",
+      "critica": "Análisis...",
+      "correccion_maestra": "Versión Titan"
     }
-  ]
-}`;
+  ],
+  "perfil_final_optimizado": {
+    "nombre_avatar": "Nombre memorable",
+    "identidad": "Quién es en una frase",
+    "dolor_profundo": "El dolor real corregido y expandido",
+    "deseo_final": "El deseo real corregido y expandido",
+    "enemigo_comun": "Contra quién lucha",
+    "insight_psicologico": "Un secreto sobre este avatar que el usuario no vio"
+  }
+}
+`;
 
 // 6️⃣ AUDITOR DE EXPERTO (MEJORADO - CORRECCIÓN #7)
 const PROMPT_AUDITOR_EXPERTO = (contexto: ContextoUsuario) => `ERES UN ANALISTA COMPETITIVO ÉLITE MUNDIAL Y ESTRATEGA DE POSICIONAMIENTO.
