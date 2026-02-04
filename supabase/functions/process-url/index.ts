@@ -2253,6 +2253,113 @@ async function getVideoContent(
 }
 
 // ==================================================================================
+// 🧠 CLASE VIDEO ANALYZER (PEGAR ESTO ARRIBA, ANTES DE SERVE)
+// ==================================================================================
+
+class VideoAnalyzer {
+  private openai: any;
+  private apify: ApifyClient;
+  private cache: Map<string, any>;
+
+  constructor(openaiKey: string, apifyToken: string) {
+    this.openai = new OpenAI({ apiKey: openaiKey });
+    this.apify = new ApifyClient({ token: apifyToken });
+    this.cache = new Map();
+  }
+
+  async analyzeVideo(url: string, depth: 'basic' | 'standard' | 'premium' | 'ultra' = 'premium'): Promise<any> {
+    console.log(`[ANALYZER] 🚀 Analizando ${url} (${depth})`);
+    
+    // 1. Detectar Plataforma
+    let platform = 'general';
+    if (url.includes('tiktok')) platform = 'tiktok';
+    else if (url.includes('youtube') || url.includes('youtu.be')) platform = 'youtube';
+    else if (url.includes('instagram')) platform = 'instagram';
+
+    // 2. Scraping (Apify)
+    const scrapedData = await this.scrapWithApify(url, platform);
+    
+    // 3. Transcript (Whisper o Subtítulos)
+    const transcriptData = await this.getTranscript(scrapedData);
+
+    const result = {
+      platform: platform,
+      url,
+      data: {
+        transcript: transcriptData,
+        description: scrapedData.description,
+        metadata: {
+            author: scrapedData.author,
+            likes: scrapedData.likes,
+            views: scrapedData.views,
+            duration: scrapedData.duration
+        },
+        visualAnalysis: null,
+        audioAnalysis: null,
+        ocr: null,
+        sentiment: null
+      }
+    };
+
+    return result;
+  }
+
+  private async scrapWithApify(url: string, platform: string): Promise<any> {
+    console.log(`[APIFY] 📡 Scraping ${platform}...`);
+    let actorId = 'clockworks/tiktok-scraper'; // Default
+    let input: any = { postURLs: [url], shouldDownloadVideos: true };
+
+    if (platform === 'youtube') {
+        actorId = 'bernardo/youtube-scraper';
+        input = { startUrls: [{ url }], maxResults: 1 };
+    } else if (platform === 'instagram') {
+        actorId = 'apify/instagram-scraper';
+        input = { directUrls: [url], resultsLimit: 1 };
+    }
+
+    const run = await this.apify.actor(actorId).call(input);
+    const { items } = await this.apify.dataset(run.defaultDatasetId).listItems();
+    
+    if (!items || items.length === 0) throw new Error('Apify no devolvió resultados. El video puede ser privado o no existir.');
+    
+    const d = items[0];
+    return {
+        videoUrl: d.videoUrl || d.videoUrlNoWatermark || d.downloadAddr || '',
+        audioUrl: d.audioUrl || '',
+        description: d.text || d.description || d.caption || '',
+        author: d.authorMeta?.name || d.author || '',
+        likes: d.diggCount || d.likeCount || 0,
+        views: d.playCount || d.viewCount || 0,
+        duration: d.duration || 0
+    };
+  }
+
+  private async getTranscript(data: any): Promise<any> {
+    // Si hay videoUrl, usar Whisper
+    if (data.videoUrl) {
+        try {
+            console.log('[WHISPER] 🎙️ Transcribiendo...');
+            const response = await fetch(data.videoUrl);
+            const blob = await response.blob();
+            // Convertir a archivo para OpenAI
+            const file = new File([blob], 'video.mp4', { type: 'video/mp4' });
+            
+            const transcription = await this.openai.audio.transcriptions.create({
+                file, 
+                model: 'whisper-1', 
+                language: 'es', 
+                response_format: 'verbose_json'
+            });
+            return { text: transcription.text, duration: transcription.duration, source: 'whisper', confidence: 0.99 };
+        } catch (e: any) {
+            console.warn('[WHISPER] Falló, usando descripción.', e.message);
+        }
+    }
+    return { text: data.description, source: 'description', confidence: 0.5 };
+  }
+}
+
+// ==================================================================================
 // 🎬 SERVIDOR PRINCIPAL (CORREGIDO - TODOS LOS PROBLEMAS)
 // ==================================================================================
 
@@ -2337,149 +2444,116 @@ serve(async (req) => {
     
 case 'autopsia_viral':
     case 'recreate': {
-      console.log(`[TITAN ULTRA] 🚀 Iniciando modo: ${selectedMode}`);
+        console.log(`[TITAN ULTRA] 🚀 Iniciando modo: ${selectedMode}`);
 
-      let contentToAnalyze = "";
-      let targetTopic = processedContext;
-      let platName = platform || 'General';
-      let videoDescription = '';
-      let actualWhisperMinutes = 0;
-      let videoMetadata: any = {};
-      let analysisDepth: 'basic' | 'standard' | 'premium' | 'ultra' = 'premium';
+        let contentToAnalyze = "";
+        let platName = platform || 'General';
+        let videoDescription = '';
+        let actualWhisperMinutes = 0;
+        let videoMetadata = {};
+        
+        // Determinar nivel de análisis
+        let analysisDepth = 'standard';
+        try {
+            const { data: profile } = await supabase.from('profiles').select('credits, tier').eq('id', userId).single();
+            if (profile?.tier === 'premium' || profile?.tier === 'admin') analysisDepth = 'ultra';
+            else if ((profile?.credits || 0) > 20) analysisDepth = 'premium';
+        } catch (e) { console.warn("Error leyendo perfil, usando standard"); }
 
-      // 1. Determinar Nivel (Tier)
-      const { data: profile } = await supabase.from('profiles').select('credits, tier').eq('id', userId).single();
-      if (profile?.tier === 'premium' || profile?.tier === 'admin') analysisDepth = 'ultra';
-      else if ((profile?.credits || 0) > 20) analysisDepth = 'premium';
-      else analysisDepth = 'standard';
+        try {
+            // A: URL -> ANÁLISIS DIRECTO
+            if (url && url.includes('http')) {
+                console.log(`[TITAN ULTRA] 🎬 Procesando URL: ${url}`);
+                
+                const apifyToken = Deno.env.get('APIFY_API_TOKEN');
+                if (!apifyToken) throw new Error("Falta APIFY_API_TOKEN");
 
-      try {
-        // =================================================================
-        // A: URL -> USAR CLASE DIRECTAMENTE (FIX DEL ERROR "NOT DEFINED")
-        // =================================================================
-        if (url && url.includes('http')) {
-          console.log(`[TITAN ULTRA] 🎬 Procesando URL: ${url}`);
-          
-          const apifyToken = Deno.env.get('APIFY_API_TOKEN');
-          if (!apifyToken) throw new Error("Falta APIFY_API_TOKEN en variables de entorno.");
+                // 🔥 Instanciar clase aquí (ahora funcionará porque la moviste arriba)
+                const analyzer = new VideoAnalyzer(openaiKey, apifyToken); 
+                
+                // Ejecutar análisis
+                const ultraResult = await analyzer.analyzeVideo(url, analysisDepth);
+                
+                // Extraer datos
+                contentToAnalyze = ultraResult.data.transcript?.text || '';
+                platName = ultraResult.platform;
+                
+                // Guardar metadata
+                videoMetadata = {
+                    ...ultraResult.data.metadata,
+                    visualAnalysis: ultraResult.data.visualAnalysis,
+                    audioAnalysis: ultraResult.data.audioAnalysis,
+                    ocr: ultraResult.data.ocr,
+                    sentiment: ultraResult.data.sentiment,
+                    transcriptSource: ultraResult.data.transcript?.source
+                };
 
-          // 🔥 AQUÍ ESTÁ EL ARREGLO: Instanciamos la clase aquí mismo
-          const analyzer = new VideoAnalyzer(openaiKey, apifyToken);
-          const ultraResult = await analyzer.analyzeVideo(url, analysisDepth);
-
-          // Extraer datos
-          contentToAnalyze = ultraResult.data.transcript?.text || '';
-          videoDescription = ultraResult.data.description || '';
-          platName = ultraResult.platform;
-          
-          // Guardar Metadata
-          videoMetadata = {
-            ...ultraResult.data.metadata,
-            transcriptSource: ultraResult.data.transcript?.source,
-            transcriptConfidence: ultraResult.data.transcript?.confidence,
-            visualAnalysis: ultraResult.data.visualAnalysis,
-            audioAnalysis: ultraResult.data.audioAnalysis,
-            ocr: ultraResult.data.ocr,
-            sentiment: ultraResult.data.sentiment
-          };
-
-          // Calcular Whisper
-          if (ultraResult.data.transcript?.source === 'whisper') {
-            actualWhisperMinutes = Math.ceil((ultraResult.data.transcript.duration || 0) / 60);
-            whisperMinutes = actualWhisperMinutes;
-          }
-        }
-        // =================================================================
-        // B: VIDEO SUBIDO
-        // =================================================================
-        else if (body.uploadedVideo && body.uploadedFileName) {
-          console.log('[TITAN ULTRA] 📁 Procesando video subido...');
-          const uploadResult = await processUploadedVideo(body.uploadedVideo, body.uploadedFileName, openai);
-          
-          contentToAnalyze = uploadResult.transcript;
-          videoDescription = `Video subido: ${body.uploadedFileName}`;
-          platName = 'upload';
-          actualWhisperMinutes = Math.ceil(uploadResult.duration / 60);
-          whisperMinutes = actualWhisperMinutes;
-        }
-        // =================================================================
-        // C: TEXTO MANUAL
-        // =================================================================
-        else if (processedContext && processedContext.length > 50) {
-          console.log('[TITAN ULTRA] 📝 Usando texto manual');
-          contentToAnalyze = processedContext;
-          videoDescription = 'Transcripción manual';
-        }
-        else {
-          throw new Error('Debes proporcionar una URL válida, subir un video o escribir texto suficiente.');
-        }
-
-        // Validación final de contenido
-        if (!contentToAnalyze || contentToAnalyze.length < 20) {
-          throw new Error('El contenido extraído es insuficiente para analizar.');
-        }
-
-        // =================================================================
-        // 2. EJECUTAR CEREBRO (AUTOPSIA)
-        // =================================================================
-        console.log('[TITAN ULTRA] 🔬 Ejecutando autopsia viral...');
-        const autopsiaRes = await ejecutarAutopsiaViral(contentToAnalyze, platName, openai);
-        const adnViral = autopsiaRes.data;
-
-        // =================================================================
-        // 3. BIFURCACIÓN (CLONAR vs ANALIZAR)
-        // =================================================================
-        if (selectedMode === 'recreate') {
-          // MODO CLONACIÓN (Ingeniería Inversa)
-          console.log(`[RECREATE] 🧬 Clonando estructura para tema: "${targetTopic || userContext.nicho}"...`);
-          
-          const contextoRecreate = { 
-            ...userContext, 
-            tema_especifico: targetTopic || userContext.nicho 
-          };
-          
-          const guionRes = await ejecutarGeneradorGuiones(contextoRecreate, adnViral, openai, settings);
-          
-          result = {
-            autopsia: adnViral,
-            guion_generado: guionRes.data,
-            modo: "ingenieria_inversa_ultra",
-            metadata_ultra: {
-              analysisDepth,
-              transcriptSource: videoMetadata.transcriptSource || 'manual',
-              platform: platName,
-              videoStats: videoMetadata, // Pasamos toda la metadata
-              whisper_used: actualWhisperMinutes > 0,
-              whisper_minutes: actualWhisperMinutes
+                // Calcular minutos Whisper
+                if (ultraResult.data.transcript?.source === 'whisper') {
+                    actualWhisperMinutes = Math.ceil((ultraResult.data.transcript.duration || 0) / 60);
+                    whisperMinutes = actualWhisperMinutes;
+                }
             }
-          };
-          tokensUsed = autopsiaRes.tokens + guionRes.tokens;
-
-        } else {
-          // MODO AUTOPSIA PURA
-          console.log('[AUTOPSIA] 📊 Finalizando análisis...');
-          result = {
-            ...adnViral,
-            metadata_ultra: {
-              analysisDepth,
-              transcriptSource: videoMetadata.transcriptSource || 'manual',
-              platform: platName,
-              videoStats: videoMetadata,
-              whisper_used: actualWhisperMinutes > 0,
-              whisper_minutes: actualWhisperMinutes
+            // B: VIDEO SUBIDO
+            else if (body.uploadedVideo) {
+                console.log('[TITAN ULTRA] 📁 Procesando video subido...');
+                const uploadResult = await processUploadedVideo(body.uploadedVideo, body.uploadedFileName, openai);
+                contentToAnalyze = uploadResult.transcript;
+                platName = 'upload';
+                actualWhisperMinutes = Math.ceil(uploadResult.duration / 60);
+                whisperMinutes = actualWhisperMinutes;
             }
-          };
-          tokensUsed = autopsiaRes.tokens;
-        }
+            // C: TEXTO MANUAL
+            else if (processedContext && processedContext.length > 50) {
+                console.log('[TITAN ULTRA] 📝 Usando texto manual');
+                contentToAnalyze = processedContext;
+            } 
+            else {
+                throw new Error('Debes proporcionar una URL, subir un video o escribir texto.');
+            }
 
-      } catch (err: any) {
-        console.error('[TITAN ULTRA] ❌ Error en proceso:', err.message);
-        throw new Error(`Fallo en Titan Ultra: ${err.message}`);
-      }
-      break;
+            // Validación final
+            if (!contentToAnalyze || contentToAnalyze.length < 20) {
+                throw new Error('No se pudo extraer suficiente contenido para analizar.');
+            }
+
+            // EJECUTAR CEREBRO (Autopsia)
+            console.log('[TITAN ULTRA] 🔬 Ejecutando autopsia viral...');
+            const autopsiaRes = await ejecutarAutopsiaViral(contentToAnalyze, platName, openai);
+            const adnViral = autopsiaRes.data;
+
+            // BIFURCACIÓN FINAL
+            if (selectedMode === 'recreate') {
+                console.log(`[RECREATE] 🧬 Clonando...`);
+                // Asegurar que tenemos un tema
+                const temaParaClonar = processedContext || userContext.nicho || "General";
+                const contextoRecreate = { ...userContext, tema_especifico: temaParaClonar };
+                
+                const guionRes = await ejecutarGeneradorGuiones(contextoRecreate, adnViral, openai, settings);
+                
+                result = {
+                    autopsia: adnViral,
+                    guion_generado: guionRes.data,
+                    metadata_video: { ...videoMetadata, platform: platName }
+                };
+                tokensUsed = autopsiaRes.tokens + guionRes.tokens;
+            } else {
+                console.log('[AUTOPSIA] 📊 Finalizando...');
+                result = {
+                    ...adnViral,
+                    metadata_video: { ...videoMetadata, platform: platName }
+                };
+                tokensUsed = autopsiaRes.tokens;
+            }
+
+        } catch (videoError) {
+            console.error('[TITAN ERROR] ❌', videoError.message);
+            throw new Error(`Fallo en análisis de video: ${videoError.message}`);
+        }
+        break;
     }
-    
-      case 'generar_guion': {
+
+     case 'generar_guion': {
         // ✅ CORRECCIÓN #1: Añadir tema específico al contexto
         const temaDelUsuario = processedContext || userContext.nicho;
         
