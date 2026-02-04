@@ -2336,140 +2336,152 @@ serve(async (req) => {
 
     
     case 'autopsia_viral':
-    case 'recreate': {
-    console.log(`[TITAN ULTRA] 🚀 Modo: ${selectedMode}`);
+case 'recreate': {
+    console.log(`[TITAN ULTRA] 🚀 Iniciando modo: ${selectedMode}`);
 
+    // --- 1. Inicialización de Variables ---
     let contentToAnalyze = "";
-    let targetTopic = processedContext;
+    let targetTopic = processedContext; // Tema específico si viene del contexto
     let platName = platform || 'General';
     let videoDescription = '';
     let actualWhisperMinutes = 0;
-    let videoMetadata: any = {};
-    let analysisDepth: 'basic' | 'standard' | 'premium' | 'ultra' = 'premium';
+    let videoMetadata = {};
+    let analysisDepth = 'standard'; // Valor por defecto seguro
 
-    // Determinar profundidad de análisis según créditos del usuario
-    const { data: profile } = await supabase
-        .from('profiles')
-        .select('credits, tier')
-        .eq('id', userId)
-        .single();
-    
-    if (profile?.tier === 'premium' || profile?.tier === 'admin') {
-        analysisDepth = 'ultra'; // Análisis completo
-    } else if ((profile?.credits || 0) > 20) {
-        analysisDepth = 'premium'; // Análisis avanzado
-    } else {
-        analysisDepth = 'standard'; // Análisis básico
+    // --- 2. Determinación de Nivel de Análisis (Optimizado) ---
+    try {
+        const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('credits, tier')
+            .eq('id', userId)
+            .single();
+
+        if (profileError) {
+            console.warn(`[TITAN ULTRA] ⚠️ No se pudo obtener perfil, usando nivel standard. Error: ${profileError.message}`);
+        } else {
+            if (profile?.tier === 'premium' || profile?.tier === 'admin') {
+                analysisDepth = 'ultra';
+            } else if ((profile?.credits || 0) > 20) {
+                analysisDepth = 'premium';
+            }
+        }
+    } catch (err) {
+        console.error(`[TITAN ULTRA] ❌ Error consultando perfil: ${err.message}`);
+        // Continuamos con el nivel standard por defecto
     }
 
+    console.log(`[TITAN ULTRA] 🎯 Nivel de análisis determinado: ${analysisDepth}`);
+
     try {
-        // ═══════════════════════════════════════════════════════════
-        // CASO A: URL PROPORCIONADA - ANÁLISIS ULTRA
-        // ═══════════════════════════════════════════════════════════
+        // --- 3. Obtención de Contenido (Lógica de Selección) ---
+        
+        // A: URL PROPORCIONADA -> ANÁLISIS ULTRA (Prioridad 1)
         if (url && url.includes('http')) {
-            console.log(`[TITAN ULTRA] 🎬 Iniciando análisis ${analysisDepth}...`);
+            console.log(`[TITAN ULTRA] 🎬 Procesando URL: ${url}`);
             
-            const ultraResult = await analyzeVideoUltra(url, openai, analysisDepth);
-            
-            // Extraer datos
-            contentToAnalyze = ultraResult.data.transcript?.text || '';
-            videoDescription = ultraResult.data.description || '';
-            platName = ultraResult.platform;
-            
-            // Calcular Whisper minutes si se usó
-            if (ultraResult.data.transcript?.source === 'whisper') {
-                actualWhisperMinutes = Math.ceil((ultraResult.data.transcript.duration || 0) / 60);
-                whisperMinutes = actualWhisperMinutes;
+            try {
+                const ultraResult = await analyzeVideoUltra(url, openai, analysisDepth);
+                
+                if (!ultraResult || !ultraResult.data) {
+                    throw new Error("La respuesta del análisis de video está vacía o es inválida.");
+                }
+
+                // Extracción de datos
+                contentToAnalyze = ultraResult.data.transcript?.text || '';
+                videoDescription = ultraResult.data.description || '';
+                platName = ultraResult.platform || platName;
+
+                // Cálculo de minutos Whisper
+                if (ultraResult.data.transcript?.source === 'whisper') {
+                    actualWhisperMinutes = Math.ceil((ultraResult.data.transcript.duration || 0) / 60);
+                    whisperMinutes = actualWhisperMinutes; // Variable global/externa
+                }
+
+                // Construcción de Metadata
+                videoMetadata = {
+                    ...ultraResult.data.metadata,
+                    transcriptSource: ultraResult.data.transcript?.source,
+                    transcriptConfidence: ultraResult.data.transcript?.confidence,
+                    visualAnalysis: ultraResult.data.visualAnalysis,
+                    audioAnalysis: ultraResult.data.audioAnalysis,
+                    ocr: ultraResult.data.ocr,
+                    sentiment: ultraResult.data.sentiment
+                };
+
+                console.log('[TITAN ULTRA] ✅ Análisis de URL completado exitosamente.');
+
+            } catch (urlError) {
+                console.error(`[TITAN ULTRA] ❌ Error analizando URL: ${urlError.message}`);
+                throw new Error(`Fallo al analizar la URL: ${urlError.message}`);
             }
-            
-            // Guardar metadata completa
-            videoMetadata = {
-                ...ultraResult.data.metadata,
-                transcriptSource: ultraResult.data.transcript?.source,
-                transcriptConfidence: ultraResult.data.transcript?.confidence,
-                visualAnalysis: ultraResult.data.visualAnalysis,
-                audioAnalysis: ultraResult.data.audioAnalysis,
-                ocr: ultraResult.data.ocr,
-                sentiment: ultraResult.data.sentiment
-            };
-            
-            console.log('[TITAN ULTRA] ✅ Análisis completado:', {
-                platform: platName,
-                transcriptLength: contentToAnalyze.length,
-                transcriptSource: ultraResult.data.transcript?.source,
-                confidence: ultraResult.data.transcript?.confidence,
-                hasVisualAnalysis: !!ultraResult.data.visualAnalysis,
-                hasAudioAnalysis: !!ultraResult.data.audioAnalysis,
-                hasOCR: !!ultraResult.data.ocr
-            });
         }
-        // ═══════════════════════════════════════════════════════════
-        // CASO B: VIDEO SUBIDO
-        // ═══════════════════════════════════════════════════════════
+        // B: VIDEO SUBIDO (Prioridad 2)
         else if (body.uploadedVideo && body.uploadedFileName) {
             console.log('[TITAN ULTRA] 📁 Procesando video subido...');
-            
-            const uploadResult = await processUploadedVideo(
-                body.uploadedVideo,
-                body.uploadedFileName,
-                openai
-            );
-            
-            contentToAnalyze = uploadResult.transcript;
-            videoDescription = `Video subido: ${body.uploadedFileName}`;
-            platName = 'upload';
-            actualWhisperMinutes = Math.ceil(uploadResult.duration / 60);
-            whisperMinutes = actualWhisperMinutes;
+            try {
+                const uploadResult = await processUploadedVideo(
+                    body.uploadedVideo,
+                    body.uploadedFileName,
+                    openai
+                );
+
+                contentToAnalyze = uploadResult.transcript;
+                videoDescription = `Video subido: ${body.uploadedFileName}`;
+                platName = 'upload';
+                actualWhisperMinutes = Math.ceil((uploadResult.duration || 0) / 60);
+                whisperMinutes = actualWhisperMinutes;
+
+            } catch (uploadError) {
+                console.error(`[TITAN ULTRA] ❌ Error procesando video subido: ${uploadError.message}`);
+                throw new Error(`Fallo al procesar el video subido: ${uploadError.message}`);
+            }
         }
-        // ═══════════════════════════════════════════════════════════
-        // CASO C: TEXTO MANUAL
-        // ═══════════════════════════════════════════════════════════
-        else if (processedContext && processedContext.length > 50) {
-            console.log('[TITAN ULTRA] 📝 Usando texto manual');
+        // C: TEXTO MANUAL (Prioridad 3 - Fallback)
+        else if (processedContext && processedContext.length > 20) { // Umbral mínimo razonable
+            console.log('[TITAN ULTRA] 📝 Usando texto manual proporcionado.');
             contentToAnalyze = processedContext;
             videoDescription = 'Transcripción manual';
         }
         else {
-            throw new Error('Proporciona URL, video subido, o transcripción manual.');
+            throw new Error('No se proporcionó una fuente válida (URL, video o texto) para analizar.');
         }
 
-        // Validación
+        // --- 4. Validación Final de Contenido ---
         if (!contentToAnalyze || contentToAnalyze.length < 20) {
-            throw new Error('Contenido insuficiente (mínimo 20 caracteres).');
+            throw new Error('El contenido extraído es insuficiente para un análisis significativo (mínimo 20 caracteres).');
         }
 
-        // ═══════════════════════════════════════════════════════════
-        // EJECUTAR AUTOPSIA VIRAL (EXTRACCIÓN DE ADN)
-        // ═══════════════════════════════════════════════════════════
+        // --- 5. Ejecución del Cerebro (Autopsia Viral) ---
         console.log('[TITAN ULTRA] 🔬 Ejecutando autopsia viral...');
-        
         const autopsiaRes = await ejecutarAutopsiaViral(
-            contentToAnalyze, 
-            platName, 
+            contentToAnalyze,
+            platName,
             openai
         );
-        
+
+        if (!autopsiaRes || !autopsiaRes.data) {
+            throw new Error("La autopsia viral no devolvió datos válidos.");
+        }
+
         const adnViral = autopsiaRes.data;
 
-        // ═══════════════════════════════════════════════════════════
-        // BIFURCACIÓN: AUTOPSIA vs INGENIERÍA INVERSA
-        // ═══════════════════════════════════════════════════════════
+        // --- 6. Bifurcación de Modos (Recreate vs Autopsia) ---
         if (selectedMode === 'recreate') {
-            // INGENIERÍA INVERSA
-            console.log(`[RECREATE ULTRA] 🧬 Clonando para: "${targetTopic}"...`);
-            
-            const contextoRecreate = { 
-                ...userContext, 
-                tema_especifico: targetTopic || userContext.nicho 
+            // MODO RECREATE (INGENIERÍA INVERSA)
+            console.log(`[RECREATE ULTRA] 🧬 Clonando contenido para el tema: "${targetTopic || 'General'}"...`);
+
+            const contextoRecreate = {
+                ...userContext, // Asumimos que userContext está disponible en el scope superior
+                tema_especifico: targetTopic || userContext?.nicho || 'General'
             };
-            
+
             const guionRes = await ejecutarGeneradorGuiones(
-                contextoRecreate, 
-                adnViral, 
-                openai, 
-                settings
+                contextoRecreate,
+                adnViral,
+                openai,
+                settings // Asumimos que settings está disponible
             );
-            
+
             result = {
                 autopsia: adnViral,
                 guion_generado: guionRes.data,
@@ -2494,13 +2506,13 @@ serve(async (req) => {
                     whisper_minutes: actualWhisperMinutes
                 }
             };
-            
-            tokensUsed = autopsiaRes.tokens + guionRes.tokens;
+
+            tokensUsed = (autopsiaRes.tokens || 0) + (guionRes.tokens || 0);
 
         } else {
-            // AUTOPSIA PURA
-            console.log('[AUTOPSIA ULTRA] 📊 Devolviendo análisis completo...');
-            
+            // MODO AUTOPSIA PURA
+            console.log('[AUTOPSIA ULTRA] 📊 Finalizando y devolviendo análisis completo...');
+
             result = {
                 ...adnViral,
                 metadata_ultra: {
@@ -2523,15 +2535,15 @@ serve(async (req) => {
                     whisper_minutes: actualWhisperMinutes
                 }
             };
-            
-            tokensUsed = autopsiaRes.tokens;
+
+            tokensUsed = autopsiaRes.tokens || 0;
         }
-        
-    } catch (error: any) {
-        console.error('[TITAN ULTRA] ❌ Error:', error.message);
-        throw error;
+
+    } catch (processError) {
+        console.error(`[TITAN ULTRA] ❌ Error crítico durante el procesamiento: ${processError.message}`);
+        throw processError; // Re-lanzar para que sea manejado por el bloque superior
     }
-    
+
     break;
 }
     
