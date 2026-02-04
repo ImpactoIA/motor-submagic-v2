@@ -16,6 +16,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import OpenAI from 'https://esm.sh/openai@4'
 import { ApifyClient } from 'npm:apify-client'
 
+// DESHABILITADO - No existe el archivo
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -1503,39 +1504,25 @@ async function ejecutarAutopsiaViral(
   platform: string,
   openai: any
 ): Promise<{ data: any; tokens: number }> {
-  console.log('[CEREBRO] 🔬 Ejecutando Autopsia Viral MEJORADA...');
+  console.log('[CEREBRO] 🔬 Ejecutando Autopsia Viral...');
   
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o',
     response_format: { type: 'json_object' },
     messages: [
-      { role: 'system', content: 'Eres el forense de viralidad #1 del mundo. DEBES devolver un JSON COMPLETO con TODAS las secciones.' },
+      { role: 'system', content: 'Eres el forense de viralidad #1 del mundo. DEBES devolver un JSON COMPLETO.' },
       { role: 'user', content: `${PROMPT_AUTOPSIA_VIRAL(platform)}\n\nCONTENIDO A ANALIZAR:\n${content}` }
     ],
-    temperature: 0.3,
+    temperature: 0.3, // Temperatura baja para ser preciso y analítico
     max_tokens: 4096
   });
   
   const data = JSON.parse(completion.choices[0].message.content || '{}');
   
-  // Validar que tenga las secciones críticas
-  if (!data.score_viral || !data.adn_extraido || !data.desglose_temporal) {
-    console.error('[AUTOPSIA] ⚠️ Respuesta incompleta, rellenando con datos mínimos...');
-    return {
-      data: {
-        score_viral: data.score_viral || { potencial_total: 0, factores_exito: [], nivel_replicabilidad: "N/A" },
-        adn_extraido: data.adn_extraido || { idea_ganadora: "No disponible", disparador_psicologico: "N/A", estructura_exacta: "N/A", formula_gancho: "N/A" },
-        desglose_temporal: data.desglose_temporal || [],
-        patron_replicable: data.patron_replicable || { nombre_patron: "N/A", formula: "N/A", aplicacion_generica: "N/A" },
-        produccion_deconstruida: data.produccion_deconstruida || {},
-        insights_algoritmicos: data.insights_algoritmicos || {}
-      },
-      tokens: completion.usage?.total_tokens || 0
-    };
+  // Validación básica por si la IA alucina y no devuelve los campos clave
+  if (!data.score_viral || !data.adn_extraido) {
+    console.warn('[AUTOPSIA] ⚠️ Respuesta incompleta detectada. (La IA devolvió JSON pero faltan campos clave).');
   }
-  
-  if (data.patron_replicable) MEMORIA_SISTEMA.patrones_virales.push(data.patron_replicable.nombre_patron);
-  if (data.adn_extraido?.formula_gancho) MEMORIA_SISTEMA.hooks_alto_rendimiento.push(data.adn_extraido.formula_gancho);
   
   return {
     data,
@@ -1549,21 +1536,58 @@ async function ejecutarGeneradorGuiones(
   openai: any,
   settings: any = {}
 ): Promise<{ data: any; tokens: number }> {
-  console.log('[CEREBRO] ✍️ Ejecutando Generador de Guiones MEJORADO...');
+  console.log('[CEREBRO] ✍️ Ejecutando Generador de Guiones...');
+  
+  let systemPrompt: string;
+  let temperature: number;
+  
+  // DECISIÓN: ¿Hay ADN viral?
+  if (viralDNA && viralDNA.adn_extraido) {
+    // MODO INGENIERÍA INVERSA
+    console.log('[GENERADOR] 🧬 Modo: INGENIERÍA INVERSA ELITE');
+    
+    const nichoDestino = settings.manual_niche || contexto.nicho;
+    const temaEspecifico = contexto.tema_especifico || nichoDestino;
+    
+    systemPrompt = PROMPT_INGENIERIA_INVERSA_ELITE(
+      viralDNA,
+      nichoDestino,
+      temaEspecifico,
+      contexto
+    );
+    
+    temperature = 0.4;
+    
+  } else {
+    // MODO CREACIÓN NORMAL
+    console.log('[GENERADOR] ✨ Modo: CREACIÓN ORIGINAL');
+    
+    systemPrompt = PROMPT_GENERADOR_GUIONES(contexto, null, settings);
+    temperature = 0.7;
+  }
   
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o',
     response_format: { type: 'json_object' },
     messages: [
-      { role: 'system', content: 'Eres el mejor guionista de contenido viral en español. REGLA CRÍTICA: Escribe el guion COMPLETO palabra por palabra sobre el tema específico, nunca resúmenes.' },
-      { role: 'user', content: PROMPT_GENERADOR_GUIONES(contexto, viralDNA, settings) }
+      { role: 'system', content: 'Eres el mejor guionista de contenido viral en español.' },
+      { role: 'user', content: systemPrompt }
     ],
-    temperature: 0.7,
+    temperature,
     max_tokens: 4096
   });
   
+  const parsedData = JSON.parse(completion.choices[0].message.content || '{}');
+  
+  // Normalizar output
+  const normalizedData = {
+    ...parsedData,
+    guion_completo: parsedData.guion_completo_adaptado || parsedData.guion_completo,
+    modo_usado: viralDNA ? 'ingenieria_inversa_elite' : 'creacion_original'
+  };
+  
   return {
-    data: JSON.parse(completion.choices[0].message.content || '{}'),
+    data: normalizedData,
     tokens: completion.usage?.total_tokens || 0
   };
 }
@@ -2311,161 +2335,205 @@ serve(async (req) => {
       }
 
     
-      case 'autopsia_viral':
-      case 'recreate': {
-    console.log(`[TITAN] 🚀 Modo: ${selectedMode}`);
+    case 'autopsia_viral':
+    case 'recreate': {
+    console.log(`[TITAN ULTRA] 🚀 Modo: ${selectedMode}`);
 
-    // 1. VARIABLES
     let contentToAnalyze = "";
     let targetTopic = processedContext;
     let platName = platform || 'General';
     let videoDescription = '';
     let actualWhisperMinutes = 0;
-    let videoSource: 'url' | 'upload' | 'manual' = 'manual';
+    let videoMetadata: any = {};
+    let analysisDepth: 'basic' | 'standard' | 'premium' | 'ultra' = 'premium';
 
-    // 2. OBTENER CONTENIDO DEL VIDEO
+    // Determinar profundidad de análisis según créditos del usuario
+    const { data: profile } = await supabase
+        .from('profiles')
+        .select('credits, tier')
+        .eq('id', userId)
+        .single();
     
-    // Extraer datos del body
-    const videoUrl = url || body.url || null;
-    const uploadedFile = body.uploadedVideo || null;
-    const uploadedFileName = body.uploadedFileName || 'video.mp4';
+    if (profile?.tier === 'premium' || profile?.tier === 'admin') {
+        analysisDepth = 'ultra'; // Análisis completo
+    } else if ((profile?.credits || 0) > 20) {
+        analysisDepth = 'premium'; // Análisis avanzado
+    } else {
+        analysisDepth = 'standard'; // Análisis básico
+    }
 
     try {
-        // ──────────────────────────────────────────────────────────
-        // CASO A: URL o ARCHIVO SUBIDO
-        // ──────────────────────────────────────────────────────────
-        if (videoUrl || uploadedFile) {
-            console.log('[TITAN] 🎬 Obteniendo contenido del video...');
+        // ═══════════════════════════════════════════════════════════
+        // CASO A: URL PROPORCIONADA - ANÁLISIS ULTRA
+        // ═══════════════════════════════════════════════════════════
+        if (url && url.includes('http')) {
+            console.log(`[TITAN ULTRA] 🎬 Iniciando análisis ${analysisDepth}...`);
             
-            const videoData = await getVideoContent(
-                videoUrl,
-                uploadedFile,
-                uploadedFileName,
-                openai
-            );
+            const ultraResult = await analyzeVideoUltra(url, openai, analysisDepth);
             
-            contentToAnalyze = videoData.transcript;
-            videoDescription = videoData.description;
-            platName = videoData.platform;
-            videoSource = videoData.source;
+            // Extraer datos
+            contentToAnalyze = ultraResult.data.transcript?.text || '';
+            videoDescription = ultraResult.data.description || '';
+            platName = ultraResult.platform;
             
-            if (videoData.duration > 0) {
-                actualWhisperMinutes = Math.ceil(videoData.duration / 60);
+            // Calcular Whisper minutes si se usó
+            if (ultraResult.data.transcript?.source === 'whisper') {
+                actualWhisperMinutes = Math.ceil((ultraResult.data.transcript.duration || 0) / 60);
                 whisperMinutes = actualWhisperMinutes;
             }
             
-            console.log('[TITAN] ✅ Contenido obtenido:', {
-                source: videoSource,
+            // Guardar metadata completa
+            videoMetadata = {
+                ...ultraResult.data.metadata,
+                transcriptSource: ultraResult.data.transcript?.source,
+                transcriptConfidence: ultraResult.data.transcript?.confidence,
+                visualAnalysis: ultraResult.data.visualAnalysis,
+                audioAnalysis: ultraResult.data.audioAnalysis,
+                ocr: ultraResult.data.ocr,
+                sentiment: ultraResult.data.sentiment
+            };
+            
+            console.log('[TITAN ULTRA] ✅ Análisis completado:', {
                 platform: platName,
                 transcriptLength: contentToAnalyze.length,
-                whisperMinutes: actualWhisperMinutes
+                transcriptSource: ultraResult.data.transcript?.source,
+                confidence: ultraResult.data.transcript?.confidence,
+                hasVisualAnalysis: !!ultraResult.data.visualAnalysis,
+                hasAudioAnalysis: !!ultraResult.data.audioAnalysis,
+                hasOCR: !!ultraResult.data.ocr
             });
         }
-        // ──────────────────────────────────────────────────────────
-        // CASO B: TEXTO MANUAL (FALLBACK)
-        // ──────────────────────────────────────────────────────────
+        // ═══════════════════════════════════════════════════════════
+        // CASO B: VIDEO SUBIDO
+        // ═══════════════════════════════════════════════════════════
+        else if (body.uploadedVideo && body.uploadedFileName) {
+            console.log('[TITAN ULTRA] 📁 Procesando video subido...');
+            
+            const uploadResult = await processUploadedVideo(
+                body.uploadedVideo,
+                body.uploadedFileName,
+                openai
+            );
+            
+            contentToAnalyze = uploadResult.transcript;
+            videoDescription = `Video subido: ${body.uploadedFileName}`;
+            platName = 'upload';
+            actualWhisperMinutes = Math.ceil(uploadResult.duration / 60);
+            whisperMinutes = actualWhisperMinutes;
+        }
+        // ═══════════════════════════════════════════════════════════
+        // CASO C: TEXTO MANUAL
+        // ═══════════════════════════════════════════════════════════
         else if (processedContext && processedContext.length > 50) {
-            console.log('[TITAN] 📝 Usando texto manual');
+            console.log('[TITAN ULTRA] 📝 Usando texto manual');
             contentToAnalyze = processedContext;
             videoDescription = 'Transcripción manual';
-            videoSource = 'manual';
         }
-        // ──────────────────────────────────────────────────────────
-        // ERROR: SIN DATOS
-        // ──────────────────────────────────────────────────────────
         else {
-            throw new Error('Proporciona: URL, video subido, o transcripción manual.');
+            throw new Error('Proporciona URL, video subido, o transcripción manual.');
         }
 
-    } catch (videoError: any) {
-        console.error('[TITAN] ❌ Error obteniendo video:', videoError.message);
-        
-        // FALLBACK FINAL: Texto manual
-        if (processedContext && processedContext.length > 50) {
-            console.log('[TITAN] ⚠️ Usando texto manual como último recurso');
-            contentToAnalyze = processedContext;
-            videoSource = 'manual';
-        } else {
-            throw new Error(`Error: ${videoError.message}`);
+        // Validación
+        if (!contentToAnalyze || contentToAnalyze.length < 20) {
+            throw new Error('Contenido insuficiente (mínimo 20 caracteres).');
         }
-    }
 
-    // Validación
-    if (!contentToAnalyze || contentToAnalyze.length < 20) {
-        throw new Error('Contenido insuficiente para análisis (mínimo 20 caracteres).');
-    }
-
-    // 3. AUTOPSIA (EXTRAER ADN)
-    console.log('[TITAN] 🔬 Ejecutando autopsia viral...');
-    
-    const autopsiaRes = await ejecutarAutopsiaViral(
-        contentToAnalyze, 
-        platName, 
-        openai
-    );
-    
-    const adnViral = autopsiaRes.data;
-
-    // 4. BIFURCACIÓN
-    if (selectedMode === 'recreate') {
-        // ═══════════════════════════════════════════════════
-        // MODO INGENIERÍA INVERSA
-        // ═══════════════════════════════════════════════════
-        console.log(`[RECREATE] 🧬 Clonando al nicho: "${targetTopic}"...`);
+        // ═══════════════════════════════════════════════════════════
+        // EJECUTAR AUTOPSIA VIRAL (EXTRACCIÓN DE ADN)
+        // ═══════════════════════════════════════════════════════════
+        console.log('[TITAN ULTRA] 🔬 Ejecutando autopsia viral...');
         
-        const contextoRecreate = { 
-            ...userContext, 
-            tema_especifico: targetTopic || userContext.nicho 
-        };
-        
-        const guionRes = await ejecutarGeneradorGuiones(
-            contextoRecreate, 
-            adnViral, 
-            openai, 
-            settings
+        const autopsiaRes = await ejecutarAutopsiaViral(
+            contentToAnalyze, 
+            platName, 
+            openai
         );
         
-        result = {
-            autopsia: adnViral,
-            guion_generado: guionRes.data,
-            modo: "ingenieria_inversa_exitosa",
-            metadata_video: {
-                source: videoSource,
-                platform: platName,
-                description: videoDescription,
-                whisper_used: actualWhisperMinutes > 0,
-                whisper_minutes: actualWhisperMinutes,
-                original_url: videoUrl || null,
-                uploaded_file: uploadedFileName || null
-            }
-        };
-        
-        tokensUsed = autopsiaRes.tokens + guionRes.tokens;
+        const adnViral = autopsiaRes.data;
 
-    } else {
-        // ═══════════════════════════════════════════════════
-        // MODO AUTOPSIA PURA
-        // ═══════════════════════════════════════════════════
-        console.log('[AUTOPSIA] 📊 Devolviendo análisis...');
+        // ═══════════════════════════════════════════════════════════
+        // BIFURCACIÓN: AUTOPSIA vs INGENIERÍA INVERSA
+        // ═══════════════════════════════════════════════════════════
+        if (selectedMode === 'recreate') {
+            // INGENIERÍA INVERSA
+            console.log(`[RECREATE ULTRA] 🧬 Clonando para: "${targetTopic}"...`);
+            
+            const contextoRecreate = { 
+                ...userContext, 
+                tema_especifico: targetTopic || userContext.nicho 
+            };
+            
+            const guionRes = await ejecutarGeneradorGuiones(
+                contextoRecreate, 
+                adnViral, 
+                openai, 
+                settings
+            );
+            
+            result = {
+                autopsia: adnViral,
+                guion_generado: guionRes.data,
+                modo: "ingenieria_inversa_ultra",
+                metadata_ultra: {
+                    analysisDepth,
+                    transcriptSource: videoMetadata.transcriptSource || 'manual',
+                    transcriptConfidence: videoMetadata.transcriptConfidence || 1.0,
+                    platform: platName,
+                    videoStats: {
+                        likes: videoMetadata.likes || 0,
+                        views: videoMetadata.views || 0,
+                        comments: videoMetadata.comments || 0,
+                        shares: videoMetadata.shares || 0,
+                        engagement_rate: videoMetadata.engagement_rate || 0
+                    },
+                    visualAnalysis: videoMetadata.visualAnalysis || null,
+                    audioAnalysis: videoMetadata.audioAnalysis || null,
+                    ocr: videoMetadata.ocr || null,
+                    sentiment: videoMetadata.sentiment || null,
+                    whisper_used: actualWhisperMinutes > 0,
+                    whisper_minutes: actualWhisperMinutes
+                }
+            };
+            
+            tokensUsed = autopsiaRes.tokens + guionRes.tokens;
+
+        } else {
+            // AUTOPSIA PURA
+            console.log('[AUTOPSIA ULTRA] 📊 Devolviendo análisis completo...');
+            
+            result = {
+                ...adnViral,
+                metadata_ultra: {
+                    analysisDepth,
+                    transcriptSource: videoMetadata.transcriptSource || 'manual',
+                    transcriptConfidence: videoMetadata.transcriptConfidence || 1.0,
+                    platform: platName,
+                    videoStats: {
+                        likes: videoMetadata.likes || 0,
+                        views: videoMetadata.views || 0,
+                        comments: videoMetadata.comments || 0,
+                        shares: videoMetadata.shares || 0,
+                        engagement_rate: videoMetadata.engagement_rate || 0
+                    },
+                    visualAnalysis: videoMetadata.visualAnalysis || null,
+                    audioAnalysis: videoMetadata.audioAnalysis || null,
+                    ocr: videoMetadata.ocr || null,
+                    sentiment: videoMetadata.sentiment || null,
+                    whisper_used: actualWhisperMinutes > 0,
+                    whisper_minutes: actualWhisperMinutes
+                }
+            };
+            
+            tokensUsed = autopsiaRes.tokens;
+        }
         
-        result = {
-            ...adnViral,
-            metadata_video: {
-                source: videoSource,
-                platform: platName,
-                description: videoDescription,
-                whisper_used: actualWhisperMinutes > 0,
-                whisper_minutes: actualWhisperMinutes,
-                original_url: videoUrl || null,
-                uploaded_file: uploadedFileName || null
-            }
-        };
-        
-        tokensUsed = autopsiaRes.tokens;
+    } catch (error: any) {
+        console.error('[TITAN ULTRA] ❌ Error:', error.message);
+        throw error;
     }
     
     break;
-      }
+}
     
       case 'generar_guion': {
         // ✅ CORRECCIÓN #1: Añadir tema específico al contexto
@@ -2524,10 +2592,10 @@ serve(async (req) => {
       case 'audit_expert': {
         console.log('[TITAN] 🎯 Iniciando Auditoría de Experto V2...');
 
-        // 1. Intentamos obtener el texto directamente del Frontend (transcript)
+        // 1. Intentamos obtener el texto directamente del Frontend (transcript trae el JSON)
         let infoParaAnalizar = processedContext;
 
-        // 2. Si no hay texto (ej: auditoría desde botón sin formulario activo), armamos el texto desde la BD
+        // 2. Si no hay texto (ej: auditoría automática), armamos el texto desde la BD
         if (!infoParaAnalizar || infoParaAnalizar.length < 50) {
           if (expertId) {
             const { data: expertData } = await supabase
@@ -2537,22 +2605,22 @@ serve(async (req) => {
               .single();
             
             if (expertData) {
-              // Construimos el "Expediente" para el Juez
+              // Mapeamos los campos reales de tu base de datos (mission, framework, etc.)
               infoParaAnalizar = `
                 NOMBRE: ${expertData.name || 'N/A'}
                 NICHO: ${expertData.niche || 'N/A'}
                 
-                HISTORIA DE ORIGEN:
-                ${expertData.story || expertData.backstory || 'No especificada'}
+                MISIÓN / PROPUESTA DE VALOR:
+                ${expertData.mission || 'No especificada'}
                 
-                MÉTODO ÚNICO / VEHÍCULO:
-                ${expertData.unique_mechanism || expertData.vehicle || 'No especificado'}
+                FRAMEWORK / METODOLOGÍA:
+                ${expertData.framework || 'No especificado'}
                 
-                PROMESA / OFERTA:
-                ${expertData.promise || expertData.results || 'No especificada'}
+                VOCABULARIO CLAVE:
+                ${expertData.key_vocabulary || 'No especificado'}
                 
-                POSICIONAMIENTO ACTUAL:
-                ${expertData.positioning || 'No especificado'}
+                TONO DE VOZ:
+                ${expertData.tone || 'No especificado'}
               `;
             }
           }
@@ -2563,7 +2631,7 @@ serve(async (req) => {
             throw new Error("No hay suficiente información del experto para auditar. Completa el perfil primero.");
         }
         
-        // 3. Llamamos al Ejecutor con el texto preparado
+        // 3. Llamamos al Ejecutor con el texto preparado (AHORA SÍ FUNCIONARÁ)
         const res = await ejecutarAuditorExperto(infoParaAnalizar, userContext.nicho, openai);
         result = res.data;
         tokensUsed = res.tokens;
