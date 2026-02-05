@@ -263,7 +263,10 @@ FORMATO DE SALIDA JSON ESTRICTO (TODAS LAS SECCIONES OBLIGATORIAS):
 }`;
 
 // ==================================================================================
-// 🧬 PROMPT ELITE TOP 0.1% MUNDIAL - CLONACIÓN BIO-DIGITAL DE VIRALIDAD
+// 🧬 PROMPT INGENIERÍA INVERSA ELITE V2.0 - ULTRA LITERAL
+// ==================================================================================
+// UBICACIÓN: Reemplazar en index.ts línea ~400
+// ESTE PROMPT FUERZA LA CLONACIÓN PALABRA POR PALABRA
 // ==================================================================================
 
 const PROMPT_INGENIERIA_INVERSA_ELITE = (
@@ -277,115 +280,204 @@ const PROMPT_INGENIERIA_INVERSA_ELITE = (
   const dolorDestino = contextoUsuario.dolor_principal || `Estancamiento en ${nichoDestino}`;
   const deseoDestino = contextoUsuario.deseo_principal || `Autoridad y resultados en ${nichoDestino}`;
 
+  // Extraer datos clave del ADN
+  const ideaOriginal = adnViral.adn_extraido?.idea_ganadora || adnViral.idea_ganadora || "Idea viral detectada";
+  const disparadorPsicologico = adnViral.adn_extraido?.disparador_psicologico || adnViral.disparador_psicologico || "Curiosidad";
+  const formulaGancho = adnViral.adn_extraido?.formula_gancho || adnViral.formula_gancho || "[HOOK]";
+  const estructuraExacta = adnViral.adn_extraido?.estructura_exacta || adnViral.estructura_exacta || "Problema-Solución";
+  const nombrePatron = adnViral.patron_replicable?.nombre_patron || "Patrón detectado";
+  const formulaPatron = adnViral.patron_replicable?.formula || "Paso 1 → Paso 2 → Paso 3";
+
   return `
 ═════════════════════════════════════════════════════════════════════════════
- 🧬 PROTOCOLO OMEGA: CLONACIÓN DE ARQUITECTURA VIRAL (NIVEL DIOS)
+ 🧬 CLONACIÓN MOLECULAR DE ARQUITECTURA VIRAL - NIVEL DIOS
 ═════════════════════════════════════════════════════════════════════════════
 
-ERES EL DIRECTOR CREATIVO Y PSICÓLOGO CONDUCTUAL MÁS CARO DEL MUNDO.
-No solo "escribes guiones". Tú tomas un contenido ganador, extraes su alma matemática y emocional, y la trasplantas quirúrgicamente a un nuevo cuerpo (el nicho del usuario).
+ERES EL INGENIERO DE VIRALIDAD #1 DEL MUNDO.
+Tu trabajo NO es crear contenido nuevo. Tu trabajo es CLONAR quirúrgicamente la estructura de un video viral y trasplantarla a un nuevo nicho.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧪 INGREDIENTES ACTIVOS (INPUT)
+📊 DATOS DEL VIDEO ORIGINAL (EL BLUEPRINT)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-🧬 ADN VIRAL (LA ESTRUCTURA A CLONAR):
-${JSON.stringify(adnViral, null, 2)}
+🎯 IDEA CENTRAL DEL VIDEO ORIGINAL:
+"${ideaOriginal}"
 
-🎯 SUJETO DE PRUEBA (TU NUEVO VIDEO):
-• Nicho: ${nichoDestino}
-• Tema: "${temaEspecifico}"
-• Avatar: ${avatarDestino}
-• Dolor a pulsar: ${dolorDestino}
-• Deseo a activar: ${deseoDestino}
+🧠 TRIGGER PSICOLÓGICO QUE USA:
+${disparadorPsicologico}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧠 MOTOR DE RAZONAMIENTO (CHAIN OF THOUGHT)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🪝 FÓRMULA DEL GANCHO:
+${formulaGancho}
 
-ANTES DE GENERAR, REALIZA ESTE PROCESO MENTAL:
-1.  **Decodificación del Sesgo:** ¿Qué sesgo cognitivo usa el original? (¿Aversión a la pérdida? ¿Efecto Dunning-Kruger? ¿FOMO?). Identifícalo y aplícalo al nuevo tema.
-2.  **Mapeo de Intensidad:** Si el original grita en el segundo 5, tu guion debe pedir intensidad en el segundo 5. Si susurra, tú susurras.
-3.  **Traducción de Autoridad:** Si el original usa una gráfica de bolsa para mostrar autoridad, ¿qué usa tu nicho? (¿Una radiografía? ¿Un contrato? ¿Un código?).
+🏗️ ESTRUCTURA NARRATIVA:
+${estructuraExacta}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚡ REGLAS DE ORO DE LA ADAPTACIÓN (LEYES INMUTABLES)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📐 PATRÓN MATEMÁTICO DETECTADO:
+Nombre: ${nombrePatron}
+Fórmula: ${formulaPatron}
 
-1.  **LA REGLA DEL ESPEJO:** Si el video original dice "3 frutas que te matan", tú NO puedes decir "La importancia de la dieta". Debes decir "3 errores en ${temaEspecifico} que te arruinan". La especificidad sintáctica debe mantenerse.
-2.  **TIMING QUIRÚRGICO:** El guion debe estar cronometrado. Si el hook dura 2.5s, tu hook no puede durar 6s. Sé conciso.
-3.  **LENGUAJE SENSORIAL:** Usa palabras que se puedan "ver" o "sentir". Evita lo abstracto.
-4.  **DIRECCIÓN DE ACTOR:** Incluye acotaciones sobre CÓMO decir la frase (rápido, lento, enfadado, sarcástico).
+🕐 DESGLOSE TEMPORAL (TIMING EXACTO):
+${JSON.stringify(adnViral.desglose_temporal || [], null, 2)}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎬 EJEMPLOS DE TRADUCCIÓN AVANZADA (NIVEL EXPERTO)
+🎯 TU NUEVA AUDIENCIA (DESTINO DE LA CLONACIÓN)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-ORIGINAL (Relaciones): "Mi novio me dejó por esto..." (Vulnerabilidad + Curiosidad)
-TUYO (Bienes Raíces): "Perdí mi primera venta por esto..." (Vulnerabilidad + Curiosidad)
-
-ORIGINAL (Fitness): "Deja de hacer Crunches, te estás rompiendo la espalda." (Orden negativa + Miedo físico)
-TUYO (Marketing): "Deja de usar el botón 'Promocionar', estás quemando tu dinero." (Orden negativa + Miedo financiero)
+📍 NICHO DESTINO: ${nichoDestino}
+🎯 TEMA ESPECÍFICO: "${temaEspecifico}"
+👤 AVATAR: ${avatarDestino}
+💔 DOLOR A ATACAR: ${dolorDestino}
+✨ DESEO A ACTIVAR: ${deseoDestino}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📊 SALIDA JSON REQUERIDA (ESTRUCTURA OMEGA)
+⚠️ REGLAS DE CLONACIÓN MATEMÁTICA (OBLIGATORIAS)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Debes devolver un JSON estrictamente válido con esta estructura enriquecida:
+1. **MANTÉN LA ESTRUCTURA SINTÁCTICA EXACTA:**
+   - Si el original dice: "Despedir empleados es emocionalmente difícil"
+   - Tú debes decir: "Despedir [CONCEPTO DE ${temaEspecifico}] es emocionalmente difícil"
+   - NO cambies la estructura, SOLO cambia las palabras clave del nicho
+
+2. **RESPETA EL TIMING AL SEGUNDO:**
+   - Si el gancho es de 0-3s, tu gancho debe ser de 0-3s
+   - Si hay un giro en el segundo 15, tú debes ponerlo en el segundo 15
+   - COPIA el timing exacto del desglose temporal
+
+3. **USA EL MISMO TRIGGER PSICOLÓGICO:**
+   - El original usa: ${disparadorPsicologico}
+   - Tú también DEBES usar: ${disparadorPsicologico}
+   - Mantén la misma intensidad emocional
+
+4. **CLONA LA FÓRMULA DEL GANCHO:**
+   - Original: ${formulaGancho}
+   - Traduce cada elemento a ${temaEspecifico}
+   - Ejemplo: Si dice "[NÚMERO] + [PROBLEMA]" → "3 errores en ${temaEspecifico}"
+
+5. **NO INVENTES NADA NUEVO:**
+   - NO agregues secciones que no estaban en el original
+   - NO cambies el orden de los elementos
+   - SOLO traduce las palabras clave al nuevo nicho
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔬 PROCESO DE TRADUCCIÓN PASO A PASO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PASO 1: IDENTIFICA LAS PALABRAS CLAVE DEL ORIGINAL
+Ej: "empleados", "despedir", "emocionalmente difícil"
+
+PASO 2: ENCUENTRA EL EQUIVALENTE EN ${temaEspecifico}
+Ej: "clientes" → "estrategias", "despedir" → "eliminar", etc.
+
+PASO 3: REEMPLAZA PALABRA POR PALABRA
+Mantén la misma frase, solo cambia los sustantivos/verbos clave
+
+PASO 4: VERIFICA EL TIMING
+Asegúrate que cada sección tenga la misma duración que el original
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📤 FORMATO DE SALIDA (JSON ESTRICTO)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Devuelve EXACTAMENTE esta estructura:
 
 {
   "analisis_estrategico": {
-    "sesgo_cognitivo_detectado": "[El sesgo psicológico exacto que hacía viral al original]",
-    "estrategia_adaptacion": "Cómo aplicaste ese sesgo a ${nichoDestino}",
+    "sesgo_cognitivo_detectado": "${disparadorPsicologico} (mismo del original)",
+    "idea_original": "${ideaOriginal}",
+    "idea_adaptada": "La MISMA idea pero traducida a ${temaEspecifico}",
+    "estrategia_adaptacion": "Explica palabra por palabra qué cambiaste y por qué",
     "nivel_fidelidad": "99%"
   },
 
-  "guion_tecnico_completo": "GUION LISTO PARA TELEPROMPTER.\\n\\n[0-3s] (Tono: Urgente/Alarmista) ¡Detente! Si estás haciendo esto en ${temaEspecifico}, vas a fracasar.\\n\\n[4-10s] (Tono: Empático y suave) Lo sé, te han dicho que es lo correcto para ${dolorDestino}...\\n\\n... (CONTINÚA HASTA EL FINAL RESPETANDO LA ESTRUCTURA)",
+  "guion_tecnico_completo": "GUION COMPLETO PALABRA POR PALABRA.\\n\\n[0-3s] (MISMO TIMING DEL ORIGINAL)\\nGancho adaptado a ${temaEspecifico} pero con la MISMA estructura...\\n\\n[4-10s]\\n(Continúa RESPETANDO EL TIMING EXACTO)\\n\\n... HASTA EL FINAL",
 
   "plan_visual_director": [
     {
       "tiempo": "0-3s",
-      "texto_en_pantalla": "Hook visual impactante",
-      "accion_camara": "[Primer plano / Zoom in agresivo / Cámara estática]",
-      "descripcion_visual": "Descripción exacta de lo que se ve para ${nichoDestino}",
-      "audio_sfx": "[Sonido de error / Boom / Silencio total]"
-    },
-    {
-      "tiempo": "4-10s",
-      "texto_en_pantalla": "Palabras clave",
-      "accion_camara": "[Plano medio / B-Roll]",
-      "descripcion_visual": "...",
-      "audio_sfx": "..."
+      "texto_en_pantalla": "MISMO tipo de texto que el original, adaptado",
+      "accion_camara": "MISMA acción de cámara del original",
+      "descripcion_visual": "MISMA descripción visual, adaptada a ${temaEspecifico}",
+      "audio_sfx": "MISMO tipo de audio del original"
     }
+    // ... REPITE PARA CADA SECCIÓN DEL DESGLOSE TEMPORAL
+  ],
+
+  "tabla_comparativa_literal": [
+    {
+      "segundo": "0-3s",
+      "frase_original_exacta": "Primera frase del video original",
+      "frase_adaptada_exacta": "La MISMA frase pero con palabras de ${temaEspecifico}",
+      "cambios_realizados": "Empleados → Clientes, Despedir → Eliminar"
+    }
+    // ... PARA CADA SECCIÓN
   ],
 
   "psicologia_aplicada": [
     {
-      "segundo_exacto": "12s",
-      "trigger_original": "Prueba social (mostró a mucha gente)",
-      "trigger_adaptado": "Autoridad (muestras un resultado específico en ${temaEspecifico})"
+      "segundo_exacto": "3s",
+      "trigger_original": "${disparadorPsicologico}",
+      "trigger_adaptado": "MISMO trigger aplicado a ${temaEspecifico}",
+      "por_que_funciona": "Explica por qué este trigger conecta con ${dolorDestino}"
     }
   ],
 
-  "validacion_final": {
+  "validacion_fidelidad": {
     "checklist": [
-      { "item": "Mantiene la estructura temporal", "estado": true },
-      { "item": "Ataca el dolor del nuevo avatar", "estado": true },
-      { "item": "Usa el mismo tipo de gancho", "estado": true }
+      { "item": "Mantiene estructura temporal exacta", "cumple": true },
+      { "item": "Usa el mismo trigger psicológico", "cumple": true },
+      { "item": "Respeta el timing segundo a segundo", "cumple": true },
+      { "item": "Solo cambia palabras clave del nicho", "cumple": true },
+      { "item": "Fidelidad matemática > 95%", "cumple": true }
     ],
-    "consejo_pro": "Un tip final para que la grabación salga perfecta"
+    "score_clonacion": 99,
+    "advertencias": ["Lista cualquier cambio que hayas hecho y POR QUÉ fue necesario"]
   }
 }
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🚀 EJECUCIÓN
+🔥 EJEMPLO EXTREMO DE CLONACIÓN LITERAL
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Ahora, realiza la CLONACIÓN.
-Video Base: Estructura del ADN provisto.
-Nuevo Destino: ${nichoDestino} / ${temaEspecifico}.
+VIDEO ORIGINAL (Recursos Humanos):
+[0-3s] "Despedir empleados es la parte más difícil de ser CEO"
 
-NO INVENTES ESTRUCTURAS. COPIA LA MATEMÁTICA, CAMBIA LA PALABRA.
+TU GUION ADAPTADO (Marketing Digital):
+[0-3s] "Despedir campañas es la parte más difícil de ser marketero"
+
+¿VES? La estructura es IDÉNTICA. Solo cambié:
+- "empleados" → "campañas"
+- "CEO" → "marketero"
+
+TODO LO DEMÁS ES IGUAL: timing, estructura sintáctica, tono, longitud.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠️ ADVERTENCIA FINAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Si te encuentras escribiendo frases como:
+- "En este video te voy a enseñar..."
+- "Hoy vamos a hablar de..."
+- "Bienvenidos a..."
+
+❌ ESTÁS HACIENDO MAL EL TRABAJO.
+
+Debes escribir EXACTAMENTE lo que dice el video original, pero traducido a ${temaEspecifico}.
+
+Si el original empieza con: "Lo que nadie te dice sobre X"
+Tú debes empezar con: "Lo que nadie te dice sobre ${temaEspecifico}"
+
+NO inventes. NO improvises. CLONA.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚀 AHORA EJECUTA LA CLONACIÓN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Video original sobre: "${ideaOriginal}"
+Nicho destino: ${nichoDestino}
+Tema específico: "${temaEspecifico}"
+
+Genera el JSON COMPLETO con el guion CLONADO palabra por palabra.
+RECUERDA: 99% de fidelidad estructural. Solo cambia las palabras del nicho.
 `;
 };
 
