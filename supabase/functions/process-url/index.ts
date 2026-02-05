@@ -198,8 +198,12 @@ FORMATO DE SALIDA JSON ESTRICTO:
 
 ⚠️ INSTRUCCIÓN CRÍTICA: Todas las ideas deben estar en ESPAÑOL NEUTRO y ser específicas para el nicho del usuario.`;
 
-// 2️⃣ AUTOPSIA VIRAL (MEJORADO - CORRECCIÓN #5)
-const PROMPT_AUTOPSIA_VIRAL = (platform: string) => `ERES EL FORENSE DE VIRALIDAD #1 DEL MUNDO.
+// ==================================================================================
+// 🕵️ PROMPT AUTOPSIA VIRAL - NIVEL FORENSE (CORREGIDO PARA FRONTEND)
+// ==================================================================================
+
+const PROMPT_AUTOPSIA_VIRAL = (platform: string) => `
+ERES EL FORENSE DE VIRALIDAD #1 DEL MUNDO.
 TU MISIÓN: Deconstruir videos virales hasta sus componentes atómicos y extraer el ADN replicable.
 
 INSTRUCCIONES CRÍTICAS:
@@ -210,97 +214,53 @@ INSTRUCCIONES CRÍTICAS:
 
 PLATAFORMA: ${platform}
 
-PROTOCOLO DE SECUENCIACIÓN (6 CAPAS):
-
-CAPA 1: ADN DEL GANCHO (0-3s)
-- Tipo de disparador exacto: (Curiosidad/Miedo/Identidad/Shock/Patrón-Interrupción)
-- Fórmula estructural: [ELEMENTO 1] + [ELEMENTO 2]
-- Mecanismo psicológico activado: Por qué el cerebro no puede parar de ver
-- Score de retención predicho: 0-100
-
-CAPA 2: ARQUITECTURA DE RETENCIÓN (Toda la duración)
-- Timeline de Micro-Hooks: Qué mantiene enganchado cada 5-7 segundos
-- Brechas de información: Cuándo se abren preguntas y cuándo se cierran
-- Curva de tensión emocional: Mapa de altos y bajos
-- Puntos de posible abandono: Dónde la gente podría irse
-
-CAPA 3: ESTRUCTURA NARRATIVA
-- Framework identificado: (PAS / Héroe / Antes-Después / Problema-Solución / Mito vs Realidad)
-- Desglose en actos: Inicio, desarrollo, clímax, resolución
-- Por qué funciona esta estructura: Biología y psicología detrás
-
-CAPA 4: ADN DE PRODUCCIÓN
-- Ritmo de cortes: Cada cuántos segundos cambia la escena
-- Movimiento de cámara: Estático/Dinámico/Combinado
-- Uso de B-Roll: Cuándo y por qué
-- Elementos visuales clave: Texto en pantalla, overlays, efectos
-
-CAPA 5: SEÑALES ALGORÍTMICAS
-- Táctica de watch time: Cómo maximiza el tiempo de visualización
-- Hooks de engagement: Qué dispara comentarios/likes/shares
-- SEO y discoverability: Keywords, hashtags, momento de publicación
-
-CAPA 6: BLUEPRINT DE REPLICACIÓN
-- Fórmula exacta extraída del video
-- Cómo adaptar al nicho del usuario sin copiar
-- Variaciones para testear
-- Trampas que evitar
-
-BIBLIOTECAS DE CONOCIMIENTO:
-${MASTER_HOOKS_STR}
-${WINNER_ROCKET_TIMELINE}
-${ALGORITHM_SECRETS_STR}
-
 ⚠️ REGLA ULTRA CRÍTICA: Debes devolver un JSON COMPLETO Y VÁLIDO con TODAS las secciones.
-NO devuelvas respuestas vacías o incompletas.
 
 FORMATO DE SALIDA JSON ESTRICTO (TODAS LAS SECCIONES OBLIGATORIAS):
 {
   "score_viral": {
-    "potencial_total": 9.2,
+    "potencial_total": 9.2, // Float 0-10
     "factores_exito": ["Factor 1 específico", "Factor 2 específico", "Factor 3 específico"],
-    "nivel_replicabilidad": "Alta"
+    "nivel_replicabilidad": "Alta/Media/Baja"
   },
   "adn_extraido": {
     "idea_ganadora": "La idea central en una frase potente y específica",
-    "disparador_psicologico": "El mecanismo mental principal que activa",
-    "estructura_exacta": "PAS / Héroe / Otra",
-    "formula_gancho": "[ELEMENTO 1] + [ELEMENTO 2] = Ejemplo concreto del video"
+    "disparador_psicologico": "El mecanismo mental principal que activa (Curiosidad, Miedo, etc.)",
+    "estructura_exacta": "Nombre del formato (ej: Listicle Rápido, Storytime)",
+    "formula_gancho": "[ELEMENTO 1] + [ELEMENTO 2] (Ej: Afirmación Polémica + Prueba Visual)"
   },
   "desglose_temporal": [
     {
       "segundo": "0-3",
-      "que_pasa": "Descripción específica de lo que sucede en pantalla",
+      "que_pasa": "Descripción visual de lo que sucede",
       "porque_funciona": "Mecanismo psicológico específico activado",
       "replicar_como": "Instrucción clara de cómo aplicarlo"
     },
     {
       "segundo": "4-10",
-      "que_pasa": "Siguiente sección del video",
-      "porque_funciona": "Por qué esta sección retiene",
-      "replicar_como": "Cómo replicarlo"
+      "que_pasa": "Siguiente sección...",
+      "porque_funciona": "Por qué retiene...",
+      "replicar_como": "Cómo replicarlo..."
     }
+    // ... Mínimo 3 pasos más hasta el final
   ],
   "patron_replicable": {
     "nombre_patron": "Nombre descriptivo y memorable del patrón",
-    "formula": "PASO 1: Acción específica + PASO 2: Acción específica + PASO 3: Acción específica",
+    "formula": "PASO 1 + PASO 2 + PASO 3",
     "aplicacion_generica": "Cómo cualquiera puede usar esto en su nicho"
   },
   "produccion_deconstruida": {
-    "visuales_clave": ["Elemento visual 1 específico", "Elemento visual 2 específico"],
+    "visuales_clave": ["Elemento visual 1", "Elemento visual 2"],
     "ritmo_cortes": "Cada X segundos (número concreto)",
-    "movimiento_camara": "Descripción específica del movimiento",
-    "musica_sonido": "Tipo de audio usado y por qué funciona",
-    "texto_pantalla": "Cuándo aparece y qué dice exactamente"
+    "movimiento_camara": "Descripción específica del movimiento (Zoom, Estático, etc.)",
+    "musica_sonido": "Tipo de audio usado y por qué funciona"
   },
   "insights_algoritmicos": {
     "optimizacion_retencion": "Táctica específica que usa para retención",
     "triggers_engagement": "Qué elementos disparan interacción",
     "seo_keywords": ["Keyword 1", "Keyword 2", "Keyword 3"]
   }
-}
-
-⚠️ REGLA CRÍTICA: No describas el video, DECONSTRUYE su arquitectura. Sé ESPECÍFICO en cada respuesta.`;
+}`;
 
 // ==================================================================================
 // 🧬 PROMPT ELITE TOP 0.1% MUNDIAL - CLONACIÓN BIO-DIGITAL DE VIRALIDAD
@@ -2198,115 +2158,156 @@ serve(async (req) => {
 
     
 case 'autopsia_viral':
-    case 'recreate': {
-        console.log(`[TITAN ULTRA] 🚀 Iniciando modo: ${selectedMode}`);
+case 'recreate': {
+    console.log(`[TITAN] 🚀 Modo: ${selectedMode}`);
 
-        let contentToAnalyze = "";
-        let platName = platform || 'General';
-        let videoDescription = '';
-        let actualWhisperMinutes = 0;
-        let videoMetadata = {};
-        
-        // Determinar nivel de análisis
-        let analysisDepth = 'standard';
-        try {
-            const { data: profile } = await supabase.from('profiles').select('credits, tier').eq('id', userId).single();
-            if (profile?.tier === 'premium' || profile?.tier === 'admin') analysisDepth = 'ultra';
-            else if ((profile?.credits || 0) > 20) analysisDepth = 'premium';
-        } catch (e) { console.warn("Error leyendo perfil, usando standard"); }
+    // 1. DEFINIR VARIABLES
+    let contentToAnalyze = "";
+    let targetTopic = processedContext; // El tema/nicho del usuario
+    let platName = platform || 'General';
+    let videoDescription = '';
+    let actualWhisperMinutes = 0;
+    let videoSource: 'url' | 'upload' | 'manual' = 'manual';
 
-        try {
-            // A: URL -> ANÁLISIS DIRECTO
-            if (url && url.includes('http')) {
-                console.log(`[TITAN ULTRA] 🎬 Procesando URL: ${url}`);
-                
-                const apifyToken = Deno.env.get('APIFY_API_TOKEN');
-                if (!apifyToken) throw new Error("Falta APIFY_API_TOKEN");
-
-                // 🔥 Instanciar clase aquí (ahora funcionará porque la moviste arriba)
-                const analyzer = new VideoAnalyzer(openaiKey, apifyToken); 
-                
-                // Ejecutar análisis
-                const ultraResult = await analyzer.analyzeVideo(url, analysisDepth);
-                
-                // Extraer datos
-                contentToAnalyze = ultraResult.data.transcript?.text || '';
-                platName = ultraResult.platform;
-                
-                // Guardar metadata
-                videoMetadata = {
-                    ...ultraResult.data.metadata,
-                    visualAnalysis: ultraResult.data.visualAnalysis,
-                    audioAnalysis: ultraResult.data.audioAnalysis,
-                    ocr: ultraResult.data.ocr,
-                    sentiment: ultraResult.data.sentiment,
-                    transcriptSource: ultraResult.data.transcript?.source
-                };
-
-                // Calcular minutos Whisper
-                if (ultraResult.data.transcript?.source === 'whisper') {
-                    actualWhisperMinutes = Math.ceil((ultraResult.data.transcript.duration || 0) / 60);
-                    whisperMinutes = actualWhisperMinutes;
-                }
-            }
-            // B: VIDEO SUBIDO
-            else if (body.uploadedVideo) {
-                console.log('[TITAN ULTRA] 📁 Procesando video subido...');
-                const uploadResult = await processUploadedVideo(body.uploadedVideo, body.uploadedFileName, openai);
-                contentToAnalyze = uploadResult.transcript;
-                platName = 'upload';
-                actualWhisperMinutes = Math.ceil(uploadResult.duration / 60);
+    // 2. OBTENER CONTENIDO DEL VIDEO
+    try {
+        // ──────────────────────────────────────────────────────────
+        // CASO A: URL o ARCHIVO SUBIDO
+        // ──────────────────────────────────────────────────────────
+        if (url || body.uploadedVideo) {
+            console.log('[TITAN] 🎬 Obteniendo contenido del video...');
+            
+            const videoData = await getVideoContent(
+                url || null,
+                body.uploadedVideo || null,
+                body.uploadedFileName || null,
+                openai
+            );
+            
+            contentToAnalyze = videoData.transcript;
+            videoDescription = videoData.description;
+            platName = videoData.platform;
+            videoSource = videoData.source;
+            
+            if (videoData.duration > 0) {
+                actualWhisperMinutes = Math.ceil(videoData.duration / 60);
                 whisperMinutes = actualWhisperMinutes;
             }
-            // C: TEXTO MANUAL
-            else if (processedContext && processedContext.length > 50) {
-                console.log('[TITAN ULTRA] 📝 Usando texto manual');
-                contentToAnalyze = processedContext;
-            } 
-            else {
-                throw new Error('Debes proporcionar una URL, subir un video o escribir texto.');
-            }
-
-            // Validación final
-            if (!contentToAnalyze || contentToAnalyze.length < 20) {
-                throw new Error('No se pudo extraer suficiente contenido para analizar.');
-            }
-
-            // EJECUTAR CEREBRO (Autopsia)
-            console.log('[TITAN ULTRA] 🔬 Ejecutando autopsia viral...');
-            const autopsiaRes = await ejecutarAutopsiaViral(contentToAnalyze, platName, openai);
-            const adnViral = autopsiaRes.data;
-
-            // BIFURCACIÓN FINAL
-            if (selectedMode === 'recreate') {
-                console.log(`[RECREATE] 🧬 Clonando...`);
-                // Asegurar que tenemos un tema
-                const temaParaClonar = processedContext || userContext.nicho || "General";
-                const contextoRecreate = { ...userContext, tema_especifico: temaParaClonar };
-                
-                const guionRes = await ejecutarGeneradorGuiones(contextoRecreate, adnViral, openai, settings);
-                
-                result = {
-                    autopsia: adnViral,
-                    guion_generado: guionRes.data,
-                    metadata_video: { ...videoMetadata, platform: platName }
-                };
-                tokensUsed = autopsiaRes.tokens + guionRes.tokens;
-            } else {
-                console.log('[AUTOPSIA] 📊 Finalizando...');
-                result = {
-                    ...adnViral,
-                    metadata_video: { ...videoMetadata, platform: platName }
-                };
-                tokensUsed = autopsiaRes.tokens;
-            }
-
-        } catch (videoError) {
-            console.error('[TITAN ERROR] ❌', videoError.message);
-            throw new Error(`Fallo en análisis de video: ${videoError.message}`);
+            
+            console.log('[TITAN] ✅ Contenido obtenido:', {
+                source: videoSource,
+                platform: platName,
+                transcriptLength: contentToAnalyze.length,
+                whisperMinutes: actualWhisperMinutes
+            });
         }
-        break;
+        // ──────────────────────────────────────────────────────────
+        // CASO B: TEXTO MANUAL (FALLBACK)
+        // ──────────────────────────────────────────────────────────
+        else if (processedContext && processedContext.length > 50) {
+            console.log('[TITAN] 📝 Usando texto manual');
+            contentToAnalyze = processedContext;
+            videoDescription = 'Transcripción manual';
+            videoSource = 'manual';
+        }
+        // ──────────────────────────────────────────────────────────
+        // ERROR: SIN DATOS
+        // ──────────────────────────────────────────────────────────
+        else {
+            throw new Error('Proporciona: URL, video subido, o transcripción manual.');
+        }
+
+    } catch (videoError: any) {
+        console.error('[TITAN] ❌ Error obteniendo video:', videoError.message);
+        
+        // FALLBACK FINAL: Texto manual
+        if (processedContext && processedContext.length > 50) {
+            console.log('[TITAN] ⚠️ Usando texto manual como último recurso');
+            contentToAnalyze = processedContext;
+            videoSource = 'manual';
+        } else {
+            throw new Error(`Error: ${videoError.message}`);
+        }
     }
+
+    // Validación
+    if (!contentToAnalyze || contentToAnalyze.length < 20) {
+        throw new Error('Contenido insuficiente para análisis (mínimo 20 caracteres).');
+    }
+
+    // 3. AUTOPSIA (EXTRAER ADN)
+    console.log('[TITAN] 🔬 Ejecutando autopsia viral...');
+    
+    const autopsiaRes = await ejecutarAutopsiaViral(
+        contentToAnalyze, 
+        platName, 
+        openai
+    );
+    
+    const adnViral = autopsiaRes.data;
+
+    // 4. BIFURCACIÓN: ¿Solo análisis o clonación?
+    if (selectedMode === 'recreate') {
+        // ═══════════════════════════════════════════════════
+        // MODO INGENIERÍA INVERSA
+        // ═══════════════════════════════════════════════════
+        console.log(`[RECREATE] 🧬 Clonando al nicho: "${targetTopic}"...`);
+        
+        // Construir contexto enriquecido para la clonación
+        const contextoRecreate = { 
+            ...userContext, 
+            tema_especifico: targetTopic || userContext.nicho 
+        };
+        
+        // AQUÍ SE ACTIVA EL PROMPT_INGENIERIA_INVERSA_ELITE
+        const guionRes = await ejecutarGeneradorGuiones(
+            contextoRecreate, 
+            adnViral,  // ✅ Pasamos el ADN → activa el prompt elite
+            openai, 
+            settings
+        );
+        
+        result = {
+            autopsia: adnViral,
+            guion_generado: guionRes.data,
+            modo: "ingenieria_inversa_exitosa",
+            metadata_video: {
+                source: videoSource,
+                platform: platName,
+                description: videoDescription,
+                whisper_used: actualWhisperMinutes > 0,
+                whisper_minutes: actualWhisperMinutes,
+                original_url: url || null,
+                uploaded_file: body.uploadedFileName || null
+            }
+        };
+        
+        tokensUsed = autopsiaRes.tokens + guionRes.tokens;
+
+    } else {
+        // ═══════════════════════════════════════════════════
+        // MODO AUTOPSIA PURA
+        // ═══════════════════════════════════════════════════
+        console.log('[AUTOPSIA] 📊 Devolviendo análisis...');
+        
+        result = {
+            ...adnViral,
+            metadata_video: {
+                source: videoSource,
+                platform: platName,
+                description: videoDescription,
+                whisper_used: actualWhisperMinutes > 0,
+                whisper_minutes: actualWhisperMinutes,
+                original_url: url || null,
+                uploaded_file: body.uploadedFileName || null
+            }
+        };
+        
+        tokensUsed = autopsiaRes.tokens;
+    }
+    
+    break;
+}
 
      case 'generar_guion': {
         // ✅ CORRECCIÓN #1: Añadir tema específico al contexto
