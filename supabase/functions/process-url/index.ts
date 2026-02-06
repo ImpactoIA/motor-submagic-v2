@@ -335,6 +335,10 @@ FORMATO DE SALIDA JSON ESTRICTO:
   }
 }`;
 
+// ==================================================================================
+// 🧬 PROMPT MAESTRO: PROTOCOLO OMEGA V6 (GOD MODE / NEURO-CLONACIÓN)
+// ==================================================================================
+
 const PROMPT_INGENIERIA_INVERSA_ELITE = (
   adnViral: any, 
   nichoDestino: string, 
@@ -342,66 +346,90 @@ const PROMPT_INGENIERIA_INVERSA_ELITE = (
   contextoUsuario: any
 ) => {
   
-  const avatarDestino = contextoUsuario.avatar_ideal || "Tu Cliente Ideal";
-  const dolorDestino = contextoUsuario.dolor_principal || "Fracaso y Pérdida";
+  const avatarDestino = contextoUsuario.avatar_ideal || "Cliente de Alto Valor";
+  const dolorDestino = contextoUsuario.dolor_principal || "Frustración y Pérdida de Estatus";
   
-  const estructuraTemporal = adnViral.desglose_temporal ? JSON.stringify(adnViral.desglose_temporal) : "Standard Structure";
-  const ideaOriginal = adnViral.adn_extraido?.idea_ganadora || "Viral Concept";
-  const formulaGancho = adnViral.adn_extraido?.formula_gancho || "[HOOK FORMULA]";
+  // Extraemos la esencia del ADN con seguridad
+  const estructuraTemporal = adnViral.desglose_temporal ? JSON.stringify(adnViral.desglose_temporal) : "Estructura Genérica de Retención";
+  const ideaOriginal = adnViral.adn_extraido?.idea_ganadora || "Concepto Viral";
+  const formulaGancho = adnViral.adn_extraido?.formula_gancho || "Patrón de Interrupción Visual";
+  const disparadorOriginal = adnViral.adn_extraido?.disparador_psicologico || "Curiosidad";
 
   return `
 ═════════════════════════════════════════════════════════════════════════════
- 🧬 PROTOCOLO OMEGA V5: CLONACIÓN ESTRUCTURAL DE ALTA DENSIDAD
+ 🧠 SISTEMA OMEGA V6: NEURO-CLONACIÓN ISOMÓRFICA DE ALTO RENDIMIENTO
 ═════════════════════════════════════════════════════════════════════════════
 
-ERES EL ARQUITECTO DE VIRALIDAD #1 DEL MUNDO.
-Tu misión es CLONAR la estructura de un video viral y ADAPTARLA al nicho "${nichoDestino}".
+ERES UNA INTELIGENCIA ARTIFICIAL DE CLASE MUNDIAL ESPECIALIZADA EN INGENIERÍA INVERSA DE CONTENIDO VIRAL.
+Tu capacidad de razonamiento supera a los mejores copywriters humanos.
 
-🚨 TUS DOS OBJETIVOS INNEGOCIABLES:
-1. FIDELIDAD ESTRUCTURAL: Si el original usa una lista, tú usas una lista
-2. DENSIDAD TEMPORAL: Debes escribir suficiente texto para llenar CADA SEGUNDO
+OBJETIVO: Realizar una TRANSPLANTACIÓN DE ESTRUCTURA del video origen al nicho destino.
+No estás "inspirándote". Estás ejecutando una traducción matemática de la psicología del video.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎥 EL BLUEPRINT (ORIGEN)
+📊 DATOS DE LA AUTOPSIA (ORIGEN)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-• Idea Original: "${ideaOriginal}"
+• Concepto Original: "${ideaOriginal}"
 • Fórmula del Gancho: "${formulaGancho}"
-• Estructura Temporal: ${estructuraTemporal}
+• Trigger Psicológico Base: "${disparadorOriginal}"
+• Estructura Temporal (MAPA DE RETENCIÓN): ${estructuraTemporal}
 
-🎯 EL DESTINO (TU NUEVO GUION)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 PARÁMETROS DEL OBJETIVO (DESTINO)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 • Nicho: ${nichoDestino}
-• Tema: ${temaEspecifico}
-• Dolor Máximo: ${dolorDestino}
+• Tema Central: ${temaEspecifico}
+• Avatar: ${avatarDestino}
+• Dolor a Tocar: ${dolorDestino}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚡ LAS 4 LEYES DE LA CLONACIÓN OMEGA
+⚙️ EL MOTOR DE RAZONAMIENTO (CHAIN OF THOUGHT)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Antes de escribir el guion, tu cerebro debe ejecutar estos pasos lógicos:
 
-1. 🩸 LEY DE EQUIVALENCIA DE DOLOR
-2. 📐 LEY DEL ESPEJO SINTÁCTICO
-3. 🎓 LEY DE AUTORIDAD
-4. ⏳ LEY DEL RELLENO DE TIEMPO (2.5 PALABRAS/SEG)
+1. MAPEO ISOMÓRFICO: Si el video original es un "Baile de TikTok" y el destino es "Abogados", no hagas bailar al abogado. TRADUCE la energía del baile a un movimiento de cámara dinámico o una edición rápida.
+2. EQUIVALENCIA DE EMOCIÓN:
+   - Si origen = "Miedo a perderse algo (FOMO)" -> Destino = "Miedo a perder dinero/estatus".
+   - Si origen = "Risa absurda" -> Destino = "Ironía inteligente" (si el nicho es serio).
+3. DENSIDAD DE DOPAMINA: Cada 3 segundos debe haber un "cambio" (visual, sonoro o verbal).
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📝 FORMATO JSON
+📜 MANDATOS DE EJECUCIÓN (LEYES INQUEBRANTABLES)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. EL GANCHO ES SAGRADO: Debes usar la MISMA fórmula sintáctica del original, pero con las palabras del nuevo nicho.
+2. LENGUAJE SENSORIAL: Usa palabras que se puedan "ver" y "sentir". No digas "es difícil", di "se siente como masticar vidrio".
+3. RITMO DE METRALLETA: Frases cortas. Elimina artículos innecesarios. Ve al grano.
+4. FINAL CIRCULAR: El final debe conectar emocionalmente con la promesa del principio.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📦 SALIDA REQUERIDA (JSON STRICT)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 {
   "analisis_estrategico": {
-    "sesgo_cognitivo_detectado": "Nombre del sesgo",
-    "estrategia_adaptacion": "Qué cambiaste",
-    "nivel_fidelidad": "99%"
+    "traduccion_psicologica": "Explica brevemente: 'Cambié el humor del original por autoridad agresiva porque el nicho es Finanzas'",
+    "trigger_principal_aplicado": "Ej: Avaricia / Estatus / Miedo",
+    "nivel_de_agresividad": "Alto/Medio/Bajo"
   },
   
-  "guion_tecnico_completo": "GUION COMPLETO PALABRA POR PALABRA...",
+  "guion_tecnico_completo": "GUION FINAL (Incluye indicaciones de tono entre paréntesis, ej: (Susurrando), (Gritando))",
   
   "plan_visual_director": [
     {
-      "tiempo": "0-5s",
-      "accion_camara": "[Tipo de toma]",
-      "descripcion_visual": "Qué se ve",
-      "audio_sfx": "[Sonido]"
+      "tiempo": "0-3s",
+      "tipo_plano": "Primerísimo Primer Plano (Ojos) / Plano General / Cámara en Mano",
+      "accion_en_pantalla": "Descripción detallada del movimiento",
+      "texto_superpuesto": "Texto gancho en pantalla (si aplica)",
+      "efecto_sonoro": "Sfx específico (Ej: 'Golpe seco', 'Sonido de caja', 'Silencio total')"
+    },
+    { 
+      "tiempo": "3-10s", 
+      "tipo_plano": "...", 
+      "accion_en_pantalla": "...", 
+      "texto_superpuesto": "...", 
+      "efecto_sonoro": "..." 
     }
+    // Continúa para todo el video...
   ]
 }`;
 };
@@ -1129,51 +1157,88 @@ async function ejecutarAutopsiaViral(
 }
 
 // ==================================================================================
-// 🧠 CEREBRO UNIFICADO (Maneja Script Generator Y Titan Viral)
+// 🧠 CEREBRO AGÉNTICO: PLANIFICADOR + EJECUTOR (NIVEL ELITE)
 // ==================================================================================
 
 async function ejecutarGeneradorGuiones(
-  contexto: any,        // Datos del usuario (Nicho, Avatar, Tema)
-  viralDNA: any | null, // ⚠️ LA CLAVE: Si es null = Crea. Si tiene datos = Clona.
+  contexto: any,
+  viralDNA: any | null,
   openai: any,
   settings: any = {}
 ): Promise<{ data: any; tokens: number }> {
   
-  console.log('[CEREBRO] 🧠 Iniciando proceso de escritura...');
+  console.log('[CEREBRO] 🧠 Iniciando Protocolo Agéntico de Doble Paso...');
+  let tokensTotal = 0;
+
+  // --------------------------------------------------------------------------
+  // PASO 1: EL ESTRATEGA (Reasoning Phase)
+  // --------------------------------------------------------------------------
+  // Antes de escribir, la IA debe "pensar" la estructura perfecta.
+  // Esto evita alucinaciones y mejora la adaptación al nicho.
   
+  console.log('[PASO 1] ♟️ El Estratega está diseñando la estructura...');
+  
+  let promptEstrategia = "";
+  if (viralDNA) {
+    promptEstrategia = `
+      ANALIZA este ADN Viral: ${JSON.stringify(viralDNA.adn_extraido)}
+      OBJETIVO: Adaptarlo al nicho "${settings.manual_niche || contexto.nicho}".
+      TAREA: Crea un ESQUEMA LÓGICO paso a paso de cómo adaptar la historia/estructura original al nuevo nicho.
+      NO escribas el guion aún. Solo define los puntos clave de la trama y cómo disparar la emoción en el nuevo público.
+    `;
+  } else {
+    promptEstrategia = `
+      OBJETIVO: Crear un guion viral para "${contexto.tema_especifico}" en el nicho "${contexto.nicho}".
+      TAREA: Diseña una estructura ganadora (Gancho -> Retención -> Payoff).
+      Define qué sesgos psicológicos usarás en cada segundo.
+    `;
+  }
+
+  const estrategia = await openai.chat.completions.create({
+    model: 'gpt-4o', // Usamos modelo rápido o el mismo 4o
+    messages: [
+      { role: 'system', content: 'Eres un Estratega de Marketing Viral de clase mundial.' },
+      { role: 'user', content: promptEstrategia }
+    ],
+    temperature: 0.7
+  });
+
+  const planEstrategico = estrategia.choices[0].message.content;
+  tokensTotal += estrategia.usage?.total_tokens || 0;
+
+  // --------------------------------------------------------------------------
+  // PASO 2: EL EJECUTOR (Writing Phase)
+  // --------------------------------------------------------------------------
+  // Ahora la IA escribe basándose en el plan maestro, no en el vacío.
+  
+  console.log('[PASO 2] ✍️ El Guionista está ejecutando el plan...');
+
   let systemPrompt: string;
   let temperature: number;
   let roleContent: string;
 
-  // 🔀 ENRUTADOR DE LÓGICA (ROUTER)
   if (viralDNA && viralDNA.adn_extraido) {
-    // 🧬 CAMINO A: TITAN VIRAL (Clonación)
-    console.log('[MODO] 🧬 Ingeniería Inversa (Omega V5)');
-    
+    // MODO CLONACIÓN
     systemPrompt = PROMPT_INGENIERIA_INVERSA_ELITE(
       viralDNA,
       settings.manual_niche || contexto.nicho, 
       contexto.tema_especifico,
       contexto
     );
+    // LE INYECTAMOS EL PLAN ESTRATÉGICO AL PROMPT
+    systemPrompt += `\n\n🛡️ INSTRUCCIÓN DE MANDO: Sigue estrictamente este PLAN ESTRATÉGICO que acabas de diseñar:\n${planEstrategico}`;
     
-    // Temperatura baja para copiar la estructura fielmente
     temperature = 0.4; 
     roleContent = 'Eres el Arquitecto de Viralidad #1 (Omega V5).';
-
   } else {
-    // ✨ CAMINO B: SCRIPT GENERATOR (Creación Original)
-    console.log('[MODO] ✨ Creación Original (V400)');
-    
-    // Pasamos 'null' porque no hay ADN que copiar
+    // MODO ORIGINAL
     systemPrompt = PROMPT_GENERADOR_GUIONES(contexto, null, settings);
+    systemPrompt += `\n\n🛡️ INSTRUCCIÓN DE MANDO: Ejecuta el guion basándote en tu análisis previo:\n${planEstrategico}`;
     
-    // Temperatura alta para ser creativo
     temperature = 0.7; 
     roleContent = 'Eres el Mejor Guionista Viral del Mundo (Titan V400).';
   }
 
-  // 🚀 LLAMADA ÚNICA A LA IA
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o', 
     response_format: { type: 'json_object' },
@@ -1185,21 +1250,26 @@ async function ejecutarGeneradorGuiones(
     max_tokens: 4096
   });
 
+  tokensTotal += completion.usage?.total_tokens || 0;
   const parsedData = JSON.parse(completion.choices[0].message.content || '{}');
 
-  // 🛡️ NORMALIZACIÓN DE SALIDA (Blindaje para el Frontend)
-  // Esto asegura que tu componente OmegaScriptView siempre funcione
+  // --------------------------------------------------------------------------
+  // PASO 3: NORMALIZACIÓN Y ENTREGA
+  // --------------------------------------------------------------------------
   const normalizedData = {
     ...parsedData,
-    // Unificamos nombres de variables para que el frontend no falle
     guion_tecnico_completo: parsedData.guion_tecnico_completo || parsedData.guion_completo || parsedData.guion_completo_adaptado,
     plan_visual_director: parsedData.plan_visual_director || parsedData.plan_visual,
-    analisis_estrategico: parsedData.analisis_estrategico || parsedData.metadata_guion // Fallback si falta uno
+    // Agregamos el "razonamiento oculto" para que el usuario vea por qué la IA hizo lo que hizo (Opcional)
+    analisis_estrategico: {
+        ...(parsedData.analisis_estrategico || {}),
+        razonamiento_interno: "Planificación Estratégica Ejecutada"
+    }
   };
 
   return {
     data: normalizedData,
-    tokens: completion.usage?.total_tokens || 0
+    tokens: tokensTotal
   };
 }
 
