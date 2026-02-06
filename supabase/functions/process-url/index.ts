@@ -336,7 +336,7 @@ FORMATO DE SALIDA JSON ESTRICTO:
 }`;
 
 // ==================================================================================
-// 🧬 PROMPT MAESTRO: PROTOCOLO OMEGA V6 (GOD MODE / NEURO-CLONACIÓN)
+// 💎 PROMPT TITAN V9: CLONACIÓN SINTÁCTICA ESTRICTA (EL ESPEJO)
 // ==================================================================================
 
 const PROMPT_INGENIERIA_INVERSA_ELITE = (
@@ -346,93 +346,67 @@ const PROMPT_INGENIERIA_INVERSA_ELITE = (
   contextoUsuario: any
 ) => {
   
-  const avatarDestino = contextoUsuario.avatar_ideal || "Cliente de Alto Valor";
-  const dolorDestino = contextoUsuario.dolor_principal || "Frustración y Pérdida de Estatus";
+  const avatarDestino = contextoUsuario.avatar_ideal || "Tu Cliente";
+  const dolorDestino = contextoUsuario.dolor_principal || "Perder Dinero/Tiempo";
   
-  // Extraemos la esencia del ADN con seguridad
-  const estructuraTemporal = adnViral.desglose_temporal ? JSON.stringify(adnViral.desglose_temporal) : "Estructura Genérica de Retención";
-  const ideaOriginal = adnViral.adn_extraido?.idea_ganadora || "Concepto Viral";
-  const formulaGancho = adnViral.adn_extraido?.formula_gancho || "Patrón de Interrupción Visual";
-  const disparadorOriginal = adnViral.adn_extraido?.disparador_psicologico || "Curiosidad";
+  // Extraemos la "Fórmula"
+  const estructura = JSON.stringify(adnViral.desglose_temporal || []);
+  const formulaGancho = adnViral.adn_extraido?.formula_gancho || "Afirmación Polémica";
 
   return `
 ═════════════════════════════════════════════════════════════════════════════
- 🧠 SISTEMA OMEGA V6: NEURO-CLONACIÓN ISOMÓRFICA DE ALTO RENDIMIENTO
+ 🪞 SISTEMA TITAN V9: CLONACIÓN SINTÁCTICA (EL ESPEJO VIRAL)
 ═════════════════════════════════════════════════════════════════════════════
 
-ERES UNA INTELIGENCIA ARTIFICIAL DE CLASE MUNDIAL ESPECIALIZADA EN INGENIERÍA INVERSA DE CONTENIDO VIRAL.
-Tu capacidad de razonamiento supera a los mejores copywriters humanos.
+ERES UNA MÁQUINA DE REEMPLAZO DE VARIABLES. NO ERES UN ESCRITOR CREATIVO.
+Tu única misión es tomar la frase viral del video original y cambiarle las palabras clave por las del nicho: "${nichoDestino}".
 
-OBJETIVO: Realizar una TRANSPLANTACIÓN DE ESTRUCTURA del video origen al nicho destino.
-No estás "inspirándote". Estás ejecutando una traducción matemática de la psicología del video.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📊 DATOS DE LA AUTOPSIA (ORIGEN)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-• Concepto Original: "${ideaOriginal}"
-• Fórmula del Gancho: "${formulaGancho}"
-• Trigger Psicológico Base: "${disparadorOriginal}"
-• Estructura Temporal (MAPA DE RETENCIÓN): ${estructuraTemporal}
+OPERACIÓN: "DESNUDAR Y VESTIR"
+1. Desnuda la frase original (Halla la estructura gramatical).
+2. Viste la frase con el tema: "${temaEspecifico}".
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎯 PARÁMETROS DEL OBJETIVO (DESTINO)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-• Nicho: ${nichoDestino}
-• Tema Central: ${temaEspecifico}
-• Avatar: ${avatarDestino}
-• Dolor a Tocar: ${dolorDestino}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚙️ EL MOTOR DE RAZONAMIENTO (CHAIN OF THOUGHT)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Antes de escribir el guion, tu cerebro debe ejecutar estos pasos lógicos:
-
-1. MAPEO ISOMÓRFICO: Si el video original es un "Baile de TikTok" y el destino es "Abogados", no hagas bailar al abogado. TRADUCE la energía del baile a un movimiento de cámara dinámico o una edición rápida.
-2. EQUIVALENCIA DE EMOCIÓN:
-   - Si origen = "Miedo a perderse algo (FOMO)" -> Destino = "Miedo a perder dinero/estatus".
-   - Si origen = "Risa absurda" -> Destino = "Ironía inteligente" (si el nicho es serio).
-3. DENSIDAD DE DOPAMINA: Cada 3 segundos debe haber un "cambio" (visual, sonoro o verbal).
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📜 MANDATOS DE EJECUCIÓN (LEYES INQUEBRANTABLES)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-1. EL GANCHO ES SAGRADO: Debes usar la MISMA fórmula sintáctica del original, pero con las palabras del nuevo nicho.
-2. LENGUAJE SENSORIAL: Usa palabras que se puedan "ver" y "sentir". No digas "es difícil", di "se siente como masticar vidrio".
-3. RITMO DE METRALLETA: Frases cortas. Elimina artículos innecesarios. Ve al grano.
-4. FINAL CIRCULAR: El final debe conectar emocionalmente con la promesa del principio.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📦 SALIDA REQUERIDA (JSON STRICT)
+🧪 EJEMPLOS DE LO QUE DEBES HACER (LÓGICA MATEMÁTICA)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-{
-  "analisis_estrategico": {
-    "traduccion_psicologica": "Explica brevemente: 'Cambié el humor del original por autoridad agresiva porque el nicho es Finanzas'",
-    "trigger_principal_aplicado": "Ej: Avaricia / Estatus / Miedo",
-    "nivel_de_agresividad": "Alto/Medio/Bajo"
-  },
-  
-  "guion_tecnico_completo": "GUION FINAL (Incluye indicaciones de tono entre paréntesis, ej: (Susurrando), (Gritando))",
-  
-  "plan_visual_director": [
-    {
-      "tiempo": "0-3s",
-      "tipo_plano": "Primerísimo Primer Plano (Ojos) / Plano General / Cámara en Mano",
-      "accion_en_pantalla": "Descripción detallada del movimiento",
-      "texto_superpuesto": "Texto gancho en pantalla (si aplica)",
-      "efecto_sonoro": "Sfx específico (Ej: 'Golpe seco', 'Sonido de caja', 'Silencio total')"
-    },
-    { 
-      "tiempo": "3-10s", 
-      "tipo_plano": "...", 
-      "accion_en_pantalla": "...", 
-      "texto_superpuesto": "...", 
-      "efecto_sonoro": "..." 
-    }
-    // Continúa para todo el video...
-  ]
-}`;
+CASO 1: ESTRUCTURA DE PORCENTAJE
+- Original (Nutrición): "El 80% de la gente come mal."
+- Tu Nicho (Marketing): "El 80% de la gente vende mal."
+(✅ MANTIENES EL NÚMERO, CAMBIAS EL VERBO).
+
+CASO 2: ESTRUCTURA DE CONDICIÓN
+- Original (Relaciones): "Si él no te llama, no le importas."
+- Tu Nicho (Bienes Raíces): "Si la casa no se vende, el precio está mal."
+(✅ MANTIENES LA LÓGICA "SI X -> ENTONCES Y").
+
+CASO 3: ESTRUCTURA DE NEGACIÓN
+- Original (Fitness): "Deja de hacer cardio si quieres músculo."
+- Tu Nicho (Crypto): "Deja de hacer trading si quieres riqueza."
+(✅ MANTIENES EL IMPERATIVO "DEJA DE").
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🧬 EL ADN A CLONAR (INPUT)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• FÓRMULA DEL GANCHO ORIGINAL: "${formulaGancho}"
+• ESTRUCTURA DE TIEMPOS: ${estructura}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠️ REGLAS DE ORO (STRICT MODE)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. RESPETA LOS NÚMEROS: Si el viral dice "3 errores", tú dices "3 errores". Si dice "80%", tú dices "80%".
+2. RESPETA LA INTENSIDAD: Si el original insulta o es agresivo, tú debes ser agresivo con el dolor del usuario (${dolorDestino}).
+3. NO AÑADAS RELLENO: Si el original dura 15 segundos y dice 30 palabras, tú escribe 30 palabras. Ni una más.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📝 TU SALIDA (EL GUION CLONADO)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Genera un JSON con:
+1. "analisis_estrategico": Explica qué patrón sintáctico detectaste y reemplazaste (Ej: "Patrón detectado: [Porcentaje] + [Error]. Reemplazo: Comer -> Lanzar").
+2. "guion_tecnico_completo": El guion final.
+3. "plan_visual_director": Las instrucciones de cámara idénticas al original.
+`;
 };
+
 
 // 🧠 GENERADOR DE GUIONES - ULTRA MEJORADO CON CONOCIMIENTO EXPERTO
 // ==================================================================================
