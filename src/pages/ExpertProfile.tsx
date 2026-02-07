@@ -2,127 +2,376 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { 
-    Save, Plus, Trash2, MessageSquare, 
-    Zap, Search, RefreshCw, Send, User, Users, BookOpen, 
-    Fingerprint, Mic, Globe, ShieldCheck, Activity, AlertTriangle, CheckCircle2,
-    XCircle, ArrowRight, ShieldAlert, Award, Star
+    Save, Plus, Trash2, MessageSquare, Zap, Search, RefreshCw, Send, 
+    User, Users, BookOpen, Fingerprint, Mic, Globe, ShieldCheck, Activity, 
+    AlertTriangle, CheckCircle2, XCircle, ArrowRight, ShieldAlert, Award, 
+    Star, Target, Trophy, Sparkles, Lightbulb, Eye, Brain, Rocket,
+    TrendingUp, DollarSign, Crown, Flame, Crosshair
 } from 'lucide-react';
 
 // ==================================================================================
-// 🎨 SUB-COMPONENTE: REPORTE DE AUDITORÍA EXPERTA (NUEVO)
+// 🎨 SUB-COMPONENTE: REPORTE DE AUDITORÍA V2 (MEJORADO)
 // ==================================================================================
-const ExpertAuditReport = ({ data }: { data: any }) => {
+const ExpertAuditReportV2 = ({ data }: { data: any }) => {
   if (!data || !data.auditoria_calidad) {
-    // Fallback simple
     return (
         <div className="bg-yellow-900/10 p-4 rounded-xl border border-yellow-500/20 text-yellow-200 text-xs">
-            <p className="font-bold mb-1">Resultado recibido, formato no estándar.</p>
+            <p className="font-bold mb-1">Resultado recibido</p>
             <pre className="text-[10px] opacity-70 whitespace-pre-wrap">{JSON.stringify(data, null, 2)}</pre>
         </div>
     );
   }
 
-  const { auditoria_calidad, analisis_campo_por_campo, perfil_experto_optimizado } = data;
+  const { auditoria_calidad, analisis_campo_por_campo, perfil_experto_optimizado, analisis_competitivo, plan_accion_90_dias, siguiente_paso } = data;
   
   const getStatusColor = (status: string) => {
-    if (status?.includes('Magnética') || status?.includes('Único') || status?.includes('Irresistible') || status?.includes('🟢')) 
+    if (status?.includes('Magnética') || status?.includes('Único') || status?.includes('🟢')) 
         return 'text-green-400 border-green-500/30 bg-green-500/10';
-    if (status?.includes('Común') || status?.includes('Confuso') || status?.includes('Débil') || status?.includes('🟡')) 
+    if (status?.includes('Común') || status?.includes('🟡')) 
         return 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10';
+    if (status?.includes('Débil') || status?.includes('🔴'))
+        return 'text-orange-400 border-orange-500/30 bg-orange-500/10';
     return 'text-red-400 border-red-500/30 bg-red-500/10';
+  };
+
+  const getScoreColor = (score: number) => {
+    if (score >= 96) return 'text-purple-400';
+    if (score >= 86) return 'text-cyan-400';
+    if (score >= 71) return 'text-green-400';
+    if (score >= 51) return 'text-yellow-400';
+    if (score >= 31) return 'text-orange-400';
+    return 'text-red-500';
   };
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
       
-      {/* 1. VELOCÍMETRO DE AUTORIDAD */}
-      <div className="bg-gradient-to-r from-gray-900 to-black border border-gray-800 rounded-2xl p-5 relative overflow-hidden">
-        <div className="flex justify-between items-start relative z-10">
-          <div>
-            <h3 className="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1">NIVEL DE AUTORIDAD</h3>
-            <div className="flex items-baseline gap-2">
-              <span className={`text-4xl font-black ${auditoria_calidad.score_global > 80 ? 'text-green-400' : auditoria_calidad.score_global > 50 ? 'text-yellow-400' : 'text-red-500'}`}>
-                {auditoria_calidad.score_global}
-              </span>
-              <span className="text-gray-600 text-xs font-bold">/ 100</span>
+      {/* Scoreboard V2 */}
+      <div className="bg-gradient-to-r from-gray-900 via-indigo-950/20 to-black border border-gray-800 rounded-2xl p-6 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 blur-3xl"></div>
+        
+        <div className="relative z-10">
+          <div className="flex justify-between items-start mb-4">
+            <div>
+              <h3 className="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1 flex items-center gap-2">
+                <Award size={12}/> NIVEL DE AUTORIDAD
+              </h3>
+              <div className="flex items-baseline gap-2 mb-2">
+                <span className={`text-5xl font-black ${getScoreColor(auditoria_calidad.score_global)}`}>
+                  {auditoria_calidad.score_global}
+                </span>
+                <span className="text-gray-600 text-xl font-bold">/100</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Crown size={16} className={getScoreColor(auditoria_calidad.score_global)}/>
+                <p className="text-white font-black text-sm tracking-wide">{auditoria_calidad.nivel_autoridad}</p>
+              </div>
             </div>
-            <p className="text-white font-bold text-sm mt-1 flex items-center gap-1">
-                <Award size={14} className="text-indigo-400"/> {auditoria_calidad.nivel_autoridad}
-            </p>
-          </div>
-          
-          <div className="bg-white/5 p-3 rounded-lg max-w-[140px] backdrop-blur-sm border border-white/10">
-            <div className="flex items-center gap-1 mb-1 text-indigo-400">
-              <ShieldAlert size={12} />
-              <span className="text-[9px] font-bold uppercase">Titan Strategy</span>
+            
+            <div className="bg-white/5 p-4 rounded-xl max-w-[200px] backdrop-blur-sm border border-white/10">
+              <div className="flex items-center gap-1 mb-2 text-indigo-400">
+                <ShieldAlert size={14} />
+                <span className="text-[10px] font-black uppercase tracking-wider">Titan Strategy</span>
+              </div>
+              <p className="text-xs text-gray-300 italic leading-relaxed">"{auditoria_calidad.veredicto_brutal}"</p>
             </div>
-            <p className="text-[10px] text-gray-300 italic leading-tight">"{auditoria_calidad.veredicto_brutal}"</p>
           </div>
+
+          {/* Desglose de Puntos */}
+          {auditoria_calidad.desglose_puntos && (
+            <div className="grid grid-cols-5 gap-2 mb-4">
+              <div className="bg-black/40 p-2.5 rounded-lg border border-gray-800">
+                <span className="text-[9px] text-gray-500 uppercase block mb-1">Historia</span>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-lg font-black text-cyan-400">{auditoria_calidad.desglose_puntos.historia}</span>
+                  <span className="text-[10px] text-gray-600">/25</span>
+                </div>
+              </div>
+              <div className="bg-black/40 p-2.5 rounded-lg border border-gray-800">
+                <span className="text-[9px] text-gray-500 uppercase block mb-1">Mecanismo</span>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-lg font-black text-purple-400">{auditoria_calidad.desglose_puntos.mecanismo}</span>
+                  <span className="text-[10px] text-gray-600">/30</span>
+                </div>
+              </div>
+              <div className="bg-black/40 p-2.5 rounded-lg border border-gray-800">
+                <span className="text-[9px] text-gray-500 uppercase block mb-1">Proof</span>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-lg font-black text-green-400">{auditoria_calidad.desglose_puntos.proof}</span>
+                  <span className="text-[10px] text-gray-600">/20</span>
+                </div>
+              </div>
+              <div className="bg-black/40 p-2.5 rounded-lg border border-gray-800">
+                <span className="text-[9px] text-gray-500 uppercase block mb-1">Enemigo</span>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-lg font-black text-red-400">{auditoria_calidad.desglose_puntos.enemigo}</span>
+                  <span className="text-[10px] text-gray-600">/15</span>
+                </div>
+              </div>
+              <div className="bg-black/40 p-2.5 rounded-lg border border-gray-800">
+                <span className="text-[9px] text-gray-500 uppercase block mb-1">Promesa</span>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-lg font-black text-yellow-400">{auditoria_calidad.desglose_puntos.promesa}</span>
+                  <span className="text-[10px] text-gray-600">/10</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Penalizaciones */}
+          {auditoria_calidad.penalizaciones_aplicadas && auditoria_calidad.penalizaciones_aplicadas.length > 0 && (
+            <div className="bg-red-900/10 border border-red-500/20 rounded-lg p-3">
+              <h4 className="text-red-400 text-[10px] font-black uppercase mb-2">⚠️ Penalizaciones</h4>
+              <ul className="space-y-1">
+                {auditoria_calidad.penalizaciones_aplicadas.map((pen: string, i: number) => (
+                  <li key={i} className="text-xs text-red-300 flex items-start gap-2">
+                    <XCircle size={12} className="shrink-0 mt-0.5"/>
+                    <span>{pen}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* 2. ANÁLISIS TÁCTICO (HISTORIA - MÉTODO - OFERTA) */}
+      {/* Análisis Campo por Campo */}
       <div className="space-y-3">
         <h4 className="text-[10px] font-bold text-gray-400 uppercase flex items-center gap-2 tracking-widest pl-1">
           <Activity size={12}/> Auditoría Táctica
         </h4>
         
         {analisis_campo_por_campo?.map((item: any, idx: number) => (
-          <div key={idx} className="bg-[#0a0a0a] border border-gray-800 rounded-xl p-4 hover:border-indigo-500/30 transition-colors group">
+          <div key={idx} className="bg-[#0a0a0a] border border-gray-800 rounded-xl p-4 hover:border-indigo-500/30 transition-colors">
             <div className="flex justify-between items-center mb-3">
               <h5 className="font-bold text-white text-xs">{item.campo}</h5>
-              <span className={`text-[9px] font-black uppercase px-1.5 py-0.5 rounded border ${getStatusColor(item.calificacion)}`}>
-                {item.calificacion?.split(' ')[1] || item.calificacion}
-              </span>
+              <div className="flex items-center gap-2">
+                {item.score_numerico !== undefined && (
+                  <span className="text-xs font-black text-gray-400">{item.score_numerico}/10</span>
+                )}
+                <span className={`text-[9px] font-black uppercase px-1.5 py-0.5 rounded border ${getStatusColor(item.calificacion)}`}>
+                  {item.calificacion?.split(' ')[1] || item.calificacion}
+                </span>
+              </div>
             </div>
 
             <div className="space-y-3">
               {/* Input Usuario */}
-              <div className="relative pl-3 border-l-2 border-red-500/20">
-                <span className="text-[9px] text-red-400 font-bold block mb-0.5 uppercase">Debilidad Detectada</span>
-                <p className="text-[9px] text-red-300 mt-1 flex items-start gap-1 leading-relaxed">
+              {item.lo_que_escribio && (
+                <div className="relative pl-3 border-l-2 border-red-500/20">
+                  <span className="text-[9px] text-red-400 font-bold block mb-0.5 uppercase">Lo que escribiste</span>
+                  <p className="text-gray-400 text-[10px] italic">"{item.lo_que_escribio}"</p>
+                </div>
+              )}
+
+              {/* Crítica */}
+              <div className="relative pl-3 border-l-2 border-orange-500/20 bg-orange-900/5 py-1 rounded-r-lg">
+                <span className="text-[9px] text-orange-400 font-bold block mb-0.5 uppercase">Debilidad Detectada</span>
+                <p className="text-[10px] text-orange-300 flex items-start gap-1 leading-relaxed">
                     <XCircle size={10} className="shrink-0 mt-0.5"/> {item.critica}
                 </p>
               </div>
 
-              {/* Corrección Titan */}
-              <div className="relative pl-3 border-l-2 border-green-500/40 bg-green-500/5 py-1 rounded-r-lg">
-                <span className="text-[9px] text-green-400 font-bold block mb-0.5 uppercase">Estrategia High-Ticket</span>
+              {/* Corrección Maestra */}
+              <div className="relative pl-3 border-l-2 border-green-500/40 bg-green-500/5 py-2 px-1 rounded-r-lg">
+                <span className="text-[9px] text-green-400 font-bold block mb-1 uppercase">✨ Estrategia High-Ticket</span>
                 <p className="text-gray-200 text-[10px] font-medium leading-relaxed">"{item.correccion_maestra}"</p>
               </div>
+
+              {/* Ejemplos de Referencia */}
+              {item.ejemplos_referencia && item.ejemplos_referencia.length > 0 && (
+                <div className="bg-blue-900/10 border border-blue-500/20 rounded-lg p-2">
+                  <span className="text-[9px] text-blue-400 font-bold uppercase block mb-1">📚 Ejemplos Legendarios</span>
+                  <ul className="space-y-1">
+                    {item.ejemplos_referencia.map((ej: string, i: number) => (
+                      <li key={i} className="text-xs text-blue-200 flex items-start gap-2">
+                        <span className="text-blue-500 shrink-0">•</span>
+                        <span>{ej}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
         ))}
       </div>
 
-      {/* 3. PERFIL OPTIMIZADO */}
-      <div className="bg-indigo-900/10 border border-indigo-500/20 rounded-2xl p-4">
-        <h4 className="text-center text-[10px] font-black text-indigo-300 uppercase tracking-widest mb-3">💎 MARCA PERSONAL PULIDA</h4>
+      {/* Perfil Optimizado */}
+      <div className="bg-indigo-900/10 border border-indigo-500/20 rounded-2xl p-5">
+        <h4 className="text-center text-xs font-black text-indigo-300 uppercase tracking-widest mb-4 flex items-center justify-center gap-2">
+          <Crown size={14}/> MARCA PERSONAL OPTIMIZADA
+        </h4>
         
-        <div className="space-y-2">
-          <div className="bg-black/40 p-2.5 rounded-lg border border-white/5">
-            <span className="block text-[9px] text-gray-500 uppercase font-bold mb-1">Nueva Bio (Posicionamiento)</span>
-            <p className="text-white text-xs font-bold">{perfil_experto_optimizado.posicionamiento_unico}</p>
-          </div>
-          <div className="bg-black/40 p-2.5 rounded-lg border border-white/5">
-             <span className="block text-[9px] text-gray-500 uppercase font-bold mb-1">Tu "Mecanismo Único"</span>
-             <p className="text-indigo-200 text-xs italic font-bold">✨ {perfil_experto_optimizado.nombre_metodo_comercial}</p>
-          </div>
-           <div className="bg-black/40 p-2.5 rounded-lg border border-white/5">
-             <span className="block text-[9px] text-gray-500 uppercase font-bold mb-1">Factor Diferencial</span>
-             <p className="text-gray-300 text-[10px]">{perfil_experto_optimizado.factor_diferencial}</p>
-          </div>
+        <div className="space-y-3">
+          {perfil_experto_optimizado?.elevator_pitch && (
+            <div className="bg-black/40 p-3 rounded-lg border border-white/5">
+              <span className="block text-[9px] text-gray-500 uppercase font-bold mb-1">Elevator Pitch (15seg)</span>
+              <p className="text-white text-xs font-bold leading-relaxed">{perfil_experto_optimizado.elevator_pitch}</p>
+            </div>
+          )}
+
+          {perfil_experto_optimizado?.bio_magnetica && (
+            <div className="bg-black/40 p-3 rounded-lg border border-white/5">
+              <span className="block text-[9px] text-gray-500 uppercase font-bold mb-1">Bio Magnética</span>
+              <p className="text-gray-300 text-[10px] leading-relaxed whitespace-pre-line">{perfil_experto_optimizado.bio_magnetica}</p>
+            </div>
+          )}
+
+          {perfil_experto_optimizado?.mecanismo_comercial && (
+            <div className="bg-purple-900/10 border border-purple-500/20 p-3 rounded-lg">
+              <span className="block text-[9px] text-purple-400 uppercase font-bold mb-1">🎯 Tu Mecanismo Único</span>
+              <p className="text-purple-200 text-xs font-black mb-2">{perfil_experto_optimizado.mecanismo_comercial.nombre}</p>
+              {perfil_experto_optimizado.mecanismo_comercial.pasos && (
+                <ul className="space-y-1">
+                  {perfil_experto_optimizado.mecanismo_comercial.pasos.map((paso: string, i: number) => (
+                    <li key={i} className="text-[10px] text-purple-300 flex items-start gap-2">
+                      <span className="text-purple-500 font-bold">{i + 1}.</span>
+                      <span>{paso}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+
+          {perfil_experto_optimizado?.proof_stack_ordenado && (
+            <div className="bg-green-900/10 border border-green-500/20 p-3 rounded-lg">
+              <span className="block text-[9px] text-green-400 uppercase font-bold mb-2">🏆 Proof Stack</span>
+              <ul className="space-y-1">
+                {perfil_experto_optimizado.proof_stack_ordenado.map((proof: string, i: number) => (
+                  <li key={i} className="text-xs text-green-200 flex items-start gap-2">
+                    <CheckCircle2 size={12} className="text-green-500 shrink-0 mt-0.5"/>
+                    <span>{proof}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Análisis Competitivo */}
+      {analisis_competitivo && (
+        <div className="bg-orange-900/10 border border-orange-500/20 rounded-xl p-4">
+          <h4 className="text-orange-400 text-xs font-black uppercase mb-3 flex items-center gap-2">
+            <Target size={14}/> Análisis Competitivo
+          </h4>
+          
+          <div className="space-y-3">
+            {analisis_competitivo.competidores_directos && (
+              <div>
+                <span className="text-[9px] text-gray-500 uppercase font-bold block mb-1">Competidores Directos</span>
+                <p className="text-xs text-gray-300">{analisis_competitivo.competidores_directos}</p>
+              </div>
+            )}
+
+            {analisis_competitivo.tu_diferenciador_vs_ellos && (
+              <div className="bg-green-900/10 border border-green-500/20 p-2 rounded">
+                <span className="text-[9px] text-green-400 uppercase font-bold block mb-1">✅ Tu Ventaja</span>
+                <p className="text-xs text-green-200">{analisis_competitivo.tu_diferenciador_vs_ellos}</p>
+              </div>
+            )}
+
+            {analisis_competitivo.debilidad_competitiva && (
+              <div className="bg-red-900/10 border border-red-500/20 p-2 rounded">
+                <span className="text-[9px] text-red-400 uppercase font-bold block mb-1">⚠️ Tu Debilidad</span>
+                <p className="text-xs text-red-200">{analisis_competitivo.debilidad_competitiva}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Plan de Acción 90 Días */}
+      {plan_accion_90_dias && plan_accion_90_dias.length > 0 && (
+        <div className="bg-cyan-900/10 border border-cyan-500/20 rounded-xl p-4">
+          <h4 className="text-cyan-400 text-xs font-black uppercase mb-3 flex items-center gap-2">
+            <Rocket size={14}/> Plan de Acción 90 Días
+          </h4>
+          
+          <div className="space-y-3">
+            {plan_accion_90_dias.map((mes: any, idx: number) => (
+              <div key={idx} className="bg-black/40 p-3 rounded-lg border border-cyan-500/20">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-black text-cyan-300">MES {mes.mes}</span>
+                  <span className="text-[9px] text-cyan-500 uppercase">{mes.kpi}</span>
+                </div>
+                <p className="text-xs text-white font-bold mb-2">{mes.objetivo}</p>
+                <ul className="space-y-1">
+                  {mes.acciones.map((accion: string, i: number) => (
+                    <li key={i} className="text-[10px] text-gray-300 flex items-start gap-2">
+                      <span className="text-cyan-500 shrink-0">•</span>
+                      <span>{accion}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Siguiente Paso */}
+      {siguiente_paso && (
+        <div className="bg-gradient-to-r from-yellow-900/10 to-orange-900/10 border border-yellow-500/20 rounded-xl p-5 text-center">
+          <h4 className="text-yellow-400 text-xs font-black uppercase mb-3 flex items-center justify-center gap-2">
+            <ArrowRight size={14}/> Tu Siguiente Paso HOY
+          </h4>
+          <p className="text-sm text-white font-medium leading-relaxed">{siguiente_paso}</p>
+        </div>
+      )}
 
     </div>
   );
 };
 
 // ==================================================================================
-// 🧩 COMPONENTE PRINCIPAL: EXPERT PROFILE
+// 💬 SUB-COMPONENTE: CHAT HISTORY
 // ==================================================================================
+const ExpertChatHistory = ({ messages }: { messages: any[] }) => {
+  if (messages.length === 0) {
+    return (
+      <div className="h-full flex flex-col items-center justify-center text-gray-600 opacity-40 p-6">
+        <MessageSquare size={48} className="mb-4"/>
+        <p className="text-sm text-center font-medium max-w-[240px] leading-relaxed">
+          Prueba la voz de tu experto
+          <span className="block mt-2 text-xs text-gray-700">
+            Haz preguntas técnicas a tu audiencia
+          </span>
+        </p>
+      </div>
+    );
+  }
 
+  return (
+    <div className="space-y-4">
+      {messages.map((msg, idx) => (
+        <div key={idx} className="space-y-2 animate-in fade-in slide-in-from-bottom-2">
+          <div className="flex justify-end">
+            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-2.5 rounded-2xl rounded-tr-sm max-w-[85%] shadow-lg">
+              <p className="text-xs font-medium leading-relaxed">{msg.question}</p>
+            </div>
+          </div>
+          
+          <div className="flex justify-start">
+            <div className="bg-gray-800 text-gray-100 px-4 py-3 rounded-2xl rounded-tl-sm max-w-[85%] border border-gray-700 shadow-xl">
+              <div className="flex items-center gap-2 mb-2">
+                <Fingerprint size={12} className="text-indigo-400"/>
+                <span className="text-[9px] text-indigo-400 font-black uppercase tracking-wider">Experto IA</span>
+              </div>
+              <p className="text-xs leading-relaxed whitespace-pre-wrap">{msg.answer}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+// ==================================================================================
+// 🧩 COMPONENTE PRINCIPAL: EXPERT AUTHORITY ENGINE
+// ==================================================================================
 export const ExpertProfile = () => {
     const { user, userProfile, refreshProfile } = useAuth();
     
@@ -131,36 +380,71 @@ export const ExpertProfile = () => {
     const [selectedExpertId, setSelectedExpertId] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
-    // Contexto para el Chat de Prueba (V300)
+    // Estados IA
+    const [aiMode, setAiMode] = useState<'test' | 'xray' | 'amplify'>('test');
+    const [chatInput, setChatInput] = useState('');
+    const [chatHistory, setChatHistory] = useState<any[]>([]);
+    const [auditResult, setAuditResult] = useState<any>(null);
+    const [contentIdeas, setContentIdeas] = useState<any>(null);
+    const [isProcessing, setIsProcessing] = useState(false);
+
+    // Contexto
     const [avatars, setAvatars] = useState<any[]>([]);
     const [knowledgeBases, setKnowledgeBases] = useState<any[]>([]);
     const [selectedTestAvatarId, setSelectedTestAvatarId] = useState<string>('');
     const [selectedTestKbId, setSelectedTestKbId] = useState<string>('');
 
-    // Estados IA
-    const [chatInput, setChatInput] = useState('');
-    const [chatResponse, setChatResponse] = useState('');
-    const [auditResult, setAuditResult] = useState<any>(null); // NUEVO
-    const [isChatting, setIsChatting] = useState(false);
-    const [isAuditing, setIsAuditing] = useState(false);
+    // Tabs
+    const [activeTab, setActiveTab] = useState<'identity' | 'authority' | 'proof' | 'mechanism'>('identity');
 
-    const COSTO_AUDITORIA = 2;
-    const COSTO_CHAT = 1;
+    // Costos
+    const COSTO_XRAY = 2;
+    const COSTO_TEST = 1;
+    const COSTO_AMPLIFY = 3;
 
-    // Formulario
+    // Formulario EXPANDIDO (20 campos)
     const [formData, setFormData] = useState({
-        name: '', niche: '', mission: '', tone: '', key_vocabulary: '', framework: ''
+        // Identidad Básica
+        name: '',
+        niche: '',
+        mission: '',
+        
+        // Historia y Posicionamiento
+        origin_story: '',
+        unique_positioning: '',
+        enemy: '',
+        transformation_promise: '',
+        
+        // Voz y Autoridad
+        tone: '',
+        key_vocabulary: '',
+        personality_archetype: '',
+        
+        // Mecanismo y Metodología
+        framework: '',
+        mechanism_name: '',
+        methodology_steps: '',
+        
+        // Proof y Credibilidad
+        case_studies: '',
+        certifications: '',
+        media_appearances: '',
+        client_results: '',
+        testimonials: '',
+        
+        // Pilares de Contenido
+        content_pillar_1: '',
+        content_pillar_2: ''
     });
 
     const getPlanLimit = () => {
         const tier = userProfile?.tier || 'free';
-        if (tier === 'esencial') return 1; // Solo 1 experto en plan bajo
+        if (tier === 'esencial') return 1;
         if (tier === 'pro') return 3;
         if (tier === 'agency') return 10;
         return 1;
     };
 
-    // --- CARGA DE DATOS ---
     useEffect(() => { 
         if (user) {
             fetchExperts();
@@ -197,25 +481,50 @@ export const ExpertProfile = () => {
 
     const selectExpert = (expert: any) => {
         setSelectedExpertId(expert.id);
-        setChatResponse('');
+        setChatHistory([]);
         setAuditResult(null);
+        setContentIdeas(null);
+        
         setFormData({
             name: expert.name || '',
             niche: expert.niche || '',
             mission: expert.mission || '',
+            origin_story: expert.origin_story || '',
+            unique_positioning: expert.unique_positioning || '',
+            enemy: expert.enemy || '',
+            transformation_promise: expert.transformation_promise || '',
             tone: expert.tone || '',
             key_vocabulary: expert.key_vocabulary || '',
-            framework: expert.framework || ''
+            personality_archetype: expert.personality_archetype || '',
+            framework: expert.framework || '',
+            mechanism_name: expert.mechanism_name || '',
+            methodology_steps: expert.methodology_steps || '',
+            case_studies: expert.case_studies || '',
+            certifications: expert.certifications || '',
+            media_appearances: expert.media_appearances || '',
+            client_results: expert.client_results || '',
+            testimonials: expert.testimonials || '',
+            content_pillar_1: expert.content_pillar_1 || '',
+            content_pillar_2: expert.content_pillar_2 || ''
         });
     };
 
     const handleNewExpert = () => {
         const limit = getPlanLimit();
         if (expertsList.length >= limit) return alert(`⚠️ Límite de ${limit} expertos alcanzado.`);
+        
         setSelectedExpertId(null);
-        setChatResponse('');
+        setChatHistory([]);
         setAuditResult(null);
-        setFormData({ name: '', niche: '', mission: '', tone: '', key_vocabulary: '', framework: '' });
+        setContentIdeas(null);
+        
+        setFormData({ 
+            name: '', niche: '', mission: '', origin_story: '', unique_positioning: '',
+            enemy: '', transformation_promise: '', tone: '', key_vocabulary: '',
+            personality_archetype: '', framework: '', mechanism_name: '', methodology_steps: '',
+            case_studies: '', certifications: '', media_appearances: '', client_results: '',
+            testimonials: '', content_pillar_1: '', content_pillar_2: ''
+        });
     };
 
     const handleSave = async () => {
@@ -237,7 +546,6 @@ export const ExpertProfile = () => {
             
             await fetchExperts();
             selectExpert(result.data);
-            // Feedback sutil
         } catch (e: any) { alert(`Error: ${e.message}`); } 
         finally { setLoading(false); }
     };
@@ -255,70 +563,147 @@ export const ExpertProfile = () => {
         } catch (e) { console.error(e); }
     };
 
-    // --- IA: AUDITORÍA DE EXPERTO (V300) ---
-    const handleAudit = async () => {
+    // X-RAY AUTHORITY (Antes: Audit)
+    const handleXRayAuthority = async () => {
         if (!formData.niche || !formData.mission) return alert("Define Nicho y Misión.");
-        if (userProfile?.tier !== 'admin' && (userProfile?.credits || 0) < COSTO_AUDITORIA) return alert("Saldo insuficiente.");
+        if (userProfile?.tier !== 'admin' && (userProfile?.credits || 0) < COSTO_XRAY) return alert("Saldo insuficiente.");
 
-        setIsAuditing(true);
+        setIsProcessing(true);
         setAuditResult(null);
         
         try {
             const { data, error } = await supabase.functions.invoke('process-url', {
                 body: {
-                    selectedMode: 'audit_expert', // MODO ESPECÍFICO
+                    selectedMode: 'audit_expert',
                     transcript: JSON.stringify(formData), 
-                    avatarId: selectedTestAvatarId, // Para que audite en relación al avatar
-                    estimatedCost: COSTO_AUDITORIA
+                    avatarId: selectedTestAvatarId,
+                    estimatedCost: COSTO_XRAY
                 },
             });
 
             if (error) throw error;
             
-            // CONEXIÓN CON EL NUEVO FORMATO DEL PROMPT "TITAN STRATEGY"
-            // Esperamos: { auditoria_calidad: {...}, analisis_campo_por_campo: [...], ... }
             const result = data.generatedData || data;
-
             setAuditResult(result);
             if(refreshProfile) refreshProfile();
 
         } catch (e: any) { alert(`Error: ${e.message}`); }
-        finally { setIsAuditing(false); }
+        finally { setIsProcessing(false); }
     };
 
-    // --- IA: CHAT DE PRUEBA (V300) ---
-    const handleChat = async () => {
+    // VOICE TEST (Antes: Chat)
+    const handleVoiceTest = async () => {
         if (!chatInput) return;
-        if (userProfile?.tier !== 'admin' && (userProfile?.credits || 0) < COSTO_CHAT) return alert("Saldo insuficiente.");
+        if (userProfile?.tier !== 'admin' && (userProfile?.credits || 0) < COSTO_TEST) return alert("Saldo insuficiente.");
         
-        setIsChatting(true);
+        setIsProcessing(true);
         try {
             const { data, error } = await supabase.functions.invoke('process-url', {
                 body: {
                     selectedMode: 'chat_expert', 
                     transcript: `Usuario pregunta: "${chatInput}". \nContexto del Experto: ${JSON.stringify(formData)}`,
-                    avatarId: selectedTestAvatarId, // A quién le habla
-                    knowledgeBaseId: selectedTestKbId, // Qué sabe
-                    estimatedCost: COSTO_CHAT
+                    avatarId: selectedTestAvatarId,
+                    knowledgeBaseId: selectedTestKbId,
+                    estimatedCost: COSTO_TEST
                 },
             });
             if (error) throw error;
-            setChatResponse(data.generatedData.answer || "...");
+            
+            const answer = data.generatedData?.answer || 
+                          data.generatedData?.text_output || 
+                          (typeof data.generatedData === 'string' ? data.generatedData : "Sin respuesta");
+            
+            setChatHistory(prev => [...prev, {
+                question: chatInput,
+                answer: answer
+            }]);
+            
+            setChatInput('');
             if (refreshProfile) refreshProfile();
-        } catch (e) { setChatResponse("Error de conexión."); }
-        finally { setIsChatting(false); }
+            
+        } catch (e: any) { 
+            setChatHistory(prev => [...prev, {
+                question: chatInput,
+                answer: `Error: ${e.message}`
+            }]);
+        }
+        finally { setIsProcessing(false); }
+    };
+
+    // CONTENT AMPLIFIER (Nuevo - Antes: Insights)
+    const handleContentAmplifier = async () => {
+        if (!formData.name || !formData.niche) return alert("Completa Nombre y Nicho.");
+        if (userProfile?.tier !== 'admin' && (userProfile?.credits || 0) < COSTO_AMPLIFY) return alert("Saldo insuficiente.");
+
+        setIsProcessing(true);
+        setContentIdeas(null);
+        
+        try {
+            const contentPrompt = `GENERA IDEAS DE CONTENIDO PARA ESTE EXPERTO:
+
+${JSON.stringify(formData, null, 2)}
+
+GENERA:
+1. 5 títulos de contenido virales para ${formData.niche}
+2. 3 frameworks únicos para explicar conceptos complejos
+3. 2 controversias estratégicas para generar engagement
+4. 1 serie de contenido de 30 días
+
+Devuelve en formato JSON:
+{
+  "titulos_virales": ["titulo1", "titulo2", ...],
+  "frameworks_ensenanza": ["framework1", "framework2", "framework3"],
+  "controversias_estrategicas": ["controversia1", "controversia2"],
+  "serie_30_dias": {
+    "nombre": "Nombre de la serie",
+    "temas_semanales": ["semana1", "semana2", "semana3", "semana4"]
+  }
+}`;
+
+            const { data, error } = await supabase.functions.invoke('process-url', {
+                body: {
+                    selectedMode: 'chat_expert',
+                    transcript: contentPrompt,
+                    avatarId: selectedTestAvatarId,
+                    knowledgeBaseId: selectedTestKbId,
+                    estimatedCost: COSTO_AMPLIFY
+                },
+            });
+            
+            if (error) throw error;
+            
+            let ideas;
+            try {
+                const rawAnswer = data.generatedData?.answer || 
+                                 data.generatedData?.text_output || 
+                                 JSON.stringify(data.generatedData);
+                ideas = JSON.parse(rawAnswer);
+            } catch {
+                ideas = { 
+                    raw: data.generatedData?.answer || "No se generaron ideas" 
+                };
+            }
+            
+            setContentIdeas(ideas);
+            if (refreshProfile) refreshProfile();
+
+        } catch (e: any) { alert(`Error: ${e.message}`); }
+        finally { setIsProcessing(false); }
     };
 
     return (
-        <div className="max-w-7xl mx-auto space-y-6 pb-20 animate-in fade-in">
+        <div className="max-w-7xl mx-auto space-y-6 pb-20 px-4 animate-in fade-in">
             
             {/* HEADER */}
             <div className="flex flex-col md:flex-row justify-between items-end gap-4 pt-6">
                 <div>
-                    <h1 className="text-3xl font-black text-white flex items-center gap-2 tracking-tighter">
-                        <Fingerprint className="text-indigo-500" fill="currentColor"/> THE AUTHORITY FORGE
+                    <h1 className="text-4xl font-black text-white flex items-center gap-3 tracking-tighter">
+                        <Crown className="text-indigo-500" fill="currentColor" size={36}/> 
+                        AUTHORITY FORGE
                     </h1>
-                    <p className="text-gray-400 text-sm font-medium">Diseña una identidad de experto magnética y diferénciate del ruido.</p>
+                    <p className="text-gray-400 text-base font-medium mt-1">
+                        Diseña una marca personal magnética que atrae clientes premium
+                    </p>
                 </div>
                 <div className="flex gap-2 w-full md:w-auto">
                     <select 
@@ -332,135 +717,589 @@ export const ExpertProfile = () => {
                         <option value="" disabled>Cargar Experto...</option>
                         {expertsList.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
                     </select>
-                    <button onClick={handleNewExpert} className="p-3 bg-indigo-600 rounded-xl hover:bg-indigo-500 text-white transition-all shadow-lg shadow-indigo-900/20"><Plus size={20}/></button>
+                    <button onClick={handleNewExpert} className="p-3 bg-indigo-600 rounded-xl hover:bg-indigo-500 text-white transition-all shadow-lg shadow-indigo-900/20">
+                        <Plus size={20}/>
+                    </button>
                 </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 
-                {/* --- FORMULARIO IZQUIERDA (8 Cols) --- */}
+                {/* FORMULARIO IZQUIERDA (8 Cols) */}
                 <div className="lg:col-span-8 space-y-6">
                     
-                    {/* 1. POSICIONAMIENTO */}
-                    <div className="bg-[#0B0E14] border border-gray-800 rounded-3xl p-6 shadow-xl relative group">
-                        <div className="absolute top-0 left-0 w-1 h-full bg-indigo-500 rounded-l-3xl group-hover:w-2 transition-all"></div>
-                        <h3 className="text-white font-bold mb-6 flex items-center gap-2 text-lg">
-                            <Globe size={20} className="text-indigo-400"/> 1. Posicionamiento de Mercado
-                        </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                            <div>
-                                <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block tracking-widest">Nombre de Marca / Experto</label>
-                                <input type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="input-viral" placeholder="Ej: Dr. Finanzas"/>
-                            </div>
-                            <div>
-                                <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block tracking-widest">Nicho Específico</label>
-                                <input type="text" value={formData.niche} onChange={(e) => setFormData({...formData, niche: e.target.value})} className="input-viral" placeholder="Ej: Inversiones inmobiliarias para médicos"/>
-                            </div>
-                        </div>
-                        <div>
-                            <label className="text-[10px] font-black text-indigo-400 uppercase mb-2 block tracking-widest flex items-center gap-2"><ShieldCheck size={12}/> Misión Única (Unique Value Prop)</label>
-                            <textarea value={formData.mission} onChange={(e) => setFormData({...formData, mission: e.target.value})} className="textarea-viral h-24 border-indigo-500/20 focus:border-indigo-500" placeholder="Ayudo a [AVATAR] a lograr [RESULTADO] sin [OBJECIÓN] mediante [MÉTODO]..."/>
-                        </div>
+                    {/* Tabs de Navegación */}
+                    <div className="flex gap-2 bg-gray-900/50 p-2 rounded-2xl border border-gray-800">
+                        <button
+                            onClick={() => setActiveTab('identity')}
+                            className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
+                                activeTab === 'identity'
+                                    ? 'bg-indigo-600 text-white shadow-lg'
+                                    : 'text-gray-500 hover:text-white'
+                            }`}
+                        >
+                            <Globe size={14} className="inline mr-1"/> Identidad
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('authority')}
+                            className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
+                                activeTab === 'authority'
+                                    ? 'bg-purple-600 text-white shadow-lg'
+                                    : 'text-gray-500 hover:text-white'
+                            }`}
+                        >
+                            <Mic size={14} className="inline mr-1"/> Autoridad
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('proof')}
+                            className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
+                                activeTab === 'proof'
+                                    ? 'bg-green-600 text-white shadow-lg'
+                                    : 'text-gray-500 hover:text-white'
+                            }`}
+                        >
+                            <Trophy size={14} className="inline mr-1"/> Prueba
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('mechanism')}
+                            className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
+                                activeTab === 'mechanism'
+                                    ? 'bg-yellow-600 text-white shadow-lg'
+                                    : 'text-gray-500 hover:text-white'
+                            }`}
+                        >
+                            <Zap size={14} className="inline mr-1"/> Mecanismo
+                        </button>
                     </div>
 
-                    {/* 2. VOZ Y AUTORIDAD */}
-                    <div className="bg-[#0B0E14] border border-gray-800 rounded-3xl p-6 shadow-xl relative group">
-                        <div className="absolute top-0 left-0 w-1 h-full bg-pink-500 rounded-l-3xl group-hover:w-2 transition-all"></div>
-                        <h3 className="text-white font-bold mb-6 flex items-center gap-2 text-lg">
-                            <Mic size={20} className="text-pink-500"/> 2. Voz y Autoridad
-                        </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                            <div>
-                                <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block tracking-widest">Tono de Voz</label>
-                                <input type="text" value={formData.tone} onChange={(e) => setFormData({...formData, tone: e.target.value})} className="input-viral" placeholder="Ej: Disruptivo, Académico, 'Hermano Mayor'"/>
-                            </div>
-                            <div>
-                                <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block tracking-widest">Palabras de Poder (Jerga)</label>
-                                <input type="text" value={formData.key_vocabulary} onChange={(e) => setFormData({...formData, key_vocabulary: e.target.value})} className="input-viral" placeholder="Ej: Matrix, Cashflow, Libertad, Sistema..."/>
-                            </div>
-                        </div>
-                        <div className="bg-yellow-900/5 p-4 rounded-2xl border border-yellow-500/10">
-                            <label className="text-[10px] font-black text-yellow-400 uppercase mb-2 block tracking-widest">Framework / Metodología Propietaria</label>
-                            <textarea value={formData.framework} onChange={(e) => setFormData({...formData, framework: e.target.value})} className="textarea-viral h-20 bg-transparent border-none p-0 focus:ring-0 resize-none placeholder:text-yellow-900/30 text-gray-300" placeholder="Describe tu método paso a paso (Ej: El Método 3C: Captar, Convertir, Cerrar)"/>
-                        </div>
-                    </div>
+                    {/* CONTENIDO DE TABS */}
+                    <div className="bg-[#0B0E14] border border-gray-800 rounded-3xl p-6 shadow-xl min-h-[500px]">
+                        {/* TAB: IDENTIDAD */}
+                        {activeTab === 'identity' && (
+                            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                                <h3 className="text-white font-bold text-lg flex items-center gap-2">
+                                    <Globe size={20} className="text-indigo-400"/> Posicionamiento de Mercado
+                                </h3>
+                                
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Nombre de Marca *</label>
+                                        <input 
+                                            type="text" 
+                                            value={formData.name} 
+                                            onChange={(e) => setFormData({...formData, name: e.target.value})} 
+                                            className="input-viral" 
+                                            placeholder="Ej: Dr. Finanzas"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Nicho Específico *</label>
+                                        <input 
+                                            type="text" 
+                                            value={formData.niche} 
+                                            onChange={(e) => setFormData({...formData, niche: e.target.value})} 
+                                            className="input-viral" 
+                                            placeholder="Ej: Inversiones inmobiliarias para médicos"
+                                        />
+                                    </div>
+                                </div>
 
-                    <div className="flex justify-end gap-4 pt-4 border-t border-gray-800">
-                        {selectedExpertId && (
-                            <button onClick={handleDelete} className="text-red-500 hover:text-white px-4 py-3 rounded-xl hover:bg-red-900/20 transition-all text-sm font-bold flex items-center gap-2">
-                                <Trash2 size={16}/> Eliminar
-                            </button>
+                                <div>
+                                    <label className="text-[10px] font-black text-indigo-400 uppercase mb-2 block flex items-center gap-2">
+                                        <ShieldCheck size={12}/> Misión Única (UVP) *
+                                    </label>
+                                    <textarea 
+                                        value={formData.mission} 
+                                        onChange={(e) => setFormData({...formData, mission: e.target.value})} 
+                                        className="textarea-viral h-24 border-indigo-500/20" 
+                                        placeholder="Ayudo a [AVATAR] a lograr [RESULTADO] sin [OBJECIÓN] mediante [MÉTODO]..."
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Historia de Origen</label>
+                                    <textarea 
+                                        value={formData.origin_story} 
+                                        onChange={(e) => setFormData({...formData, origin_story: e.target.value})} 
+                                        className="textarea-viral h-32" 
+                                        placeholder="Tu crisis → Tu descubrimiento → Tu transformación. Ej: 'Perdí todo en 2008, descubrí X, ahora...'"
+                                    />
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Posicionamiento Único</label>
+                                        <input 
+                                            type="text" 
+                                            value={formData.unique_positioning} 
+                                            onChange={(e) => setFormData({...formData, unique_positioning: e.target.value})} 
+                                            className="input-viral" 
+                                            placeholder="Ej: El único coach de fitness que odia el gym"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-[10px] font-black text-red-400 uppercase mb-2 block">Enemigo Común</label>
+                                        <input 
+                                            type="text" 
+                                            value={formData.enemy} 
+                                            onChange={(e) => setFormData({...formData, enemy: e.target.value})} 
+                                            className="input-viral border-red-500/20" 
+                                            placeholder="Ej: Los gur��s que venden humo"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="text-[10px] font-black text-green-400 uppercase mb-2 block">Promesa de Transformación</label>
+                                    <input 
+                                        type="text" 
+                                        value={formData.transformation_promise} 
+                                        onChange={(e) => setFormData({...formData, transformation_promise: e.target.value})} 
+                                        className="input-viral border-green-500/20" 
+                                        placeholder="Ej: €10k/mes en 90 días o devuelvo el doble"
+                                    />
+                                </div>
+                            </div>
                         )}
-                        <button onClick={handleSave} disabled={loading} className="px-8 py-3 bg-white text-black font-black rounded-xl hover:bg-gray-200 transition-all flex items-center gap-2 shadow-lg shadow-white/5">
-                            {loading ? <RefreshCw size={18} className="animate-spin"/> : <Save size={18}/>} GUARDAR IDENTIDAD
+
+                        {/* TAB: AUTORIDAD */}
+                        {activeTab === 'authority' && (
+                            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                                <h3 className="text-white font-bold text-lg flex items-center gap-2">
+                                    <Mic size={20} className="text-purple-400"/> Voz y Autoridad
+                                </h3>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Tono de Voz</label>
+                                        <input 
+                                            type="text" 
+                                            value={formData.tone} 
+                                            onChange={(e) => setFormData({...formData, tone: e.target.value})} 
+                                            className="input-viral" 
+                                            placeholder="Ej: Disruptivo, Académico, Hermano Mayor"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Arquetipo de Personalidad</label>
+                                        <select 
+                                            value={formData.personality_archetype} 
+                                            onChange={(e) => setFormData({...formData, personality_archetype: e.target.value})}
+                                            className="input-viral"
+                                        >
+                                            <option value="">Seleccionar...</option>
+                                            <option>Maverick (Gary Vee)</option>
+                                            <option>Mentor (Tony Robbins)</option>
+                                            <option>Disruptor (Grant Cardone)</option>
+                                            <option>Científico (Neil Patel)</option>
+                                            <option>Hermano Mayor (Alex Hormozi)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Palabras de Poder / Jerga Propietaria</label>
+                                    <textarea 
+                                        value={formData.key_vocabulary} 
+                                        onChange={(e) => setFormData({...formData, key_vocabulary: e.target.value})} 
+                                        className="textarea-viral h-20" 
+                                        placeholder="Ej: Matrix, Cashflow, Libertad, Sistema, Escalabilidad..."
+                                    />
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Pilar de Contenido #1</label>
+                                        <input 
+                                            type="text" 
+                                            value={formData.content_pillar_1} 
+                                            onChange={(e) => setFormData({...formData, content_pillar_1: e.target.value})} 
+                                            className="input-viral" 
+                                            placeholder="Tema principal (70% del contenido)"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Pilar de Contenido #2</label>
+                                        <input 
+                                            type="text" 
+                                            value={formData.content_pillar_2} 
+                                            onChange={(e) => setFormData({...formData, content_pillar_2: e.target.value})} 
+                                            className="input-viral" 
+                                            placeholder="Tema secundario (30% del contenido)"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* TAB: PRUEBA */}
+                        {activeTab === 'proof' && (
+                            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                                <h3 className="text-white font-bold text-lg flex items-center gap-2">
+                                    <Trophy size={20} className="text-green-400"/> Proof Stack (Prueba Social)
+                                </h3>
+
+                                <div>
+                                    <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Resultados de Clientes (con números)</label>
+                                    <textarea 
+                                        value={formData.client_results} 
+                                        onChange={(e) => setFormData({...formData, client_results: e.target.value})} 
+                                        className="textarea-viral h-24" 
+                                        placeholder="Ej: He ayudado a 127 clientes a generar €2.3M en los últimos 18 meses..."
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Casos de Estudio</label>
+                                    <textarea 
+                                        value={formData.case_studies} 
+                                        onChange={(e) => setFormData({...formData, case_studies: e.target.value})} 
+                                        className="textarea-viral h-24" 
+                                        placeholder="Ej: Cliente X: De €0 a €50k/mes en 6 meses. Cliente Y: Escaló de 1 a 15 empleados..."
+                                    />
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Certificaciones / Autoridad</label>
+                                        <input 
+                                            type="text" 
+                                            value={formData.certifications} 
+                                            onChange={(e) => setFormData({...formData, certifications: e.target.value})} 
+                                            className="input-viral" 
+                                            placeholder="Ej: MBA Harvard, Certificado Google..."
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Apariciones en Medios</label>
+                                        <input 
+                                            type="text" 
+                                            value={formData.media_appearances} 
+                                            onChange={(e) => setFormData({...formData, media_appearances: e.target.value})} 
+                                            className="input-viral" 
+                                            placeholder="Ej: Forbes, Podcast de Tim Ferriss..."
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Testimonios (Mejores 3)</label>
+                                    <textarea 
+                                        value={formData.testimonials} 
+                                        onChange={(e) => setFormData({...formData, testimonials: e.target.value})} 
+                                        className="textarea-viral h-24" 
+                                        placeholder="'Gracias a [TU NOMBRE], pasé de X a Y en Z tiempo' - Nombre, Empresa"
+                                    />
+                                </div>
+                            </div>
+                        )}
+
+                        {/* TAB: MECANISMO */}
+                        {activeTab === 'mechanism' && (
+                            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                                <h3 className="text-white font-bold text-lg flex items-center gap-2">
+                                    <Zap size={20} className="text-yellow-400"/> Metodología Propietaria
+                                </h3>
+
+                                <div>
+                                    <label className="text-[10px] font-black text-yellow-400 uppercase mb-2 block">Nombre del Mecanismo™</label>
+                                    <input 
+                                        type="text" 
+                                        value={formData.mechanism_name} 
+                                        onChange={(e) => setFormData({...formData, mechanism_name: e.target.value})} 
+                                        className="input-viral border-yellow-500/20" 
+                                        placeholder="Ej: Sistema RAPID™, Método SCALE™, Framework MAGNET™"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Framework Completo (Paso a Paso)</label>
+                                    <textarea 
+                                        value={formData.framework} 
+                                        onChange={(e) => setFormData({...formData, framework: e.target.value})} 
+                                        className="textarea-viral h-32" 
+                                        placeholder="Describe tu metodología completa. Ej: El Método 3C: 1) Captar (estrategia de adquisición), 2) Convertir (sistema de ventas), 3) Cerrar (fulfillment)"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Pasos del Sistema (Numerados)</label>
+                                    <textarea 
+                                        value={formData.methodology_steps} 
+                                        onChange={(e) => setFormData({...formData, methodology_steps: e.target.value})} 
+                                        className="textarea-viral h-24" 
+                                        placeholder="Paso 1: [Acción]\nPaso 2: [Acción]\nPaso 3: [Acción]..."
+                                    />
+                                </div>
+
+                                <div className="bg-yellow-900/5 p-4 rounded-xl border border-yellow-500/10">
+                                    <h4 className="text-yellow-400 text-xs font-black uppercase mb-2">💡 Tips para Mecanismos Únicos</h4>
+                                    <ul className="space-y-1 text-xs text-gray-300">
+                                        <li className="flex items-start gap-2">
+                                            <span className="text-yellow-500 shrink-0">•</span>
+                                            <span>Usa acrónimos: RAPID, SCALE, MAGNET</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                            <span className="text-yellow-500 shrink-0">•</span>
+                                            <span>Registra tu trademark™</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                            <span className="text-yellow-500 shrink-0">•</span>
+                                            <span>Haz que suene científico pero simple</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Botones de Acción */}
+                    <div className="flex justify-between items-center gap-4 pt-4 border-t border-gray-800">
+                        <div className="flex gap-2">
+                            {selectedExpertId && (
+                                <button 
+                                    onClick={handleDelete} 
+                                    className="text-red-500 hover:text-white px-4 py-3 rounded-xl hover:bg-red-900/20 transition-all text-sm font-bold flex items-center gap-2"
+                                >
+                                    <Trash2 size={16}/> Eliminar
+                                </button>
+                            )}
+                        </div>
+                        
+                        <button 
+                            onClick={handleSave} 
+                            disabled={loading} 
+                            className="px-8 py-3 bg-white text-black font-black rounded-xl hover:bg-gray-200 transition-all flex items-center gap-2 shadow-lg"
+                        >
+                            {loading ? <RefreshCw size={18} className="animate-spin"/> : <Save size={18}/>} 
+                            GUARDAR
                         </button>
                     </div>
                 </div>
 
-                {/* --- DERECHA: SIMULADOR IA (4 Cols) --- */}
-                <div className="lg:col-span-4 space-y-6">
+                {/* PANEL IA DERECHA (4 Cols) */}
+                <div className="lg:col-span-4">
                     <div className="bg-[#0f1115] border border-gray-800 rounded-3xl p-6 sticky top-6 shadow-2xl flex flex-col h-[700px]">
                         
                         {/* Header IA */}
-                        <div className="border-b border-gray-800 pb-4 mb-4 flex justify-between items-center">
-                            <h3 className="text-lg font-bold text-white flex items-center gap-2"><MessageSquare size={18} className="text-green-400"/> Simulador de Voz</h3>
-                            <div className="bg-green-900/20 px-2 py-1 rounded text-[10px] text-green-400 font-bold border border-green-500/30">V300</div>
+                        <div className="border-b border-gray-800 pb-4 mb-4">
+                            <div className="flex justify-between items-center mb-3">
+                                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                                    <Sparkles size={18} className="text-indigo-400"/> AI LAB
+                                </h3>
+                                <div className="bg-indigo-900/20 px-2 py-1 rounded text-[10px] text-indigo-400 font-bold border border-indigo-500/30">
+                                    ULTRA
+                                </div>
+                            </div>
+
+                            {/* Modos de IA */}
+                            <div className="flex gap-2 bg-gray-900/50 p-1 rounded-lg">
+                                <button
+                                    onClick={() => setAiMode('test')}
+                                    className={`flex-1 py-2 px-3 rounded text-[10px] font-black uppercase transition-all ${
+                                        aiMode === 'test'
+                                            ? 'bg-green-600 text-white'
+                                            : 'text-gray-500 hover:text-white'
+                                    }`}
+                                    title="Prueba tu voz"
+                                >
+                                    <Mic size={12} className="inline mr-1"/> Voice
+                                </button>
+                                <button
+                                    onClick={() => setAiMode('xray')}
+                                    className={`flex-1 py-2 px-3 rounded text-[10px] font-black uppercase transition-all ${
+                                        aiMode === 'xray'
+                                            ? 'bg-indigo-600 text-white'
+                                            : 'text-gray-500 hover:text-white'
+                                    }`}
+                                    title="Escaneo de autoridad"
+                                >
+                                    <Eye size={12} className="inline mr-1"/> X-Ray
+                                </button>
+                                <button
+                                    onClick={() => setAiMode('amplify')}
+                                    className={`flex-1 py-2 px-3 rounded text-[10px] font-black uppercase transition-all ${
+                                        aiMode === 'amplify'
+                                            ? 'bg-yellow-600 text-white'
+                                            : 'text-gray-500 hover:text-white'
+                                    }`}
+                                    title="Generador de contenido"
+                                >
+                                    <Zap size={12} className="inline mr-1"/> Amplify
+                                </button>
+                            </div>
                         </div>
 
-                        {/* Configuración de Prueba */}
+                        {/* Configuración */}
                         <div className="mb-4 space-y-2">
-                             <div className="relative">
-                                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-pink-400"><Users size={12}/></div>
-                                <select value={selectedTestAvatarId} onChange={(e) => setSelectedTestAvatarId(e.target.value)} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-3 pl-9 text-xs text-gray-300 outline-none focus:border-pink-500">
-                                    <option value="">Hablarle a: (Avatar)</option>{avatars.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
-                                </select>
-                            </div>
-                            <div className="relative">
-                                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-yellow-400"><BookOpen size={12}/></div>
-                                <select value={selectedTestKbId} onChange={(e) => setSelectedTestKbId(e.target.value)} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-3 pl-9 text-xs text-gray-300 outline-none focus:border-yellow-500">
-                                    <option value="">Usar Conocimiento: (KB)</option>{knowledgeBases.map(kb => <option key={kb.id} value={kb.id}>{kb.title}</option>)}
-                                </select>
-                            </div>
+                            <select 
+                                value={selectedTestAvatarId} 
+                                onChange={(e) => setSelectedTestAvatarId(e.target.value)} 
+                                className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-3 text-xs text-gray-300 outline-none"
+                            >
+                                <option value="">🎯 Hablarle a (Avatar)</option>
+                                {avatars.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+                            </select>
+                            <select 
+                                value={selectedTestKbId} 
+                                onChange={(e) => setSelectedTestKbId(e.target.value)} 
+                                className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-3 text-xs text-gray-300 outline-none"
+                            >
+                                <option value="">📚 Usar Conocimiento (KB)</option>
+                                {knowledgeBases.map(kb => <option key={kb.id} value={kb.id}>{kb.title}</option>)}
+                            </select>
                         </div>
 
                         {/* Pantalla Resultados */}
-                        <div className="flex-1 overflow-y-auto custom-scrollbar bg-[#0a0a0a] rounded-2xl p-4 border border-gray-800 mb-4 shadow-inner relative">
+                        <div className="flex-1 overflow-y-auto custom-scrollbar bg-[#0a0a0a] rounded-2xl p-4 border border-gray-800 mb-4 shadow-inner">
                             
-                            {/* LOGICA DE VISUALIZACIÓN */}
-                            {auditResult ? (
-                                <ExpertAuditReport data={auditResult} />
-                            ) : chatResponse ? (
-                                <div className="space-y-2">
-                                    <div className="flex gap-2 items-center mb-2">
-                                        <div className="w-6 h-6 rounded-full bg-indigo-500 flex items-center justify-center text-[10px] font-bold text-white">EX</div>
-                                        <span className="text-xs font-bold text-indigo-300">{formData.name || 'Experto'}</span>
-                                    </div>
-                                    <p className="text-gray-300 text-sm whitespace-pre-wrap leading-relaxed animate-in fade-in font-medium pl-8 border-l-2 border-indigo-500/20">{chatResponse}</p>
+                            {aiMode === 'xray' && auditResult && (
+                                <ExpertAuditReportV2 data={auditResult} />
+                            )}
+
+                            {aiMode === 'test' && (
+                                <ExpertChatHistory messages={chatHistory} />
+                            )}
+
+                            {aiMode === 'amplify' && contentIdeas && (
+                                <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                    {contentIdeas.titulos_virales && (
+                                        <div className="bg-yellow-900/10 border border-yellow-500/20 rounded-xl p-4">
+                                            <h4 className="text-yellow-400 text-xs font-black uppercase mb-2 flex items-center gap-2">
+                                                <Flame size={14}/> Títulos Virales
+                                            </h4>
+                                            <ul className="space-y-2">
+                                                {contentIdeas.titulos_virales.map((titulo: string, i: number) => (
+                                                    <li key={i} className="text-xs text-gray-300 flex items-start gap-2">
+                                                        <span className="text-yellow-500 shrink-0">{i + 1}.</span>
+                                                        <span>{titulo}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+
+                                    {contentIdeas.frameworks_ensenanza && (
+                                        <div className="bg-purple-900/10 border border-purple-500/20 rounded-xl p-4">
+                                            <h4 className="text-purple-400 text-xs font-black uppercase mb-2 flex items-center gap-2">
+                                                <Brain size={14}/> Frameworks de Enseñanza
+                                            </h4>
+                                            <ul className="space-y-2">
+                                                {contentIdeas.frameworks_ensenanza.map((fw: string, i: number) => (
+                                                    <li key={i} className="text-xs text-gray-300 flex items-start gap-2">
+                                                        <span className="text-purple-500 shrink-0">•</span>
+                                                        <span>{fw}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+
+                                    {contentIdeas.raw && (
+                                        <div className="bg-gray-900 border border-gray-800 rounded-xl p-4">
+                                            <p className="text-xs text-gray-300 leading-relaxed whitespace-pre-wrap">
+                                                {contentIdeas.raw}
+                                            </p>
+                                        </div>
+                                    )}
                                 </div>
-                            ) : (
-                                <div className="h-full flex flex-col items-center justify-center text-gray-600 opacity-40">
-                                    <Fingerprint size={40} className="mb-3"/>
-                                    <p className="text-xs text-center font-medium max-w-[150px]">Audita tu autoridad o prueba tu voz.</p>
+                            )}
+
+                            {/* Estados Vacíos */}
+                            {aiMode === 'xray' && !auditResult && !isProcessing && (
+                                <div className="h-full flex flex-col items-center justify-center text-gray-600 opacity-40 p-6">
+                                    <Eye size={48} className="mb-4"/>
+                                    <p className="text-sm text-center font-medium">
+                                        Escaneo profundo de autoridad
+                                    </p>
+                                    <p className="text-xs text-center text-gray-700 mt-2">
+                                        Encuentra puntos ciegos y optimiza
+                                    </p>
+                                </div>
+                            )}
+
+                            {aiMode === 'amplify' && !contentIdeas && !isProcessing && (
+                                <div className="h-full flex flex-col items-center justify-center text-gray-600 opacity-40 p-6">
+                                    <Zap size={48} className="mb-4"/>
+                                    <p className="text-sm text-center font-medium">
+                                        Generador de contenido
+                                    </p>
+                                    <p className="text-xs text-center text-gray-700 mt-2">
+                                        Ideas virales para tu nicho
+                                    </p>
                                 </div>
                             )}
                         </div>
 
                         {/* Botones */}
                         <div className="space-y-3">
-                            <button onClick={handleAudit} disabled={isAuditing || !formData.niche} className="w-full py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-xs font-black uppercase tracking-widest flex justify-center items-center gap-2 transition-all border border-gray-700">
-                                {isAuditing ? <RefreshCw size={14} className="animate-spin"/> : <Activity size={14}/>} Auditar Autoridad (2 Cr)
-                            </button>
-                            <div className="relative">
-                                <input type="text" value={chatInput} onChange={(e) => setChatInput(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && handleChat()} placeholder="Hazle una pregunta técnica..." className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl py-3 pl-4 pr-12 text-white text-sm focus:border-green-500 outline-none transition-all shadow-inner"/>
-                                <button onClick={handleChat} disabled={isChatting || !chatInput} className="absolute right-2 top-2 p-1.5 bg-green-600 hover:bg-green-500 text-white rounded-lg disabled:opacity-50 transition-all shadow-lg shadow-green-900/20">
-                                    {isChatting ? <RefreshCw size={14} className="animate-spin"/> : <Send size={14}/>}
+                            {aiMode === 'xray' && (
+                                <button 
+                                    onClick={handleXRayAuthority} 
+                                    disabled={isProcessing || !formData.niche} 
+                                    className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-black uppercase flex justify-center items-center gap-2 transition-all disabled:opacity-50 shadow-lg shadow-indigo-900/20"
+                                >
+                                    {isProcessing ? <RefreshCw size={14} className="animate-spin"/> : <Eye size={14}/>} 
+                                    {isProcessing ? 'ESCANEANDO...' : `X-RAY AUTHORITY (${COSTO_XRAY} CR)`}
                                 </button>
-                            </div>
+                            )}
+
+                            {aiMode === 'amplify' && (
+                                <button 
+                                    onClick={handleContentAmplifier} 
+                                    disabled={isProcessing || !formData.name} 
+                                    className="w-full py-3 bg-yellow-600 hover:bg-yellow-500 text-white rounded-xl text-xs font-black uppercase flex justify-center items-center gap-2 transition-all disabled:opacity-50 shadow-lg shadow-yellow-900/20"
+                                >
+                                    {isProcessing ? <RefreshCw size={14} className="animate-spin"/> : <Zap size={14}/>} 
+                                    {isProcessing ? 'GENERANDO...' : `CONTENT AMPLIFIER (${COSTO_AMPLIFY} CR)`}
+                                </button>
+                            )}
+
+                            {aiMode === 'test' && (
+                                <div className="relative">
+                                    <input 
+                                        type="text" 
+                                        value={chatInput} 
+                                        onChange={(e) => setChatInput(e.target.value)} 
+                                        onKeyPress={(e) => e.key === 'Enter' && handleVoiceTest()} 
+                                        placeholder="Hazle una pregunta técnica..." 
+                                        className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl py-3 pl-4 pr-12 text-white text-sm outline-none"
+                                    />
+                                    <button 
+                                        onClick={handleVoiceTest} 
+                                        disabled={isProcessing || !chatInput} 
+                                        className="absolute right-2 top-2 p-1.5 bg-green-600 hover:bg-green-500 text-white rounded-lg disabled:opacity-50 shadow-lg shadow-green-900/20"
+                                    >
+                                        {isProcessing ? <RefreshCw size={14} className="animate-spin"/> : <Send size={14}/>}
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
             </div>
-            <style>{`.input-viral { width: 100%; background-color: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); border-radius: 0.75rem; padding: 0.75rem; color: white; font-size: 0.875rem; outline: none; transition: all 0.2s; } .input-viral:focus { border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1); } .textarea-viral { width: 100%; background-color: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); border-radius: 0.75rem; padding: 0.75rem; color: white; font-size: 0.875rem; outline: none; resize: none; transition: all 0.2s; } .textarea-viral:focus { border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1); } .custom-scrollbar::-webkit-scrollbar { width: 4px; } .custom-scrollbar::-webkit-scrollbar-track { background: transparent; } .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }`}</style>
+
+            <style>{`
+                .input-viral { 
+                    width: 100%; background-color: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); 
+                    border-radius: 0.75rem; padding: 0.75rem; color: white; font-size: 0.875rem; 
+                    outline: none; transition: all 0.2s; 
+                } 
+                .input-viral:focus { 
+                    border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1); 
+                } 
+                .textarea-viral { 
+                    width: 100%; background-color: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); 
+                    border-radius: 0.75rem; padding: 0.75rem; color: white; font-size: 0.875rem; 
+                    outline: none; resize: none; transition: all 0.2s; 
+                } 
+                .textarea-viral:focus { 
+                    border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1); 
+                } 
+                .custom-scrollbar::-webkit-scrollbar { width: 4px; } 
+                .custom-scrollbar::-webkit-scrollbar-track { background: transparent; } 
+                .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
+            `}</style>
         </div>
     );
 };
