@@ -3,6 +3,9 @@ import { Outlet } from 'react-router-dom';
 import { Sidebar } from '../components/Sidebar';
 import { Menu } from 'lucide-react';
 
+// ✅ 1. IMPORTAMOS EL WIDGET DEL AVATAR
+import { AvatarWidget } from '../components/AvatarWidget';
+
 export const DashboardLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -40,6 +43,9 @@ export const DashboardLayout = () => {
             </div>
         </div>
       </main>
+
+      {/* ✅ 2. WIDGET FLOTANTE (Siempre visible encima de todo) */}
+      <AvatarWidget />
 
       {/* Estilos globales inyectados para este layout */}
       <style>{`

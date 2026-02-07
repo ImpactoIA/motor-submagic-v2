@@ -2,1149 +2,766 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { 
-    Save, Plus, Trash2, Target, Heart, Flame, Zap, MessageSquare, 
-    Send, Search, Users, RefreshCw, User, BookOpen, Brain, Activity, 
-    AlertTriangle, CheckCircle2, XCircle, ArrowRight, ShieldAlert,
-    TrendingUp, Eye, Lightbulb, FileText, Copy, Download, Sparkles,
-    Clock, DollarSign, Crosshair, Compass, Radio, Star, Award
+  Save, Plus, Trash2, Shield, Target, Brain, Zap, 
+  AlertTriangle, TrendingUp, Crown, MessageSquare,
+  Award, Flame, Heart, Lock, Unlock
 } from 'lucide-react';
 
-// ==================================================================================
-// 🎨 SUB-COMPONENTE: REPORTE DE AUDITORÍA V2.0 (MEJORADO)
-// ==================================================================================
-const AuditReportV2 = ({ data }: { data: any }) => {
-  if (!data || !data.auditoria_calidad) {
-    return (
-        <div className="bg-yellow-900/10 p-4 rounded-xl border border-yellow-500/20 text-yellow-200 text-xs">
-            <p className="font-bold mb-1">Resultado recibido</p>
-            <pre className="text-[10px] opacity-70 whitespace-pre-wrap">{JSON.stringify(data, null, 2)}</pre>
-        </div>
-    );
-  }
+// ✅ IMPORTS CORREGIDOS:
+import { AvatarWidget } from '../components/AvatarWidget'; // Botón flotante
+import { MentorStrategic, ContextualSuggestions } from '../components/AvatarComponents'; // Alertas
 
-  const { auditoria_calidad, analisis_campo_por_campo, perfil_final_optimizado, recomendaciones_accionables, comparacion_antes_despues, siguiente_paso } = data;
+// ==================================================================================
+// 🧬 AVATAR PROFILE - FORMULARIO CORE (CORREGIDO)
+// ==================================================================================
+
+export const AvatarProfile: React.FC = () => {
+  const { user, refreshProfile } = useAuth();
   
-  const getStatusColor = (status: string) => {
-    if (status?.includes('Excelente') || status?.includes('🟢')) return 'text-green-400 border-green-500/30 bg-green-500/10';
-    if (status?.includes('Mejorable') || status?.includes('🟡')) return 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10';
-    if (status?.includes('Pobre') || status?.includes('🔴')) return 'text-orange-400 border-orange-500/30 bg-orange-500/10';
-    return 'text-red-400 border-red-500/30 bg-red-500/10';
+  const [avatarsList, setAvatarsList] = useState<any[]>([]);
+  const [selectedAvatarId, setSelectedAvatarId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<'core' | 'advanced' | 'evolution'>('core');
+
+  // FORMULARIO CON CAMPOS OBLIGATORIOS
+  const [formData, setFormData] = useState({
+    // Metadatos
+    name: '',
+    is_active: true,
+    
+    // === CAMPOS OBLIGATORIOS (CORE) ===
+    experience_level: 'intermedio' as 'principiante' | 'intermedio' | 'avanzado' | 'experto',
+    primary_goal: 'autoridad' as 'viralidad' | 'autoridad' | 'venta' | 'comunidad' | 'posicionamiento',
+    communication_style: 'didactico' as 'directo' | 'analitico' | 'inspirador' | 'provocador' | 'didactico',
+    risk_level: 'balanceado' as 'conservador' | 'balanceado' | 'agresivo',
+    content_priority: 'educativo' as 'educativo' | 'opinion' | 'storytelling' | 'venta_encubierta' | 'viral_corto',
+    dominant_emotion: 'curiosidad' as 'curiosidad' | 'deseo' | 'miedo' | 'aspiracion' | 'autoridad',
+    success_model: 'educador_serio' as 'educador_serio' | 'empresario_premium' | 'influencer_agresivo' | 'mentor_disruptivo' | 'experto_tecnico' | 'creativo_viral',
+    
+    // Prohibiciones
+    prohibitions: {
+      lenguaje_vulgar: false,
+      promesas_exageradas: false,
+      polemica_barata: false,
+      clickbait_engañoso: false,
+      venta_agresiva: false,
+      comparaciones_directas: false,
+      contenido_negativo: false
+    },
+    
+    // === CAMPOS AVANZADOS ===
+    signature_vocabulary: [] as string[],
+    banned_vocabulary: [] as string[],
+    narrative_structure: 'problema_solucion' as string,
+    preferred_length: 'medio' as string,
+    preferred_cta_style: 'directo' as string,
+    
+    // Objetivos secundarios
+    secondary_goals: [] as string[]
+  });
+
+  useEffect(() => {
+    if (user) {
+      fetchAvatars();
+    }
+  }, [user]);
+
+  const fetchAvatars = async () => {
+    try {
+      const { data } = await supabase
+        .from('avatars') // ✅ CORREGIDO: Nombre de tabla consistente
+        .select('*')
+        .eq('user_id', user?.id)
+        .order('created_at', { ascending: false });
+
+      if (data) {
+        setAvatarsList(data);
+        
+        // Seleccionar avatar activo
+        const active = data.find(a => a.is_active);
+        if (active) {
+          selectAvatar(active);
+        } else if (data.length > 0) {
+          selectAvatar(data[0]);
+        }
+      }
+    } catch (e) {
+      console.error('Error fetching avatars:', e);
+    }
   };
 
-  const getScoreColor = (score: number) => {
-    if (score >= 86) return 'text-purple-400';
-    if (score >= 71) return 'text-cyan-400';
-    if (score >= 51) return 'text-green-400';
-    if (score >= 31) return 'text-yellow-400';
-    return 'text-red-500';
+  const selectAvatar = (avatar: any) => {
+    setSelectedAvatarId(avatar.id);
+    setFormData({
+      name: avatar.name || '',
+      is_active: avatar.is_active ?? true,
+      experience_level: avatar.experience_level || 'intermedio',
+      primary_goal: avatar.primary_goal || 'autoridad',
+      communication_style: avatar.communication_style || 'didactico',
+      risk_level: avatar.risk_level || 'balanceado',
+      content_priority: avatar.content_priority || 'educativo',
+      dominant_emotion: avatar.dominant_emotion || 'curiosidad',
+      success_model: avatar.success_model || 'educador_serio',
+      prohibitions: avatar.prohibitions || {
+        lenguaje_vulgar: false,
+        promesas_exageradas: false,
+        polemica_barata: false,
+        clickbait_engañoso: false,
+        venta_agresiva: false,
+        comparaciones_directas: false,
+        contenido_negativo: false
+      },
+      signature_vocabulary: avatar.signature_vocabulary || [],
+      banned_vocabulary: avatar.banned_vocabulary || [],
+      narrative_structure: avatar.narrative_structure || 'problema_solucion',
+      preferred_length: avatar.preferred_length || 'medio',
+      preferred_cta_style: avatar.preferred_cta_style || 'directo',
+      secondary_goals: avatar.secondary_goals || []
+    });
+  };
+
+  const handleNewAvatar = () => {
+    setSelectedAvatarId(null);
+    setFormData({
+      name: '',
+      is_active: true,
+      experience_level: 'intermedio',
+      primary_goal: 'autoridad',
+      communication_style: 'didactico',
+      risk_level: 'balanceado',
+      content_priority: 'educativo',
+      dominant_emotion: 'curiosidad',
+      success_model: 'educador_serio',
+      prohibitions: {
+        lenguaje_vulgar: false,
+        promesas_exageradas: false,
+        polemica_barata: false,
+        clickbait_engañoso: false,
+        venta_agresiva: false,
+        comparaciones_directas: false,
+        contenido_negativo: false
+      },
+      signature_vocabulary: [],
+      banned_vocabulary: [],
+      narrative_structure: 'problema_solucion',
+      preferred_length: 'medio',
+      preferred_cta_style: 'directo',
+      secondary_goals: []
+    });
+  };
+
+  const handleSave = async () => {
+    if (!formData.name) {
+      return alert('⚠️ El nombre del avatar es obligatorio');
+    }
+
+    setLoading(true);
+    try {
+      // 1. Si marcamos este como activo, desactivamos los otros primero
+      if (formData.is_active) {
+          await supabase
+            .from('avatars')
+            .update({ is_active: false })
+            .eq('user_id', user?.id);
+      }
+
+      const dataToSave = {
+        ...formData,
+        user_id: user?.id,
+        updated_at: new Date().toISOString()
+      };
+
+      let result;
+      if (selectedAvatarId) {
+        // Actualizar
+        result = await supabase
+          .from('avatars')
+          .update(dataToSave)
+          .eq('id', selectedAvatarId)
+          .select()
+          .single();
+      } else {
+        // Crear nuevo
+        result = await supabase
+          .from('avatars')
+          .insert(dataToSave)
+          .select()
+          .single();
+      }
+
+      if (result.error) throw result.error;
+
+      // Actualizar perfil de usuario
+      if (formData.is_active && result.data) {
+        await supabase
+          .from('profiles')
+          .update({ active_avatar_id: result.data.id })
+          .eq('id', user?.id);
+      }
+
+      if (refreshProfile) refreshProfile();
+      await fetchAvatars();
+      
+      alert('✅ Avatar guardado exitosamente');
+    } catch (e: any) {
+      alert(`Error: ${e.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!selectedAvatarId || !confirm('¿Eliminar este avatar?')) return;
+
+    try {
+      await supabase
+        .from('avatars')
+        .delete()
+        .eq('id', selectedAvatarId);
+
+      handleNewAvatar();
+      await fetchAvatars();
+      if (refreshProfile) refreshProfile();
+    } catch (e) {
+      console.error('Error deleting avatar:', e);
+    }
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="max-w-7xl mx-auto space-y-6 pb-20 px-4">
       
-      {/* Scoreboard V2 con Desglose */}
-      <div className="bg-gradient-to-r from-gray-900 via-gray-950 to-black border border-gray-800 rounded-2xl p-6 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/5 blur-3xl"></div>
-        
-        <div className="relative z-10">
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <h3 className="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1">CALIDAD DEL AVATAR</h3>
-              <div className="flex items-baseline gap-2 mb-2">
-                <span className={`text-5xl font-black ${getScoreColor(auditoria_calidad.score_global)}`}>
-                  {auditoria_calidad.score_global}
-                </span>
-                <span className="text-gray-600 text-xl font-bold">/100</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Award size={16} className={getScoreColor(auditoria_calidad.score_global)}/>
-                <p className="text-white font-black text-sm tracking-wide">{auditoria_calidad.nivel_actual}</p>
-              </div>
-            </div>
-            
-            <div className="bg-white/5 p-4 rounded-xl max-w-[200px] backdrop-blur-sm border border-white/10">
-              <div className="flex items-center gap-1 mb-2 text-fuchsia-400">
-                <ShieldAlert size={14} />
-                <span className="text-[10px] font-black uppercase tracking-wider">Veredicto Brutal</span>
-              </div>
-              <p className="text-xs text-gray-300 italic leading-relaxed">"{auditoria_calidad.veredicto_brutal}"</p>
-            </div>
+      {/* HEADER */}
+      <div className="flex justify-between items-end gap-4 pt-6">
+        <div>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-black uppercase tracking-widest mb-2">
+            <Shield size={12} /> Avatar Core
           </div>
-
-          {/* Desglose de Puntos */}
-          {auditoria_calidad.desglose_puntos && (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-              <div className="bg-black/40 p-3 rounded-lg border border-gray-800">
-                <span className="text-[9px] text-gray-500 uppercase block mb-1">Especificidad</span>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-xl font-black text-cyan-400">{auditoria_calidad.desglose_puntos.especificidad}</span>
-                  <span className="text-xs text-gray-600">/30</span>
-                </div>
-              </div>
-              <div className="bg-black/40 p-3 rounded-lg border border-gray-800">
-                <span className="text-[9px] text-gray-500 uppercase block mb-1">Dolor</span>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-xl font-black text-red-400">{auditoria_calidad.desglose_puntos.dolor}</span>
-                  <span className="text-xs text-gray-600">/30</span>
-                </div>
-              </div>
-              <div className="bg-black/40 p-3 rounded-lg border border-gray-800">
-                <span className="text-[9px] text-gray-500 uppercase block mb-1">Coherencia</span>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-xl font-black text-purple-400">{auditoria_calidad.desglose_puntos.coherencia}</span>
-                  <span className="text-xs text-gray-600">/20</span>
-                </div>
-              </div>
-              <div className="bg-black/40 p-3 rounded-lg border border-gray-800">
-                <span className="text-[9px] text-gray-500 uppercase block mb-1">Accionable</span>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-xl font-black text-green-400">{auditoria_calidad.desglose_puntos.actionable}</span>
-                  <span className="text-xs text-gray-600">/20</span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Penalizaciones */}
-          {auditoria_calidad.penalizaciones_aplicadas && auditoria_calidad.penalizaciones_aplicadas.length > 0 && (
-            <div className="bg-red-900/10 border border-red-500/20 rounded-lg p-3">
-              <h4 className="text-red-400 text-[10px] font-black uppercase mb-2">⚠️ Penalizaciones</h4>
-              <ul className="space-y-1">
-                {auditoria_calidad.penalizaciones_aplicadas.map((pen: string, i: number) => (
-                  <li key={i} className="text-xs text-red-300 flex items-start gap-2">
-                    <XCircle size={12} className="shrink-0 mt-0.5"/>
-                    <span>{pen}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <h1 className="text-4xl font-black text-white flex items-center gap-3 tracking-tighter">
+            ADN COGNITIVO
+          </h1>
+          <p className="text-gray-400 text-sm font-medium mt-1">
+            Define cómo piensa, habla y actúa tu marca en TODAS las funciones de Titan
+          </p>
+        </div>
+        
+        <div className="flex gap-2">
+          <select
+            onChange={(e) => {
+              const selected = avatarsList.find(a => a.id === e.target.value);
+              if (selected) selectAvatar(selected);
+            }}
+            value={selectedAvatarId || ''}
+            className="bg-[#0a0a0a] border border-white/10 text-white text-sm rounded-xl p-3 outline-none"
+          >
+            <option value="" disabled>Seleccionar Avatar...</option>
+            {avatarsList.map(a => (
+              <option key={a.id} value={a.id}>
+                {a.name} {a.is_active ? '(Activo)' : ''}
+              </option>
+            ))}
+          </select>
+          
+          <button
+            onClick={handleNewAvatar}
+            className="p-3 bg-indigo-600 rounded-xl hover:bg-indigo-500 text-white"
+          >
+            <Plus size={20} />
+          </button>
         </div>
       </div>
 
-      {/* Análisis Campo por Campo */}
-      <div className="space-y-3">
-        <h4 className="text-[10px] font-bold text-gray-400 uppercase flex items-center gap-2 tracking-widest pl-1">
-          <Activity size={12}/> Análisis Forense por Campo
-        </h4>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         
-        {analisis_campo_por_campo?.map((item: any, idx: number) => (
-          <div key={idx} className="bg-[#0a0a0a] border border-gray-800 rounded-xl p-4 hover:border-gray-600 transition-colors">
-            <div className="flex justify-between items-center mb-3">
-              <h5 className="font-bold text-white text-xs">{item.campo}</h5>
-              <div className="flex items-center gap-2">
-                {item.score_numerico !== undefined && (
-                  <span className="text-xs font-black text-gray-400">{item.score_numerico}/10</span>
-                )}
-                <span className={`text-[9px] font-black uppercase px-1.5 py-0.5 rounded border ${getStatusColor(item.calificacion)}`}>
-                  {item.calificacion?.split(' ')[1] || item.calificacion}
-                </span>
-              </div>
-            </div>
+        {/* FORMULARIO (8 cols) */}
+        <div className="lg:col-span-8 space-y-6">
+          
+          {/* Tabs */}
+          <div className="flex gap-2 bg-gray-900/50 p-2 rounded-2xl border border-gray-800">
+            <button
+              onClick={() => setActiveTab('core')}
+              className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
+                activeTab === 'core'
+                  ? 'bg-indigo-600 text-white shadow-lg'
+                  : 'text-gray-500 hover:text-white'
+              }`}
+            >
+              <Shield size={14} className="inline mr-1" /> Core (Obligatorio)
+            </button>
+            <button
+              onClick={() => setActiveTab('advanced')}
+              className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
+                activeTab === 'advanced'
+                  ? 'bg-purple-600 text-white shadow-lg'
+                  : 'text-gray-500 hover:text-white'
+              }`}
+            >
+              <Brain size={14} className="inline mr-1" /> Avanzado
+            </button>
+            <button
+              onClick={() => setActiveTab('evolution')}
+              className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
+                activeTab === 'evolution'
+                  ? 'bg-cyan-600 text-white shadow-lg'
+                  : 'text-gray-500 hover:text-white'
+              }`}
+            >
+              <TrendingUp size={14} className="inline mr-1" /> Evolución
+            </button>
+          </div>
 
-            <div className="space-y-3">
-              <div className="relative pl-3 border-l-2 border-red-500/20">
-                <span className="text-[9px] text-red-400 font-bold block mb-0.5 uppercase">Lo que escribiste</span>
-                <p className="text-gray-400 text-[10px] italic">"{item.lo_que_escribio_usuario}"</p>
-                <p className="text-[9px] text-red-300 mt-2 flex items-start gap-1 leading-relaxed">
-                    <XCircle size={10} className="shrink-0 mt-0.5"/> {item.critica}
-                </p>
-              </div>
+          {/* CONTENIDO TABS */}
+          <div className="bg-[#0B0E14] border border-gray-800 rounded-3xl p-6 shadow-xl min-h-[600px]">
+            
+            {/* TAB: CORE */}
+            {activeTab === 'core' && (
+              <div className="space-y-6">
+                <h3 className="text-white font-bold text-lg flex items-center gap-2 mb-6">
+                  <Shield size={20} className="text-indigo-400" /> Configuración Core (Obligatoria)
+                </h3>
 
-              <div className="relative pl-3 border-l-2 border-green-500/40 bg-green-500/5 py-2 px-1 rounded-r-lg">
-                <span className="text-[9px] text-green-400 font-bold block mb-1 uppercase">✨ Corrección Maestra</span>
-                <p className="text-gray-200 text-[10px] font-medium leading-relaxed">"{item.correccion_maestra}"</p>
-              </div>
-
-              {item.impacto_en_conversion && (
-                <div className="bg-blue-900/10 border border-blue-500/20 rounded-lg p-2">
-                  <span className="text-[9px] text-blue-400 font-bold uppercase block mb-1">Impacto en Conversión</span>
-                  <p className="text-xs text-blue-200">{item.impacto_en_conversion}</p>
+                {/* Nombre */}
+                <div>
+                  <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">
+                    Nombre del Avatar *
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className="input-avatar"
+                    placeholder="Ej: El Mentor Digital, Coach Premium, Disruptor Viral..."
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Este nombre identifica tu marca/personalidad en el sistema
+                  </p>
                 </div>
+
+                {/* Estado Activo */}
+                <div className="bg-green-900/10 border border-green-500/20 p-4 rounded-xl">
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.is_active}
+                      onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
+                      className="w-5 h-5"
+                    />
+                    <div className="flex-1">
+                      <span className="text-white font-bold text-sm block">Marcar como Avatar Activo</span>
+                      <span className="text-gray-400 text-xs">
+                        Solo 1 avatar puede estar activo. Este controlará TODAS las funciones de Titan.
+                      </span>
+                    </div>
+                    {formData.is_active ? <Unlock className="text-green-400" size={20} /> : <Lock className="text-gray-500" size={20} />}
+                  </label>
+                </div>
+
+                {/* Grid de campos obligatorios */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  
+                  {/* Nivel de Experiencia */}
+                  <div className="bg-blue-900/10 p-4 rounded-xl border border-blue-500/20">
+                    <label className="text-[10px] font-black text-blue-400 uppercase mb-2 block flex items-center gap-2">
+                      <Award size={12} /> Nivel de Experiencia *
+                    </label>
+                    <select
+                      value={formData.experience_level}
+                      onChange={(e) => setFormData({ ...formData, experience_level: e.target.value as any })}
+                      className="input-avatar"
+                    >
+                      <option value="principiante">Principiante (Lenguaje simple)</option>
+                      <option value="intermedio">Intermedio (Balance)</option>
+                      <option value="avanzado">Avanzado (Sofisticado)</option>
+                      <option value="experto">Experto (Altamente técnico)</option>
+                    </select>
+                    <p className="text-xs text-gray-400 mt-2">
+                      Afecta la complejidad del lenguaje en TODO el contenido
+                    </p>
+                  </div>
+
+                  {/* Objetivo Principal */}
+                  <div className="bg-purple-900/10 p-4 rounded-xl border border-purple-500/20">
+                    <label className="text-[10px] font-black text-purple-400 uppercase mb-2 block flex items-center gap-2">
+                      <Target size={12} /> Objetivo Principal * (Solo 1)
+                    </label>
+                    <select
+                      value={formData.primary_goal}
+                      onChange={(e) => setFormData({ ...formData, primary_goal: e.target.value as any })}
+                      className="input-avatar"
+                    >
+                      <option value="viralidad">Viralidad (Maximizar alcance)</option>
+                      <option value="autoridad">Autoridad (Posicionarme como experto)</option>
+                      <option value="venta">Venta (Convertir a clientes)</option>
+                      <option value="comunidad">Comunidad (Audiencia leal)</option>
+                      <option value="posicionamiento">Posicionamiento (Dominar nicho)</option>
+                    </select>
+                    <p className="text-xs text-gray-400 mt-2">
+                      TODO el contenido se optimizará para este objetivo
+                    </p>
+                  </div>
+
+                  {/* Personalidad Comunicativa */}
+                  <div className="bg-pink-900/10 p-4 rounded-xl border border-pink-500/20">
+                    <label className="text-[10px] font-black text-pink-400 uppercase mb-2 block flex items-center gap-2">
+                      <MessageSquare size={12} /> Personalidad Comunicativa *
+                    </label>
+                    <select
+                      value={formData.communication_style}
+                      onChange={(e) => setFormData({ ...formData, communication_style: e.target.value as any })}
+                      className="input-avatar"
+                    >
+                      <option value="directo">Directo (Al grano, sin rodeos)</option>
+                      <option value="analitico">Analítico (Datos y lógica)</option>
+                      <option value="inspirador">Inspirador (Motivacional)</option>
+                      <option value="provocador">Provocador (Controversial)</option>
+                      <option value="didactico">Didáctico (Educativo)</option>
+                    </select>
+                    <p className="text-xs text-gray-400 mt-2">
+                      Define el TONO de toda tu comunicación
+                    </p>
+                  </div>
+
+                  {/* Nivel de Riesgo */}
+                  <div className="bg-red-900/10 p-4 rounded-xl border border-red-500/20">
+                    <label className="text-[10px] font-black text-red-400 uppercase mb-2 block flex items-center gap-2">
+                      <Flame size={12} /> Nivel de Riesgo *
+                    </label>
+                    <select
+                      value={formData.risk_level}
+                      onChange={(e) => setFormData({ ...formData, risk_level: e.target.value as any })}
+                      className="input-avatar"
+                    >
+                      <option value="conservador">Conservador (Seguro, sin polémica)</option>
+                      <option value="balanceado">Balanceado (Mix de seguridad e innovación)</option>
+                      <option value="agresivo">Agresivo (Disruptivo, polémico)</option>
+                    </select>
+                    <p className="text-xs text-gray-400 mt-2">
+                      Afecta agresividad de hooks y CTAs
+                    </p>
+                  </div>
+
+                  {/* Prioridad de Contenido */}
+                  <div className="bg-green-900/10 p-4 rounded-xl border border-green-500/20">
+                    <label className="text-[10px] font-black text-green-400 uppercase mb-2 block flex items-center gap-2">
+                      <Zap size={12} /> Tipo de Contenido Prioritario *
+                    </label>
+                    <select
+                      value={formData.content_priority}
+                      onChange={(e) => setFormData({ ...formData, content_priority: e.target.value as any })}
+                      className="input-avatar"
+                    >
+                      <option value="educativo">Educativo (Enseñar conceptos)</option>
+                      <option value="opinion">Opinión (Hot takes)</option>
+                      <option value="storytelling">Storytelling (Narrativas)</option>
+                      <option value="venta_encubierta">Venta Encubierta (Educar + vender)</option>
+                      <option value="viral_corto">Viral Corto (Impacto rápido)</option>
+                    </select>
+                  </div>
+
+                  {/* Emoción Dominante */}
+                  <div className="bg-yellow-900/10 p-4 rounded-xl border border-yellow-500/20">
+                    <label className="text-[10px] font-black text-yellow-400 uppercase mb-2 block flex items-center gap-2">
+                      <Heart size={12} /> Emoción Dominante *
+                    </label>
+                    <select
+                      value={formData.dominant_emotion}
+                      onChange={(e) => setFormData({ ...formData, dominant_emotion: e.target.value as any })}
+                      className="input-avatar"
+                    >
+                      <option value="curiosidad">Curiosidad (¿Cómo funciona?)</option>
+                      <option value="deseo">Deseo (Quiero esto YA)</option>
+                      <option value="miedo">Miedo (No quiero perderlo)</option>
+                      <option value="aspiracion">Aspiración (Quiero ser así)</option>
+                      <option value="autoridad">Autoridad (Confío en el experto)</option>
+                    </select>
+                  </div>
+
+                </div>
+
+                {/* Modelo de Éxito */}
+                <div className="bg-indigo-900/10 p-5 rounded-xl border border-indigo-500/20">
+                  <label className="text-[10px] font-black text-indigo-400 uppercase mb-3 block flex items-center gap-2">
+                    <Crown size={12} /> Modelo de Éxito (Referencia Cognitiva) *
+                  </label>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {[
+                      { value: 'educador_serio', label: 'Educador Serio', example: 'Gary Vee, Neil Patel' },
+                      { value: 'empresario_premium', label: 'Empresario Premium', example: 'Alex Hormozi, Grant Cardone' },
+                      { value: 'influencer_agresivo', label: 'Influencer Agresivo', example: 'Dan Lok, Tai Lopez' },
+                      { value: 'mentor_disruptivo', label: 'Mentor Disruptivo', example: 'Russell Brunson, Tony Robbins' },
+                      { value: 'experto_tecnico', label: 'Experto Técnico', example: 'Tim Ferriss, Naval' },
+                      { value: 'creativo_viral', label: 'Creativo Viral', example: 'MrBeast, Casey Neistat' }
+                    ].map(model => (
+                      <button
+                        key={model.value}
+                        onClick={() => setFormData({ ...formData, success_model: model.value as any })}
+                        className={`p-3 rounded-lg border-2 text-left transition-all ${
+                          formData.success_model === model.value
+                            ? 'border-indigo-500 bg-indigo-500/20'
+                            : 'border-gray-700 bg-gray-900/50 hover:border-gray-600'
+                        }`}
+                      >
+                        <p className="text-white font-bold text-xs mb-1">{model.label}</p>
+                        <p className="text-gray-400 text-[10px]">{model.example}</p>
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-xs text-gray-400 mt-3">
+                    ⚠️ Esto es una referencia cognitiva, NO copia. Define el arquetipo que guía tu comunicación.
+                  </p>
+                </div>
+
+                {/* Prohibiciones */}
+                <div className="bg-red-900/10 p-5 rounded-xl border border-red-500/20">
+                  <label className="text-[10px] font-black text-red-400 uppercase mb-3 block flex items-center gap-2">
+                    <AlertTriangle size={12} /> Prohibiciones del Avatar (Filtro Hard)
+                  </label>
+                  <p className="text-xs text-gray-400 mb-4">
+                    Marca las cosas que tu avatar JAMÁS haría. Esto bloqueará contenido que las viole.
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {[
+                      { key: 'lenguaje_vulgar', label: 'Lenguaje vulgar o groserías' },
+                      { key: 'promesas_exageradas', label: 'Promesas exageradas o irreales' },
+                      { key: 'polemica_barata', label: 'Polémica barata sin fundamento' },
+                      { key: 'clickbait_engañoso', label: 'Clickbait engañoso' },
+                      { key: 'venta_agresiva', label: 'Venta agresiva sin valor previo' },
+                      { key: 'comparaciones_directas', label: 'Comparaciones con competencia' },
+                      { key: 'contenido_negativo', label: 'Contenido excesivamente negativo' }
+                    ].map(prohibition => (
+                      <label key={prohibition.key} className="flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-red-900/10">
+                        <input
+                          type="checkbox"
+                          checked={formData.prohibitions[prohibition.key as keyof typeof formData.prohibitions]}
+                          onChange={(e) => setFormData({
+                            ...formData,
+                            prohibitions: {
+                              ...formData.prohibitions,
+                              [prohibition.key]: e.target.checked
+                            }
+                          })}
+                          className="w-4 h-4"
+                        />
+                        <span className="text-sm text-gray-300">{prohibition.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+              </div>
+            )}
+
+            {/* TAB: AVANZADO */}
+            {activeTab === 'advanced' && (
+              <div className="space-y-6">
+                <h3 className="text-white font-bold text-lg flex items-center gap-2 mb-6">
+                  <Brain size={20} className="text-purple-400" /> Personalización Avanzada (Opcional)
+                </h3>
+
+                <p className="text-gray-400 text-sm mb-6">
+                  Estos campos son opcionales pero permiten mayor control sobre tu avatar.
+                </p>
+
+                {/* Estructura Narrativa */}
+                <div>
+                  <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">
+                    Estructura Narrativa Preferida
+                  </label>
+                  <select
+                    value={formData.narrative_structure}
+                    onChange={(e) => setFormData({ ...formData, narrative_structure: e.target.value })}
+                    className="input-avatar"
+                  >
+                    <option value="problema_solucion">Problema → Solución</option>
+                    <option value="hero_journey">Hero's Journey</option>
+                    <option value="antes_despues">Antes → Después</option>
+                    <option value="enemigo_comun">Enemigo Común</option>
+                    <option value="revelacion_secreta">Revelación de Secreto</option>
+                  </select>
+                </div>
+
+                {/* Longitud Preferida */}
+                <div>
+                  <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">
+                    Longitud de Contenido Preferida
+                  </label>
+                  <select
+                    value={formData.preferred_length}
+                    onChange={(e) => setFormData({ ...formData, preferred_length: e.target.value })}
+                    className="input-avatar"
+                  >
+                    <option value="micro">Micro (&lt;30 seg)</option>
+                    <option value="corto">Corto (30-60 seg)</option>
+                    <option value="medio">Medio (1-3 min)</option>
+                    <option value="largo">Largo (3+ min)</option>
+                  </select>
+                </div>
+
+                {/* Estilo de CTA */}
+                <div>
+                  <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">
+                    Estilo de CTA Preferido
+                  </label>
+                  <select
+                    value={formData.preferred_cta_style}
+                    onChange={(e) => setFormData({ ...formData, preferred_cta_style: e.target.value })}
+                    className="input-avatar"
+                  >
+                    <option value="directo">Directo ("Compra ahora")</option>
+                    <option value="suave">Suave ("Descubre más")</option>
+                    <option value="urgencia">Urgencia ("Últimas 24h")</option>
+                    <option value="curiosidad">Curiosidad ("¿Quieres saber cómo?")</option>
+                    <option value="exclusividad">Exclusividad ("Solo para miembros")</option>
+                  </select>
+                </div>
+
+                {/* Vocabulario Característico */}
+                <div>
+                  <label className="text-[10px] font-black text-green-400 uppercase mb-2 block">
+                    Vocabulario Característico (Palabras que SÍ usas)
+                  </label>
+                  <textarea
+                    value={formData.signature_vocabulary.join(', ')}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      signature_vocabulary: e.target.value.split(',').map(w => w.trim()).filter(Boolean)
+                    })}
+                    className="textarea-avatar h-20"
+                    placeholder="Ej: momentum, leverage, ecosistema, framework, estrategia..."
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Separa por comas</p>
+                </div>
+
+                {/* Vocabulario Prohibido */}
+                <div>
+                  <label className="text-[10px] font-black text-red-400 uppercase mb-2 block">
+                    Vocabulario Prohibido (Palabras que NUNCA usas)
+                  </label>
+                  <textarea
+                    value={formData.banned_vocabulary.join(', ')}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      banned_vocabulary: e.target.value.split(',').map(w => w.trim()).filter(Boolean)
+                    })}
+                    className="textarea-avatar h-20"
+                    placeholder="Ej: gratis, secreto, explosivo..."
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Separa por comas</p>
+                </div>
+
+              </div>
+            )}
+
+            {/* TAB: EVOLUCIÓN */}
+            {activeTab === 'evolution' && (
+              <div className="space-y-6">
+                <h3 className="text-white font-bold text-lg flex items-center gap-2 mb-6">
+                  <TrendingUp size={20} className="text-cyan-400" /> Evolución del Avatar
+                </h3>
+
+                <p className="text-gray-400 text-sm">
+                  El avatar evolucionará automáticamente según tu uso del sistema.
+                  Genera más contenido para desbloquear nuevas capacidades.
+                </p>
+
+                {/* Aquí podríamos mostrar stats de evolución si las tuviéramos */}
+                <div className="bg-cyan-900/10 border border-cyan-500/20 rounded-xl p-4">
+                  <p className="text-cyan-400 font-bold text-sm mb-2">🎯 Próximos Hitos</p>
+                  <ul className="space-y-2">
+                    <li className="text-xs text-gray-300">• Nivel 10: Desbloquea análisis de competencia automático</li>
+                    <li className="text-xs text-gray-300">• Nivel 25: Ajuste fino de personalidad según engagement</li>
+                    <li className="text-xs text-gray-300">• Nivel 50: Sistema experto de A/B testing</li>
+                    <li className="text-xs text-gray-300">• Nivel 100: Avatar completamente autónomo</li>
+                  </ul>
+                </div>
+              </div>
+            )}
+
+          </div>
+
+          {/* Botones de Acción */}
+          <div className="flex justify-between items-center gap-4 pt-4 border-t border-gray-800">
+            <div>
+              {selectedAvatarId && (
+                <button
+                  onClick={handleDelete}
+                  className="text-red-500 hover:text-white px-4 py-3 rounded-xl hover:bg-red-900/20 transition-all text-sm font-bold flex items-center gap-2"
+                >
+                  <Trash2 size={16} /> Eliminar
+                </button>
               )}
             </div>
-          </div>
-        ))}
-      </div>
 
-      {/* Comparación Antes/Después */}
-      {comparacion_antes_despues && (
-        <div className="bg-gradient-to-r from-purple-900/10 to-pink-900/10 border border-purple-500/20 rounded-2xl p-5">
-          <h4 className="text-purple-400 text-xs font-black uppercase mb-4 flex items-center gap-2">
-            <TrendingUp size={14}/> Impacto Real en Tus Anuncios
-          </h4>
-          
-          <div className="space-y-4">
-            <div className="bg-black/40 p-4 rounded-lg border border-red-500/20">
-              <span className="text-[9px] text-red-400 uppercase font-bold block mb-2">❌ Headline Antes (Con tu avatar actual)</span>
-              <p className="text-sm text-gray-300 font-medium">"{comparacion_antes_despues.headline_antes}"</p>
-            </div>
-            
-            <div className="flex items-center justify-center">
-              <ArrowRight className="text-purple-500" size={24}/>
-              <span className="mx-3 text-2xl font-black text-purple-400">{comparacion_antes_despues.diferencia_estimada_ctr}</span>
-              <ArrowRight className="text-purple-500" size={24}/>
-            </div>
-
-            <div className="bg-black/40 p-4 rounded-lg border border-green-500/20">
-              <span className="text-[9px] text-green-400 uppercase font-bold block mb-2">✅ Headline Después (Con avatar optimizado)</span>
-              <p className="text-sm text-white font-bold">"{comparacion_antes_despues.headline_despues}"</p>
-            </div>
+            <button
+              onClick={handleSave}
+              disabled={loading}
+              className="px-8 py-3 bg-white text-black font-black rounded-xl hover:bg-gray-200 transition-all flex items-center gap-2 shadow-lg"
+            >
+              {loading ? <TrendingUp size={18} className="animate-spin" /> : <Save size={18} />}
+              GUARDAR AVATAR
+            </button>
           </div>
         </div>
-      )}
 
-      {/* Recomendaciones Accionables */}
-      {recomendaciones_accionables && recomendaciones_accionables.length > 0 && (
-        <div className="space-y-3">
-          <h4 className="text-[10px] font-bold text-gray-400 uppercase flex items-center gap-2 tracking-widest pl-1">
-            <Target size={12}/> Plan de Acción Inmediato
-          </h4>
-          
-          {recomendaciones_accionables.map((rec: any, idx: number) => {
-            const priorityColor = rec.prioridad === 'CRÍTICA' ? 'border-red-500/30 bg-red-900/10' :
-                                 rec.prioridad === 'ALTA' ? 'border-orange-500/30 bg-orange-900/10' :
-                                 rec.prioridad === 'MEDIA' ? 'border-yellow-500/30 bg-yellow-900/10' :
-                                 'border-gray-700 bg-gray-900/10';
-            
-            return (
-              <div key={idx} className={`border rounded-xl p-4 ${priorityColor}`}>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-black text-white">{rec.area}</span>
-                  <span className="text-[9px] font-black uppercase px-2 py-1 rounded bg-black/40 text-white">
-                    {rec.prioridad}
-                  </span>
-                </div>
-                
-                <div className="space-y-2">
-                  <div>
-                    <span className="text-[9px] text-red-400 uppercase font-bold block mb-1">Problema</span>
-                    <p className="text-xs text-gray-300">{rec.problema}</p>
-                  </div>
-                  
-                  <div>
-                    <span className="text-[9px] text-green-400 uppercase font-bold block mb-1">Solución</span>
-                    <p className="text-xs text-white font-medium">{rec.solucion}</p>
-                  </div>
+        {/* SIDEBAR (4 cols) */}
+        <div className="lg:col-span-4 space-y-6">
+          {/* Avatar Widget */}
+          <AvatarWidget />
 
-                  {rec.ejemplo && (
-                    <div className="bg-black/40 p-2 rounded border border-white/10">
-                      <span className="text-[9px] text-cyan-400 uppercase font-bold block mb-1">Ejemplo</span>
-                      <p className="text-xs text-cyan-200 italic">{rec.ejemplo}</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
+          {/* Sugerencias Contextuales */}
+          <ContextualSuggestions
+            avatar={selectedAvatarId ? avatarsList.find(a => a.id === selectedAvatarId) : null}
+            currentMode="avatar_config"
+          />
+
+          {/* Ayuda */}
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+            <p className="text-white font-bold text-sm mb-3">💡 ¿Por qué es obligatorio?</p>
+            <p className="text-xs text-gray-400 leading-relaxed mb-3">
+              El Avatar NO es decorativo. Es el cerebro que filtra y condiciona
+              TODAS las respuestas de Titan.
+            </p>
+            <p className="text-xs text-gray-400 leading-relaxed">
+              Sin avatar activo, el sistema se bloquea. Esto garantiza coherencia
+              total en tu marca.
+            </p>
+          </div>
         </div>
-      )}
 
-      {/* Perfil Optimizado */}
-      <div className="bg-indigo-900/10 border border-indigo-500/20 rounded-2xl p-5">
-        <h4 className="text-center text-xs font-black text-indigo-300 uppercase tracking-widest mb-4 flex items-center justify-center gap-2">
-          <Star size={14}/> Perfil de Avatar Pulido
-        </h4>
-        
-        <div className="space-y-3">
-          {perfil_final_optimizado?.identidad && (
-            <div className="bg-black/40 p-3 rounded-lg border border-white/5">
-              <span className="block text-[9px] text-gray-500 uppercase font-bold mb-1">Identidad</span>
-              <p className="text-white text-xs font-bold">{perfil_final_optimizado.identidad}</p>
-            </div>
-          )}
-          
-          {perfil_final_optimizado?.insight_psicologico && (
-            <div className="bg-black/40 p-3 rounded-lg border border-white/5">
-               <span className="block text-[9px] text-gray-500 uppercase font-bold mb-1">Insight Secreto</span>
-               <p className="text-indigo-200 text-xs italic leading-relaxed">"{perfil_final_optimizado.insight_psicologico}"</p>
-            </div>
-          )}
-
-          {perfil_final_optimizado?.palabras_exactas_que_usa && (
-            <div className="bg-black/40 p-3 rounded-lg border border-white/5">
-              <span className="block text-[9px] text-gray-500 uppercase font-bold mb-2">Palabras Exactas que Usa</span>
-              <div className="space-y-1">
-                {perfil_final_optimizado.palabras_exactas_que_usa.map((frase: string, i: number) => (
-                  <p key={i} className="text-xs text-cyan-300 flex items-start gap-2">
-                    <span className="text-cyan-500 shrink-0">•</span>
-                    <span className="italic">"{frase}"</span>
-                  </p>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {perfil_final_optimizado?.momento_de_compra && (
-            <div className="bg-green-900/10 border border-green-500/20 p-3 rounded-lg">
-              <span className="block text-[9px] text-green-400 uppercase font-bold mb-1">⏰ Momento de Oro</span>
-              <p className="text-xs text-green-200">{perfil_final_optimizado.momento_de_compra}</p>
-            </div>
-          )}
-
-          {perfil_final_optimizado?.objeciones_ocultas && perfil_final_optimizado.objeciones_ocultas.length > 0 && (
-            <div className="bg-red-900/10 border border-red-500/20 p-3 rounded-lg">
-              <span className="block text-[9px] text-red-400 uppercase font-bold mb-2">⚠️ Objeciones Ocultas</span>
-              <div className="space-y-1">
-                {perfil_final_optimizado.objeciones_ocultas.map((obj: string, i: number) => (
-                  <p key={i} className="text-xs text-red-200 flex items-start gap-2">
-                    <span className="text-red-500 shrink-0">•</span>
-                    <span>{obj}</span>
-                  </p>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
       </div>
 
-      {/* Siguiente Paso */}
-      {siguiente_paso && (
-        <div className="bg-gradient-to-r from-cyan-900/10 to-blue-900/10 border border-cyan-500/20 rounded-xl p-5 text-center">
-          <h4 className="text-cyan-400 text-xs font-black uppercase mb-3 flex items-center justify-center gap-2">
-            <ArrowRight size={14}/> Tu Siguiente Paso
-          </h4>
-          <p className="text-sm text-white font-medium leading-relaxed">{siguiente_paso}</p>
-        </div>
-      )}
-
+      <style>{`
+        .input-avatar {
+          width: 100%;
+          background-color: #0a0a0a;
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 0.75rem;
+          padding: 0.75rem;
+          color: white;
+          font-size: 0.875rem;
+          outline: none;
+          transition: all 0.2s;
+        }
+        .input-avatar:focus {
+          border-color: #6366f1;
+          box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+        }
+        .textarea-avatar {
+          width: 100%;
+          background-color: #0a0a0a;
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 0.75rem;
+          padding: 0.75rem;
+          color: white;
+          font-size: 0.875rem;
+          outline: none;
+          resize: none;
+          transition: all 0.2s;
+        }
+        .textarea-avatar:focus {
+          border-color: #6366f1;
+          box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+        }
+      `}</style>
     </div>
   );
-};
-
-// ==================================================================================
-// 💬 SUB-COMPONENTE: CHAT MEJORADO CON HISTORIAL
-// ==================================================================================
-const ChatHistoryEnhanced = ({ messages }: { messages: any[] }) => {
-  if (messages.length === 0) {
-    return (
-      <div className="h-full flex flex-col items-center justify-center text-gray-600 opacity-40 p-6">
-        <MessageSquare size={48} className="mb-4"/>
-        <p className="text-sm text-center font-medium max-w-[240px] leading-relaxed">
-          Haz preguntas profundas sobre tu avatar. 
-          <span className="block mt-2 text-xs text-gray-700">
-            Ej: "¿Qué contenido resonaría más con él?"
-          </span>
-        </p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-4">
-      {messages.map((msg, idx) => (
-        <div key={idx} className="space-y-2 animate-in fade-in slide-in-from-bottom-2">
-          {/* Pregunta del usuario */}
-          <div className="flex justify-end">
-            <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2.5 rounded-2xl rounded-tr-sm max-w-[85%] shadow-lg shadow-purple-900/20">
-              <p className="text-xs font-medium leading-relaxed">{msg.question}</p>
-            </div>
-          </div>
-          
-          {/* Respuesta de la IA */}
-          <div className="flex justify-start">
-            <div className="bg-gray-800 text-gray-100 px-4 py-3 rounded-2xl rounded-tl-sm max-w-[85%] border border-gray-700 shadow-xl">
-              <div className="flex items-center gap-2 mb-2">
-                <Brain size={12} className="text-purple-400"/>
-                <span className="text-[9px] text-purple-400 font-black uppercase tracking-wider">Avatar AI</span>
-              </div>
-              <p className="text-xs leading-relaxed whitespace-pre-wrap">{msg.answer}</p>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-};
-
-// ==================================================================================
-// 🧩 COMPONENTE PRINCIPAL: AVATAR INTELLIGENCE ENGINE
-// ==================================================================================
-export const AvatarProfile = () => {
-    const { user, userProfile, refreshProfile } = useAuth();
-    
-    const [avatarsList, setAvatarsList] = useState<any[]>([]);
-    const [selectedAvatarId, setSelectedAvatarId] = useState<string | null>(null);
-    const [loading, setLoading] = useState(false);
-
-    // Estados IA
-    const [aiMode, setAiMode] = useState<'discover' | 'xray' | 'oracle'>('discover');
-    const [chatInput, setChatInput] = useState('');
-    const [chatHistory, setChatHistory] = useState<any[]>([]);
-    const [auditResult, setAuditResult] = useState<any>(null);
-    const [insightsResult, setInsightsResult] = useState<any>(null);
-    const [isProcessing, setIsProcessing] = useState(false);
-
-    // Contexto
-    const [experts, setExperts] = useState<any[]>([]);
-    const [knowledgeBases, setKnowledgeBases] = useState<any[]>([]);
-    const [selectedExpertId, setSelectedExpertId] = useState<string>('');
-    const [selectedKbId, setSelectedKbId] = useState<string>('');
-
-    // Tabs formulario
-    const [activeTab, setActiveTab] = useState<'identity' | 'psychology' | 'behavior' | 'objections'>('identity');
-
-    // Costos
-    const COSTO_XRAY = 2;      // Antes: AUDIT
-    const COSTO_DISCOVER = 1;   // Antes: CHAT
-    const COSTO_ORACLE = 3;     // Antes: INSIGHTS
-
-    // Formulario (25 campos)
-    const [formData, setFormData] = useState({
-        name: '', age_range: '', gender: '', location: '', occupation: '', income_level: '',
-        primary_pain: '', hell_situation: '', heaven_situation: '',
-        hidden_fear: '', central_objection: '', secondary_objections: '', limiting_belief: '',
-        past_vehicle: '', trigger_event: '', awareness_level: 'Inconsciente del Problema',
-        language_patterns: '', trusted_influencers: '', content_consumption: '',
-        vulnerability_moments: '', decision_drivers: '', time_objection: '',
-        money_objection: '', skepticism_level: '', past_failures: ''
-    });
-
-    const getPlanLimit = () => {
-        const tier = userProfile?.tier || 'free';
-        if (tier === 'esencial') return 3;
-        if (tier === 'pro') return 12;
-        if (tier === 'agency') return 50;
-        return 1;
-    };
-
-    useEffect(() => { 
-        if (user) {
-            fetchAvatars();
-            fetchContextData();
-        }
-    }, [user]);
-
-    const fetchAvatars = async () => {
-        try {
-            const { data } = await supabase.from('avatars').select('*').eq('user_id', user?.id);
-            if (data) {
-                setAvatarsList(data);
-                if (userProfile?.active_avatar_id) {
-                    const active = data.find(p => p.id === userProfile.active_avatar_id);
-                    if (active) selectAvatar(active);
-                } else if (data.length > 0) selectAvatar(data[0]);
-            }
-        } catch (e) { console.error(e); }
-    };
-
-    const fetchContextData = async () => {
-        try {
-            const { data: exp } = await supabase.from('expert_profiles').select('id, name').eq('user_id', user?.id);
-            if(exp) setExperts(exp);
-            
-            const { data: kb } = await supabase.from('documents').select('id, title, filename').eq('user_id', user?.id);
-            if (kb) setKnowledgeBases(kb.map((k: any) => ({ id: k.id, title: k.title || k.filename })));
-
-            if (userProfile?.active_expert_id) setSelectedExpertId(userProfile.active_expert_id);
-        } catch (e) { console.error(e); }
-    };
-
-    const selectAvatar = (avatar: any) => {
-        setSelectedAvatarId(avatar.id);
-        setChatHistory([]);
-        setAuditResult(null);
-        setInsightsResult(null);
-        
-        setFormData({
-            name: avatar.name || '',
-            age_range: avatar.edad || '',
-            gender: avatar.gender || '',
-            location: avatar.location || '',
-            occupation: avatar.occupation || '',
-            income_level: avatar.income_level || '',
-            primary_pain: avatar.dolor || '',
-            hell_situation: avatar.infierno || '',
-            heaven_situation: avatar.cielo || '',
-            hidden_fear: avatar.miedo_oculto || '',
-            central_objection: avatar.objecion || '',
-            secondary_objections: avatar.secondary_objections || '',
-            limiting_belief: avatar.creencia_limitante || '',
-            past_vehicle: avatar.vehiculo_pasado || '',
-            trigger_event: avatar.gatillo || '',
-            awareness_level: avatar.conciencia || 'Inconsciente del Problema',
-            language_patterns: avatar.language_patterns || '',
-            trusted_influencers: avatar.trusted_influencers || '',
-            content_consumption: avatar.content_consumption || '',
-            vulnerability_moments: avatar.vulnerability_moments || '',
-            decision_drivers: avatar.decision_drivers || '',
-            time_objection: avatar.time_objection || '',
-            money_objection: avatar.money_objection || '',
-            skepticism_level: avatar.skepticism_level || '',
-            past_failures: avatar.past_failures || ''
-        });
-    };
-
-    const handleNewAvatar = () => {
-        const limit = getPlanLimit();
-        if (avatarsList.length >= limit) return alert(`⚠️ Límite de ${limit} avatares alcanzado.`);
-        
-        setSelectedAvatarId(null);
-        setChatHistory([]);
-        setAuditResult(null);
-        setInsightsResult(null);
-        
-        setFormData({ 
-            name: '', age_range: '', gender: '', location: '', occupation: '', income_level: '',
-            primary_pain: '', hell_situation: '', heaven_situation: '',
-            hidden_fear: '', central_objection: '', secondary_objections: '', limiting_belief: '',
-            past_vehicle: '', trigger_event: '', awareness_level: 'Inconsciente del Problema',
-            language_patterns: '', trusted_influencers: '', content_consumption: '',
-            vulnerability_moments: '', decision_drivers: '', time_objection: '',
-            money_objection: '', skepticism_level: '', past_failures: ''
-        });
-    };
-
-    const handleSave = async () => {
-        if (!formData.name) return alert("Ponle un Nombre Clave a este avatar");
-        if (!user?.id) return; 
-        
-        setLoading(true);
-        try {
-            const dataToSave: any = {
-                user_id: user.id,
-                name: formData.name,
-                edad: formData.age_range,
-                dolor: formData.primary_pain,
-                infierno: formData.hell_situation,
-                cielo: formData.heaven_situation,
-                miedo_oculto: formData.hidden_fear,
-                objecion: formData.central_objection,
-                creencia_limitante: formData.limiting_belief,
-                vehiculo_pasado: formData.past_vehicle,
-                gatillo: formData.trigger_event,
-                conciencia: formData.awareness_level,
-                gender: formData.gender,
-                location: formData.location,
-                occupation: formData.occupation,
-                income_level: formData.income_level,
-                secondary_objections: formData.secondary_objections,
-                language_patterns: formData.language_patterns,
-                trusted_influencers: formData.trusted_influencers,
-                content_consumption: formData.content_consumption,
-                vulnerability_moments: formData.vulnerability_moments,
-                decision_drivers: formData.decision_drivers,
-                time_objection: formData.time_objection,
-                money_objection: formData.money_objection,
-                skepticism_level: formData.skepticism_level,
-                past_failures: formData.past_failures
-            };
-
-            if (selectedAvatarId) dataToSave.id = selectedAvatarId;
-
-            const { data, error } = await supabase.from('avatars').upsert(dataToSave).select('id').single();
-            if (error) throw error;
-            
-            const newId = data.id;
-            await supabase.from('profiles').update({ active_avatar_id: newId }).eq('id', user.id);
-            
-            if(refreshProfile) refreshProfile();
-            setSelectedAvatarId(newId);
-            await fetchAvatars(); 
-        } catch (e: any) { alert(`Error: ${e.message}`); } 
-        finally { setLoading(false); }
-    };
-    
-    const handleDelete = async () => {
-        if(!selectedAvatarId || !confirm("¿Eliminar este Avatar?")) return;
-        try {
-            if (userProfile?.active_avatar_id === selectedAvatarId) {
-                await supabase.from('profiles').update({ active_avatar_id: null }).eq('id', user?.id);
-            }
-            await supabase.from('avatars').delete().eq('id', selectedAvatarId);
-            handleNewAvatar();
-            await fetchAvatars();
-            if(refreshProfile) refreshProfile();
-        } catch (e) { console.error(e); }
-    };
-
-    // X-RAY SCAN (Antes: Audit)
-    const handleXRayScan = async () => {
-        if (!formData.name || !formData.primary_pain) {
-            return alert("Completa al menos el Nombre y el Dolor Principal.");
-        }
-        
-        if (userProfile?.tier !== 'admin' && (userProfile?.credits || 0) < COSTO_XRAY) {
-            return alert(`⚠️ Saldo insuficiente. Necesitas ${COSTO_XRAY} créditos.`);
-        }
-
-        setIsProcessing(true);
-        setAuditResult(null);
-        
-        try {
-            const { data, error } = await supabase.functions.invoke('process-url', {
-                body: {
-                    selectedMode: 'audit_avatar',
-                    transcript: JSON.stringify(formData),
-                    expertId: selectedExpertId,
-                    knowledgeBaseId: selectedKbId,
-                    estimatedCost: COSTO_XRAY
-                },
-            });
-
-            if (error) throw error;
-            
-            const resultData = data.generatedData || data;
-            setAuditResult(resultData);
-            
-            if(refreshProfile) refreshProfile();
-
-        } catch (e: any) { 
-            console.error(e);
-            alert(`Error: ${e.message}`); 
-        } finally { 
-            setIsProcessing(false); 
-        }
-    };
-
-    // DISCOVER MODE (Antes: Chat)
-    const handleDiscover = async () => {
-        if (!chatInput.trim()) return;
-        
-        if (userProfile?.tier !== 'admin' && (userProfile?.credits || 0) < COSTO_DISCOVER) {
-            return alert(`⚠️ Saldo insuficiente. Necesitas ${COSTO_DISCOVER} crédito.`);
-        }
-        
-        setIsProcessing(true);
-        
-        try {
-            const contextPrompt = `CONTEXTO DEL AVATAR:
-${JSON.stringify(formData, null, 2)}
-
-PREGUNTA DEL USUARIO:
-"${chatInput}"
-
-INSTRUCCIONES:
-Eres un psicólogo experto en análisis de audiencias. Responde la pregunta del usuario con insights profundos basados en el perfil del avatar. Sé específico, práctico y accionable.`;
-
-            const { data, error } = await supabase.functions.invoke('process-url', {
-                body: {
-                    selectedMode: 'chat_avatar',
-                    transcript: contextPrompt,
-                    expertId: selectedExpertId,
-                    knowledgeBaseId: selectedKbId,
-                    estimatedCost: COSTO_DISCOVER
-                },
-            });
-            
-            if (error) throw error;
-            
-            const answer = data.generatedData?.answer || 
-                          data.generatedData?.text_output || 
-                          data.generatedData?.respuesta ||
-                          (typeof data.generatedData === 'string' ? data.generatedData : "Sin respuesta");
-            
-            setChatHistory(prev => [...prev, {
-                question: chatInput,
-                answer: answer
-            }]);
-            
-            setChatInput('');
-            
-            if (refreshProfile) refreshProfile();
-            
-        } catch (e: any) { 
-            console.error(e);
-            setChatHistory(prev => [...prev, {
-                question: chatInput,
-                answer: `Error: ${e.message}`
-            }]);
-        } finally { 
-            setIsProcessing(false); 
-        }
-    };
-
-    // ORACLE MODE (Antes: Insights)
-    const handleOracle = async () => {
-        if (!formData.name || !formData.primary_pain) {
-            return alert("Completa al menos el Nombre y el Dolor Principal.");
-        }
-        
-        if (userProfile?.tier !== 'admin' && (userProfile?.credits || 0) < COSTO_ORACLE) {
-            return alert(`⚠️ Saldo insuficiente. Necesitas ${COSTO_ORACLE} créditos.`);
-        }
-
-        setIsProcessing(true);
-        setInsightsResult(null);
-        
-        try {
-            const insightsPrompt = `ANALIZA ESTE PERFIL DE AVATAR Y GENERA INSIGHTS PROFUNDOS:
-
-${JSON.stringify(formData, null, 2)}
-
-GENERA:
-1. 5 insights psicológicos ocultos que no son obvios
-2. 3 ángulos de contenido únicos para conectar con este avatar
-3. 2 objeciones que NO ha mencionado pero que probablemente tiene
-4. 1 "momento de oro" - cuándo es más receptivo a comprar
-
-Devuelve en formato JSON:
-{
-  "insights_ocultos": ["insight1", "insight2", ...],
-  "angulos_contenido": ["angulo1", "angulo2", "angulo3"],
-  "objeciones_ocultas": ["objecion1", "objecion2"],
-  "momento_oro": "descripción del momento ideal"
-}`;
-
-            const { data, error } = await supabase.functions.invoke('process-url', {
-                body: {
-                    selectedMode: 'chat_avatar',
-                    transcript: insightsPrompt,
-                    expertId: selectedExpertId,
-                    knowledgeBaseId: selectedKbId,
-                    estimatedCost: COSTO_ORACLE
-                },
-            });
-            
-            if (error) throw error;
-            
-            let insights;
-            try {
-                const rawAnswer = data.generatedData?.answer || 
-                                 data.generatedData?.text_output || 
-                                 JSON.stringify(data.generatedData);
-                
-                insights = JSON.parse(rawAnswer);
-            } catch {
-                insights = { 
-                    raw: data.generatedData?.answer || 
-                         data.generatedData?.text_output || 
-                         "No se generaron insights" 
-                };
-            }
-            
-            setInsightsResult(insights);
-            
-            if (refreshProfile) refreshProfile();
-
-        } catch (e: any) { 
-            console.error(e);
-            alert(`Error: ${e.message}`); 
-        } finally { 
-            setIsProcessing(false); 
-        }
-    };
-
-    const handleCopyProfile = () => {
-        const profileText = `PERFIL DE AVATAR: ${formData.name}
-
-IDENTIDAD:
-- Edad: ${formData.age_range}
-- Género: ${formData.gender}
-- Ubicación: ${formData.location}
-- Ocupación: ${formData.occupation}
-- Nivel de Ingresos: ${formData.income_level}
-
-DOLOR PRINCIPAL:
-${formData.primary_pain}
-
-INFIERNO (Situación Actual):
-${formData.hell_situation}
-
-CIELO (Situación Deseada):
-${formData.heaven_situation}
-
-PSICOLOGÍA:
-- Miedo Oculto: ${formData.hidden_fear}
-- Objeción Central: ${formData.central_objection}
-- Objeciones Secundarias: ${formData.secondary_objections}
-- Creencia Limitante: ${formData.limiting_belief}
-- Nivel de Conciencia: ${formData.awareness_level}
-
-COMPORTAMIENTO:
-- Patrones de Lenguaje: ${formData.language_patterns}
-- Influencers de Confianza: ${formData.trusted_influencers}
-- Consumo de Contenido: ${formData.content_consumption}
-- Momentos de Vulnerabilidad: ${formData.vulnerability_moments}
-- Drivers de Decisión: ${formData.decision_drivers}
-
-OBJECIONES:
-- Tiempo: ${formData.time_objection}
-- Dinero: ${formData.money_objection}
-- Nivel de Escepticismo: ${formData.skepticism_level}
-- Fracasos Pasados: ${formData.past_failures}`;
-
-        navigator.clipboard.writeText(profileText);
-        alert('✅ Perfil copiado al portapapeles');
-    };
-
-    return (
-        <div className="max-w-7xl mx-auto space-y-6 pb-20 px-4 animate-in fade-in duration-500">
-            
-            {/* Header */}
-            <div className="flex flex-col md:flex-row justify-between items-end gap-4 pt-6">
-                <div>
-                    <h1 className="text-4xl font-black text-white flex items-center gap-3 tracking-tighter">
-                        <Heart className="text-pink-500" fill="currentColor" size={36}/> 
-                        AVATAR INTELLIGENCE
-                    </h1>
-                    <p className="text-gray-400 text-base font-medium mt-1">
-                        Motor de investigación psicológica de cliente ideal
-                    </p>
-                </div>
-                <div className="flex gap-2 w-full md:w-auto">
-                    <select 
-                        onChange={(e) => {
-                            const selected = avatarsList.find(a => a.id === e.target.value);
-                            if(selected) selectAvatar(selected);
-                        }}
-                        value={selectedAvatarId || ""}
-                        className="flex-1 bg-[#0a0a0a] border border-white/10 text-white text-sm rounded-xl p-3 outline-none cursor-pointer hover:border-pink-500 transition-colors"
-                    >
-                        <option value="" disabled>Seleccionar Avatar...</option>
-                        {avatarsList.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
-                    </select>
-                    <button 
-                        onClick={handleNewAvatar} 
-                        className="p-3 bg-pink-600 rounded-xl hover:bg-pink-500 text-white transition-all shadow-lg shadow-pink-900/20"
-                    >
-                        <Plus size={20}/>
-                    </button>
-                </div>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                
-                {/* IZQUIERDA: FORMULARIO (8 Cols) */}
-                <div className="lg:col-span-8 space-y-6">
-                    
-                    {/* Tabs de Navegación */}
-                    <div className="flex gap-2 bg-gray-900/50 p-2 rounded-2xl border border-gray-800">
-                        <button
-                            onClick={() => setActiveTab('identity')}
-                            className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
-                                activeTab === 'identity'
-                                    ? 'bg-blue-600 text-white shadow-lg'
-                                    : 'text-gray-500 hover:text-white'
-                            }`}
-                        >
-                            <Users size={14} className="inline mr-1"/> Identidad
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('psychology')}
-                            className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
-                                activeTab === 'psychology'
-                                    ? 'bg-purple-600 text-white shadow-lg'
-                                    : 'text-gray-500 hover:text-white'
-                            }`}
-                        >
-                            <Brain size={14} className="inline mr-1"/> Psicología
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('behavior')}
-                            className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
-                                activeTab === 'behavior'
-                                    ? 'bg-orange-600 text-white shadow-lg'
-                                    : 'text-gray-500 hover:text-white'
-                            }`}
-                        >
-                            <Activity size={14} className="inline mr-1"/> Comportamiento
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('objections')}
-                            className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
-                                activeTab === 'objections'
-                                    ? 'bg-red-600 text-white shadow-lg'
-                                    : 'text-gray-500 hover:text-white'
-                            }`}
-                        >
-                            <AlertTriangle size={14} className="inline mr-1"/> Objeciones
-                        </button>
-                    </div>
-
-                    {/* CONTENIDO DE TABS - Aquí va todo el formulario igual que antes */}
-                    {/* Por espacio, mantengo la misma estructura de tabs que en el código anterior */}
-                    {/* Solo cambio los nombres de funciones en los botones */}
-                    
-                    <div className="bg-[#0B0E14] border border-gray-800 rounded-3xl p-6 shadow-xl min-h-[500px]">
-                        {/* [AQUÍ VA TODO EL CONTENIDO DE TABS IGUAL QUE ANTES] */}
-                        {/* Por brevedad no lo repito, pero es el mismo código */}
-                        {/* TAB: IDENTIDAD, PSICOLOGÍA, COMPORTAMIENTO, OBJECIONES */}
-                        
-                        <p className="text-gray-500 text-sm text-center">
-                            [Formulario de 25 campos igual que la versión anterior]
-                        </p>
-                    </div>
-
-                    {/* Botones de Acción */}
-                    <div className="flex justify-between items-center gap-4 pt-4 border-t border-gray-800">
-                        <div className="flex gap-2">
-                            {selectedAvatarId && (
-                                <button 
-                                    onClick={handleDelete} 
-                                    className="text-red-500 hover:text-white px-4 py-3 rounded-xl hover:bg-red-900/20 transition-all text-sm font-bold flex items-center gap-2"
-                                >
-                                    <Trash2 size={16}/> Eliminar
-                                </button>
-                            )}
-                            <button 
-                                onClick={handleCopyProfile}
-                                className="text-gray-400 hover:text-white px-4 py-3 rounded-xl hover:bg-gray-800 transition-all text-sm font-bold flex items-center gap-2"
-                            >
-                                <Copy size={16}/> Copiar
-                            </button>
-                        </div>
-                        
-                        <button 
-                            onClick={handleSave} 
-                            disabled={loading} 
-                            className="px-8 py-3 bg-white text-black font-black rounded-xl hover:bg-gray-200 transition-all flex items-center gap-2 shadow-lg"
-                        >
-                            {loading ? <RefreshCw size={18} className="animate-spin"/> : <Save size={18}/>} 
-                            GUARDAR
-                        </button>
-                    </div>
-                </div>
-
-                {/* DERECHA: PANEL IA (4 Cols) */}
-                <div className="lg:col-span-4">
-                    <div className="bg-[#0f1115] border border-gray-800 rounded-3xl p-6 sticky top-6 shadow-2xl flex flex-col h-[700px]">
-                        
-                        {/* Header IA con nombres nuevos */}
-                        <div className="border-b border-gray-800 pb-4 mb-4">
-                            <div className="flex justify-between items-center mb-3">
-                                <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                                    <Sparkles size={18} className="text-purple-400"/> AI LAB
-                                </h3>
-                                <div className="bg-purple-900/20 px-2 py-1 rounded text-[10px] text-purple-400 font-bold border border-purple-500/30">
-                                    ULTRA
-                                </div>
-                            </div>
-
-                            {/* Modos de IA con nombres NUEVOS */}
-                            <div className="flex gap-2 bg-gray-900/50 p-1 rounded-lg">
-                                <button
-                                    onClick={() => setAiMode('discover')}
-                                    className={`flex-1 py-2 px-3 rounded text-[10px] font-black uppercase transition-all ${
-                                        aiMode === 'discover'
-                                            ? 'bg-purple-600 text-white'
-                                            : 'text-gray-500 hover:text-white'
-                                    }`}
-                                    title="Pregunta lo que quieras sobre tu avatar"
-                                >
-                                    <Search size={12} className="inline mr-1"/> Discover
-                                </button>
-                                <button
-                                    onClick={() => setAiMode('xray')}
-                                    className={`flex-1 py-2 px-3 rounded text-[10px] font-black uppercase transition-all ${
-                                        aiMode === 'xray'
-                                            ? 'bg-blue-600 text-white'
-                                            : 'text-gray-500 hover:text-white'
-                                    }`}
-                                    title="Escaneo profundo del avatar"
-                                >
-                                    <Eye size={12} className="inline mr-1"/> X-Ray
-                                </button>
-                                <button
-                                    onClick={() => setAiMode('oracle')}
-                                    className={`flex-1 py-2 px-3 rounded text-[10px] font-black uppercase transition-all ${
-                                        aiMode === 'oracle'
-                                            ? 'bg-yellow-600 text-white'
-                                            : 'text-gray-500 hover:text-white'
-                                    }`}
-                                    title="Predicciones y insights ocultos"
-                                >
-                                    <Sparkles size={12} className="inline mr-1"/> Oracle
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Selectores de Contexto */}
-                        <div className="mb-4 space-y-2">
-                            <select 
-                                value={selectedExpertId} 
-                                onChange={(e) => setSelectedExpertId(e.target.value)} 
-                                className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-3 text-xs text-gray-300 outline-none focus:border-purple-500"
-                            >
-                                <option value="">🧠 Experto Auditor</option>
-                                {experts.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
-                            </select>
-                            <select 
-                                value={selectedKbId} 
-                                onChange={(e) => setSelectedKbId(e.target.value)} 
-                                className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-3 text-xs text-gray-300 outline-none focus:border-yellow-500"
-                            >
-                                <option value="">📚 Base de Conocimientos</option>
-                                {knowledgeBases.map(kb => <option key={kb.id} value={kb.id}>{kb.title}</option>)}
-                            </select>
-                        </div>
-
-                        {/* Pantalla de Resultados */}
-                        <div className="flex-1 overflow-y-auto custom-scrollbar bg-[#0a0a0a] rounded-2xl p-4 border border-gray-800 mb-4 shadow-inner">
-                            {aiMode === 'xray' && auditResult && (
-                                <AuditReportV2 data={auditResult} />
-                            )}
-
-                            {aiMode === 'discover' && (
-                                <ChatHistoryEnhanced messages={chatHistory} />
-                            )}
-
-                            {aiMode === 'oracle' && insightsResult && (
-                                <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                                    {insightsResult.insights_ocultos && (
-                                        <div className="bg-yellow-900/10 border border-yellow-500/20 rounded-xl p-4">
-                                            <h4 className="text-yellow-400 text-xs font-black uppercase mb-2 flex items-center gap-2">
-                                                <Lightbulb size={14}/> Insights Ocultos
-                                            </h4>
-                                            <ul className="space-y-2">
-                                                {insightsResult.insights_ocultos.map((insight: string, i: number) => (
-                                                    <li key={i} className="text-xs text-gray-300 flex items-start gap-2">
-                                                        <span className="text-yellow-500 shrink-0">•</span>
-                                                        <span>{insight}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )}
-
-                                    {insightsResult.angulos_contenido && (
-                                        <div className="bg-blue-900/10 border border-blue-500/20 rounded-xl p-4">
-                                            <h4 className="text-blue-400 text-xs font-black uppercase mb-2 flex items-center gap-2">
-                                                <Target size={14}/> Ángulos de Contenido
-                                            </h4>
-                                            <ul className="space-y-2">
-                                                {insightsResult.angulos_contenido.map((angulo: string, i: number) => (
-                                                    <li key={i} className="text-xs text-gray-300 flex items-start gap-2">
-                                                        <span className="text-blue-500 shrink-0">{i + 1}.</span>
-                                                        <span>{angulo}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )}
-
-                                    {insightsResult.objeciones_ocultas && (
-                                        <div className="bg-red-900/10 border border-red-500/20 rounded-xl p-4">
-                                            <h4 className="text-red-400 text-xs font-black uppercase mb-2 flex items-center gap-2">
-                                                <AlertTriangle size={14}/> Objeciones Ocultas
-                                            </h4>
-                                            <ul className="space-y-2">
-                                                {insightsResult.objeciones_ocultas.map((obj: string, i: number) => (
-                                                    <li key={i} className="text-xs text-gray-300 flex items-start gap-2">
-                                                        <span className="text-red-500 shrink-0">•</span>
-                                                        <span>{obj}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )}
-
-                                    {insightsResult.momento_oro && (
-                                        <div className="bg-green-900/10 border border-green-500/20 rounded-xl p-4">
-                                            <h4 className="text-green-400 text-xs font-black uppercase mb-2 flex items-center gap-2">
-                                                <Clock size={14}/> Momento de Oro
-                                            </h4>
-                                            <p className="text-xs text-gray-300 leading-relaxed">
-                                                {insightsResult.momento_oro}
-                                            </p>
-                                        </div>
-                                    )}
-
-                                    {insightsResult.raw && (
-                                        <div className="bg-gray-900 border border-gray-800 rounded-xl p-4">
-                                            <p className="text-xs text-gray-300 leading-relaxed whitespace-pre-wrap">
-                                                {insightsResult.raw}
-                                            </p>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-
-                            {/* Estados Vacíos */}
-                            {aiMode === 'xray' && !auditResult && !isProcessing && (
-                                <div className="h-full flex flex-col items-center justify-center text-gray-600 opacity-40 p-6">
-                                    <Eye size={48} className="mb-4"/>
-                                    <p className="text-sm text-center font-medium">
-                                        Escaneo profundo de tu avatar
-                                    </p>
-                                    <p className="text-xs text-center text-gray-700 mt-2">
-                                        Encuentra puntos ciegos y optimiza
-                                    </p>
-                                </div>
-                            )}
-
-                            {aiMode === 'oracle' && !insightsResult && !isProcessing && (
-                                <div className="h-full flex flex-col items-center justify-center text-gray-600 opacity-40 p-6">
-                                    <Sparkles size={48} className="mb-4"/>
-                                    <p className="text-sm text-center font-medium">
-                                        Predicciones psicológicas
-                                    </p>
-                                    <p className="text-xs text-center text-gray-700 mt-2">
-                                        Descubre insights ocultos
-                                    </p>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Botones de Acción CON NOMBRES NUEVOS */}
-                        <div className="space-y-3">
-                            {aiMode === 'xray' && (
-                                <button 
-                                    onClick={handleXRayScan} 
-                                    disabled={isProcessing || !formData.name || !formData.primary_pain} 
-                                    className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-black uppercase tracking-widest flex justify-center items-center gap-2 transition-all disabled:opacity-50 shadow-lg shadow-blue-900/20"
-                                >
-                                    {isProcessing ? <RefreshCw size={14} className="animate-spin"/> : <Eye size={14}/>} 
-                                    {isProcessing ? 'ESCANEANDO...' : `X-RAY SCAN (${COSTO_XRAY} CR)`}
-                                </button>
-                            )}
-
-                            {aiMode === 'oracle' && (
-                                <button 
-                                    onClick={handleOracle} 
-                                    disabled={isProcessing || !formData.name || !formData.primary_pain} 
-                                    className="w-full py-3 bg-yellow-600 hover:bg-yellow-500 text-white rounded-xl text-xs font-black uppercase tracking-widest flex justify-center items-center gap-2 transition-all disabled:opacity-50 shadow-lg shadow-yellow-900/20"
-                                >
-                                    {isProcessing ? <RefreshCw size={14} className="animate-spin"/> : <Sparkles size={14}/>} 
-                                    {isProcessing ? 'CONSULTANDO...' : `ORACLE MODE (${COSTO_ORACLE} CR)`}
-                                </button>
-                            )}
-
-                            {aiMode === 'discover' && (
-                                <div className="relative">
-                                    <input 
-                                        type="text" 
-                                        value={chatInput} 
-                                        onChange={(e) => setChatInput(e.target.value)} 
-                                        onKeyPress={(e) => e.key === 'Enter' && handleDiscover()} 
-                                        placeholder="Pregunta cualquier cosa sobre tu avatar..." 
-                                        className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl py-3 pl-4 pr-12 text-white text-sm focus:border-purple-500 outline-none transition-all shadow-inner"
-                                    />
-                                    <button 
-                                        onClick={handleDiscover} 
-                                        disabled={isProcessing || !chatInput.trim()} 
-                                        className="absolute right-2 top-2 p-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg disabled:opacity-50 transition-all shadow-lg shadow-purple-900/20"
-                                    >
-                                        {isProcessing ? <RefreshCw size={14} className="animate-spin"/> : <Send size={14}/>}
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <style>{`
-                .input-viral { 
-                    width: 100%; background-color: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); 
-                    border-radius: 0.75rem; padding: 0.75rem; color: white; font-size: 0.875rem; 
-                    outline: none; transition: all 0.2s; 
-                } 
-                .input-viral:focus { 
-                    border-color: #db2777; box-shadow: 0 0 0 2px rgba(219, 39, 119, 0.1); 
-                } 
-                .textarea-viral { 
-                    width: 100%; background-color: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); 
-                    border-radius: 0.75rem; padding: 0.75rem; color: white; font-size: 0.875rem; 
-                    outline: none; resize: none; transition-all 0.2s; 
-                } 
-                .textarea-viral:focus { 
-                    border-color: #db2777; box-shadow: 0 0 0 2px rgba(219, 39, 119, 0.1); 
-                } 
-                .custom-scrollbar::-webkit-scrollbar { width: 4px; } 
-                .custom-scrollbar::-webkit-scrollbar-track { background: transparent; } 
-                .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
-            `}</style>
-        </div>
-    );
 };

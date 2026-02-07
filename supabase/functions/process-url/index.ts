@@ -8,6 +8,8 @@
 //  ✅ SISTEMA DE COBROS ALINEADO
 // ==================================================================================
 
+import { ExpertAuthoritySystem } from './ExpertAuthoritySystem.ts'
+import AvatarMiddleware from './avatarMiddleware.ts'
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import OpenAI from 'https://esm.sh/openai@4'
@@ -426,6 +428,9 @@ const PROMPT_GENERADOR_GUIONES = (contexto: any, viralDNA: any, settings: any = 
   const deseoPrincipal = contexto.deseo_principal || `Dominar ${temaEspecifico} y obtener reconocimiento`;
   const enemigoComun = contexto.enemigo_comun || "Los consejos genéricos y la información superficial que no funciona";
   const nicho = contexto.nicho || temaEspecifico;
+
+  // 🛡️ CALCULAR REGLAS DE EXPERTO
+  const expertDirectives = ExpertAuthoritySystem.generateDirectives(contexto.expertProfile);
   
   // ✅ Adaptación al nicho cuando hay DNA viral
   const dnaContext = viralDNA ? `
@@ -638,6 +643,8 @@ Escribir un guion de video COMPLETO, palabra por palabra, diseñado para:
 
 ${dnaContext}
 
+${expertDirectives} 
+(⚠️ IMPORTANTE: Las directivas de arriba definen TU NIVEL DE AUTORIDAD. Obedécelas.)
 =========================================
 🎯 CONTEXTO DEL CREADOR
 =========================================
@@ -944,166 +951,81 @@ FORMATO JSON:
   "decision_recomendada": "PUBLICAR"
 }`;
 
-const PROMPT_AUDITOR_AVATAR = (infoCliente: string, nicho: string, contextoExperto?: string) => `
+const PROMPT_AUDITOR_AVATAR = (infoCliente: string, nicho: string) => `
 ═══════════════════════════════════════════════════════════════════════════════
 🔥 TITAN AUDIT - CONSULTORÍA FORENSE DE AVATARES (MODO: DESPIADADO)
 ═══════════════════════════════════════════════════════════════════════════════
 
-IDENTIDAD:
-Eres "TITAN AUDIT", el consultor de perfiles de cliente más caro del mundo ($50k/sesión).
-Tu misión NO es ser amable. Tu misión es SALVAR al usuario de perder millones por tener un avatar mediocre.
+IDENTIDAD: Eres "TITAN AUDIT". Tu misión es SALVAR al usuario de perder millones.
+Analiza: "${infoCliente}". Nicho: "${nicho}".
 
-Tienes la combinación letal de:
-- Eugène Schwartz (copywriting psicológico)
-- Roy H. Williams (insight hunting)
-- Dan Kennedy (detective de mercados)
-- Robert Cialdini (arquitecto de persuasión)
+⚠️ REGLA DE ORO (COMPATIBILIDAD DB):
+Debes clasificar al avatar usando EXACTAMENTE los siguientes valores permitidos en el campo "perfil_final_optimizado":
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🛡️ PROTOCOLO DE SEGURIDAD (ANTI-ALUCINACIÓN)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-SI EL INPUT DEL USUARIO ("PERFIL DEL AVATAR") ES:
-1. Menor a 5 palabras.
-2. Incoherente (ej: "asdfg", "no sé", "prueba").
-3. Irrelevante (ej: "¿qué hora es?").
-
-ENTONCES EJECUTA ESTA ORDEN DE EMERGENCIA:
-- Score Global = 0.
-- Veredicto = "INFORMACIÓN INSUFICIENTE O ABSURDA. ESCRIBE ALGO REAL."
-- Detén el análisis profundo y devuelve el JSON con los campos de análisis vacíos o nulos.
+- Nivel: 'principiante', 'intermedio', 'avanzado', 'experto'
+- Objetivo: 'viralidad', 'autoridad', 'venta', 'comunidad', 'posicionamiento'
+- Estilo: 'directo', 'analitico', 'inspirador', 'provocador', 'didactico'
+- Riesgo: 'conservador', 'balanceado', 'agresivo'
+- Contenido: 'educativo', 'opinion', 'storytelling', 'venta_encubierta', 'viral_corto'
+- Emocion: 'curiosidad', 'deseo', 'miedo', 'aspiracion', 'autoridad'
+- Modelo: 'educador_serio', 'empresario_premium', 'influencer_agresivo', 'mentor_disruptivo', 'experto_tecnico', 'creativo_viral'
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📊 DATOS RECIBIDOS
+📤 FORMATO DE SALIDA (JSON ESTRICTO)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-PERFIL DEL AVATAR:
-${infoCliente}
-
-NICHO DE MERCADO: 
-${nicho}
-
-${contextoExperto ? `CRITERIO DE EXPERTO:
-${contextoExperto}` : ''}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚖️ MATRIZ DE EVALUACIÓN (TOLERANCIA CERO)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-CRITERIO 1: ESPECIFICIDAD RADICAL (30 puntos)
-❌ BASURA: "Quiere ganar dinero", "Necesita clientes", "Quiere crecer"
-✅ ORO: "Necesita facturar €8k/mes consistentes para dejar su trabajo en 90 días"
-Test del Espejo: Si 1000 personas leen esto, ¿solo 1 levantaría la mano?
-
-CRITERIO 2: DOLOR SANGRIENTO (30 puntos)
-❌ MOLESTIA: "Le gustaría mejorar", "Sería bueno tener"
-✅ URGENCIA: "Se despierta a las 3am con ansiedad", "Llora en el baño del trabajo"
-Test de la Compra: ¿Pagaría $500 HOY para resolverlo o puede esperar 6 meses?
-
-CRITERIO 3: COHERENCIA PSICOLÓGICA (20 puntos)
-¿Los elementos encajan? (Ingresos vs Ocupación / Miedo vs Deseo).
-
-CRITERIO 4: ACTIONABLE INTELLIGENCE (20 puntos)
-¿Puedes escribir un anuncio AHORA con esta info? ¿Conoces sus MOMENTOS DE VULNERABILIDAD?
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎯 SISTEMA DE SCORING (SÉ BRUTAL)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-0-30 puntos → "DESASTROSO" - Este avatar es un fantasma. Nadie se identifica con esto.
-31-50 puntos → "AMATEUR" - Avatar genérico. Competirás por precio y perderás.
-51-70 puntos → "PROFESIONAL" - Sólido pero falta el factor "wow". Funciona, no domina.
-71-85 puntos → "AVANZADO" - Avatar con filo. Ya sabes más que el 90% del mercado.
-86-95 puntos → "ELITE" - Este avatar es un rifle de precisión. Letal en conversión.
-96-100 puntos → "GRANDMASTER" - Perfección absoluta. Este nivel de claridad genera millones.
-
-IMPORTANTE: 
-- Si hay CAMPOS VACÍOS → Automáticamente -20 puntos
-- Si el dolor es GENÉRICO → Automáticamente -15 puntos
-- Si NO hay DATOS DEMOGRÁFICOS → -10 puntos
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📤 FORMATO DE SALIDA (JSON ESTRICTO - SIN MARKDOWN)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-IDIOMA DE SALIDA: SIEMPRE ESPAÑOL NEUTRO (Incluso si el input es inglés).
-FORMATO: JSON PURO. NO USES MARKDOWN. NO USES \`\`\`json.
-
-Devuelve EXACTAMENTE este JSON:
+Devuelve EXACTAMENTE este JSON (Sin Markdown):
 
 {
   "auditoria_calidad": {
     "score_global": 0,
+    "veredicto_brutal": "Frase corta y dura.",
     "nivel_actual": "DESASTROSO/AMATEUR/PROFESIONAL/AVANZADO/ELITE/GRANDMASTER",
-    "veredicto_brutal": "Frase de máximo 15 palabras. Ej: 'Tan genérico que duele.' o 'Imprime dinero.'",
-    "desglose_puntos": {
-      "especificidad": 0,
-      "dolor": 0,
-      "coherencia": 0,
-      "actionable": 0
-    },
-    "penalizaciones_aplicadas": [
-      "Lista de penalizaciones (ej: 'Campos vacíos: -20 pts'). Si no hay, array vacío."
-    ]
+    "desglose_puntos": { "especificidad": 0, "dolor": 0, "coherencia": 0, "actionable": 0 },
+    "penalizaciones_aplicadas": []
   },
-  
   "analisis_campo_por_campo": [
     {
-      "campo": "Nombre del campo evaluado",
-      "lo_que_escribio_usuario": "Copia exacta",
-      "calificacion": "🟢 / 🟡 / 🔴 / ⚫",
-      "score_numerico": 0,
-      "critica": "Explicación PSICOLÓGICA del error. Piensa en dinero perdido.",
-      "correccion_maestra": "Reescribe el campo nivel Eugene Schwartz. LISTO PARA USAR.",
-      "impacto_en_conversion": "Alto/Medio/Bajo"
+      "campo": "Ej: Dolor Principal",
+      "lo_que_escribio_usuario": "...",
+      "calificacion": "🔴",
+      "critica": "...",
+      "correccion_maestra": "..."
     }
-    // MÍNIMO 5 campos analizados
   ],
-  
   "perfil_final_optimizado": {
-    "identidad": "Quién es realmente (Nombre + Situación)",
-    "insight_psicologico": "Lo que piensa a las 3 AM pero no dice",
-    "palabras_exactas_que_usa": [
-      "Frase textual 1",
-      "Frase textual 2",
-      "Frase textual 3"
-    ],
-    "momento_de_compra": "Trigger event exacto (Día/Hora/Situación)",
-    "objeciones_ocultas": [
-      "Objeción oculta 1",
-      "Objeción oculta 2"
-    ]
+    "name": "Nombre Comercial del Avatar",
+    "identidad": "Quién es realmente",
+    "experience_level": "valor_permitido",
+    "primary_goal": "valor_permitido",
+    "communication_style": "valor_permitido",
+    "risk_level": "valor_permitido",
+    "content_priority": "valor_permitido",
+    "dominant_emotion": "valor_permitido",
+    "success_model": "valor_permitido",
+    "prohibitions": {
+        "lenguaje_vulgar": false,
+        "promesas_exageradas": false,
+        "polemica_barata": false,
+        "clickbait_engañoso": false,
+        "venta_agresiva": false,
+        "comparaciones_directas": false,
+        "contenido_negativo": false
+    },
+    "insight_psicologico": "...",
+    "palabras_exactas_que_usa": ["..."],
+    "objeciones_ocultas": ["..."]
   },
-  
   "recomendaciones_accionables": [
-    {
-      "area": "Demografía/Psicología/Comportamiento",
-      "problema": "El error detectado",
-      "solucion": "La solución exacta",
-      "prioridad": "CRÍTICA/ALTA/MEDIA",
-      "ejemplo": "Ejemplo práctico"
-    }
+    { "area": "...", "problema": "...", "solucion": "...", "prioridad": "ALTA" }
   ],
-  
   "comparacion_antes_despues": {
-    "headline_antes": "Anuncio con el avatar mediocre actual",
-    "headline_despues": "Anuncio con el avatar optimizado",
-    "diferencia_estimada_ctr": "+X%"
+    "headline_antes": "...", "headline_despues": "..."
   },
-  
-  "siguiente_paso": "Instrucción ÚNICA y CLARA. Ej: 'Entrevista a 3 clientes hoy' o 'Lanza este anuncio ya'."
+  "siguiente_paso": "..."
 }
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚠️ REGLAS DE ORO
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-1. **SÉ DESPIADADO PERO CONSTRUCTIVO**: No destruyas sin dar soluciones.
-2. **USA NÚMEROS**: Haz tangible la pérdida de dinero.
-3. **SÉ ESPECÍFICO**: No digas "mejora", di "cambia X por Y".
-4. **NO USES MARKDOWN**: Solo JSON puro. Nada de \`\`\`json.
-5. **ANTI-ALUCINACIÓN**: Si el input es basura, usa el protocolo de seguridad.
 `;
 
-const PROMPT_AUDITOR_EXPERTO = (infoExperto: string, nicho: string, avatarContext?: string) => `
+const PROMPT_AUDITOR_EXPERTO = (perfilCompleto: any, avatarContext?: string) => `
 ═══════════════════════════════════════════════════════════════════════════════
 🔥 TITAN STRATEGY - AUDITORÍA FORENSE DE AUTORIDAD (UI MATCH 100%)
 ═══════════════════════════════════════════════════════════════════════════════
@@ -1133,8 +1055,15 @@ ENTONCES:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📊 DATOS RECIBIDOS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-PERFIL DEL EXPERTO: ${infoExperto}
-NICHO: ${nicho}
+PERFIL DEL EXPERTO (ANÁLISIS COMPLETO):
+${JSON.stringify(perfilCompleto, null, 2)}
+
+CONTEXTO DE AUTORIDAD DECLARADA:
+- Nivel Objetivo: ${perfilCompleto.authority_level || 'No definido'}
+- Tipo de Autoridad: ${perfilCompleto.authority_type || 'No definido'}
+- Territorio Mental: ${perfilCompleto.mental_territory || 'No definido'}
+- Prohibiciones (Líneas Rojas): ${perfilCompleto.prohibitions || 'Ninguna'}
+
 ${avatarContext ? `AVATAR OBJETIVO: ${avatarContext}` : ''}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1146,6 +1075,10 @@ Evalúa del 1 al 100 basándote en estos 5 pilares:
 3. PROOF (20 pts): ¿Hay números reales, dinero generado o transformación tangible?
 4. ENEMIGO (15 pts): ¿Polariza contra algo? (Ej: "El Cardio mata tus ganancias").
 5. PROMESA (10 pts): ¿Es una oferta "Grand Slam"?
+6. COHERENCIA DE AUTORIDAD (CRÍTICO):
+   - Si dice ser "Referente" pero tiene prohibiciones de "Aprendiz", PENALIZA DURO.
+   - Si su "Territorio Mental" es débil, destrúyelo.
+   - Verifica si su "Tipo de Prueba" coincide con su "Tipo de Autoridad" (Ej: Académico debe tener datos, no solo opiniones).
 
 SCORING:
 0-30 = INVISIBLE | 31-50 = GENÉRICO | 51-70 = COMPETENTE
@@ -1468,6 +1401,21 @@ async function ejecutarGeneradorGuiones(
     tokens: tokensTotal
   };
 }
+
+// 🛡️ VALIDACIÓN DE EXPERTO (TITANIUM V2.0)
+  // Usamos (contexto as any) para leer el perfil sin errores
+  if ((contexto as any).expertProfile) {
+      console.log('[PASO 3] 🛡️ El Experto está auditando el guion...');
+      
+      const validation = ExpertAuthoritySystem.applyFilter(
+          (contexto as any).expertProfile, 
+          'guion', 
+          normalizedData
+      );
+      
+      // 👇 AQUÍ ESTÁ EL TRUCO PARA ELIMINAR LA LÍNEA ROJA FINAL
+      (normalizedData as any).expert_validation = validation;
+  }
 
 async function ejecutarJuezViral(
   contexto: ContextoUsuario,
@@ -1969,7 +1917,7 @@ async function getUserContext(
 
   const results = await Promise.allSettled(promises as Promise<any>[]);
   
-  const contexto: ContextoUsuario = {
+  const contexto: any = {
     nicho: 'General',
     avatar_ideal: 'Audiencia general',
     dolor_principal: 'N/A',
@@ -1982,9 +1930,13 @@ async function getUserContext(
   if (results[0]?.status === 'fulfilled') {
     const expert = results[0].value?.data;
     if (expert) {
-      contexto.nicho = expert.niche || contexto.nicho;
-      contexto.posicionamiento = expert.positioning || '';
-      contexto.diferenciadores = expert.differentiators || [];
+      // Usamos (contexto as any) para forzar la entrada de datos
+      (contexto as any).nicho = expert.niche || contexto.nicho;
+      (contexto as any).posicionamiento = expert.positioning || '';
+      (contexto as any).diferenciadores = expert.differentiators || [];
+      
+      // 👇 ESTA ES LA CLAVE PARA QUE NO DE ERROR
+      (contexto as any).expertProfile = expert;
     }
   }
   
@@ -2136,6 +2088,59 @@ serve(async (req) => {
     let result: any;
     let tokensUsed = 0;
 
+    // ==============================================================================
+    // 🛡️ MIDDLEWARE DE AVATAR + 💉 INYECCIÓN DE PERSONALIDAD
+    // ==============================================================================
+    
+    // 1. Definimos qué modos NO necesitan avatar
+    const skipMiddleware = ['audit_avatar', 'auditar_avatar'].includes(selectedMode);
+    let activeAvatar = null;
+    let avatarDirectives = "";
+
+    if (!skipMiddleware) {
+        console.log('[MIDDLEWARE] 🕵️ Verificando Avatar...');
+        const avatarMw = new AvatarMiddleware(supabase);
+        const validation = await avatarMw.validateAndGetAvatar(userId);
+
+        // ⛔ BLOQUEO: Si no hay avatar, detenemos todo
+        if (!validation.success) {
+            return new Response(JSON.stringify({ 
+                success: false, 
+                error: validation.error,
+                warnings: validation.warnings,
+                action: "REDIRECT_TO_AVATAR"
+            }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 403 });
+        }
+
+        activeAvatar = validation.avatar;
+        console.log(`[MIDDLEWARE] ✅ Avatar Activo: ${activeAvatar.name}`);
+
+        // 🛡️ SEGURIDAD: Verificar prohibiciones del Avatar
+        const requestContent = { mode: selectedMode, transcript: processedContext, ...settings };
+        const safetyCheck = await avatarMw.filterContentRequest(requestContent, userId);
+        
+        if (!safetyCheck.approved) {
+             return new Response(JSON.stringify({ 
+                success: false,
+                error: "CONTENT_VIOLATION", 
+                message: "Tu Avatar prohíbe este tipo de contenido.",
+                warnings: safetyCheck.warnings
+            }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+        }
+
+        // 💉 INYECCIÓN DE PERSONALIDAD (EL TRUCO MAESTRO)
+        // Generamos las instrucciones de tono/estilo y las pegamos al contexto
+        console.log(`[PERSONALIDAD] 🎭 Inyectando ADN de: ${activeAvatar.name}`);
+        
+        avatarDirectives = avatarMw.buildPromptWithAvatar("", activeAvatar, selectedMode);
+
+        // Inyectamos en el contexto para que TODAS las funciones (Ideas, Guiones, etc.) lo lean
+        processedContext = processedContext + `\n\n[SISTEMA: INSTRUCCIONES DE PERSONALIDAD OBLIGATORIAS DEL AVATAR]:\n${avatarDirectives}`;
+        
+        // También inyectamos en userContext para funciones complejas
+        (userContext as any).knowledge_base_content = ((userContext as any).knowledge_base_content || "") + `\n\n[PERSONALIDAD AVATAR]: ${avatarDirectives}`;
+    }
+    
     // ==================================================================================
     // 🎯 SWITCH CASE
     // ==================================================================================
@@ -2520,12 +2525,29 @@ serve(async (req) => {
         whisper_minutes: whisperMinutes
       });
     }
+     
+    // ==================================================================================
+    // 🧬 EVOLUCIÓN DEL AVATAR (Sumar experiencia)
+    // ==================================================================================
+    if (activeAvatar && !noSaveModes.includes(selectedMode)) {
+        try {
+            const avatarMw = new AvatarMiddleware(supabase);
+            await avatarMw.incrementContentCount();
+            console.log(`[EVOLUCIÓN] 🆙 Avatar "${activeAvatar.name}" ganó experiencia.`);
+        } catch (e) { console.error("Error sumando experiencia:", e); }
+    }
 
     return new Response(
       JSON.stringify({ 
         success: true, 
         generatedData: result, 
         finalCost, 
+        // ✅ DATOS DEL AVATAR PARA EL FRONTEND
+        avatar_used: activeAvatar ? {
+            id: activeAvatar.id,
+            name: activeAvatar.name,
+            level: activeAvatar.experience_level
+        } : null,
         metadata: { 
           mode: selectedMode, 
           duration: Date.now() - startTime,

@@ -394,15 +394,15 @@ export const ExpertProfile = () => {
     const [selectedTestAvatarId, setSelectedTestAvatarId] = useState<string>('');
     const [selectedTestKbId, setSelectedTestKbId] = useState<string>('');
 
-    // Tabs
-    const [activeTab, setActiveTab] = useState<'identity' | 'authority' | 'proof' | 'mechanism'>('identity');
+    // Tabs - ✅ AGREGADA LA PESTAÑA 'expert_authority'
+    const [activeTab, setActiveTab] = useState<'identity' | 'authority' | 'proof' | 'mechanism' | 'expert_authority'>('identity');
 
     // Costos
     const COSTO_XRAY = 2;
     const COSTO_TEST = 1;
     const COSTO_AMPLIFY = 3;
 
-    // Formulario EXPANDIDO (20 campos)
+    // ✅ FORMULARIO EXPANDIDO CON NUEVOS CAMPOS DE EXPERT AUTHORITY
     const [formData, setFormData] = useState({
         // Identidad Básica
         name: '',
@@ -434,7 +434,21 @@ export const ExpertProfile = () => {
         
         // Pilares de Contenido
         content_pillar_1: '',
-        content_pillar_2: ''
+        content_pillar_2: '',
+        
+        // ✅ NUEVOS CAMPOS DE EXPERT AUTHORITY
+        authority_level: 'practicante',        // aprendiz | practicante | experto | referente
+        authority_type: 'practica',            // academica | practica | estrategica | disruptiva
+        depth_level: 'media',                  // superficial | media | profunda | tecnica
+        proof_type: 'casos_reales',            // datos | casos_reales | analogias | opinion_razonada
+        mental_territory: '',                  // Texto libre
+        prohibitions: JSON.stringify({         // JSON string
+            promesas_rapidas: false,
+            simplificaciones_extremas: false,
+            ataques_personales: false,
+            opinion_sin_prueba: false,
+            contenido_superficial: false
+        })
     });
 
     const getPlanLimit = () => {
@@ -479,6 +493,7 @@ export const ExpertProfile = () => {
         } catch (e) { console.error(e); }
     };
 
+    // ✅ ACTUALIZADA PARA CARGAR LOS NUEVOS CAMPOS
     const selectExpert = (expert: any) => {
         setSelectedExpertId(expert.id);
         setChatHistory([]);
@@ -505,7 +520,23 @@ export const ExpertProfile = () => {
             client_results: expert.client_results || '',
             testimonials: expert.testimonials || '',
             content_pillar_1: expert.content_pillar_1 || '',
-            content_pillar_2: expert.content_pillar_2 || ''
+            content_pillar_2: expert.content_pillar_2 || '',
+            
+            // ✅ CARGAR NUEVOS CAMPOS
+            authority_level: expert.authority_level || 'practicante',
+            authority_type: expert.authority_type || 'practica',
+            depth_level: expert.depth_level || 'media',
+            proof_type: expert.proof_type || 'casos_reales',
+            mental_territory: expert.mental_territory || '',
+            prohibitions: typeof expert.prohibitions === 'string' 
+                ? expert.prohibitions 
+                : JSON.stringify(expert.prohibitions || {
+                    promesas_rapidas: false,
+                    simplificaciones_extremas: false,
+                    ataques_personales: false,
+                    opinion_sin_prueba: false,
+                    contenido_superficial: false
+                })
         });
     };
 
@@ -523,7 +554,16 @@ export const ExpertProfile = () => {
             enemy: '', transformation_promise: '', tone: '', key_vocabulary: '',
             personality_archetype: '', framework: '', mechanism_name: '', methodology_steps: '',
             case_studies: '', certifications: '', media_appearances: '', client_results: '',
-            testimonials: '', content_pillar_1: '', content_pillar_2: ''
+            testimonials: '', content_pillar_1: '', content_pillar_2: '',
+            authority_level: 'practicante', authority_type: 'practica', depth_level: 'media',
+            proof_type: 'casos_reales', mental_territory: '', 
+            prohibitions: JSON.stringify({
+                promesas_rapidas: false,
+                simplificaciones_extremas: false,
+                ataques_personales: false,
+                opinion_sin_prueba: false,
+                contenido_superficial: false
+            })
         });
     };
 
@@ -728,52 +768,63 @@ Devuelve en formato JSON:
                 {/* FORMULARIO IZQUIERDA (8 Cols) */}
                 <div className="lg:col-span-8 space-y-6">
                     
-                    {/* Tabs de Navegación */}
-                    <div className="flex gap-2 bg-gray-900/50 p-2 rounded-2xl border border-gray-800">
+                    {/* ✅ TABS DE NAVEGACIÓN - AGREGADO EXPERT AUTHORITY */}
+                    <div className="flex gap-2 bg-gray-900/50 p-2 rounded-2xl border border-gray-800 overflow-x-auto">
                         <button
                             onClick={() => setActiveTab('identity')}
-                            className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
+                            className={`flex-1 py-2.5 px-3 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap ${
                                 activeTab === 'identity'
                                     ? 'bg-indigo-600 text-white shadow-lg'
                                     : 'text-gray-500 hover:text-white'
                             }`}
                         >
-                            <Globe size={14} className="inline mr-1"/> Identidad
+                            <Globe size={12} className="inline mr-1"/> Identidad
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('expert_authority')}
+                            className={`flex-1 py-2.5 px-3 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap ${
+                                activeTab === 'expert_authority'
+                                    ? 'bg-red-600 text-white shadow-lg'
+                                    : 'text-gray-500 hover:text-white'
+                            }`}
+                        >
+                            <ShieldCheck size={12} className="inline mr-1"/> Expert Authority
                         </button>
                         <button
                             onClick={() => setActiveTab('authority')}
-                            className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
+                            className={`flex-1 py-2.5 px-3 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap ${
                                 activeTab === 'authority'
                                     ? 'bg-purple-600 text-white shadow-lg'
                                     : 'text-gray-500 hover:text-white'
                             }`}
                         >
-                            <Mic size={14} className="inline mr-1"/> Autoridad
+                            <Mic size={12} className="inline mr-1"/> Voz
                         </button>
                         <button
                             onClick={() => setActiveTab('proof')}
-                            className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
+                            className={`flex-1 py-2.5 px-3 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap ${
                                 activeTab === 'proof'
                                     ? 'bg-green-600 text-white shadow-lg'
                                     : 'text-gray-500 hover:text-white'
                             }`}
                         >
-                            <Trophy size={14} className="inline mr-1"/> Prueba
+                            <Trophy size={12} className="inline mr-1"/> Prueba
                         </button>
                         <button
                             onClick={() => setActiveTab('mechanism')}
-                            className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
+                            className={`flex-1 py-2.5 px-3 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap ${
                                 activeTab === 'mechanism'
                                     ? 'bg-yellow-600 text-white shadow-lg'
                                     : 'text-gray-500 hover:text-white'
                             }`}
                         >
-                            <Zap size={14} className="inline mr-1"/> Mecanismo
+                            <Zap size={12} className="inline mr-1"/> Mecanismo
                         </button>
                     </div>
 
                     {/* CONTENIDO DE TABS */}
                     <div className="bg-[#0B0E14] border border-gray-800 rounded-3xl p-6 shadow-xl min-h-[500px]">
+                        
                         {/* TAB: IDENTIDAD */}
                         {activeTab === 'identity' && (
                             <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
@@ -844,7 +895,7 @@ Devuelve en formato JSON:
                                             value={formData.enemy} 
                                             onChange={(e) => setFormData({...formData, enemy: e.target.value})} 
                                             className="input-viral border-red-500/20" 
-                                            placeholder="Ej: Los gur��s que venden humo"
+                                            placeholder="Ej: Los gurús que venden humo"
                                         />
                                     </div>
                                 </div>
@@ -862,7 +913,148 @@ Devuelve en formato JSON:
                             </div>
                         )}
 
-                        {/* TAB: AUTORIDAD */}
+                        {/* ✅ NUEVO TAB: EXPERT AUTHORITY */}
+                        {activeTab === 'expert_authority' && (
+                            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                                <h3 className="text-white font-bold text-lg flex items-center gap-2">
+                                    <ShieldCheck size={20} className="text-red-400"/> Posicionamiento de Autoridad
+                                </h3>
+
+                                {/* NIVEL DE AUTORIDAD */}
+                                <div>
+                                    <label className="text-[10px] font-black text-red-400 uppercase mb-2 block flex items-center gap-2">
+                                        <Trophy size={12}/> Nivel de Autoridad (Cómo te ve el mercado)
+                                    </label>
+                                    <select 
+                                        value={formData.authority_level} 
+                                        onChange={(e) => setFormData({...formData, authority_level: e.target.value})}
+                                        className="input-viral border-red-500/20"
+                                    >
+                                        <option value="aprendiz">🌱 Aprendiz (Comparto mi viaje de aprendizaje)</option>
+                                        <option value="practicante">⚙️ Practicante (Tengo experiencia aplicada)</option>
+                                        <option value="experto">🎯 Experto (Domino profundamente el tema)</option>
+                                        <option value="referente">👑 Referente (Soy LA voz del nicho)</option>
+                                    </select>
+                                    <p className="text-xs text-gray-500 mt-1 italic">
+                                        Esto define la profundidad y seguridad con la que hablas
+                                    </p>
+                                </div>
+
+                                {/* TIPO DE AUTORIDAD */}
+                                <div>
+                                    <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Tipo de Autoridad (Cómo convences)</label>
+                                    <select 
+                                        value={formData.authority_type} 
+                                        onChange={(e) => setFormData({...formData, authority_type: e.target.value})}
+                                        className="input-viral"
+                                    >
+                                        <option value="academica">📚 Académica (Datos, estudios, ciencia)</option>
+                                        <option value="practica">🛠️ Práctica (Experiencia, casos reales, resultados)</option>
+                                        <option value="estrategica">🧠 Estratégica (Sistemas, frameworks, visión)</option>
+                                        <option value="disruptiva">💥 Disruptiva (Rompo paradigmas, anti-sistema)</option>
+                                    </select>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {/* PROFUNDIDAD MÁXIMA */}
+                                    <div>
+                                        <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Profundidad Máxima</label>
+                                        <select 
+                                            value={formData.depth_level} 
+                                            onChange={(e) => setFormData({...formData, depth_level: e.target.value})}
+                                            className="input-viral"
+                                        >
+                                            <option value="superficial">☁️ Superficial (Tips rápidos, viral corto)</option>
+                                            <option value="media">📊 Media (Explicaciones claras, ejemplos)</option>
+                                            <option value="profunda">🔬 Profunda (Análisis detallado, matices)</option>
+                                            <option value="tecnica">⚙️ Técnica (Jerga, implementación exacta)</option>
+                                        </select>
+                                    </div>
+
+                                    {/* TIPO DE PRUEBA */}
+                                    <div>
+                                        <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Tipo de Prueba Preferida</label>
+                                        <select 
+                                            value={formData.proof_type} 
+                                            onChange={(e) => setFormData({...formData, proof_type: e.target.value})}
+                                            className="input-viral"
+                                        >
+                                            <option value="datos">📊 Datos y Estadísticas</option>
+                                            <option value="casos_reales">💼 Casos de Estudio Reales</option>
+                                            <option value="analogias">🎭 Analogías y Metáforas</option>
+                                            <option value="opinion_razonada">💭 Opinión Razonada (Thought Leadership)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                {/* TERRITORIO MENTAL */}
+                                <div>
+                                    <label className="text-[10px] font-black text-yellow-400 uppercase mb-2 block">Territorio Mental™</label>
+                                    <textarea 
+                                        value={formData.mental_territory} 
+                                        onChange={(e) => setFormData({...formData, mental_territory: e.target.value})} 
+                                        className="textarea-viral h-20 border-yellow-500/20" 
+                                        placeholder="¿En qué ideas QUIERES SER CONOCIDO? Ej: simplicidad, anti-mitos, procesos escalables, verdad incómoda..."
+                                    />
+                                    <p className="text-xs text-gray-500 mt-1 italic">
+                                        Define tu "marca registrada" conceptual. Ej: Alex Hormozi = "Value First", Gary Vee = "Patience + Hustle"
+                                    </p>
+                                </div>
+
+                                {/* PROHIBICIONES */}
+                                <div className="bg-red-900/10 border border-red-500/20 rounded-xl p-4">
+                                    <h4 className="text-red-400 text-xs font-black uppercase mb-3">⚠️ Líneas Rojas de Credibilidad</h4>
+                                    <p className="text-xs text-gray-400 mb-3">Marca lo que NUNCA harás (mantiene coherencia con tu posicionamiento):</p>
+                                    
+                                    <div className="space-y-2">
+                                        {[
+                                            { key: 'promesas_rapidas', label: 'Promesas de resultados rápidos sin esfuerzo' },
+                                            { key: 'simplificaciones_extremas', label: 'Simplificar en exceso temas complejos' },
+                                            { key: 'ataques_personales', label: 'Atacar personas (en vez de ideas)' },
+                                            { key: 'opinion_sin_prueba', label: 'Opiniones sin respaldo o experiencia' },
+                                            { key: 'contenido_superficial', label: 'Contenido viral sin valor real' }
+                                        ].map(item => {
+                                            const prohibitionsObj = JSON.parse(formData.prohibitions || '{}');
+                                            return (
+                                                <label key={item.key} className="flex items-center gap-2 text-xs text-gray-300 cursor-pointer hover:text-white transition-colors">
+                                                    <input 
+                                                        type="checkbox" 
+                                                        checked={prohibitionsObj[item.key] || false}
+                                                        onChange={(e) => {
+                                                            const updated = {...prohibitionsObj, [item.key]: e.target.checked};
+                                                            setFormData({...formData, prohibitions: JSON.stringify(updated)});
+                                                        }}
+                                                        className="w-4 h-4 accent-red-500"
+                                                    />
+                                                    <span>{item.label}</span>
+                                                </label>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+
+                                {/* INDICADOR DE COHERENCIA */}
+                                <div className="bg-indigo-900/10 border border-indigo-500/20 rounded-xl p-4">
+                                    <h4 className="text-indigo-400 text-xs font-black uppercase mb-2">💡 Coherencia Avatar ↔ Experto</h4>
+                                    <p className="text-xs text-gray-300">
+                                        {formData.authority_level === 'aprendiz' && (
+                                            "✅ Como aprendiz, puedes compartir tu viaje. Usa historias personales de fracaso → aprendizaje."
+                                        )}
+                                        {formData.authority_level === 'practicante' && (
+                                            "✅ Como practicante, muestra resultados reales sin exagerar. Prueba social es clave."
+                                        )}
+                                        {formData.authority_level === 'experto' && (
+                                            "✅ Como experto, profundiza sin perder claridad. Tu audiencia espera frameworks y sistemas."
+                                        )}
+                                        {formData.authority_level === 'referente' && (
+                                            "⚠️ Como referente, cada palabra importa. Tu opinión ES la verdad para tu audiencia."
+                                        )}
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* TAB: VOZ Y AUTORIDAD (ORIGINAL) */}
                         {activeTab === 'authority' && (
                             <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
                                 <h3 className="text-white font-bold text-lg flex items-center gap-2">

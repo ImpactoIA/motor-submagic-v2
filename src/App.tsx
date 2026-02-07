@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 // Layout
@@ -61,6 +61,7 @@ function AppContent() {
       {/* 2. RUTAS PROTEGIDAS (ECOSISTEMA TITAN) */}
       <Route path="/dashboard" element={
           <ProtectedRoute>
+            {/* DashboardLayout ya incluye el <AvatarWidget /> inyectado */}
             <DashboardLayout /> 
           </ProtectedRoute>
       }>
@@ -94,6 +95,9 @@ function AppContent() {
       {/* 3. REDIRECCIONES DE COMPATIBILIDAD */}
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
       
+      {/* ✅ Redirección crítica para el Widget del Avatar */}
+      <Route path="/avatar" element={<Navigate to="/dashboard/avatar-profile" replace />} />
+      
       {/* Redirecciones automáticas para evitar errores 404 en navegación directa */}
       <Route path="/settings" element={<Navigate to="/dashboard/settings" replace />} />
       <Route path="/script-generator" element={<Navigate to="/dashboard/script-generator" replace />} />
@@ -114,4 +118,4 @@ export default function App() {
   );
 }
 
-console.log("🚀 TITAN V300 SYSTEM: ONLINE");
+console.log("🚀 TITAN V300 SYSTEM: ONLINE - AVATAR CORE ENABLED");
