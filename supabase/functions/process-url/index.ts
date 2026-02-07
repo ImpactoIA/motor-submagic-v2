@@ -944,13 +944,6 @@ FORMATO JSON:
   "decision_recomendada": "PUBLICAR"
 }`;
 
-// ==================================================================================
-// 🧠 PROMPT AUDITOR AVATAR V3.0 - TITANIUM EDITION (BLINDADO)
-// ==================================================================================
-// UBICACIÓN: index.ts - Función para auditoría de avatares
-// USO: Cuando selectedMode === 'audit_avatar'
-// ==================================================================================
-
 const PROMPT_AUDITOR_AVATAR = (infoCliente: string, nicho: string, contextoExperto?: string) => `
 ═══════════════════════════════════════════════════════════════════════════════
 🔥 TITAN AUDIT - CONSULTORÍA FORENSE DE AVATARES (MODO: DESPIADADO)
@@ -1110,15 +1103,6 @@ Devuelve EXACTAMENTE este JSON:
 5. **ANTI-ALUCINACIÓN**: Si el input es basura, usa el protocolo de seguridad.
 `;
 
-export default PROMPT_AUDITOR_AVATAR;
-
-// ==================================================================================
-// 🧠 PROMPT AUDITOR EXPERTO V4.0 - FINAL SYNC (UI MATCH 100%)
-// ==================================================================================
-// UBICACIÓN: supabase/functions/process-url/index.ts
-// USO: Cuando selectedMode === 'audit_expert'
-// ==================================================================================
-
 const PROMPT_AUDITOR_EXPERTO = (infoExperto: string, nicho: string, avatarContext?: string) => `
 ═══════════════════════════════════════════════════════════════════════════════
 🔥 TITAN STRATEGY - AUDITORÍA FORENSE DE AUTORIDAD (UI MATCH 100%)
@@ -1251,8 +1235,6 @@ REGLAS DE ORO:
 3. NO uses markdown. JSON puro solamente.
 AHORA EJECUTA LA AUDITORÍA.
 `;
-
-export default PROMPT_AUDITOR_EXPERTO;
 
 const PROMPT_MENTOR_ESTRATEGICO = (contexto: ContextoUsuario, resultados?: any) => {
   const resultadosStr = resultados ? `\nRESULTADOS:\n${JSON.stringify(resultados)}` : '';
