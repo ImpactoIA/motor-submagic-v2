@@ -6,24 +6,29 @@ import {
     RefreshCw, Wand2, Zap, Copy, Save, Calendar as CalendarIcon, Gavel,
     Video, Instagram, Youtube, Linkedin, CheckCircle2, AlignLeft,
     User, AlertCircle, PenTool, Layout, Brain, Target, XCircle,
-    X, ChevronRight 
+    X, ChevronRight, Flame, TrendingUp, MessageCircle, Award, Eye
 } from 'lucide-react';
 
 // ==================================================================================
-// 🎯 INTERFACES Y TIPOS
+// 🎯 INTERFACES Y TIPOS (ACTUALIZADAS PARA V500)
 // ==================================================================================
 
 interface ScriptResult {
     metadata_guion?: {
         tema_tratado?: string;
+        plataforma?: string;
         arquitectura?: string;
+        objetivo_viral?: string;
+        percepcion_creador?: string;
         duracion_estimada?: string;
         tono_voz?: string;
+        ritmo?: string;
     };
     ganchos_opcionales?: Array<{
         tipo: string;
         texto: string;
         retencion_predicha: number;
+        mecanismo?: string;
     }>;
     guion_completo: string;
     plan_visual?: Array<{
@@ -31,10 +36,24 @@ interface ScriptResult {
         accion_en_pantalla: string;
         instruccion_produccion: string;
         audio?: string;
+        texto_pantalla?: string;
     }>;
-    analisis_psicologico?: {
-        gatillo_mental_principal: string;
-        emocion_objetivo: string;
+    analisis_viral?: {
+        loops_abiertos?: string[];
+        loops_cerrados?: string[];
+        loop_emocional?: string;
+        frases_autoridad?: string[];
+        trigger_comentarios?: string;
+        score_viralidad_predicho?: number;
+        advertencias?: string[];
+    };
+    auto_validacion?: {
+        hace_sentir_inspirado: boolean;
+        suena_distinto: boolean;
+        podria_molestar: boolean;
+        sera_recordado: boolean;
+        decision: string;
+        razon?: string;
     };
 }
 
@@ -209,17 +228,17 @@ export const ScriptGenerator = () => {
     const [isSaving, setIsSaving] = useState(false);
     const [saveSuccess, setSaveSuccess] = useState(false);
 
-    // --- NUEVO: ESTADOS PARA EL POP-UP DE AGENDAR ---
+    // --- Estados para el POP-UP de AGENDAR ---
     const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
     const [scheduleDate, setScheduleDate] = useState(new Date().toISOString().split('T')[0]);
 
-   // ==================================================================================
-    // 🔄 EFECTOS (Carga inicial y Navegación desde Ideas)
     // ==================================================================================
+    // 🔄 EFECTOS
+    // ==================================================================================
+    
     useEffect(() => {
         if (!user) return;
         
-        // 1. Cargar Expertos
         const loadExperts = async () => {
             const { data } = await supabase
                 .from('expert_profiles')
@@ -230,26 +249,15 @@ export const ScriptGenerator = () => {
         };
         loadExperts();
 
-        // 2. CAPTURA DE DATOS (Esta es la corrección clave)
         if (location.state) {
-            // Creamos una variable temporal para armar el texto completo
             let fullText = location.state.topic || '';
-
-            // Si hay descripción (hook), la sumamos con un salto de línea
             if (location.state.hook && !fullText.includes(location.state.hook)) {
                 fullText += `\n\nContexto: ${location.state.hook}`;
             }
-
-            // Guardamos todo de una sola vez
-            if (fullText) {
-                setTopic(fullText);
-            }
-
-            // Limpiamos el historial para que no se repita al recargar
+            if (fullText) setTopic(fullText);
             window.history.replaceState({}, document.title);
         }
         
-        // 3. Seleccionar experto activo si existe
         if (userProfile?.active_expert_id) setSelectedExpertId(userProfile.active_expert_id);
 
     }, [user, userProfile, location]);
@@ -258,17 +266,12 @@ export const ScriptGenerator = () => {
     // 🎯 FUNCIONES PRINCIPALES
     // ==================================================================================
 
-   /**
-     * Generar guion usando el backend V105
-     */
     const handleGenerate = async () => {
-        // Validaciones
         if (!topic.trim()) {
             setError("Por favor escribe un tema para el guion.");
             return;
         }
         
-        // Verificar créditos
         if (userProfile?.tier !== 'admin' && (userProfile?.credits || 0) < cost) {
             const shouldRecharge = confirm(
                 `⚠️ Saldo insuficiente. Necesitas ${cost} créditos pero tienes ${userProfile?.credits || 0}.\n\n¿Deseas recargar?`
@@ -287,9 +290,9 @@ export const ScriptGenerator = () => {
         try {
             const { data, error: apiError } = await supabase.functions.invoke('process-url', {
                 body: {
-                    selectedMode: 'generar_guion',
-                    userInput: topic.trim(), // 👈 ESTA ES LA CLAVE: El backend necesita 'userInput'
-                    topic: topic.trim(),     // Lo mantenemos como respaldo
+                    selectedMode: 'generador_guiones',
+                    userInput: topic.trim(),
+                    topic: topic.trim(),
                     settings: {
                         structure: selectedStructure,
                         awareness,
@@ -298,7 +301,7 @@ export const ScriptGenerator = () => {
                         durationId: durationId,
                         duration: durationId,
                         hook_type: hookType,
-                        platform: selectedPlatform.label
+                        platform: selectedPlatform.label // ✅ CRITICAL: Motor V500 usa esto
                     },
                     expertId: selectedExpertId || undefined,
                     avatarId: userProfile?.active_avatar_id || undefined,
@@ -309,17 +312,14 @@ export const ScriptGenerator = () => {
             if (apiError) throw new Error(apiError.message || 'Error al conectar con el backend');
             if (!data?.success && !data?.generatedData) throw new Error(data?.error || 'El backend devolvió un error desconocido');
 
-            // Soporte flexible para la respuesta del backend
             const finalResult = data.generatedData || data;
             
-            // Validación final para asegurar que llegó el guion
             if (!finalResult.guion_completo) {
                 throw new Error('El backend no devolvió un guion completo. Intenta de nuevo.');
             }
 
             setResult(finalResult);
             
-            // Refrescar perfil para actualizar créditos
             if (refreshProfile) await refreshProfile();
 
         } catch (e: any) {
@@ -330,9 +330,6 @@ export const ScriptGenerator = () => {
         }
     };
 
-    /**
-     * Guardar guion en la biblioteca (viral_generations)
-     */
     const handleSaveLibrary = async () => {
         if (!result || !user) return;
         
@@ -364,26 +361,22 @@ export const ScriptGenerator = () => {
         }
     };
 
-   // --- FUNCIÓN PARA GUARDAR EN CALENDARIO DESDE EL POP-UP ---
     const handleConfirmSchedule = async () => {
-        // 1. Validamos que haya fecha seleccionada en el modal
         if (!scheduleDate) return alert("Selecciona una fecha.");
         if (!result || !user) return;
 
         try {
-            // 2. Guardamos en 'content_items' (La tabla del Nuevo Calendario)
             const { error } = await supabase.from('content_items').insert({
                 user_id: user.id,
                 type: 'calendar_event',
-                title: result.metadata_guion?.tema_tratado || topic, // Usamos el tema como título
-                scheduled_date: scheduleDate, // La fecha del selector visual
+                title: result.metadata_guion?.tema_tratado || topic,
+                scheduled_date: scheduleDate,
                 platform: selectedPlatform.label, 
                 status: 'planned',
                 content: {
                     objetivo: objective, 
                     formato: 'Video Corto',
                     description: "Agendado desde Script Generator",
-                    // 👇 AQUÍ GUARDAMOS EL GUION PARA QUE EL CALENDARIO LO PUEDA VER
                     guion_completo: result.guion_completo, 
                     metadata: result.metadata_guion
                 }
@@ -391,21 +384,14 @@ export const ScriptGenerator = () => {
 
             if (error) throw error;
 
-            // 3. Éxito: Cerramos el modal y avisamos
             alert(`✅ Guion agendado exitosamente para el ${scheduleDate}`);
             setIsScheduleModalOpen(false);
-            
-            // Opcional: Si quieres que al agendar te lleve al calendario, descomenta la siguiente línea:
-            // navigate('/dashboard/calendar'); 
 
         } catch (e: any) {
             alert("Error al agendar: " + e.message);
         }
     };
 
-    /**
-     * Auditar el guion con Juez Viral
-     */
     const handleAuditScript = async () => {
         if (!result?.guion_completo || !user) return;
         
@@ -417,7 +403,7 @@ export const ScriptGenerator = () => {
             const { data, error } = await supabase.functions.invoke('process-url', {
                 body: {
                     selectedMode: 'juez_viral',
-                    text: result.guion_completo, // ✅ CORREGIDO: Usa 'text' en vez de 'userInput'
+                    text: result.guion_completo,
                     expertId: selectedExpertId || undefined,
                     avatarId: userProfile?.active_avatar_id || undefined,
                     estimatedCost: 2
@@ -432,7 +418,6 @@ export const ScriptGenerator = () => {
 
             setAuditResult(data.generatedData);
             
-            // Refrescar créditos
             if (refreshProfile) await refreshProfile();
 
         } catch (e: any) {
@@ -444,9 +429,6 @@ export const ScriptGenerator = () => {
         }
     };
 
-    /**
-     * Copiar guion al portapapeles
-     */
     const handleCopyScript = () => {
         if (!result?.guion_completo) return;
         
@@ -466,15 +448,15 @@ export const ScriptGenerator = () => {
     return (
         <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in pb-20 p-4 font-sans text-white">
             
-            {/* ==================== HEADER ==================== */}
+            {/* HEADER */}
             <div className="flex flex-col md:flex-row justify-between items-end gap-4 border-b border-gray-800 pb-6">
                 <div>
                     <h1 className="text-3xl font-black flex items-center gap-2 bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-purple-500">
-                        <PenTool className="text-pink-500" size={32}/> 
-                        SCRIPT WRITER V300
+                        <Flame className="text-pink-500" size={32}/> 
+                        MOTOR VIRAL V500 ÉLITE
                     </h1>
                     <p className="text-gray-400 text-sm mt-1">
-                        Arquitectura Winner Rocket + Psicología de Masas + IA Nivel Dios
+                        8 Capas Virales + Adaptación por Plataforma + Auto-Juez Interno
                     </p>
                 </div>
                 <div className="bg-gray-900 px-4 py-2 rounded-lg border border-gray-800 flex items-center gap-2">
@@ -488,7 +470,7 @@ export const ScriptGenerator = () => {
                 {/* ==================== CONTROLES (IZQUIERDA) ==================== */}
                 <div className="lg:col-span-5 space-y-6">
                     
-                    {/* 1️⃣ TEMA PRINCIPAL */}
+                    {/* TEMA PRINCIPAL */}
                     <div className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-5 shadow-lg">
                         <label className="text-xs font-black text-gray-500 uppercase mb-2 block tracking-widest">
                             1. Tema Principal
@@ -519,7 +501,7 @@ export const ScriptGenerator = () => {
                         </div>
                     </div>
 
-                    {/* 2️⃣ ESTRUCTURA NARRATIVA */}
+                    {/* ESTRUCTURA NARRATIVA */}
                     <div className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-5 shadow-lg">
                         <label className="text-xs font-black text-gray-500 uppercase mb-3 flex items-center gap-2 tracking-widest">
                             <Layout size={14} /> 2. Estructura Narrativa
@@ -548,7 +530,7 @@ export const ScriptGenerator = () => {
                         </div>
                     </div>
 
-                    {/* 3️⃣ CONFIGURACIÓN PSICOLÓGICA */}
+                    {/* CONFIGURACIÓN PSICOLÓGICA */}
                     <div className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-5 shadow-lg space-y-4 relative overflow-hidden">
                         <div className="absolute top-0 left-0 w-1 h-full bg-indigo-600"></div>
                         <label className="text-xs font-black text-gray-500 uppercase mb-2 flex items-center gap-2 tracking-widest">
@@ -589,7 +571,7 @@ export const ScriptGenerator = () => {
                         </div>
                     </div>
 
-                    {/* 4️⃣ CONFIGURACIÓN FINAL */}
+                    {/* CONFIGURACIÓN FINAL */}
                     <div className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-5 shadow-lg space-y-4">
                         <div>
                             <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block tracking-widest">
@@ -652,7 +634,7 @@ export const ScriptGenerator = () => {
                         </div>
                     </div>
 
-                    {/* 🚀 BOTÓN PRINCIPAL DE GENERACIÓN */}
+                    {/* BOTÓN PRINCIPAL */}
                     <button 
                         onClick={handleGenerate} 
                         disabled={!topic.trim() || isGenerating} 
@@ -661,17 +643,16 @@ export const ScriptGenerator = () => {
                         {isGenerating ? (
                             <>
                                 <RefreshCw className="animate-spin" size={20}/>
-                                ANALIZANDO PSICOLOGÍA...
+                                MOTOR V500 PROCESANDO...
                             </>
                         ) : (
                             <>
-                                <Zap size={20} className="group-hover:text-yellow-300 transition-colors"/>
-                                GENERAR GUION ({cost} CR)
+                                <Flame size={20} className="group-hover:text-yellow-300 transition-colors"/>
+                                GENERAR GUION VIRAL ({cost} CR)
                             </>
                         )}
                     </button>
 
-                    {/* Mensaje de error */}
                     {error && (
                         <div className="bg-red-500/10 border border-red-500/20 p-3 rounded-xl text-red-400 text-xs text-center flex items-center justify-center gap-2">
                             <AlertCircle size={14}/> 
@@ -685,27 +666,49 @@ export const ScriptGenerator = () => {
                     {result ? (
                         <div className="bg-[#0B0E14] border border-gray-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden min-h-[700px] flex flex-col animate-in slide-in-from-bottom-8 duration-700">
                             
-                            {/* Barra Superior de Acciones */}
+                            {/* Barra Superior */}
                             <div className="flex justify-between items-start border-b border-gray-800 pb-5 mb-6">
                                 <div>
-                                    <div className="flex items-center gap-2 mb-2">
+                                    <div className="flex items-center gap-2 mb-2 flex-wrap">
                                         <span className="text-[10px] font-black text-green-400 uppercase tracking-widest bg-green-500/10 px-2 py-0.5 rounded border border-green-500/20 flex items-center gap-1">
                                             <CheckCircle2 size={10}/> Completado
                                         </span>
+                                        
+                                        {/* 🔥 NUEVO: Mostrar plataforma */}
+                                        {result.metadata_guion?.plataforma && (
+                                            <span className="text-[10px] font-black text-purple-400 uppercase tracking-widest bg-purple-500/10 px-2 py-0.5 rounded border border-purple-500/20">
+                                                📱 {result.metadata_guion.plataforma}
+                                            </span>
+                                        )}
+                                        
+                                        {/* 🔥 NUEVO: Mostrar objetivo viral */}
+                                        {result.metadata_guion?.objetivo_viral && (
+                                            <span className="text-[10px] font-black text-yellow-400 uppercase tracking-widest bg-yellow-500/10 px-2 py-0.5 rounded border border-yellow-500/20">
+                                                🎯 {result.metadata_guion.objetivo_viral}
+                                            </span>
+                                        )}
+                                        
                                         <span className="text-[10px] text-gray-500 uppercase tracking-widest border border-gray-800 px-2 py-0.5 rounded bg-gray-900">
-                                            {result.metadata_guion?.arquitectura || selectedStructure}
+                                            {result.metadata_guion?.estructura_usada || result.metadata_guion?.arquitectura || selectedStructure}
                                         </span>
                                     </div>
                                     <h2 className="text-xl font-black text-white leading-tight max-w-lg">
                                         {result.metadata_guion?.tema_tratado || topic}
                                     </h2>
+                                    
+                                    {/* 🔥 NUEVO: Mostrar percepción del creador */}
+                                    {result.metadata_guion?.percepcion_creador && (
+                                        <p className="text-xs text-indigo-400 mt-2 italic">
+                                            💡 Percepción: "{result.metadata_guion.percepcion_creador}"
+                                        </p>
+                                    )}
                                 </div>
+                                
                                 <div className="flex gap-2 flex-wrap justify-end">
                                     <button 
-                                       onClick={() => setIsScheduleModalOpen(true)} // 👈 CAMBIA ESTO
-                                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-bold text-xs flex items-center gap-2 shadow-lg shadow-indigo-500/20 transition-all"
+                                        onClick={() => setIsScheduleModalOpen(true)}
+                                        className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-bold text-xs flex items-center gap-2 shadow-lg shadow-indigo-500/20 transition-all"
                                     >
-                                    
                                         <CalendarIcon size={16}/> Agendar
                                     </button>
                                     <button 
@@ -734,11 +737,131 @@ export const ScriptGenerator = () => {
                                 </div>
                             </div>
 
-                            {/* Mensaje de éxito al guardar */}
                             {saveSuccess && (
                                 <div className="mb-4 bg-green-500/10 border border-green-500/20 p-3 rounded-xl text-green-400 text-xs flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
                                     <CheckCircle2 size={14}/> 
                                     Guardado en biblioteca correctamente
+                                </div>
+                            )}
+
+                            {/* 🔥 NUEVO: ANÁLISIS VIRAL V500 */}
+                            {result.analisis_viral && (
+                                <div className="mb-6 bg-purple-900/10 border border-purple-500/20 rounded-2xl p-5">
+                                    <h3 className="text-sm font-black text-purple-400 mb-3 flex items-center gap-2">
+                                        <TrendingUp size={16}/> Análisis Viral V500
+                                    </h3>
+                                    
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                                        {/* Score Viral */}
+                                        {result.analisis_viral.score_viralidad_predicho && (
+                                            <div className="bg-black/30 p-3 rounded-xl">
+                                                <div className="flex items-center justify-between mb-2">
+                                                    <span className="text-gray-400 uppercase tracking-wide text-[10px] font-bold">Score Viral</span>
+                                                    <span className="text-2xl font-black text-purple-400">
+                                                        {result.analisis_viral.score_viralidad_predicho}
+                                                        <span className="text-sm text-gray-500">/100</span>
+                                                    </span>
+                                                </div>
+                                                <div className="w-full bg-gray-800 rounded-full h-2">
+                                                    <div 
+                                                        className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all"
+                                                        style={{ width: `${result.analisis_viral.score_viralidad_predicho}%` }}
+                                                    ></div>
+                                                </div>
+                                            </div>
+                                        )}
+                                        
+                                        {/* Loops Detectados */}
+                                        <div className="bg-black/30 p-3 rounded-xl">
+                                            <span className="text-gray-400 uppercase tracking-wide text-[10px] font-bold block mb-2">Loops Detectados</span>
+                                            <div className="flex gap-2 items-center">
+                                                <div className="flex items-center gap-1">
+                                                    <Eye size={12} className="text-green-400"/>
+                                                    <span className="text-green-400 font-bold">{result.analisis_viral.loops_abiertos?.length || 0}</span>
+                                                    <span className="text-gray-500 text-[10px]">Abiertos</span>
+                                                </div>
+                                                <div className="flex items-center gap-1">
+                                                    <CheckCircle2 size={12} className="text-blue-400"/>
+                                                    <span className="text-blue-400 font-bold">{result.analisis_viral.loops_cerrados?.length || 0}</span>
+                                                    <span className="text-gray-500 text-[10px]">Cerrados</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Frases de Autoridad */}
+                                    {result.analisis_viral.frases_autoridad && result.analisis_viral.frases_autoridad.length > 0 && (
+                                        <div className="mt-4">
+                                            <span className="text-[10px] font-bold text-yellow-400 uppercase block mb-2">
+                                                👑 Frases de Autoridad Detectadas
+                                            </span>
+                                            <ul className="space-y-1">
+                                                {result.analisis_viral.frases_autoridad.slice(0, 3).map((frase, i) => (
+                                                    <li key={i} className="text-[11px] text-gray-300 flex items-start gap-2">
+                                                        <Award size={10} className="text-yellow-400 mt-0.5 shrink-0"/> 
+                                                        {frase}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                    
+                                    {/* Trigger de Comentarios */}
+                                    {result.analisis_viral.trigger_comentarios && (
+                                        <div className="mt-4 bg-pink-500/10 border border-pink-500/20 p-3 rounded-xl">
+                                            <span className="text-[10px] font-bold text-pink-400 uppercase block mb-1">
+                                                <MessageCircle size={10} className="inline"/> Trigger de Comentarios
+                                            </span>
+                                            <p className="text-xs text-gray-300 italic">
+                                                "{result.analisis_viral.trigger_comentarios}"
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* 🔥 NUEVO: AUTO-VALIDACIÓN */}
+                            {result.auto_validacion && (
+                                <div className={`mb-6 border rounded-2xl p-4 ${
+                                    result.auto_validacion.decision === 'APROBAR' 
+                                        ? 'bg-green-900/10 border-green-500/20' 
+                                        : 'bg-red-900/10 border-red-500/20'
+                                }`}>
+                                    <h3 className={`text-sm font-black mb-3 flex items-center gap-2 ${
+                                        result.auto_validacion.decision === 'APROBAR' ? 'text-green-400' : 'text-red-400'
+                                    }`}>
+                                        {result.auto_validacion.decision === 'APROBAR' ? <CheckCircle2 size={16}/> : <XCircle size={16}/>}
+                                        Auto-Validación: {result.auto_validacion.decision}
+                                    </h3>
+                                    
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-[10px]">
+                                        <div className={`p-2 rounded-lg ${result.auto_validacion.hace_sentir_inspirado ? 'bg-green-500/10' : 'bg-gray-800'}`}>
+                                            <span className={result.auto_validacion.hace_sentir_inspirado ? 'text-green-400' : 'text-gray-500'}>
+                                                {result.auto_validacion.hace_sentir_inspirado ? '✅' : '❌'} Inspirador
+                                            </span>
+                                        </div>
+                                        <div className={`p-2 rounded-lg ${result.auto_validacion.suena_distinto ? 'bg-green-500/10' : 'bg-gray-800'}`}>
+                                            <span className={result.auto_validacion.suena_distinto ? 'text-green-400' : 'text-gray-500'}>
+                                                {result.auto_validacion.suena_distinto ? '✅' : '❌'} Único
+                                            </span>
+                                        </div>
+                                        <div className={`p-2 rounded-lg ${result.auto_validacion.podria_molestar ? 'bg-green-500/10' : 'bg-gray-800'}`}>
+                                            <span className={result.auto_validacion.podria_molestar ? 'text-green-400' : 'text-gray-500'}>
+                                                {result.auto_validacion.podria_molestar ? '✅' : '❌'} Polémico
+                                            </span>
+                                        </div>
+                                        <div className={`p-2 rounded-lg ${result.auto_validacion.sera_recordado ? 'bg-green-500/10' : 'bg-gray-800'}`}>
+                                            <span className={result.auto_validacion.sera_recordado ? 'text-green-400' : 'text-gray-500'}>
+                                                {result.auto_validacion.sera_recordado ? '✅' : '❌'} Memorable
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                    {result.auto_validacion.razon && (
+                                        <p className="text-xs text-gray-400 mt-3 italic">
+                                            💭 {result.auto_validacion.razon}
+                                        </p>
+                                    )}
                                 </div>
                             )}
 
@@ -758,15 +881,21 @@ export const ScriptGenerator = () => {
                                                     <Target size={10}/> {hook.retencion_predicha}% Ret.
                                                 </span>
                                             </div>
-                                            <p className="text-sm text-gray-300 italic group-hover:text-white transition-colors">
+                                            <p className="text-sm text-gray-300 italic group-hover:text-white transition-colors mb-2">
                                                 "{hook.texto}"
                                             </p>
+                                            {/* 🔥 NUEVO: Mostrar mecanismo */}
+                                            {hook.mecanismo && (
+                                                <span className="text-[9px] text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded">
+                                                    Mecánica: {hook.mecanismo}
+                                                </span>
+                                            )}
                                         </div>
                                     ))}
                                 </div>
                             )}
 
-                            {/* GUION COMPLETO - MODO TELEPROMPTER */}
+                            {/* GUION COMPLETO */}
                             <div className="flex-1 space-y-3 mb-8">
                                 <label className="text-xs font-black text-gray-500 uppercase tracking-widest flex items-center gap-2">
                                     <AlignLeft size={14}/> Modo Teleprompter
@@ -776,7 +905,7 @@ export const ScriptGenerator = () => {
                                 </div>
                             </div>
 
-                            {/* AUDITORÍA DEL JUEZ VIRAL */}
+                            {/* AUDITORÍA */}
                             {showAudit && (
                                 <div className="mt-8 pt-6 border-t border-gray-700 animate-in fade-in slide-in-from-bottom-4">
                                     <h3 className="text-lg font-black text-pink-500 mb-4 flex items-center gap-2">
@@ -797,7 +926,6 @@ export const ScriptGenerator = () => {
                                         </div>
                                     ) : auditResult ? (
                                         <div className="bg-pink-900/10 border border-pink-500/20 rounded-2xl p-6">
-                                            {/* Score Principal */}
                                             <div className="flex justify-between items-center mb-6">
                                                 <div className="text-5xl font-black text-white">
                                                     {auditResult.veredicto_final?.score_total}
@@ -813,7 +941,6 @@ export const ScriptGenerator = () => {
                                                 </div>
                                             </div>
                                             
-                                            {/* Fortalezas y Debilidades */}
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                 <div>
                                                     <span className="text-xs font-black text-green-400 uppercase block mb-2">
@@ -843,7 +970,6 @@ export const ScriptGenerator = () => {
                                                 </div>
                                             </div>
 
-                                            {/* Optimizaciones Rápidas */}
                                             {auditResult.optimizaciones_rapidas && auditResult.optimizaciones_rapidas.length > 0 && (
                                                 <div className="mt-6 pt-6 border-t border-pink-500/20">
                                                     <span className="text-xs font-black text-yellow-400 uppercase block mb-2">
@@ -868,7 +994,7 @@ export const ScriptGenerator = () => {
                                 </div>
                             )}
 
-                            {/* PLAN VISUAL (RODAJE) */}
+                            {/* PLAN VISUAL */}
                             {result.plan_visual && result.plan_visual.length > 0 && (
                                 <div className="border-t border-gray-800 pt-6 mt-6">
                                     <label className="text-xs font-black text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
@@ -896,6 +1022,11 @@ export const ScriptGenerator = () => {
                                                                 🎵 {scene.audio}
                                                             </span>
                                                         )}
+                                                        {scene.texto_pantalla && (
+                                                            <span className="text-[10px] text-yellow-400 uppercase tracking-wide">
+                                                                📝 {scene.texto_pantalla}
+                                                            </span>
+                                                        )}
                                                     </div>
                                                 </div>
                                             </div>
@@ -906,7 +1037,6 @@ export const ScriptGenerator = () => {
 
                         </div>
                     ) : (
-                        // ESTADO VACÍO
                         <div className="h-full border-2 border-dashed border-gray-800 rounded-3xl flex flex-col items-center justify-center text-center p-12 bg-gray-900/20 min-h-[600px]">
                             <div className="p-6 bg-gray-900 rounded-full mb-6 shadow-xl">
                                 <Wand2 size={48} className="text-gray-600"/>
@@ -915,17 +1045,17 @@ export const ScriptGenerator = () => {
                                 Lienzo Creativo Vacío
                             </h3>
                             <p className="text-sm text-gray-500 max-w-xs mx-auto leading-relaxed">
-                                Configura la psicología y estructura a la izquierda para que la IA diseñe tu próximo viral.
+                                Configura la psicología y estructura a la izquierda para que el Motor V500 Élite codifique tu próximo viral.
                             </p>
                         </div>
                     )}
                 </div>
             </div>
-   {/* --- MODAL POP-UP PARA AGENDAR (NUEVO & CORREGIDO) --- */}
+
+            {/* MODAL DE AGENDAR */}
             {isScheduleModalOpen && (
                 <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in">
                     <div className="bg-[#0B0E14] border border-gray-800 rounded-2xl w-full max-w-md shadow-2xl p-6 relative">
-                        {/* Botón Cerrar */}
                         <button 
                             onClick={() => setIsScheduleModalOpen(false)} 
                             className="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors"
@@ -933,7 +1063,6 @@ export const ScriptGenerator = () => {
                             <X size={18}/>
                         </button>
                         
-                        {/* Encabezado */}
                         <div className="text-center mb-6">
                             <div className="w-12 h-12 bg-indigo-600/20 rounded-full flex items-center justify-center mx-auto mb-3 text-indigo-500 border border-indigo-500/30">
                                 <CalendarIcon size={24}/>
@@ -942,7 +1071,6 @@ export const ScriptGenerator = () => {
                             <p className="text-xs text-gray-400 mt-1">Elige cuándo quieres publicar este guion.</p>
                         </div>
 
-                        {/* Formulario */}
                         <div className="space-y-4">
                             <div>
                                 <label className="text-[10px] font-bold text-gray-500 uppercase mb-2 block tracking-wider">Fecha de Publicación</label>
@@ -970,6 +1098,6 @@ export const ScriptGenerator = () => {
                 </div>
             )}
 
-        </div> // 👈 CIERRE DEL CONTENEDOR PRINCIPAL
+        </div>
     );
 };

@@ -151,144 +151,124 @@ async function delay(ms: number): Promise<void> {
 // 🧠 SISTEMA CEREBRAL - PROMPTS V300 (100% PRESERVADOS)
 // ==================================================================================
 
-const PROMPT_IDEAS_ELITE = (
-  temaEspecifico: string,
+// ==================================================================================
+// 🧠 1. DEFINICIÓN DE ESTRATEGIAS Y PROMPT (LÓGICA PURA)
+// ==================================================================================
+
+// Mapas de Estrategia (Helpers)
+const getObjetivoStrategy = (objetivo: string) => {
+  const map: any = {
+    'viralidad': '🔥 VIRALIDAD: Alcance masivo. Gancho visual inmediato. Estructura rápida. Emoción: Sorpresa/Indignación.',
+    'autoridad': '👑 AUTORIDAD: Profundidad técnica. Frameworks propios. Emoción: Respeto/Confianza.',
+    'venta': '💰 VENTA: Conversión directa. Problema-Agitación-Solución. Emoción: Deseo/Urgencia.',
+    'comunidad': '👥 COMUNIDAD: Identidad y Pertenencia. Preguntas, historias vulnerables.',
+    'educacion': '📚 EDUCACIÓN: Utilidad práctica. Tutoriales paso a paso. "Cómo se hace".',
+    'opinion': '🗣️ OPINIÓN: Polarización estratégica. "Verdad incómoda". Debate.'
+  };
+  return map[objetivo] || map['viralidad'];
+};
+
+const getTimingStrategy = (timing: string) => {
+  const map: any = {
+    'evergreen': '🌲 EVERGREEN: Funciona hoy y en 2 años. Problemas universales.',
+    'tendencia': '🔥 TENDENCIA: Úsalo YA. Aprovecha el hype actual.',
+    'reaccion': '⚡ REACCIÓN: Noticia de últimas 48h. Sé el primero en opinar.',
+    'estacional': '📅 ESTACIONAL: Vinculado a la fecha/temporada actual.',
+    'momentum': '🚀 MOMENTUM: Habla de tu crecimiento actual.'
+  };
+  return map[timing] || map['evergreen'];
+};
+
+// EL PROMPT MAESTRO V2
+const PROMPT_IDEAS_ELITE_V2 = (
+  tema: string,
   cantidad: number,
   plataforma: string,
-  contexto: ContextoUsuario
-) => `
+  objetivo: string,
+  timing: string,
+  contexto: any
+) => {
+  const estrategia = getObjetivoStrategy(objetivo);
+  const tiempo = getTimingStrategy(timing);
+
+  return `
 ═════════════════════════════════════════════════════════════════════════════
-🧠 GENERADOR DE IDEAS VIRALES ULTRA-CONTEXTUAL - TITAN ENGINE
+🧠 CEREBRO ESTRATÉGICO V2.0 - MODO: ${objetivo.toUpperCase()}
 ═════════════════════════════════════════════════════════════════════════════
 
-ERES EL GENIO CREATIVO DE CONTENIDO VIRAL #1 EN ESPAÑOL.
-TU MISIÓN: Generar EXACTAMENTE ${cantidad} ideas de video EXPLOSIVAS sobre:
+ACTÚA COMO: El Estratega de Contenido Digital #1.
+OBJETIVO: Generar ideas que cumplan el objetivo "${objetivo}" usando el contexto "${timing}".
 
-🎯 TEMA ESPECÍFICO DEL USUARIO:
-"${temaEspecifico}"
+📊 VARIABLES:
+- Tema: "${tema}"
+- Plataforma: "${plataforma}"
+- Estrategia: ${estrategia}
+- Contexto Temporal: ${tiempo}
 
-📱 PLATAFORMA DESTINO:
-${plataforma}
+👤 PERFIL DEL EXPERTO:
+- Nicho: ${contexto.nicho || 'General'}
+- Autoridad: ${contexto.expertProfile?.authority_level || 'Practicante'}
+- Tipo de Prueba: ${contexto.expertProfile?.proof_type || 'Casos reales'}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📊 CONTEXTO DEL EXPERTO (ÚSALO RELIGIOSAMENTE)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-🔹 NICHO: ${contexto.nicho || 'General'}
-🔹 AVATAR IDEAL: ${contexto.avatar_ideal || 'Audiencia general'}
-🔹 DOLOR PRINCIPAL: ${contexto.dolor_principal || 'N/A'}
-🔹 DESEO PRINCIPAL: ${contexto.deseo_principal || 'N/A'}
-
-${contexto.knowledge_base_content ? `
-🧠 BASE DE CONOCIMIENTO:
-"${contexto.knowledge_base_content.substring(0, 800)}..."
-
-⚠️ CRÍTICO: Usa ESTA información para generar ideas. No inventes contenido genérico.
-` : ''}
-
-${contexto.hooks_exitosos?.length > 0 ? `
-🎣 HOOKS EXITOSOS PREVIOS (REPLICA EL PATRÓN):
-${contexto.hooks_exitosos.slice(0, 5).map((h, i) => `${i + 1}. ${h}`).join('\n')}
-` : ''}
+🛡️ REGLAS DE ORO:
+1. Si es "Venta", DEBE incluir un ángulo de conversión o dolor agudo.
+2. Si es "Autoridad", usa lenguaje técnico o frameworks.
+3. Si es "Viralidad", el gancho debe ser disruptivo (0-3 seg).
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎬 ESPECIFICACIONES DE PLATAFORMA: ${plataforma}
+📤 FORMATO DE SALIDA JSON (ESTRICTO)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-${plataforma === 'TikTok' ? `
-✅ FORMATO: Videos verticales 9:16, 15-60 segundos
-✅ GANCHOS: Primeros 0.5s críticos, texto en pantalla obligatorio
-✅ ESTILO: Dinámico, rápido, música trending, cortes cada 2-3s
-✅ TONO: Casual, auténtico, directo, sin fluff corporativo
-✅ KEYWORDS: #ParaTi #Viral #Trending + 2 de nicho
-` : plataforma === 'Reels' ? `
-✅ FORMATO: Videos verticales 9:16, 15-90 segundos
-✅ GANCHOS: Visual primero, texto después. Loops al final
-✅ ESTILO: Estético, transiciones smooth, música de Instagram
-✅ TONO: Inspiracional, aspiracional, belleza visual
-✅ KEYWORDS: 3 hashtags grandes + 2 nicho
-` : plataforma === 'YouTube' ? `
-✅ FORMATO: Horizontal 16:9, 8-15 minutos (Shorts: vertical 60s)
-✅ GANCHOS: Título clickbait ético + thumbnail impactante
-✅ ESTILO: Narrativa más larga, storytelling, valor educativo
-✅ TONO: Profesional pero conversacional, autoridad
-✅ KEYWORDS: SEO en título, descripción optimizada
-` : plataforma === 'LinkedIn' ? `
-✅ FORMATO: Cuadrado 1:1 o vertical, 30-90 segundos
-✅ GANCHOS: Estadística impactante o pregunta profesional
-✅ ESTILO: Pulido, profesional, valor B2B, insights de industria
-✅ TONO: Experto pero accesible, thought leadership
-✅ KEYWORDS: Industria, profesión, caso de uso corporativo
-` : `
-✅ FORMATO: Cuadrado 1:1, 30-90 segundos
-✅ GANCHOS: Emocional o controversial (moderado)
-✅ ESTILO: Conversacional, relatable, community-driven
-✅ TONO: Amigable, cercano, storytelling personal
-`}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔥 BIBLIOTECAS DE CONOCIMIENTO WINNER ROCKET
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-${MASTER_HOOKS_STR}
-
-${VIDEO_FORMATS_STR}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚙️ PROTOCOLO DE GENERACIÓN (SIGUE RELIGIOSAMENTE)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-1. **ANALIZA EL TEMA**: "${temaEspecifico}"
-2. **CONECTA CON EL DOLOR**: ${contexto.dolor_principal}
-3. **APLICA LOS 7 DISPARADORES VIRALES**
-4. **DIVERSIFICA LOS FORMATOS**
-5. **CALCULA SCORE VIRAL REAL**
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📤 FORMATO DE SALIDA JSON (EXACTO)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 {
+  "analisis_estrategico": {
+    "objetivo_dominante": "${objetivo}",
+    "razonamiento": "Por qué este enfoque funciona para este tema",
+    "advertencias": ["Riesgo 1", "Riesgo 2"],
+    "oportunidades": ["Oportunidad 1", "Oportunidad 2"]
+  },
   "ideas": [
     {
       "id": 1,
-      "titulo": "Título ultra específico (Max 60 chars)",
-      "concepto": "Descripción potente en 1-2 frases",
-      "disparador_principal": "Curiosidad/Miedo/Deseo/Urgencia/Identidad/Controversia/Transformación",
-      "gancho_sugerido": "Primera línea EXACTA del video",
+      "titulo": "Título atractivo interno (Max 60 chars)",
+      "concepto": "Descripción potente de la idea",
+      "objetivo_principal": "${objetivo}",
+      "contexto_temporal": "${timing}",
+      "estructura_sugerida": "Ej: Winner Rocket / PAS / Storytelling",
+      "disparador_principal": "Curiosidad/Miedo/Deseo/Identidad",
+      "emocion_objetivo": "La emoción exacta que buscamos",
+      "gancho_sugerido": "Primera línea EXACTA del video (Script)",
       "potencial_viral": 8.5,
-      "razon_potencia": "Por qué esta idea puede explotar",
-      "formato_visual": "Uno de los 12 formatos Winner Rocket",
-      "angulo": "El ángulo único",
-      "cta_sugerido": "Llamado a la acción",
+      "razon_potencia": "Por qué va a funcionar",
+      "formato_visual": "Talking Head / B-Roll / Pantalla Verde / Pizarra",
+      "angulo": "El ángulo único diferenciador",
+      "cta_sugerido": "Llamado a la acción específico",
       "plataforma_ideal": "${plataforma}",
-      "duracion_recomendada": "15-30s / 30-60s / 60-90s",
-      "dificultad_produccion": "Baja / Media / Alta",
-      "keywords": ["#keyword1", "#keyword2"]
+      "duracion_recomendada": "Ej: 15-30s",
+      "dificultad_produccion": "Baja/Media/Alta",
+      "keywords": ["#tag1", "#tag2"],
+      "mejor_momento": "Ej: Lunes por la mañana",
+      "urgencia_publicacion": "alta/media/baja"
     }
   ],
-  
   "recomendacion_top": {
-    "idea_id": 3,
+    "idea_id": 1,
     "razon": "Por qué ESTA es la mejor opción AHORA",
-    "plan_rapido": "3 pasos concretos para ejecutarla hoy"
+    "por_que_ahora": "Justificación del timing",
+    "plan_rapido": "3 pasos para ejecutarla hoy"
   },
-
   "insights_estrategicos": {
-    "tendencia_detectada": "Qué tendencia hace que estas ideas funcionen ahora",
-    "brecha_mercado": "Qué NO está haciendo la competencia",
-    "advertencia": "Qué evitar"
+    "tendencia_detectada": "Tendencia que apoya esto",
+    "brecha_mercado": "Qué NO hace la competencia",
+    "advertencia": "Qué evitar",
+    "siguiente_paso_logico": "Próximo contenido a crear"
   }
 }
 
-⚠️ REGLAS INQUEBRANTABLES:
-1. Genera EXACTAMENTE ${cantidad} ideas
-2. Todas en ESPAÑOL NEUTRO
-3. Todas sobre: "${temaEspecifico}"
-4. Todas para ${plataforma}
-
-🚀 ¡CREA MAGIA! 🎬✨
+⚠️ REGLAS FINALES:
+1. Genera EXACTAMENTE ${cantidad} ideas.
+2. Todas en ESPAÑOL NEUTRO.
+3. JSON VÁLIDO OBLIGATORIO.
 `;
+};
 
 const PROMPT_AUTOPSIA_VIRAL = (platform: string) => `
 ERES EL FORENSE DE VIRALIDAD #1 DEL MUNDO.
@@ -1227,32 +1207,63 @@ async function ejecutarIdeasRapidas(
   topic: string,
   quantity: number,
   platform: string,
-  contexto: any, 
-  openai: any
+  contexto: any,
+  openai: any,
+  settings: any = {} // Aquí vienen objective y timing desde el frontend
 ): Promise<{ data: any; tokens: number }> {
-  console.log(`[CEREBRO] 💡 Generando ${quantity} ideas sobre: "${topic}" para ${platform}`);
   
-  const completion = await openai.chat.completions.create({
-    model: 'gpt-4o',
-    response_format: { type: 'json_object' },
-    messages: [
-      { 
-        role: 'system', 
-        content: 'Eres el genio creativo #1 del mundo.' 
+  // 1. Extraer variables (con defaults por seguridad)
+  const objective = settings.objective || 'viralidad';
+  const timing = settings.timing_context || 'evergreen';
+
+  console.log(`[CEREBRO V2] 🎯 Generando Ideas | Objetivo: ${objective} | Timing: ${timing}`);
+
+  // 2. Generar el Prompt usando la función del Bloque 1
+  const prompt = PROMPT_IDEAS_ELITE_V2(
+    topic,
+    quantity,
+    platform,
+    objective,
+    timing,
+    contexto
+  );
+
+  // 3. Llamar a OpenAI
+  try {
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o', // Modelo inteligente necesario para estrategia
+      response_format: { type: 'json_object' }, // Forzar JSON
+      messages: [
+        { 
+          role: 'system', 
+          content: 'Eres el Consultor Estratégico de Contenido Digital #1. Tu salida es SIEMPRE en formato JSON válido.' 
+        },
+        { role: 'user', content: prompt }
+      ],
+      temperature: 0.8, // Creatividad alta pero controlada
+      max_tokens: 3500
+    });
+
+    // 4. Parsear respuesta
+    const rawContent = completion.choices[0].message.content;
+    const parsedData = JSON.parse(rawContent || '{"ideas":[]}');
+
+    return {
+      data: parsedData,
+      tokens: completion.usage?.total_tokens || 0
+    };
+
+  } catch (error) {
+    console.error("[ERROR CRÍTICO] Fallo en ejecutarIdeasRapidas:", error);
+    // Devolver estructura de error segura
+    return {
+      data: { 
+        ideas: [], 
+        error: "Hubo un error generando las ideas estratégicas. Intenta de nuevo." 
       },
-      { 
-        role: 'user', 
-        content: PROMPT_IDEAS_ELITE(topic, quantity, platform, contexto)
-      }
-    ],
-    temperature: 0.85,
-    max_tokens: quantity === 10 ? 4000 : 2500
-  });
-  
-  return {
-    data: JSON.parse(completion.choices[0].message.content || '{"ideas":[]}'),
-    tokens: completion.usage?.total_tokens || 0
-  };
+      tokens: 0
+    };
+  }
 }
 
 async function ejecutarAutopsiaViral(
@@ -2147,15 +2158,31 @@ serve(async (req) => {
 
     switch (selectedMode) {
       case 'ideas_rapidas': {
+        console.log('🚀 [ROUTER] Iniciando Ideas Rápidas Elite V2.0...');
+        
+        // 1. Recuperar variables (Prioridad: Body > Settings > Defaults)
         const topic = body.topic || body.userInput || processedContext || "Ideas Virales";
-        const quantity = settings.quantity || 3; 
-        const platform = settings.platform || 'TikTok';
+        const quantity = settings?.quantity || 3;
+        const platform = settings?.platform || 'TikTok';
+
+        // 2. Validación de Seguridad
+        if (!topic || topic === "Ideas Virales") {
+           // Si no hay tema, intentamos usar el contexto, si no, error
+           if (!processedContext) throw new Error("⚠️ Debes ingresar un tema para generar ideas.");
+        }
+
+        // 3. Ejecución con paso de parámetros ESTRATÉGICOS
+        // IMPORTANTE: Pasamos 'settings' al final. Ahí van 'objective' y 'timing'.
+        const res = await ejecutarIdeasRapidas(
+          topic, 
+          quantity, 
+          platform, 
+          userContext, // El contexto enriquecido (Avatar + Experto + KB)
+          openai,      // Cliente OpenAI
+          settings     // ✅ AQUÍ VIAJA LA ESTRATEGIA (Objetivo + Timing)
+        );
         
-        console.log(`[IDEAS] Topic: "${topic}" | Qty: ${quantity} | Platform: ${platform}`);
-        
-        const res = await ejecutarIdeasRapidas(topic, quantity, platform, userContext, openai);
-        
-        result = res.data; 
+        result = res.data;
         tokensUsed = res.tokens;
         break;
       }
