@@ -472,37 +472,7 @@ export const QuickIdeas = () => {
                     </p>
                 </div>
 
-                {/* 3. TEMA Y CANTIDAD */}
-                <div className="flex flex-col md:flex-row gap-4 items-end">
-                    <div className="flex-1 w-full">
-                        <label className="text-xs font-black text-gray-500 uppercase mb-3 block tracking-widest">
-                            3. ¿Sobre qué tema?
-                        </label>
-                        <input
-                            type="text"
-                            value={topic}
-                            onChange={(e) => setTopic(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && handleGenerate()}
-                            placeholder="Ej: Errores al invertir en cripto, Rutina para abdomen..."
-                            className="w-full bg-gray-900 border border-gray-700 rounded-2xl p-4 text-white focus:outline-none focus:border-indigo-500 transition-all font-medium placeholder-gray-600 focus:ring-1 focus:ring-indigo-500/20"
-                        />
-                    </div>
-                    
-                    <div className="w-full md:w-auto">
-                        <label className="text-xs font-black text-gray-500 uppercase mb-3 block tracking-widest">Cantidad</label>
-                        <select
-                            value={amount}
-                            onChange={(e) => setAmount(Number(e.target.value))}
-                            className="w-full bg-gray-900 border border-gray-700 rounded-2xl p-4 text-white outline-none min-w-[180px] cursor-pointer font-bold focus:border-indigo-500 transition-all"
-                        >
-                            <option value={3}>3 Ideas (3 Créditos)</option>
-                            <option value={5}>5 Ideas (3 Créditos)</option>
-                            <option value={10}>10 Ideas (7 Créditos)</option>
-                        </select>
-                    </div>
-                </div>
-
-                {/* 3. TEMA Y CANTIDAD */}
+                 {/* 3. TEMA Y CANTIDAD */}
                 <div className="flex flex-col md:flex-row gap-4 items-end">
                     <div className="flex-1 w-full">
                         <label className="text-xs font-black text-gray-500 uppercase mb-3 block tracking-widest">
