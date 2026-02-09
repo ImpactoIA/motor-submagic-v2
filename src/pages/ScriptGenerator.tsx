@@ -221,7 +221,7 @@ const TITAN_STRUCTURES = [
 // 🎲 LENTES CREATIVOS (VARIABILIDAD)
 const CREATIVE_LENSES = [
     { id: 'auto', label: '🎲 Sorpréndeme (IA Auto)', icon: Zap },
-    { id: 'contrarian', label: '😈 Abogado del Diablo', icon: Flame },
+    { id: 'contrarian', label: '⚡ El Disruptor', icon: Flame },
     { id: 'scientific', label: '🧪 Científico Lógico', icon: Brain },
     { id: 'confessional', label: '🙏 Vulnerable / Real', icon: User },
     { id: 'warrior', label: '⚔️ Agresivo / Directo', icon: Target },

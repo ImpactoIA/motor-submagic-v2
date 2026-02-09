@@ -7,7 +7,8 @@ import {
     Lightbulb, RefreshCw, Rocket, Copy, ArrowRight, 
     Wallet, User, Users, BookOpen, AlertCircle, Save, CheckCircle2,
     TrendingUp, Zap, Star, Crown, Target, Brain, Flame, Award,
-    Clock, Calendar, Shield, MessageSquare
+    Clock, Calendar, Shield, MessageSquare,
+    Wand2 // 👈 ESTE ES EL NUEVO QUE NECESITAS
 } from 'lucide-react';
 
 // ==================================================================================
@@ -91,6 +92,15 @@ const TIMING_CONTEXTS = [
     { id: 'momentum', label: '🚀 Momentum Personal', description: 'Capitaliza tu momento actual de crecimiento' }
 ];
 
+// 2. PEGAR ESTA CONSTANTE NUEVA (CON EL NOMBRE CAMBIADO)
+const CREATIVE_LENSES = [
+    { id: 'auto', label: '🎲 IA Automática', icon: Zap, color: 'text-yellow-400', bg: 'bg-yellow-900/20', border: 'border-yellow-500/50' },
+    { id: 'contrarian', label: '⚡ El Disruptor', icon: Flame, color: 'text-red-500', bg: 'bg-red-900/20', border: 'border-red-500/50' }, // <--- NOMBRE CAMBIADO
+    { id: 'scientific', label: '🧪 Científico', icon: Brain, color: 'text-blue-400', bg: 'bg-blue-900/20', border: 'border-blue-500/50' },
+    { id: 'confessional', label: '🙏 Vulnerable', icon: User, color: 'text-pink-400', bg: 'bg-pink-900/20', border: 'border-pink-500/50' },
+    { id: 'warrior', label: '⚔️ Comandante', icon: Target, color: 'text-orange-500', bg: 'bg-orange-900/20', border: 'border-orange-500/50' },
+];
+
 // ✅ INTERFAZ MEJORADA CON TODOS LOS CAMPOS
 interface IdeaItem {
     id: number;
@@ -163,6 +173,9 @@ export const QuickIdeas = () => {
     const [selectedTiming, setSelectedTiming] = useState(TIMING_CONTEXTS[0]);
     const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
     
+    // 👇👇👇 AGREGAR ESTA LÍNEA 👇👇👇
+    const [selectedLens, setSelectedLens] = useState(CREATIVE_LENSES[0]);
+
     // --- ESTADOS CONTEXTO ---
     const [experts, setExperts] = useState<any[]>([]);
     const [avatars, setAvatars] = useState<any[]>([]);
@@ -230,7 +243,12 @@ export const QuickIdeas = () => {
                     settings: {
                         quantity: amount,
                         platform: selectedPlatform.label,
-                        objective: selectedObjective.id, // ← LA VARIABLE MÁS IMPORTANTE
+                        objective: selectedObjective.id,
+                        
+                        // 👇👇👇 AGREGAR ESTA LÍNEA 👇👇👇
+                        creative_lens: selectedLens.id, 
+                        // 👆👆👆 ESTO CONECTA CON EL BACKEND V500
+                        
                         timing_context: selectedTiming.id,
                         objective_strategy: selectedObjective.strategy,
                         objective_description: selectedObjective.description
@@ -405,6 +423,59 @@ export const QuickIdeas = () => {
                         <p className="text-xs text-indigo-300 leading-relaxed">
                             <span className="font-bold">Estrategia:</span> {selectedObjective.strategy}
                         </p>
+                    </div>
+                </div>
+
+                {/* 🎲 2.5 FACTOR X (LENTE CREATIVO) - NUEVO BLOQUE V500 */}
+                <div>
+                    <label className="text-xs font-black text-pink-500 uppercase mb-4 block tracking-widest flex items-center gap-2">
+                        <Wand2 size={14}/> 2.5 Factor X (El Tono de la Idea)
+                    </label>
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                        {CREATIVE_LENSES.map(lens => (
+                            <button
+                                key={lens.id}
+                                onClick={() => setSelectedLens(lens)}
+                                className={`p-3 rounded-xl border flex flex-col items-center justify-center gap-2 transition-all ${
+                                    selectedLens.id === lens.id
+                                        ? `${lens.bg} ${lens.border} text-white shadow-lg ring-1 ring-white/10 scale-105`
+                                        : 'bg-gray-900/50 border-gray-800 text-gray-500 hover:border-gray-700 hover:text-gray-300'
+                                }`}
+                            >
+                                <lens.icon size={20} className={selectedLens.id === lens.id ? lens.color : 'opacity-50'} />
+                                <span className="text-[10px] font-bold uppercase text-center">{lens.label}</span>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                {/* 3. TEMA Y CANTIDAD */}
+                <div className="flex flex-col md:flex-row gap-4 items-end">
+                    <div className="flex-1 w-full">
+                        <label className="text-xs font-black text-gray-500 uppercase mb-3 block tracking-widest">
+                            3. ¿Sobre qué tema?
+                        </label>
+                        <input
+                            type="text"
+                            value={topic}
+                            onChange={(e) => setTopic(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleGenerate()}
+                            placeholder="Ej: Errores al invertir en cripto, Rutina para abdomen..."
+                            className="w-full bg-gray-900 border border-gray-700 rounded-2xl p-4 text-white focus:outline-none focus:border-indigo-500 transition-all font-medium placeholder-gray-600 focus:ring-1 focus:ring-indigo-500/20"
+                        />
+                    </div>
+                    
+                    <div className="w-full md:w-auto">
+                        <label className="text-xs font-black text-gray-500 uppercase mb-3 block tracking-widest">Cantidad</label>
+                        <select
+                            value={amount}
+                            onChange={(e) => setAmount(Number(e.target.value))}
+                            className="w-full bg-gray-900 border border-gray-700 rounded-2xl p-4 text-white outline-none min-w-[180px] cursor-pointer font-bold focus:border-indigo-500 transition-all"
+                        >
+                            <option value={3}>3 Ideas (3 Créditos)</option>
+                            <option value={5}>5 Ideas (3 Créditos)</option>
+                            <option value={10}>10 Ideas (7 Créditos)</option>
+                        </select>
                     </div>
                 </div>
 

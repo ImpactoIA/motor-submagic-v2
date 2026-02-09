@@ -203,7 +203,7 @@ const TITAN_STRUCTURE_DEFINITIONS: any = {
 
 const CREATIVE_LENSES: any = {
   'auto': { label: '🎲 Aleatorio Inteligente (La IA decide)', instruction: 'Elige el ángulo que maximice el impacto emocional para este tema.' },
-  'contrarian': { label: '😈 El Abogado del Diablo', instruction: 'Enfoque: Ataca la sabiduría popular. Lleva la contraria a lo que todos dicen en el nicho.' },
+  'contrarian': { label: '⚡ El Disruptor', instruction: 'Enfoque: Ataca la sabiduría popular. Lleva la contraria a lo que todos dicen en el nicho.' },
   'scientific': { label: '🧪 El Científico de Datos', instruction: 'Enfoque: Basa todo en lógica, números, estudios y pruebas. Frío y calculador.' },
   'confessional': { label: '🙏 El Confesional Vulnerable', instruction: 'Enfoque: Habla desde una herida abierta o un error personal. Tono bajo y suave.' },
   'warrior': { label: '⚔️ El General de Guerra', instruction: 'Enfoque: Tono agresivo, de comando. "O estás conmigo o contra mí". Polarizante.' },
@@ -313,11 +313,20 @@ const PROMPT_IDEAS_ELITE_V2 = (
   objetivo: string, // ← LA VARIABLE MÁS IMPORTANTE
   timingContext: string,
   contexto: any
+  settings: any = {}
 ) => {
   
+  // 1. Mantenemos el contexto de Marketing (El "Alma")
   const objetivoStrategy = getObjetivoStrategy(objetivo);
   const timingStrategy = getTimingStrategy(timingContext);
-  const platformStrategy = getPlatformStrategy(plataforma);
+
+  // 2. Nueva Capa D: ADN de Plataforma (El "Motor Técnico")
+  // Sustituye a platformStrategy porque es mucho más detallado
+  const platRules = PLATFORM_DNA[plataforma] || PLATFORM_DNA['TikTok'];
+
+  // 3. Nueva Capa E: Lente Creativo (La "Personalidad")
+  const lensId = settings.creative_lens || 'auto';
+  const lensData = CREATIVE_LENSES[lensId] || CREATIVE_LENSES['auto'];
 
   return `
 ═════════════════════════════════════════════════════════════════════════════
@@ -329,6 +338,24 @@ NO eres un "generador de ideas creativas".
 ERES el consultor estratégico #1 del mundo en contenido digital.
 Tu trabajo NO es impresionar con creatividad.
 Tu trabajo ES responder: "¿Qué debe publicar este usuario AHORA para lograr su objetivo?"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎲 CAPA DE VARIABILIDAD: LENTE CREATIVO (FACTOR X)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Debes procesar todas las ideas bajo este filtro de personalidad:
+🎭 ARQUETIPO ACTIVO: ${lensData.label}
+👉 INSTRUCCIÓN DE TONO: "${lensData.instruction}"
+
+(Ejemplo: Si el lente es "El Disruptor", las ideas deben ser provocadoras y desafiar lo común).
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🌍 REGLAS FÍSICAS DE LA PLATAFORMA (${plataforma.toUpperCase()})
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Las ideas deben ser nativas para esta red:
+• RITMO: ${platRules.ritmo}
+• LENGUAJE: ${platRules.lenguaje}
+• REGLA DE ORO: ${platRules.regla_oro}
+• FOCO DEL CTA: ${platRules.cta_focus}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🎯 OBJETIVO DEL USUARIO (LA VARIABLE MÁS IMPORTANTE)
@@ -392,12 +419,12 @@ ${platformStrategy}
 📤 FORMATO DE SALIDA JSON
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-{
-  "analisis_estrategico": {
+"analisis_estrategico": {
     "objetivo_dominante": "${objetivo}",
-    "razonamiento": "POR QUÉ estas ideas sirven para este objetivo",
-    "advertencias": ["Advertencia 1", "Advertencia 2"],
-    "oportunidades": ["Oportunidad 1", "Oportunidad 2"]
+    "lente_aplicado": "${lensData.label}", // 👈 Agregamos esto
+    "razonamiento": "POR QUÉ estas ideas sirven para este objetivo usando el lente ${lensData.label}",
+    "advertencias": ["Advertencia 1"],
+    "oportunidades": ["Oportunidad 1"]
   },
   "ideas": [
     {
