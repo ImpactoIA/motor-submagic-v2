@@ -167,6 +167,9 @@ export const QuickIdeas = () => {
     const [topic, setTopic] = useState('');
     const [selectedPlatform, setSelectedPlatform] = useState(PLATFORMS[0]);
     const [amount, setAmount] = useState(3);
+
+    // ✅ AÑADE ESTA LÍNEA AQUÍ:
+    const [nicho, setNicho] = useState('');
     
     // ✅ NUEVOS ESTADOS ESTRATÉGICOS
     const [selectedObjective, setSelectedObjective] = useState(CONTENT_OBJECTIVES[0]);
@@ -248,6 +251,9 @@ export const QuickIdeas = () => {
                         // 👇👇👇 AGREGAR ESTA LÍNEA 👇👇👇
                         creative_lens: selectedLens.id, 
                         // 👆👆👆 ESTO CONECTA CON EL BACKEND V500
+
+                        // 🔥 AÑADE ESTO AQUÍ:
+                    nicho: nicho,
                         
                         timing_context: selectedTiming.id,
                         objective_strategy: selectedObjective.strategy,
@@ -389,7 +395,7 @@ export const QuickIdeas = () => {
                     </div>
                 </div>
 
-                {/* 2. OBJETIVO (LA VARIABLE MÁS IMPORTANTE) */}
+               {/* 2. OBJETIVO (ESTRATEGIA) */}
                 <div>
                     <label className="text-xs font-black text-indigo-400 uppercase mb-4 block tracking-widest flex items-center gap-2">
                         <Target size={14}/> 2. ¿Cuál es tu OBJETIVO? (Esto define TODO)
@@ -418,7 +424,7 @@ export const QuickIdeas = () => {
                         ))}
                     </div>
                     
-                    {/* Explicación del Objetivo Seleccionado */}
+                    {/* Explicación del Objetivo */}
                     <div className="mt-4 bg-indigo-900/10 border border-indigo-500/20 rounded-xl p-4">
                         <p className="text-xs text-indigo-300 leading-relaxed">
                             <span className="font-bold">Estrategia:</span> {selectedObjective.strategy}
@@ -426,7 +432,7 @@ export const QuickIdeas = () => {
                     </div>
                 </div>
 
-                {/* 🎲 2.5 FACTOR X (LENTE CREATIVO) - NUEVO BLOQUE V500 */}
+                {/* 🎲 2.5 FACTOR X (LENTE CREATIVO) */}
                 <div>
                     <label className="text-xs font-black text-pink-500 uppercase mb-4 block tracking-widest flex items-center gap-2">
                         <Wand2 size={14}/> 2.5 Factor X (El Tono de la Idea)
@@ -447,6 +453,23 @@ export const QuickIdeas = () => {
                             </button>
                         ))}
                     </div>
+                </div>
+
+                {/* 🎯 2.8 NICHO / MERCADO (NUEVO PASO) */}
+                <div>
+                    <label className="text-xs font-black text-amber-500 uppercase mb-4 block tracking-widest flex items-center gap-2">
+                        <Users size={14}/> 2.8 Define tu Nicho / Mercado
+                    </label>
+                    <input
+                        type="text"
+                        value={nicho} 
+                        onChange={(e) => setNicho(e.target.value)}
+                        placeholder="Ej: Fitness para mamás, Real Estate, Trading, Dueños de agencias..."
+                        className="w-full bg-gray-900 border border-gray-700 rounded-2xl p-4 text-white focus:outline-none focus:border-amber-500 transition-all font-medium placeholder-gray-600 focus:ring-1 focus:ring-amber-500/20"
+                    />
+                    <p className="text-[10px] text-gray-500 mt-2 ml-1">
+                        Especificar el nicho ayuda a la IA a generar ángulos mucho más precisos.
+                    </p>
                 </div>
 
                 {/* 3. TEMA Y CANTIDAD */}

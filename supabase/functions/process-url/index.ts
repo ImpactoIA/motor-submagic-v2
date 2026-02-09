@@ -310,9 +310,9 @@ const PROMPT_IDEAS_ELITE_V2 = (
   temaEspecifico: string,
   cantidad: number,
   plataforma: string,
-  objetivo: string, // ← LA VARIABLE MÁS IMPORTANTE
+  objetivo: string,
   timingContext: string,
-  contexto: any
+  contexto: any, // 👈 ¡TE FALTA ESTA COMA!
   settings: any = {}
 ) => {
   
