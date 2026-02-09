@@ -96,6 +96,161 @@ INSTAGRAM: Carousels 3x alcance | Reels loop +60% shares | 3 hashtags grandes + 
 YOUTUBE: Títulos números mejor | Loop endscreen | Subtítulos +35% retención`;
 
 // ==================================================================================
+// 🏛️ MATRIZ TITAN V500: DEFINICIÓN DE ESTRUCTURAS Y MODOS INTERNOS
+// ==================================================================================
+
+const TITAN_STRUCTURE_DEFINITIONS: any = {
+  'winner_rocket': {
+    base: 'HOOK (3s) -> CONTEXTO -> CONFLICTO -> LOOP 1 -> INSIGHT -> LOOP 2 -> RESOLUCIÓN -> CTA',
+    modes: {
+      'viral_rapido': 'Prioridad: Velocidad. Cortes cada 2s. Sin pausas. Energía 100%.',
+      'autoridad': 'Prioridad: Estatus. Pausas reflexivas. Datos duros. Tono grave.',
+      'venta': 'Prioridad: Conversión. Enfatizar el dolor y la solución exclusiva.',
+      'storytelling': 'Prioridad: Emoción. Viaje del héroe comprimido.',
+      'marca_personal': 'Prioridad: Conexión. Vulnerabilidad estratégica.',
+      'lead_magnet': 'Prioridad: Intercambio. Alto valor percibido gratis.',
+      'educativo': 'Prioridad: Claridad. Sin jerga, utilidad inmediata.'
+    }
+  },
+  'aida': {
+    base: 'ATENCIÓN (Romper patrón) -> INTERÉS (Curiosidad lógica) -> DESEO (Beneficio emocional) -> ACCIÓN (Instrucción clara)',
+    modes: {
+      'educativo': 'Enfoque: Aprender algo nuevo. Deseo = Transformación de habilidad.',
+      'autoridad': 'Enfoque: Por qué yo sé y tú no. Atención = Credibilidad.',
+      'venta': 'Enfoque: Transacción. Deseo = Posesión del producto.',
+      'viral': 'Enfoque: Shock. Atención = Visual disruptivo.',
+      'storytelling': 'Enfoque: Empatía. Interés = ¿Qué pasará después?',
+      'leads': 'Enfoque: Captura. Acción = Registro inmediato.'
+    }
+  },
+  'pas': {
+    base: 'PROBLEMA (Identificación) -> AGITACIÓN (Consecuencias del no actuar) -> SOLUCIÓN (Tu método)',
+    modes: {
+      'dolor_emocional': 'Agitación psicológica. "¿Cómo te hace sentir esto?"',
+      'urgencia': 'Agitación temporal. "Se te acaba el tiempo."',
+      'objecion': 'Problema = La excusa que ponen siempre. Solución = Por qué es falsa.',
+      'frustracion': 'Problema = Intentar y fallar. Solución = El eslabón perdido.',
+      'perdida_futura': 'Agitación = El costo de oportunidad de no cambiar.'
+    }
+  },
+  'storytelling': {
+    base: 'HOOK (In media res) -> CONTEXTO -> DETONANTE -> CLÍMAX -> APRENDIZAJE -> CTA',
+    modes: {
+      'personal': 'Historia propia del experto. Vulnerabilidad.',
+      'cliente': 'Caso de éxito externo. Prueba social.',
+      'error_aprendizaje': 'Cómo fallé para que tú no falles.',
+      'transformacion': 'El viaje del punto A (infierno) al punto B (cielo).',
+      'confesional': 'Secreto o error nunca contado.',
+      'inspiracional': 'Superación de obstáculos imposibles.'
+    }
+  },
+  'viral_shock': {
+    base: 'SHOCK VISUAL/VERBAL -> POLARIZACIÓN -> JUSTIFICACIÓN LÓGICA -> CTA DEBATE',
+    modes: {
+      'opinion_impopular': 'Decir lo que nadie se atreve.',
+      'mito_verdad': 'Destruir una creencia común de la industria.',
+      'ataque_creencia': 'Atacar el status quo directamente.',
+      'frase_prohibida': 'Decir lo que "ellos" no quieren que sepas.',
+      'polarizacion': 'Dividir a la audiencia en dos bandos.'
+    }
+  },
+  'autoridad': {
+    base: 'AFIRMACIÓN DE PODER -> PRUEBA DE EXPERTIS -> CAMBIO DE PARADIGMA -> APLICACIÓN',
+    modes: {
+      'marco_mental': 'Enseñar una nueva forma de pensar (Mindset).',
+      'insight': 'Información privilegiada o data oculta.',
+      'tendencia': 'Predicción del futuro del nicho.',
+      'error_mercado': 'Por qué todos los demás están equivocados.',
+      'nueva_regla': 'Establecer un nuevo estándar en la industria.'
+    }
+  },
+  'educativo': {
+    base: 'PROMESA -> SISTEMA/PASOS -> ERROR COMÚN -> RESULTADO -> CTA',
+    modes: {
+      'framework': 'Explicar un sistema propio (Paso 1, 2, 3).',
+      'checklist': 'Lista rápida de verificación.',
+      'paso_a_paso': 'Tutorial "How-to" clásico.',
+      'error_comun': 'Corrección técnica de un fallo habitual.',
+      'comparativo': 'Opción A vs Opción B (Cuál es mejor).',
+      'mini_clase': 'Profundidad académica en poco tiempo.'
+    }
+  },
+  'venta': {
+    base: 'GANCHO DE FILTRO -> PROMESA DE VALOR -> PRUEBA -> OFERTA -> CTA',
+    modes: {
+      'soft_sell': 'Venta indirecta a través de valor.',
+      'hard_sell': 'Venta directa enfocada en escasez y precio.',
+      'objeciones': 'Derribar la razón #1 por la que no compran.',
+      'caso_real': 'Vender mostrando el resultado de otro.',
+      'oferta_limitada': 'Enfocado 100% en urgencia temporal.'
+    }
+  },
+  'comunidad': {
+    base: 'PREGUNTA/RETO -> CONTEXTO DE TRIBU -> INVITACIÓN -> CTA INCLUSIVO',
+    modes: {
+      'reto': 'Desafío a la audiencia para hacer algo.',
+      'lead_magnet': 'Intercambio de valor (Lead Magnet).',
+      'serie': 'Parte 1 de una serie temática.',
+      'promesa_abierta': 'Compromiso público del creador.',
+      'invitacion': 'Invitación a evento o webinar.'
+    }
+  }
+};
+
+// ==================================================================================
+// 🎲 VARIABILIDAD CONTROLADA: LENTES CREATIVOS (CAPA E)
+// ==================================================================================
+
+const CREATIVE_LENSES: any = {
+  'auto': { label: '🎲 Aleatorio Inteligente (La IA decide)', instruction: 'Elige el ángulo que maximice el impacto emocional para este tema.' },
+  'contrarian': { label: '😈 El Abogado del Diablo', instruction: 'Enfoque: Ataca la sabiduría popular. Lleva la contraria a lo que todos dicen en el nicho.' },
+  'scientific': { label: '🧪 El Científico de Datos', instruction: 'Enfoque: Basa todo en lógica, números, estudios y pruebas. Frío y calculador.' },
+  'confessional': { label: '🙏 El Confesional Vulnerable', instruction: 'Enfoque: Habla desde una herida abierta o un error personal. Tono bajo y suave.' },
+  'warrior': { label: '⚔️ El General de Guerra', instruction: 'Enfoque: Tono agresivo, de comando. "O estás conmigo o contra mí". Polarizante.' },
+  'philosopher': { label: '🧠 El Filósofo Profundo', instruction: 'Enfoque: Cuestiona el "por qué" detrás de todo. Metafísico y existencial.' },
+  'comedian': { label: '🤡 El Sarcástico', instruction: 'Enfoque: Usa ironía, exageración y humor ácido para exponer verdades.' }
+};
+
+// ==================================================================================
+// 🌍 PLATFORM DNA: REGLAS FÍSICAS DE ADAPTACIÓN (CAPA D)
+// ==================================================================================
+
+const PLATFORM_DNA: any = {
+  'TikTok': {
+    ritmo: '⚡ FRENÉTICO: Cortes cada 2s. Sin respirar.',
+    lenguaje: 'Coloquial, directo, "slang" de internet.',
+    estructura_visual: 'Texto en pantalla constante (Hooks visuales).',
+    cta_focus: '💬 COMENTARIOS (Debate/Polémica).',
+    duracion_ideal: '15s - 45s (Lo bueno, breve, dos veces bueno).',
+    regla_oro: 'Prohibido presentarse ("Hola soy..."). Empieza con el problema.'
+  },
+  'Reels': {
+    ritmo: '🎵 RÍTMICO: Sincronizado con audio/música.',
+    lenguaje: 'Estético, aspiracional, cercano.',
+    estructura_visual: 'Alta calidad visual, portadas bonitas.',
+    cta_focus: '💾 GUARDADOS (Utilidad) o ✈️ COMPARTIR (Identificación).',
+    duracion_ideal: '30s - 60s.',
+    regla_oro: 'El audio es el 50% del éxito. Usa hooks auditivos.'
+  },
+  'YouTube': {
+    ritmo: '🧠 DINÁMICO PERO PROFUNDO: Pausas para enfatizar.',
+    lenguaje: 'Analítico, explicativo, autoridad.',
+    estructura_visual: 'Cambios de ángulo, B-Roll explicativo.',
+    cta_focus: '🔔 SUSCRIPCIÓN (Construir comunidad).',
+    duracion_ideal: 'Shorts (60s) o Largo (no aplica aquí, pero mantener profundidad).',
+    regla_oro: 'Contexto mata brevedad. Explica el "Por qué".'
+  },
+  'LinkedIn': {
+    ritmo: '👔 PAUSADO Y PROFESIONAL: Espacio para leer/pensar.',
+    lenguaje: 'Negocios, crecimiento, lecciones de vida, corporativo.',
+    estructura_visual: 'Limpia, subtítulos obligatorios (mucha gente lo ve sin audio).',
+    cta_focus: '🔄 REPOST (Difusión) o 🤝 CONECTAR.',
+    duracion_ideal: '45s - 90s.',
+    regla_oro: 'Aporta insight de negocio, no solo entretenimiento.'
+  }
+};
+
+// ==================================================================================
 // 🛡️ FUNCIONES DE SEGURIDAD
 // ==================================================================================
 
@@ -151,124 +306,181 @@ async function delay(ms: number): Promise<void> {
 // 🧠 SISTEMA CEREBRAL - PROMPTS V300 (100% PRESERVADOS)
 // ==================================================================================
 
-// ==================================================================================
-// 🧠 1. DEFINICIÓN DE ESTRATEGIAS Y PROMPT (LÓGICA PURA)
-// ==================================================================================
-
-// Mapas de Estrategia (Helpers)
-const getObjetivoStrategy = (objetivo: string) => {
-  const map: any = {
-    'viralidad': '🔥 VIRALIDAD: Alcance masivo. Gancho visual inmediato. Estructura rápida. Emoción: Sorpresa/Indignación.',
-    'autoridad': '👑 AUTORIDAD: Profundidad técnica. Frameworks propios. Emoción: Respeto/Confianza.',
-    'venta': '💰 VENTA: Conversión directa. Problema-Agitación-Solución. Emoción: Deseo/Urgencia.',
-    'comunidad': '👥 COMUNIDAD: Identidad y Pertenencia. Preguntas, historias vulnerables.',
-    'educacion': '📚 EDUCACIÓN: Utilidad práctica. Tutoriales paso a paso. "Cómo se hace".',
-    'opinion': '🗣️ OPINIÓN: Polarización estratégica. "Verdad incómoda". Debate.'
-  };
-  return map[objetivo] || map['viralidad'];
-};
-
-const getTimingStrategy = (timing: string) => {
-  const map: any = {
-    'evergreen': '🌲 EVERGREEN: Funciona hoy y en 2 años. Problemas universales.',
-    'tendencia': '🔥 TENDENCIA: Úsalo YA. Aprovecha el hype actual.',
-    'reaccion': '⚡ REACCIÓN: Noticia de últimas 48h. Sé el primero en opinar.',
-    'estacional': '📅 ESTACIONAL: Vinculado a la fecha/temporada actual.',
-    'momentum': '🚀 MOMENTUM: Habla de tu crecimiento actual.'
-  };
-  return map[timing] || map['evergreen'];
-};
-
-// EL PROMPT MAESTRO V2
 const PROMPT_IDEAS_ELITE_V2 = (
-  tema: string,
+  temaEspecifico: string,
   cantidad: number,
   plataforma: string,
-  objetivo: string,
-  timing: string,
+  objetivo: string, // ← LA VARIABLE MÁS IMPORTANTE
+  timingContext: string,
   contexto: any
 ) => {
-  const estrategia = getObjetivoStrategy(objetivo);
-  const tiempo = getTimingStrategy(timing);
+  
+  const objetivoStrategy = getObjetivoStrategy(objetivo);
+  const timingStrategy = getTimingStrategy(timingContext);
+  const platformStrategy = getPlatformStrategy(plataforma);
 
   return `
 ═════════════════════════════════════════════════════════════════════════════
-🧠 CEREBRO ESTRATÉGICO V2.0 - MODO: ${objetivo.toUpperCase()}
+🧠 CEREBRO ESTRATÉGICO DE CONTENIDO - TITAN ENGINE V2.0
 ═════════════════════════════════════════════════════════════════════════════
 
-ACTÚA COMO: El Estratega de Contenido Digital #1.
-OBJETIVO: Generar ideas que cumplan el objetivo "${objetivo}" usando el contexto "${timing}".
+⚠️ TU IDENTIDAD REAL:
+NO eres un "generador de ideas creativas". 
+ERES el consultor estratégico #1 del mundo en contenido digital.
+Tu trabajo NO es impresionar con creatividad.
+Tu trabajo ES responder: "¿Qué debe publicar este usuario AHORA para lograr su objetivo?"
 
-📊 VARIABLES:
-- Tema: "${tema}"
-- Plataforma: "${plataforma}"
-- Estrategia: ${estrategia}
-- Contexto Temporal: ${tiempo}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 OBJETIVO DEL USUARIO (LA VARIABLE MÁS IMPORTANTE)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-👤 PERFIL DEL EXPERTO:
+OBJETIVO SELECCIONADO: "${objetivo}"
+
+${objetivoStrategy}
+
+⚠️ REGLA DE ORO:
+Si cambio el OBJETIVO pero mantengo el TEMA igual, las ideas deben ser RADICALMENTE DIFERENTES.
+Si no es así, has fallado.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⏰ CONTEXTO TEMPORAL (ACELERADOR DE TIMING)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TIMING SELECCIONADO: "${timingContext}"
+
+${timingStrategy}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+👤 CONTEXTO DEL SISTEMA (QUIÉN HABLA, A QUIÉN, CON QUÉ AUTORIDAD)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 TEMA ESPECÍFICO:
+"${temaEspecifico}"
+
+🔹 PERFIL DE EXPERTO (Desde qué posición de autoridad hablo):
 - Nicho: ${contexto.nicho || 'General'}
-- Autoridad: ${contexto.expertProfile?.authority_level || 'Practicante'}
-- Tipo de Prueba: ${contexto.expertProfile?.proof_type || 'Casos reales'}
+- Posicionamiento: ${contexto.posicionamiento || 'Experto práctico'}
+- Nivel de Autoridad: ${contexto.expertProfile?.authority_level || 'practicante'}
+- Tipo de Autoridad: ${contexto.expertProfile?.authority_type || 'practica'}
+- Profundidad Permitida: ${contexto.expertProfile?.depth_level || 'media'}
+- Tipo de Prueba: ${contexto.expertProfile?.proof_type || 'casos_reales'}
 
-🛡️ REGLAS DE ORO:
-1. Si es "Venta", DEBE incluir un ángulo de conversión o dolor agudo.
-2. Si es "Autoridad", usa lenguaje técnico o frameworks.
-3. Si es "Viralidad", el gancho debe ser disruptivo (0-3 seg).
+${contexto.expertProfile?.mental_territory ? `
+🧠 TERRITORIO MENTAL (Mis conceptos trademark):
+"${contexto.expertProfile.mental_territory}"
+⚠️ Debes reforzar ESTAS ideas en el contenido.
+` : ''}
+
+🎯 AVATAR IDEAL (A quién le hablo):
+- Avatar: ${contexto.avatar_ideal || 'Audiencia general'}
+- Dolor Principal: ${contexto.dolor_principal || 'N/A'}
+- Deseo Principal: ${contexto.deseo_principal || 'N/A'}
+
+${contexto.knowledge_base_content ? `
+📚 BASE DE CONOCIMIENTO DISPONIBLE:
+"${contexto.knowledge_base_content.substring(0, 1000)}..."
+
+⚠️ CRÍTICO: Usa ESTE conocimiento para generar ideas. No inventes contenido genérico.
+` : ''}
+
+📱 PLATAFORMA DESTINO:
+${plataforma}
+
+${platformStrategy}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📤 FORMATO DE SALIDA JSON (ESTRICTO)
+📤 FORMATO DE SALIDA JSON
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 {
   "analisis_estrategico": {
     "objetivo_dominante": "${objetivo}",
-    "razonamiento": "Por qué este enfoque funciona para este tema",
-    "advertencias": ["Riesgo 1", "Riesgo 2"],
+    "razonamiento": "POR QUÉ estas ideas sirven para este objetivo",
+    "advertencias": ["Advertencia 1", "Advertencia 2"],
     "oportunidades": ["Oportunidad 1", "Oportunidad 2"]
   },
   "ideas": [
     {
       "id": 1,
-      "titulo": "Título atractivo interno (Max 60 chars)",
-      "concepto": "Descripción potente de la idea",
+      "titulo": "Título específico",
+      "concepto": "Descripción potente",
       "objetivo_principal": "${objetivo}",
-      "contexto_temporal": "${timing}",
-      "estructura_sugerida": "Ej: Winner Rocket / PAS / Storytelling",
-      "disparador_principal": "Curiosidad/Miedo/Deseo/Identidad",
-      "emocion_objetivo": "La emoción exacta que buscamos",
-      "gancho_sugerido": "Primera línea EXACTA del video (Script)",
+      "contexto_temporal": "${timingContext}",
+      "estructura_sugerida": "Winner Rocket/PAS/AIDA/etc",
+      "disparador_principal": "Curiosidad/Miedo/etc",
+      "emocion_objetivo": "Esperanza/Urgencia/etc",
+      "gancho_sugerido": "Primera línea exacta",
       "potencial_viral": 8.5,
-      "razon_potencia": "Por qué va a funcionar",
-      "formato_visual": "Talking Head / B-Roll / Pantalla Verde / Pizarra",
-      "angulo": "El ángulo único diferenciador",
-      "cta_sugerido": "Llamado a la acción específico",
+      "razon_potencia": "Por qué funciona",
+      "formato_visual": "Formato Winner Rocket",
+      "angulo": "Ángulo único",
+      "cta_sugerido": "CTA específico",
       "plataforma_ideal": "${plataforma}",
-      "duracion_recomendada": "Ej: 15-30s",
-      "dificultad_produccion": "Baja/Media/Alta",
+      "duracion_recomendada": "30-60s",
+      "dificultad_produccion": "Media",
       "keywords": ["#tag1", "#tag2"],
-      "mejor_momento": "Ej: Lunes por la mañana",
-      "urgencia_publicacion": "alta/media/baja"
+      "mejor_momento": "Cuándo publicar",
+      "urgencia_publicacion": "media"
     }
   ],
   "recomendacion_top": {
     "idea_id": 1,
-    "razon": "Por qué ESTA es la mejor opción AHORA",
-    "por_que_ahora": "Justificación del timing",
-    "plan_rapido": "3 pasos para ejecutarla hoy"
+    "razon": "Por qué esta idea ahora",
+    "por_que_ahora": "Timing perfecto porque...",
+    "plan_rapido": "1. Paso 1\\n2. Paso 2\\n3. Paso 3"
   },
   "insights_estrategicos": {
-    "tendencia_detectada": "Tendencia que apoya esto",
-    "brecha_mercado": "Qué NO hace la competencia",
+    "tendencia_detectada": "Tendencia actual",
+    "brecha_mercado": "Lo que falta",
     "advertencia": "Qué evitar",
-    "siguiente_paso_logico": "Próximo contenido a crear"
+    "siguiente_paso_logico": "Próximo contenido"
   }
 }
 
-⚠️ REGLAS FINALES:
-1. Genera EXACTAMENTE ${cantidad} ideas.
-2. Todas en ESPAÑOL NEUTRO.
-3. JSON VÁLIDO OBLIGATORIO.
+Genera EXACTAMENTE ${cantidad} ideas estratégicas para "${objetivo}".
 `;
 };
+
+// ==================================================================================
+// 🛠️ FUNCIONES HELPER
+// ==================================================================================
+
+function getObjetivoStrategy(objetivo: string): string {
+  const strategies: Record<string, string> = {
+    'viralidad': '🔥 VIRALIDAD: Alcance masivo, shares, controversia. Corto, rápido, loops.',
+    'autoridad': '👑 AUTORIDAD: Expertise profundo, frameworks, credibilidad. Largo, técnico.',
+    'venta': '💰 VENTA: Conversión, urgencia, deseo. PAS, miedo a perder.',
+    'comunidad': '👥 COMUNIDAD: Conversación, pertenencia, autenticidad.',
+    'posicionamiento': '🎯 MARCA: Diferenciación única, valores, memorable.',
+    'educacion': '📚 EDUCACIÓN: Tutorial claro, pasos accionables, valor tangible.',
+    'opinion': '🗣️ OPINIÓN: Controversia estratégica, posición clara, tribu.'
+  };
+  return strategies[objetivo] || strategies['viralidad'];
+}
+
+function getTimingStrategy(timing: string): string {
+  const strategies: Record<string, string> = {
+    'evergreen': '🌲 EVERGREEN: Ideas atemporales, problemas permanentes.',
+    'tendencia': '🔥 TENDENCIA: Aprovecha momentum popular HOY.',
+    'reaccion': '⚡ REACCIÓN: Responde a eventos últimas 48-72h.',
+    'estacional': '📅 ESTACIONAL: Vinculado a fechas específicas.',
+    'momentum': '🚀 MOMENTUM: Capitaliza tu crecimiento actual.'
+  };
+  return strategies[timing] || strategies['evergreen'];
+}
+
+function getPlatformStrategy(plataforma: string): string {
+  const strategies: Record<string, string> = {
+    'TikTok': '✅ TIKTOK: 0.5s críticos, texto obligatorio, música trending x5',
+    'Reels': '✅ REELS: Visual > Audio, estética, loops naturales',
+    'YouTube': '✅ YOUTUBE: Título + Thumbnail = 80%, SEO crítico',
+    'LinkedIn': '✅ LINKEDIN: Valor B2B, subtítulos obligatorios, profesional',
+    'Facebook': '✅ FACEBOOK: 1:1 formato, comunidad > viralidad, storytelling'
+  };
+  return strategies[plataforma] || strategies['TikTok'];
+}
+
+export { PROMPT_IDEAS_ELITE_V2, getObjetivoStrategy, getTimingStrategy, getPlatformStrategy };
 
 const PROMPT_AUTOPSIA_VIRAL = (platform: string) => `
 ERES EL FORENSE DE VIRALIDAD #1 DEL MUNDO.
@@ -423,6 +635,21 @@ const PROMPT_GENERADOR_GUIONES = (contexto: any, viralDNA: any, settings: any = 
   const awarenessLevel = settings.awareness || 'Consciente del Problema';
   const contentObjective = settings.objective || 'Educar';
   const avatarSituation = settings.situation || 'Dolor Agudo';
+
+  // 1. CAPA D: ADN DE PLATAFORMA (Recupera las reglas de PLATFORM_DNA)
+  const platLabel = settings.platform || 'TikTok';
+  const platRules = PLATFORM_DNA[platLabel] || PLATFORM_DNA['TikTok'];
+
+  // 2. CAPA E: LENTE CREATIVO (Recupera la personalidad de CREATIVE_LENSES)
+  const lensId = settings.creative_lens || 'auto';
+  const lensData = CREATIVE_LENSES[lensId] || CREATIVE_LENSES['auto'];
+
+  // 3. CAPA B: MODO INTERNO (Recupera la instrucción de TITAN_STRUCTURE_DEFINITIONS)
+  const modeId = settings.internal_mode || 'viral_rapido';
+  // Nota: Usamos 'structureType' que ya definiste unas líneas más arriba en tu código
+  const structureData = TITAN_STRUCTURE_DEFINITIONS[structureType] || TITAN_STRUCTURE_DEFINITIONS['winner_rocket'];
+  const modeInstruction = structureData.modes[modeId] || "Prioridad: Viralidad Genérica";
+  const backbone = structureData.base;
   
   // ==================================================================================
   // 🧬 CAPA 0: OBJETIVO VIRAL (PRE-GENERACIÓN)
@@ -1098,173 +1325,111 @@ FÓRMULAS:
   // ==================================================================================
   
   return `
-═══════════════════════════════════════════════════════════════════════════
+═════════════════════════════════════════════════════════════════════════════
 🔥 MOTOR VIRAL V500 ÉLITE - CODIFICADOR DE INFLUENCIA MUNDIAL
-═══════════════════════════════════════════════════════════════════════════
+═════════════════════════════════════════════════════════════════════════════
 
-ERES: El Motor de Viralidad e Influencia #1 del Mundo.
+ERES: El Guionista Estratégico más avanzado del mundo.
 NO ERES: Un escritor de guiones bonitos.
 
-TU MISIÓN SUPREMA: Codificar influencia. Maximizar:
-1. RETENCIÓN (que no se vayan)
-2. AUTORIDAD (percepción de experticia)
-3. PROPAGACIÓN SOCIAL (que compartan/comenten)
+TU MISIÓN SUPREMA: Fusionar 5 capas de inteligencia (Plataforma, Estrategia, Lente, Psicología, Viralidad) para crear el guion perfecto.
 
 ⚠️ REGLA SUPREMA: La percepción del creador > Calidad educativa
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎯 CAPA 0: OBJETIVO VIRAL (ANTES DE TODO)
+🌍 CAPA 1: REGLAS FÍSICAS DE LA PLATAFORMA (${platLabel.toUpperCase()})
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-TIPO DE VIRALIDAD: ${viralObjective.tipo}
-PERCEPCIÓN BUSCADA: "${viralObjective.percepcion_creador}"
-MECÁNICA: ${viralObjective.mecanica}
-EJEMPLO: ${viralObjective.ejemplo}
-GATILLOS: ${viralObjective.gatillos.join(', ')}
-
-👉 Esto es MÁS importante que el contenido en sí.
+Tu guion debe respetar estrictamente el ADN de esta plataforma:
+• RITMO: ${platRules.ritmo}
+• LENGUAJE: ${platRules.lenguaje}
+• ESTRUCTURA VISUAL: ${platRules.estructura_visual}
+• FOCO DEL CTA: ${platRules.cta_focus}
+• REGLA DE ORO: ${platRules.regla_oro}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧬 CONTEXTO DEL GUION
+🧠 CAPA 2: ESTRATEGIA ACTIVA (ARQUITECTURA)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• ESTRUCTURA BASE: ${structureId.toUpperCase()}
+  👉 Secuencia Obligatoria: ${backbone}
 
-🎯 TEMA: "${temaEspecifico}"
-👤 AVATAR: ${avatarIdeal}
-💔 DOLOR: ${dolorPrincipal}
-✨ DESEO: ${deseoPrincipal}
-⚔️ ENEMIGO: ${enemigoComun}
+• MODO TÁCTICO: ${modeId.toUpperCase()}
+  👉 Instrucción: "${modeInstruction}"
 
-PLATAFORMA: ${platform}
-COMPORTAMIENTO USUARIO: ${platformConfig.comportamiento}
-POR QUÉ SE VA: ${platformConfig.porque_se_va}
-QUÉ LO RETIENE: ${platformConfig.que_retiene}
+• BRÚJULA (OBJETIVO FINAL): ${objetivo}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎲 CAPA 3: LENTE CREATIVO (FACTOR X)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Para evitar que el guion suene genérico, asume esta personalidad:
+🎭 ARQUETIPO: ${lensData.label}
+👉 INSTRUCCIÓN DE TONO: "${lensData.instruction}"
+
+(Ejemplo: Si es "Abogado del Diablo", sé cínico. Si es "Científico", sé frío. NO te salgas del personaje).
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+👤 CAPA 4: PSICOLOGÍA DEL AVATAR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Avatar: ${avatarIdeal}
+• Situación Actual: ${situacion}
+• Nivel de Consciencia: ${consciencia}
+• Dolor Principal: ${dolorPrincipal}
+• Deseo Principal: ${deseoPrincipal}
+• Enemigo Común: ${enemigoComun}
 
 ${expertDirectives}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🏗️ ESTRUCTURA ${platform.toUpperCase()}
+🎯 CAPA 5: OBJETIVO VIRAL (GATILLOS)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-${platformConfig.estructura_obligatoria}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚡ CAPAS VIRALES OBLIGATORIAS (FORZADAS POR SISTEMA)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-🧠 CAPA 1: CONTROL DE ATENCIÓN (RETENCIÓN PURA)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Construye como LÍNEA DE RETENCIÓN, no como discurso.
-
-CADA BLOQUE DEBE RESPONDER:
-✓ ¿Por qué NO se iría aquí?
-✓ ¿Qué pierde si se va ahora?
-✓ ¿Qué curiosidad queda abierta?
-
-CADA 7-10 SEGUNDOS: Micro-gancho de retención.
-NUNCA: Dejar que la energía caiga.
-
-🔥 CAPA 2: HOOKS DE DOMINIO (0-3s)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-NO "gancho atractivo". SÍ "gancho de PODER":
-✓ Rompe una creencia arraigada
-✓ Amenaza una identidad
-✓ Promete ventaja injusta
-✓ Revela algo "prohibido"
-
-EJEMPLOS EXACTOS (usa estos como inspiración):
-• "Esto te está haciendo invisible en ${temaEspecifico} y nadie te lo dice"
-• "Si haces esto en ${temaEspecifico}, nunca vas a crecer"
-• "Esto funciona en ${temaEspecifico}, pero solo para los que entienden esto"
-• "La razón #1 por la que sigues estancado en ${temaEspecifico}"
-
-🌀 CAPA 4: SISTEMA DE LOOPS (OBLIGATORIO - FORZADO)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-OBLIGATORIO EN EL GUION:
-✓ 2 loops abiertos mínimo
-✓ 2 loops cerrados mínimo  
-✓ 1 loop emocional (identidad)
-
-FÓRMULAS DE LOOPS:
-• "Y lo que descubrí cambió todo..." [ABRIR]
-• "Pero antes de decirte qué, necesitas saber esto..." [ABRIR]
-• "Y aquí viene lo que nadie te cuenta..." [ABRIR]
-• "Cuando entendí esto..." [CERRAR]
-
-LOOPS EMOCIONALES:
-• "Si eres de los que realmente quiere ${deseoPrincipal}..." [IDENTIDAD]
-• "La gente como tú vs la gente como ellos..." [TRIBAL]
-
-👑 CAPA 5: CONSTRUCCIÓN DE AUTORIDAD (AUTOMÁTICA)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-POSICIONAR AL CREADOR COMO:
-✓ Alguien que VE PATRONES que otros no ven
-✓ Alguien que RESUME AÑOS en segundos
-✓ Alguien que NO NECESITA convencer
-
-LOGRAR CON:
-✓ Frases de CERTEZA (no "tal vez", SÍ "la realidad es")
-✓ Lenguaje DECLARATIVO (no "creo que", SÍ "esto es")
-✓ CERO disculpas o suavizadores
-✓ Números específicos y datos concretos
-✓ "Después de X años en ${temaEspecifico}..."
-
-EJEMPLOS:
-• "La verdad es que en ${temaEspecifico}..." 
-• "Lo que los datos muestran sobre ${temaEspecifico} es..."
-• "En mis X años en ${temaEspecifico}, he visto que..."
-• "La gente que gana en ${temaEspecifico} hace esto..."
-
-🧬 CAPA 6: CONTAMINACIÓN SOCIAL (VIRALIDAD REAL)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-CADA GUION DEBE TENER AL MENOS UNO:
-✓ Frase que PROVOQUE comentarios
-✓ Idea que DIVIDA opiniones
-✓ Afirmación que otros QUIERAN reaccionar
-
-RECUERDA: Viralidad ≠ Likes
-VIRALIDAD = Reacciones + Respuestas + Shares
-
-FÓRMULAS PROBADAS:
-• "Dime si no te pasa esto en ${temaEspecifico}..."
-• "Si no estás de acuerdo con esto sobre ${temaEspecifico}, probablemente eres parte del problema"
-• "Esto va a molestar a muchos en ${temaEspecifico}, pero..."
-• "Comenta si también pensabas que ${creencia_falsa}..."
+TIPO: ${viralObjective.tipo}
+PERCEPCIÓN: "${viralObjective.percepcion_creador}"
+MECÁNICA: ${viralObjective.mecanica}
+GATILLOS: ${viralObjective.gatillos.join(', ')}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧪 CAPA 8: AUTO-JUEZ VIRAL INTERNO (ANTES DE ENTREGAR)
+📝 INPUT DEL USUARIO (LA SEMILLA)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-ANTES DE ENTREGAR EL GUION, VALIDA:
-✓ ¿Esto hace sentir inferior o inspirado? → DEBE inspirar
-✓ ¿Esto suena distinto al promedio? → DEBE ser único
-✓ ¿Esto podría molestar a alguien? → DEBE generar reacción
-✓ ¿Esto se recordaría mañana? → DEBE ser memorable
-
-SI LA RESPUESTA ES "MEH" → REESCRIBE.
+Tema/Idea: "${temaEspecifico}"
+Gancho Forzado: Estilo "${hookStyle}"
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📊 FORMATO JSON DE SALIDA (ESTRICTO)
+⚡ INSTRUCCIONES DE EJECUCIÓN (MANDATORIAS)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. NO seas robótico. Usa imperfecciones calculadas si la plataforma lo pide.
+2. Si es TikTok/Reels: ELIMINA toda introducción ("Hola amigos"). Empieza en el segundo 0 con el Hook.
+3. Si es Venta: No vendas el producto, vende la transformación.
+4. Si es Viralidad: Prioriza la polémica o la curiosidad sobre la exactitud técnica.
+5. Inyecta al menos 2 LOOPS (Círculos abiertos) para mantener la retención hasta el final.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚡ MANDATO FINAL (FILOSOFÍA V500)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+NO estamos optimizando escritura. Estamos CODIFICANDO INFLUENCIA.
+
+Cada guion debe competir contra el FEED ENTERO, no contra otros guiones.
+Si cambiamos la plataforma y el guion sigue sonando igual, entonces NO estamos construyendo una plataforma profesional.
+
+EJECUTA AHORA CON MÁXIMA POTENCIA.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📤 FORMATO DE SALIDA JSON (ESTRICTO)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Responde SOLO con este JSON válido (sin markdown, sin texto extra, sin explicaciones antes ni después):
 
 {
   "metadata_guion": {
     "tema_tratado": "${temaEspecifico}",
-    "plataforma": "${platform}",
-    "arquitectura": "${structureType}",
+    "plataforma": "${platLabel}",
+    "arquitectura": "${structureId} (${modeId})",
     "objetivo_viral": "${viralObjective.tipo}",
     "percepcion_creador": "${viralObjective.percepcion_creador}",
-    "tono_voz": "${platformConfig.tono}",
-    "ritmo": "${platformConfig.ritmo}"
+    "tono_voz": "${lensData.label}",
+    "ritmo": "${platRules.ritmo}"
   },
   "ganchos_opcionales": [
     {
       "tipo": "Hook de Dominio",
-      "texto": "Gancho alternativo 1 específico para ${platform} sobre ${temaEspecifico}",
+      "texto": "Escribe aquí una variante agresiva del gancho para ${platLabel}",
       "retencion_predicha": 95,
       "mecanismo": "${viralObjective.gatillos[0]}"
     },
@@ -1275,53 +1440,43 @@ SI LA RESPUESTA ES "MEH" → REESCRIBE.
       "mecanismo": "${viralObjective.gatillos[1]}"
     }
   ],
-  "guion_completo": "TEXTO PALABRA POR PALABRA del guion completo siguiendo la estructura de ${platform}.\\n\\nGENERA MÍNIMO 150 PALABRAS.\\n\\nRESPETA TODAS LAS REGLAS DE ${platform}.\\n\\nINCLUYE LOS LOOPS, AUTORIDAD Y CONTAMINACIÓN SOCIAL.",
+  "guion_completo": "ESCRIBE AQUÍ EL GUION COMPLETO. USA SALTOS DE LÍNEA (\\n) PARA EL RITMO. INDICA [TEXTO EN PANTALLA] DONDE CORRESPONDA. EL GUION DEBE REFLEJAR EL TONO '${lensData.label}' Y EL RITMO DE '${platLabel}'.",
   "plan_visual": [
     {
       "tiempo": "0-3s",
-      "accion_en_pantalla": "Descripción visual específica",
-      "instruccion_produccion": "Tipo de toma",
-      "texto_pantalla": "Texto en pantalla",
-      "audio": "Efecto de sonido / Música"
+      "accion_en_pantalla": "Descripción visual potente (cambios de cámara, zoom)",
+      "instruccion_produccion": "Ej: Zoom in agresivo",
+      "texto_pantalla": "HOOK TEXTUAL CORTO",
+      "audio": "Efecto de sonido / Música de tensión"
+    },
+    {
+      "tiempo": "...",
+      "accion_en_pantalla": "...",
+      "instruccion_produccion": "...",
+      "texto_pantalla": "...",
+      "audio": "..."
     }
   ],
   "analisis_viral": {
-    "loops_abiertos": ["Loop 1 específico", "Loop 2 específico"],
-    "loops_cerrados": ["Loop cerrado 1"],
+    "loops_abiertos": ["Loop 1 específico del guion", "Loop 2 específico"],
+    "loops_cerrados": ["Cierre del Loop 1"],
     "loop_emocional": "Descripción del loop de identidad usado",
-    "frases_autoridad": ["Frase 1 que construye autoridad", "Frase 2"],
-    "trigger_comentarios": "Frase diseñada para generar comentarios",
+    "frases_autoridad": ["Frase exacta del guion que construye autoridad"],
+    "trigger_comentarios": "Pregunta o afirmación exacta diseñada para generar ${platRules.cta_focus}",
     "score_viralidad_predicho": 85,
-    "advertencias": ["Advertencia si algo puede mejorar"]
+    "advertencias": ["Advertencia si algo puede mejorar para ${platLabel}"]
   },
   "auto_validacion": {
     "hace_sentir_inspirado": true,
     "suena_distinto": true,
     "podria_molestar": true,
     "sera_recordado": true,
-    "decision": "APROBAR" o "REESCRIBIR",
-    "razon": "Por qué pasa o no pasa la validación"
+    "decision": "APROBAR",
+    "razon": "Explicación de por qué este guion funciona para ${platLabel} con el objetivo ${objetivo} bajo el lente ${lensData.label}"
   }
 }
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚡ MANDATO FINAL
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-NO estamos optimizando escritura.
-Estamos CODIFICANDO INFLUENCIA.
-
-Cada guion debe competir contra el FEED ENTERO, no contra otros guiones.
-
-Si cambiamos la plataforma y el guion sigue sonando igual,
-entonces NO estamos construyendo una plataforma profesional.
-
-EJECUTA AHORA CON MÁXIMA POTENCIA.
 `;
 };
-
-export { PROMPT_GENERADOR_GUIONES_V500_ELITE };
-
 
 // ==================================================================================
 // ⚖️ PROMPT JUEZ VIRAL V400 - MENTOR ESTRATÉGICO

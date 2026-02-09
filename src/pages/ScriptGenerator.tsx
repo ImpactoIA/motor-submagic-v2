@@ -89,35 +89,143 @@ interface AuditResult {
 // 📚 CONFIGURACIÓN Y CONSTANTES
 // ==================================================================================
 
-const STRUCTURES = [
-    { 
-        id: 'winner_rocket', 
-        label: 'Winner Rocket 🚀', 
-        desc: 'La fórmula viral de 7 pasos. Retención máxima + Loops.', 
-        color: 'border-yellow-500 bg-yellow-500/10 text-yellow-400', 
-        recommended: true 
-    },
-    { 
-        id: 'pas', 
-        label: 'Dolor Profundo (PAS)', 
-        desc: 'Problema → Agitación → Solución. Venta directa.', 
-        color: 'border-red-500/50 bg-red-500/5 text-red-400', 
-        recommended: false 
-    },
-    { 
-        id: 'aida', 
-        label: 'Clásica (AIDA)', 
-        desc: 'Atención → Interés → Deseo → Acción.', 
-        color: 'border-blue-500/50 bg-blue-500/5 text-blue-400', 
-        recommended: false 
-    },
-    { 
-        id: 'hso', 
-        label: 'Storytelling (HSO)', 
-        desc: 'Gancho → Historia → Oferta/Lección.', 
-        color: 'border-purple-500/50 bg-purple-500/5 text-purple-400', 
-        recommended: false 
-    }
+// ==================================================================================
+// 🏛️ MATRIZ TITAN: 9 ESTRUCTURAS x 50 MODOS INTERNOS (DATA MAESTRA)
+// ==================================================================================
+
+const TITAN_STRUCTURES = [
+  {
+    id: 'winner_rocket',
+    label: '🚀 Winner Rocket (Oficial)',
+    desc: 'La fórmula viral de 7 pasos. Retención máxima + Loops.',
+    color: 'border-yellow-500 bg-yellow-500/10 text-yellow-400',
+    modes: [
+      { id: 'viral_rapido', label: '⚡ Viral Rápido', desc: 'Ritmo frenético, cortes cada 2s.' },
+      { id: 'autoridad', label: '👑 Autoridad', desc: 'Demostración de estatus y saber.' },
+      { id: 'venta', label: '💰 Venta Directa', desc: 'Conversión al final.' },
+      { id: 'storytelling', label: '📖 Storytelling', desc: 'Viaje del héroe en 60s.' },
+      { id: 'marca_personal', label: '🙋‍♂️ Marca Personal', desc: 'Conexión y valores.' },
+      { id: 'lead_magnet', label: '🧲 Lead Magnet', desc: 'Regalo a cambio de atención.' },
+      { id: 'educativo', label: '🧠 Educativo', desc: 'Valor masivo comprimido.' }
+    ]
+  },
+  {
+    id: 'aida',
+    label: '📢 AIDA (Clásica)',
+    desc: 'Atención - Interés - Deseo - Acción.',
+    color: 'border-blue-500 bg-blue-500/10 text-blue-400',
+    modes: [
+      { id: 'educativo', label: '📚 Educativo', desc: 'Enseñar algo nuevo.' },
+      { id: 'autoridad', label: '🧠 Autoridad', desc: 'Posicionamiento experto.' },
+      { id: 'venta', label: '💸 Venta', desc: 'Push comercial.' },
+      { id: 'viral', label: '🔥 Viral', desc: 'Shock inicial fuerte.' },
+      { id: 'storytelling', label: '🎭 Drama', desc: 'Narrativa emocional.' },
+      { id: 'leads', label: '📥 Captación', desc: 'Generación de prospectos.' }
+    ]
+  },
+  {
+    id: 'pas',
+    label: '💔 PAS (Dolor Profundo)',
+    desc: 'Problema - Agitación - Solución.',
+    color: 'border-red-500 bg-red-500/10 text-red-400',
+    modes: [
+      { id: 'dolor_emocional', label: '😭 Dolor Emocional', desc: 'Ataca la inseguridad.' },
+      { id: 'urgencia', label: '⏳ Urgencia', desc: 'Miedo a perderse algo.' },
+      { id: 'objecion', label: '🛡️ Romper Objeción', desc: '"Es muy caro" -> No.' },
+      { id: 'frustracion', label: '😤 Frustración', desc: '"¿Harto de intentar X?"' },
+      { id: 'perdida_futura', label: '📉 Pérdida Futura', desc: 'Qué pasa si no actúas.' }
+    ]
+  },
+  {
+    id: 'storytelling',
+    label: '🎥 Storytelling (HSO)',
+    desc: 'Hook - Story - Offer. Conexión total.',
+    color: 'border-pink-500 bg-pink-500/10 text-pink-400',
+    modes: [
+      { id: 'personal', label: '🧔 Personal', desc: 'Tu propia historia.' },
+      { id: 'cliente', label: '🤝 Caso de Éxito', desc: 'Historia de un alumno.' },
+      { id: 'error_aprendizaje', label: '💡 Error -> Eureka', desc: 'Cómo aprendí a la mala.' },
+      { id: 'transformacion', label: '🦋 Transformación', desc: 'El viaje del punto A al B.' },
+      { id: 'confesional', label: '🤫 Confesión', desc: 'Vulnerabilidad estratégica.' },
+      { id: 'inspiracional', label: '✨ Inspiracional', desc: 'Motivación pura.' }
+    ]
+  },
+  {
+    id: 'viral_shock',
+    label: '⚡ Viral Shock',
+    desc: 'Polarización y ruptura de patrones.',
+    color: 'border-purple-500 bg-purple-500/10 text-purple-400',
+    modes: [
+      { id: 'opinion_impopular', label: '🤬 Opinión Impopular', desc: 'Contra la corriente.' },
+      { id: 'mito_verdad', label: '❌ Mito vs Verdad', desc: 'Desmintiendo la industria.' },
+      { id: 'ataque_creencia', label: '👊 Ataque a Creencia', desc: '"Lo que haces no sirve".' },
+      { id: 'frase_prohibida', label: '🚫 Lo Prohibido', desc: 'Secretos ocultos.' },
+      { id: 'polarizacion', label: '⚖️ Polarización', desc: 'Divide a la audiencia.' }
+    ]
+  },
+  {
+    id: 'autoridad',
+    label: '🧲 Thought Leader',
+    desc: 'Ideas de alto nivel. Estatus.',
+    color: 'border-emerald-500 bg-emerald-500/10 text-emerald-400',
+    modes: [
+      { id: 'marco_mental', label: '🧠 Marco Mental', desc: 'Nueva forma de pensar.' },
+      { id: 'insight', label: '💡 Insight Único', desc: 'Información privilegiada.' },
+      { id: 'tendencia', label: '📈 Tendencia Futura', desc: 'Predicción del mercado.' },
+      { id: 'error_mercado', label: '📉 Error del Mercado', desc: 'Por qué todos fallan.' },
+      { id: 'nueva_regla', label: '📏 La Nueva Regla', desc: 'Cambio de paradigma.' }
+    ]
+  },
+  {
+    id: 'educativo',
+    label: '📚 Educativo Avanzado',
+    desc: 'Valor táctico y aplicable.',
+    color: 'border-cyan-500 bg-cyan-500/10 text-cyan-400',
+    modes: [
+      { id: 'framework', label: '🏗️ Framework', desc: 'Sistema paso a paso.' },
+      { id: 'checklist', label: '✅ Checklist', desc: 'Lista de verificación.' },
+      { id: 'paso_a_paso', label: '👣 Tutorial', desc: 'How-to clásico.' },
+      { id: 'error_comun', label: '❌ Error Común', desc: 'Corrección técnica.' },
+      { id: 'comparativo', label: '🆚 Comparativo', desc: 'Opción A vs Opción B.' },
+      { id: 'mini_clase', label: '🎓 Mini-Clase', desc: 'Lección profunda en 1 min.' }
+    ]
+  },
+  {
+    id: 'venta',
+    label: '💰 Venta Estratégica',
+    desc: 'Diseñado para facturar.',
+    color: 'border-green-500 bg-green-500/10 text-green-400',
+    modes: [
+      { id: 'soft_sell', label: '☁️ Soft Sell', desc: 'Venta suave/indirecta.' },
+      { id: 'hard_sell', label: '🔨 Hard Sell', desc: 'Venta directa/agresiva.' },
+      { id: 'objeciones', label: '🛡️ Matar Objeciones', desc: 'Antes de que pregunten.' },
+      { id: 'caso_real', label: '🏆 Caso Real', desc: 'Prueba social monetizable.' },
+      { id: 'oferta_limitada', label: '⏳ Oferta Limitada', desc: 'Escasez y urgencia.' }
+    ]
+  },
+  {
+    id: 'comunidad',
+    label: '🎯 Leads & Comunidad',
+    desc: 'Crecimiento de base de datos.',
+    color: 'border-orange-500 bg-orange-500/10 text-orange-400',
+    modes: [
+      { id: 'reto', label: '🏆 Reto', desc: 'Challenge de X días.' },
+      { id: 'lead_magnet', label: '🎁 Lead Magnet', desc: 'Ebook/Plantilla gratis.' },
+      { id: 'serie', label: '📺 Serie', desc: 'Parte 1 de X.' },
+      { id: 'promesa_abierta', label: '🤝 Promesa', desc: 'Compromiso público.' },
+      { id: 'invitacion', label: '💌 Invitación', desc: 'Webinar/Evento.' }
+    ]
+  }
+];
+
+// 🎲 LENTES CREATIVOS (VARIABILIDAD)
+const CREATIVE_LENSES = [
+    { id: 'auto', label: '🎲 Sorpréndeme (IA Auto)', icon: Zap },
+    { id: 'contrarian', label: '😈 Abogado del Diablo', icon: Flame },
+    { id: 'scientific', label: '🧪 Científico Lógico', icon: Brain },
+    { id: 'confessional', label: '🙏 Vulnerable / Real', icon: User },
+    { id: 'warrior', label: '⚔️ Agresivo / Directo', icon: Target },
+    { id: 'comedian', label: '🤡 Sarcástico / Iónico', icon: MessageCircle },
 ];
 
 const AWARENESS_LEVELS = [
@@ -127,12 +235,14 @@ const AWARENESS_LEVELS = [
     "Consciente del Producto"
 ];
 
+// 🎯 OBJETIVOS GLOBALES (CAPA C - BRÚJULA)
 const OBJECTIVES = [
-    "Educar / Valor", 
-    "Inspirar / Motivar", 
-    "Persuadir / Vender", 
-    "Entretener / Viralidad", 
-    "Romper Objeciones"
+    "Viralidad (Alcance Masivo)", 
+    "Autoridad (Posicionamiento)", 
+    "Educativo (Valor Puro)", 
+    "Venta (Conversión)", 
+    "Leads (Captación)", 
+    "Marca Personal (Conexión)"
 ];
 
 const SITUATIONS = [
@@ -199,10 +309,16 @@ export const ScriptGenerator = () => {
     
     // --- Estados de UI ---
     const [topic, setTopic] = useState('');
-    const [selectedStructure, setSelectedStructure] = useState('winner_rocket');
     const [selectedPlatform, setSelectedPlatform] = useState(PLATFORMS[0]);
     const [durationId, setDurationId] = useState('medium');
     const [hookType, setHookType] = useState(MASTER_HOOKS[0].name);
+
+    // ✅ NUEVO: Estados para la Matriz V500
+    const [selectedStructure, setSelectedStructure] = useState(TITAN_STRUCTURES[0]); 
+    const [selectedInternalMode, setSelectedInternalMode] = useState(TITAN_STRUCTURES[0].modes[0]);
+    
+    // 👇👇👇 AGRÉGALO AQUÍ 👇👇👇
+    const [selectedLens, setSelectedLens] = useState('auto'); // Factor X (Variabilidad)
 
     // --- Estados Psicológicos ---
     const [awareness, setAwareness] = useState(AWARENESS_LEVELS[1]);
@@ -263,15 +379,17 @@ export const ScriptGenerator = () => {
     }, [user, userProfile, location]);
 
     // ==================================================================================
-    // 🎯 FUNCIONES PRINCIPALES
+    // 🎯 GENERACIÓN (CONEXIÓN AL CEREBRO V500)
     // ==================================================================================
 
     const handleGenerate = async () => {
+        // 1. Validaciones básicas
         if (!topic.trim()) {
             setError("Por favor escribe un tema para el guion.");
             return;
         }
         
+        // 2. Verificación de Créditos
         if (userProfile?.tier !== 'admin' && (userProfile?.credits || 0) < cost) {
             const shouldRecharge = confirm(
                 `⚠️ Saldo insuficiente. Necesitas ${cost} créditos pero tienes ${userProfile?.credits || 0}.\n\n¿Deseas recargar?`
@@ -280,6 +398,7 @@ export const ScriptGenerator = () => {
             return;
         }
 
+        // 3. Preparar estado de carga
         setIsGenerating(true);
         setError(null);
         setResult(null);
@@ -288,30 +407,49 @@ export const ScriptGenerator = () => {
         setSaveSuccess(false);
 
         try {
+            // 4. Llamada al Backend (Process-URL)
             const { data, error: apiError } = await supabase.functions.invoke('process-url', {
                 body: {
                     selectedMode: 'generador_guiones',
                     userInput: topic.trim(),
                     topic: topic.trim(),
+                    
+                    // 👇 AQUÍ ESTÁ LA ACTUALIZACIÓN CLAVE PARA V500 👇
                     settings: {
-                        structure: selectedStructure,
-                        awareness,
-                        objective,
-                        situation,
+                        // Plataforma
+                        platform: selectedPlatform.label,
+                        
+                        // Matriz Titan (IDs exactos para el Cerebro)
+                        structure: selectedStructure.id,        // Ej: 'winner_rocket'
+                        internal_mode: selectedInternalMode.id, // Ej: 'viral_rapido'
+                        
+                        // 👇👇👇 AGREGA ESTA LÍNEA OBLIGATORIA 👇👇👇
+                        creative_lens: selectedLens,            // Ej: 'contrarian'
+                        // 👆👆👆 SIN ESTO, LA VARIABILIDAD NO FUNCIONA 👆👆👆
+                        
+                        // Configuración Psicológica
+                        awareness: awareness,
+                        objective: objective,
+                        situation: situation,
+                        
+                        // Configuración Técnica
                         durationId: durationId,
                         duration: durationId,
-                        hook_type: hookType,
-                        platform: selectedPlatform.label // ✅ CRITICAL: Motor V500 usa esto
+                        hook_type: hookType
                     },
+                    // 👆 FIN DE LA ACTUALIZACIÓN 👆
+
                     expertId: selectedExpertId || undefined,
                     avatarId: userProfile?.active_avatar_id || undefined,
                     estimatedCost: cost
                 }
             });
 
+            // 5. Manejo de Errores de API
             if (apiError) throw new Error(apiError.message || 'Error al conectar con el backend');
             if (!data?.success && !data?.generatedData) throw new Error(data?.error || 'El backend devolvió un error desconocido');
 
+            // 6. Procesar Resultado
             const finalResult = data.generatedData || data;
             
             if (!finalResult.guion_completo) {
@@ -320,6 +458,7 @@ export const ScriptGenerator = () => {
 
             setResult(finalResult);
             
+            // 7. Actualizar créditos del usuario
             if (refreshProfile) await refreshProfile();
 
         } catch (e: any) {
@@ -501,30 +640,46 @@ export const ScriptGenerator = () => {
                         </div>
                     </div>
 
-                    {/* ESTRUCTURA NARRATIVA */}
-                    <div className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-5 shadow-lg">
+                   {/* 🏛️ 1. SELECCIÓN DE ESTRUCTURA MAESTRA (TITAN V500) */}
+                    <div className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-5 shadow-lg flex flex-col h-[300px]">
                         <label className="text-xs font-black text-gray-500 uppercase mb-3 flex items-center gap-2 tracking-widest">
-                            <Layout size={14} /> 2. Estructura Narrativa
+                            <Layout size={14} /> 2. Arquitectura (Elige una base)
                         </label>
-                        <div className="space-y-2">
-                            {STRUCTURES.map((s) => (
+                        <div className="flex-1 overflow-y-auto custom-scrollbar space-y-2 pr-2">
+                            {TITAN_STRUCTURES.map((s) => (
                                 <button 
                                     key={s.id} 
-                                    onClick={() => setSelectedStructure(s.id)} 
-                                    className={`w-full p-3 rounded-xl border text-left transition-all relative overflow-hidden group ${
-                                        selectedStructure === s.id 
-                                            ? s.color 
-                                            : 'bg-gray-900 border-gray-800 text-gray-400 hover:bg-gray-800'
-                                    }`}
+                                    onClick={() => { setSelectedStructure(s); setSelectedInternalMode(s.modes[0]); }}
+                                    className={`w-full p-3 rounded-xl border text-left transition-all group relative overflow-hidden ${selectedStructure.id === s.id ? s.color : 'bg-gray-900 border-gray-800 text-gray-400 hover:bg-gray-800'}`}
                                 >
                                     <div className="flex justify-between items-center relative z-10">
                                         <span className="font-bold text-sm">{s.label}</span>
-                                        {selectedStructure === s.id && <CheckCircle2 size={16} />}
+                                        {selectedStructure.id === s.id && <CheckCircle2 size={16} />}
                                     </div>
                                     <p className="text-[10px] opacity-70 relative z-10 mt-1">{s.desc}</p>
-                                    {s.recommended && selectedStructure === s.id && (
-                                        <div className="absolute top-0 right-0 w-20 h-20 bg-yellow-500/20 blur-2xl -translate-y-8 translate-x-8"></div>
-                                    )}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* 🧭 2. MODO INTERNO (SE ADAPTA DINÁMICAMENTE) */}
+                    <div className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-5 shadow-lg animate-in slide-in-from-left-4 duration-500">
+                        <label className="text-xs font-black text-gray-500 uppercase mb-3 flex items-center gap-2 tracking-widest">
+                            <Target size={14} /> 3. Modo Estratégico ({selectedStructure.modes.length} Variantes)
+                        </label>
+                        <div className="grid grid-cols-2 gap-2">
+                            {selectedStructure.modes.map((mode) => (
+                                <button
+                                    key={mode.id}
+                                    onClick={() => setSelectedInternalMode(mode)}
+                                    className={`p-2 rounded-xl border text-left transition-all flex flex-col justify-between h-full ${
+                                        selectedInternalMode.id === mode.id
+                                            ? 'bg-indigo-600/20 border-indigo-500 text-indigo-300 shadow-lg shadow-indigo-900/20'
+                                            : 'bg-gray-900/50 border-gray-800 text-gray-500 hover:bg-gray-800 hover:text-gray-300'
+                                    }`}
+                                >
+                                    <span className="text-xs font-bold block mb-1">{mode.label}</span>
+                                    <span className="text-[9px] opacity-70 leading-tight">{mode.desc}</span>
                                 </button>
                             ))}
                         </div>
