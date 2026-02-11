@@ -9,7 +9,7 @@ import {
 export const AiAssistant = () => {
   const { user, userProfile, refreshProfile } = useAuth();
   
-  // --- ESTADOS ---
+// --- ESTADOS ---
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<any[]>([
     { role: 'system', content: 'Bienvenido a tu Sala de Guerra. Selecciona tus activos estratégicos arriba para comenzar.' }
@@ -17,6 +17,9 @@ export const AiAssistant = () => {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   
+  // 🔥 NUEVO: Estado para la Memoria del Mentor V500 (Ideas/Guiones previos)
+  const [previousData, setPreviousData] = useState<any>({});
+
   // Historial de Chats
   const [chatHistory, setChatHistory] = useState<any[]>([]);
   const [showHistory, setShowHistory] = useState(false);
@@ -38,7 +41,31 @@ export const AiAssistant = () => {
   // Scroll automático
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
 
-  // --- CARGA INICIAL ---
+  // 🔥 NUEVO: Cargar Memoria Local (Conexión V500)
+  // Esto permite que el Mentor "vea" lo que acabas de generar en otras pestañas
+  useEffect(() => {
+      try {
+          const ideas = localStorage.getItem('last_ideas_generated');
+          const guion = localStorage.getItem('last_script_generated');
+          const juez = localStorage.getItem('last_analysis_result'); // Si tienes Juez Viral
+
+          const loadedData: any = {};
+          
+          if (ideas) loadedData.ideas_generadas = JSON.parse(ideas);
+          if (guion) loadedData.guion_generado = JSON.parse(guion);
+          if (juez) loadedData.analisis_juez = JSON.parse(juez);
+          
+          setPreviousData(loadedData);
+          
+          if (Object.keys(loadedData).length > 0) {
+              console.log("🧠 [MENTOR] Memoria activa cargada:", loadedData);
+          }
+      } catch (e) {
+          console.error("Error leyendo memoria local:", e);
+      }
+  }, []);
+
+  // --- CARGA INICIAL (Contexto y Historial) ---
   useEffect(() => {
       const init = async () => {
           if (!user) return;
@@ -47,7 +74,7 @@ export const AiAssistant = () => {
       };
       init();
   }, [user]);
-
+  
   const fetchContext = async () => {
       try {
           const { data: exp } = await supabase.from('expert_profiles').select('id, name').eq('user_id', user?.id);
@@ -82,58 +109,74 @@ export const AiAssistant = () => {
       } catch (e) { console.error(e); }
   };
 
-  // --- ENVÍO DE MENSAJE (CEREBRO V30) ---
   const handleSend = async () => {
-    if (!input.trim() || !user) return;
-    
-    // Validar Saldo (Solo si no es admin)
-    if (userProfile?.tier !== 'admin' && (userProfile?.credits || 0) < COSTO_MENTOR) {
-        if(!confirm(`Saldo insuficiente (${COSTO_MENTOR} créditos). ¿Recargar?`)) return;
-        // Navegar a recarga...
-        return;
-    }
+    if (!input.trim() || !user) return;
+    
+    // Validar Saldo
+    if (userProfile?.tier !== 'admin' && (userProfile?.credits || 0) < COSTO_MENTOR) {
+        if(!confirm(`Saldo insuficiente (${COSTO_MENTOR} créditos). ¿Recargar?`)) return;
+        return;
+    }
 
-    const userMsg = { role: 'user', content: input };
-    setMessages(prev => [...prev, userMsg]);
-    
-    const currentInput = input;
-    setInput('');
-    setLoading(true);
+    const currentInput = input;
+    const userMsg = { role: 'user', content: currentInput };
+    
+    // Actualizamos UI visualmente rápido
+    setMessages(prev => [...prev, userMsg]);
+    setInput('');
+    setLoading(true);
 
-    try {
-        const { data, error } = await supabase.functions.invoke('process-url', {
-            body: {
-                selectedMode: 'mentor_ia', // Prompt de Consultor V300
-                transcript: currentInput, 
-                // Contexto Completo
-                expertId: selectedExpertId,     
-                avatarId: selectedAvatarId,     
-                knowledgeBaseId: selectedKbId,  
-                estimatedCost: COSTO_MENTOR,
-                // Historial reciente para contexto conversacional (opcional)
-                customPrompt: JSON.stringify(messages.slice(-3)) 
-            },
-        });
+    try {
+        const { data, error } = await supabase.functions.invoke('process-url', {
+            body: {
+                // 🔥 CAMBIO CRÍTICO 1: El modo correcto para V500
+                selectedMode: 'chat_mentor', 
+                userInput: currentInput, 
 
-        if (error) throw error;
+                // 🔥 CAMBIO CRÍTICO 2: Enviamos el perfil completo + selecciones
+                context: {
+                    ...userProfile,
+                    active_expert_id: selectedExpertId,
+                    active_avatar_id: selectedAvatarId
+                },
 
-        const res = data.generatedData;
-        let botReply = res.answer || res.generated_content || "Análisis completado.";
+                // 🔥 CAMBIO CRÍTICO 3: La Memoria (Ideas/Guiones previos)
+                // Asegúrate de haber agregado el estado 'previousData' como vimos antes
+                previousData: previousData, 
+                
+                // Extras
+                knowledgeBaseId: selectedKbId, 
+                estimatedCost: COSTO_MENTOR
+            },
+        });
+
+        if (error) throw error;
+
+        const res = data.generatedData;
         
-        // Formato enriquecido si la IA devuelve pasos
-        if (res.action_steps && Array.isArray(res.action_steps)) {
-            botReply += "\n\n🚀 **PLAN DE ACCIÓN:**\n" + res.action_steps.map((step: string) => `• ${step}`).join("\n");
+        // 🔥 CAMBIO CRÍTICO 4: Leemos el nuevo formato JSON del Mentor
+        let botReply = res.respuesta_mentor || res.answer || "Análisis estratégico completado.";
+
+        // Si el Mentor nos da un "Siguiente Paso" claro, lo mostramos bonito
+        if (res.siguiente_paso?.accion_inmediata) {
+            botReply += `\n\n🚀 **TU SIGUIENTE PASO:** ${res.siguiente_paso.accion_inmediata}`;
+        }
+        
+        // Si hay advertencias de riesgo para la marca
+        if (res.advertencias && res.advertencias.length > 0) {
+            botReply += `\n\n⚠️ **ADVERTENCIA:** ${res.advertencias[0]}`;
         }
 
-        setMessages(prev => [...prev, { role: 'assistant', content: botReply }]);
-        if (refreshProfile) refreshProfile();
+        setMessages(prev => [...prev, { role: 'assistant', content: botReply }]);
+        if (refreshProfile) refreshProfile();
 
-    } catch (error: any) {
-        setMessages(prev => [...prev, { role: 'assistant', content: `⚠️ Error: ${error.message}` }]);
-    } finally {
-        setLoading(false);
-    }
-  };
+    } catch (error: any) {
+        console.error("Error Mentor:", error);
+        setMessages(prev => [...prev, { role: 'assistant', content: `⚠️ Error de conexión: ${error.message}` }]);
+    } finally {
+        setLoading(false);
+    }
+  };
 
   // --- GUARDAR SESIÓN ---
   const handleSaveSession = async () => {

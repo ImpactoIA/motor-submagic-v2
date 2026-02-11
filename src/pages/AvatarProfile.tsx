@@ -210,6 +210,57 @@ export const AvatarProfile: React.FC = () => {
     }
   };
 
+  // 🧠 FUNCIÓN: AUDITORÍA CON IA (TITAN ENGINE)
+  const handleAudit = async () => {
+    if (!formData.name) {
+      return alert('⚠️ Escribe un nombre para el avatar antes de auditar.');
+    }
+    
+    setLoading(true);
+    try {
+      // 1. Obtener sesión para el token de seguridad
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("No hay sesión activa");
+
+      // 2. Llamada al Backend (Titan Engine)
+      // ⚠️ IMPORTANTE: Reemplaza esta URL con la tuya de Supabase Edge Functions
+      const response = await fetch('https://oochxlakqxbwjpzqtghy.supabase.co/functions/v1/process-url', { 
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({
+          selectedMode: 'audit_avatar', // 👈 Esto activa el case que creamos en el backend
+          transcript: JSON.stringify(formData), // Enviamos todo el formulario como string
+          niche: "General" // O usa user?.niche si lo tienes disponible
+        })
+      });
+
+      const result = await response.json();
+
+      if (!result.success) throw new Error(result.error || "Error en la auditoría");
+
+      // 3. Mostrar Resultados (Por ahora en Alert y Consola)
+      console.log("📊 Resultado Auditoría:", result.generatedData);
+      
+      const calidad = result.generatedData.auditoria_calidad;
+      
+      alert(
+        `🛡️ VEREDICTO TITAN:\n\n` +
+        `🏆 Score: ${calidad.score_global}/100\n` +
+        `💀 Veredicto: "${calidad.veredicto_brutal}"\n\n` +
+        `Revisa la consola (F12) para ver el análisis detallado.`
+      );
+
+    } catch (e: any) {
+      console.error(e);
+      alert(`❌ Error en auditoría: ${e.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleDelete = async () => {
     if (!selectedAvatarId || !confirm('¿Eliminar este avatar?')) return;
 
@@ -680,6 +731,7 @@ export const AvatarProfile: React.FC = () => {
 
           {/* Botones de Acción */}
           <div className="flex justify-between items-center gap-4 pt-4 border-t border-gray-800">
+            {/* Lado Izquierdo: Botón Eliminar */}
             <div>
               {selectedAvatarId && (
                 <button
@@ -691,17 +743,30 @@ export const AvatarProfile: React.FC = () => {
               )}
             </div>
 
-            <button
-              onClick={handleSave}
-              disabled={loading}
-              className="px-8 py-3 bg-white text-black font-black rounded-xl hover:bg-gray-200 transition-all flex items-center gap-2 shadow-lg"
-            >
-              {loading ? <TrendingUp size={18} className="animate-spin" /> : <Save size={18} />}
-              GUARDAR AVATAR
-            </button>
-          </div>
-        </div>
+            {/* Lado Derecho: Grupo de Botones (Auditar + Guardar) */}
+            <div className="flex items-center gap-3">
+                {/* 👇 NUEVO BOTÓN: AUDITAR CON IA */}
+                <button
+                  onClick={handleAudit}
+                  disabled={loading}
+                  className="px-6 py-3 bg-indigo-500/10 border border-indigo-500/50 text-indigo-400 font-bold rounded-xl hover:bg-indigo-500 hover:text-white transition-all flex items-center gap-2"
+                >
+                  {loading ? <TrendingUp size={18} className="animate-spin" /> : <Shield size={18} />}
+                  AUDITAR CON IA
+                </button>
 
+                {/* BOTÓN EXISTENTE: GUARDAR */}
+                <button
+                  onClick={handleSave}
+                  disabled={loading}
+                  className="px-8 py-3 bg-white text-black font-black rounded-xl hover:bg-gray-200 transition-all flex items-center gap-2 shadow-lg"
+                >
+                  {loading ? <TrendingUp size={18} className="animate-spin" /> : <Save size={18} />}
+                  GUARDAR AVATAR
+                </button>
+            </div>
+          </div>
+          
         {/* SIDEBAR (4 cols) */}
         <div className="lg:col-span-4 space-y-6">
           {/* Avatar Widget */}
