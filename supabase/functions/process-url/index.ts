@@ -5145,122 +5145,68 @@ ${Object.entries(avatarData.prohibitions || {})
     console.log(`[COPY EXPERT] 📊 Score de calidad: ${result.validacion_interna?.score_calidad || 'N/A'}`);
     
     break;
-}
-
-  // ==================================================================================
-  // 💰 SISTEMA DE COBROS Y GUARDADO (AHORA SÍ FUERA DEL SWITCH)
-  // ==================================================================================
-
-  const calculatedPrice = calculateTitanCost(selectedMode, processedContext, whisperMinutes, settings);
-  const finalCost = Math.max(calculatedPrice, estimatedCost || 0);
-
-  // 1. Cobrar créditos
-  if (finalCost > 0) {
-    const { data: profile } = await supabase.from('profiles').select('credits, tier').eq('id', userId).single();
-    
-    if (profile?.tier !== 'admin') {
-       if ((profile?.credits || 0) < finalCost) {
-          throw new Error(`Saldo insuficiente. Costo: ${finalCost} créditos.`);
-       }
-       
-       const { error: creditError } = await supabase.rpc('decrement_credits', { user_uuid: userId, amount: finalCost });
-       if (creditError) console.error(`[COBROS] ❌ Error: ${creditError.message}`);
-       else console.log(`[COBROS] ✅ Cobrados ${finalCost} créditos`);
     }
-  }
 
-  // 2. Guardar en Historial (Si aplica)
-  const noSaveModes = ['chat_avatar', 'mentor_ia', 'mentor', 'chat_expert', 'chat_mentor'];
+    } // ← CIERRA EL SWITCH CASE
 
-  if (!noSaveModes.includes(selectedMode)) {
-    await supabase.from('viral_generations').insert({ 
-      user_id: userId, 
-      type: selectedMode, 
-      content: result, 
-      original_url: url || null, 
-      cost_credits: finalCost, 
-      platform: platform || 'general', 
-      tokens_used: tokensUsed, 
-      whisper_minutes: whisperMinutes
-    });
-  }
-    
-  // 3. Evolución del Avatar
-  if (activeAvatar && !noSaveModes.includes(selectedMode)) {
-      try {
-          const avatarMw = new AvatarMiddleware(supabase);
-          await avatarMw.incrementContentCount();
-          console.log(`[EVOLUCIÓN] 🆙 Avatar "${activeAvatar.name}" ganó experiencia.`);
-      } catch (e) { console.error("Error sumando experiencia:", e); }
-  }
+    // ==================================================================================
+    // 💰 SISTEMA DE COBROS Y GUARDADO
+    // ==================================================================================
 
-  // ==================================================================================
-  // 📤 RESPUESTA FINAL AL CLIENTE
-  // ==================================================================================
-  
-  return new Response(
-    JSON.stringify({ 
-      success: true, 
-      generatedData: result, 
-      finalCost, 
-      avatar_used: activeAvatar ? {
-          id: activeAvatar.id,
-          name: activeAvatar.name,
-          level: activeAvatar.experience_level
-      } : null,
-      metadata: { 
-        mode: selectedMode, 
-        duration: Date.now() - startTime,
-        credits_deducted: finalCost 
-      } 
-    }), 
-    { 
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
-      status: 200 
+    const calculatedPrice = calculateTitanCost(selectedMode, processedContext, whisperMinutes, settings);
+    const finalCost = Math.max(calculatedPrice, estimatedCost || 0);
+
+    // 1. Cobrar créditos
+    if (finalCost > 0) {
+      const { data: profile } = await supabase.from('profiles').select('credits, tier').eq('id', userId).single();
+      
+      if (profile?.tier !== 'admin') {
+         if ((profile?.credits || 0) < finalCost) {
+            throw new Error(`Saldo insuficiente. Costo: ${finalCost} créditos.`);
+         }
+         
+         const { error: creditError } = await supabase.rpc('decrement_credits', { user_uuid: userId, amount: finalCost });
+         if (creditError) console.error(`[COBROS] ❌ Error: ${creditError.message}`);
+      }
     }
-  );
 
-} catch (error: any) {
-  console.error(`[ERROR CRÍTICO]: ${error.message}`);
-  return new Response(
-    JSON.stringify({ success: false, error: error.message }), 
-    { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-  );
-}
-});
-     
-    // ==================================================================================
-    // 🧬 EVOLUCIÓN DEL AVATAR (Sumar experiencia)
-    // ==================================================================================
+    // 2. Guardar en Historial
+    const noSaveModes = ['chat_avatar', 'mentor_ia', 'mentor', 'chat_expert', 'chat_mentor'];
+
+    if (!noSaveModes.includes(selectedMode)) {
+      await supabase.from('viral_generations').insert({ 
+        user_id: userId, 
+        type: selectedMode, 
+        content: result, 
+        original_url: url || null, 
+        cost_credits: finalCost, 
+        platform: platform || 'general', 
+        tokens_used: tokensUsed, 
+        whisper_minutes: whisperMinutes
+      });
+    }
+      
+    // 3. Evolución del Avatar
     if (activeAvatar && !noSaveModes.includes(selectedMode)) {
         try {
             const avatarMw = new AvatarMiddleware(supabase);
             await avatarMw.incrementContentCount();
-            console.log(`[EVOLUCIÓN] 🆙 Avatar "${activeAvatar.name}" ganó experiencia.`);
-        } catch (e) { console.error("Error sumando experiencia:", e); }
+        } catch (e) { console.error("Error evolución:", e); }
     }
 
+    // ==================================================================================
+    // 📤 RESPUESTA FINAL
+    // ==================================================================================
+    
     return new Response(
       JSON.stringify({ 
         success: true, 
         generatedData: result, 
         finalCost, 
-        // ✅ DATOS DEL AVATAR PARA EL FRONTEND
-        avatar_used: activeAvatar ? {
-            id: activeAvatar.id,
-            name: activeAvatar.name,
-            level: activeAvatar.experience_level
-        } : null,
-        metadata: { 
-          mode: selectedMode, 
-          duration: Date.now() - startTime,
-          credits_deducted: finalCost 
-        } 
+        avatar_used: activeAvatar ? { id: activeAvatar.id, name: activeAvatar.name } : null,
+        metadata: { mode: selectedMode, duration: Date.now() - startTime } 
       }), 
-      { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
-        status: 200 
-      }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
     );
 
   } catch (error: any) {
@@ -5271,3 +5217,4 @@ ${Object.entries(avatarData.prohibitions || {})
     );
   }
 });
+// 🛑 FIN DEL ARCHIVO - NO PEGUES NADA DEBAJO DE ESTO
