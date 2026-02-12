@@ -1471,7 +1471,7 @@ Devuelve en formato JSON:
                 </div>
             </div>
 
-            <style>{`
+        <style>{`
                 .input-viral { 
                     width: 100%; background-color: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); 
                     border-radius: 0.75rem; padding: 0.75rem; color: white; font-size: 0.875rem; 
@@ -1492,6 +1492,6 @@ Devuelve en formato JSON:
                 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; } 
                 .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
             `}</style>
-        </div>
+        </div> {/* 👈 ESTE ES EL DIV QUE TE FALTA (Cierra el contenedor principal) */}
     );
 };

@@ -6,10 +6,76 @@ import {
     Microscope, RefreshCw, AlertTriangle, Wallet, Link as LinkIcon, 
     Layers, Clock, Camera, Activity, ArrowRight, Brain, Dna, 
     Database, Fingerprint, BarChart2, CheckCircle2, Sparkles,
-    TrendingUp, Target, Zap, Film, Eye, Upload, Trash2
+    TrendingUp, Target, Zap, Film, Eye, Upload, Trash2, Info
 } from 'lucide-react';
 
-const ANALYSIS_COST = 5;
+// ==================================================================================
+// 🎯 SISTEMA DE COSTOS DINÁMICO (ACTUALIZADO SEGÚN PLAN ESTRATÉGICO)
+// ==================================================================================
+
+interface CostEstimate {
+    basePrice: number;
+    whisperEstimate: number;
+    total: number;
+    category: 'reel' | 'video_largo' | 'masterclass';
+    categoryLabel: string;
+}
+
+function calculateCostFromDuration(durationSeconds: number): CostEstimate {
+    let basePrice = 10;
+    let category: 'reel' | 'video_largo' | 'masterclass' = 'reel';
+    let categoryLabel = 'Reel/Short';
+    
+    // 🎯 SEGÚN PLAN ESTRATÉGICO:
+    if (durationSeconds <= 90) {
+        basePrice = 10;
+        category = 'reel';
+        categoryLabel = 'Reel/Short';
+    } else if (durationSeconds <= 600) {
+        basePrice = 30;
+        category = 'video_largo';
+        categoryLabel = 'Video Largo';
+    } else {
+        basePrice = 45;
+        category = 'masterclass';
+        categoryLabel = 'Masterclass/Conferencia';
+    }
+    
+    // Estimación de Whisper (si aplica)
+    const whisperMinutes = Math.ceil(durationSeconds / 60);
+    const whisperCostDollars = whisperMinutes * 0.006;
+    const whisperEstimate = Math.ceil(whisperCostDollars / 0.01);
+    
+    return {
+        basePrice,
+        whisperEstimate,
+        total: basePrice + whisperEstimate,
+        category,
+        categoryLabel
+    };
+}
+
+async function detectVideoDurationFromFile(fileBase64: string): Promise<number> {
+    return new Promise((resolve) => {
+        const video = document.createElement('video');
+        video.preload = 'metadata';
+        
+        video.onloadedmetadata = () => {
+            window.URL.revokeObjectURL(video.src);
+            resolve(Math.floor(video.duration));
+        };
+        
+        video.onerror = () => {
+            resolve(60); // Default: 60s si no se puede detectar
+        };
+        
+        video.src = fileBase64;
+    });
+}
+
+// ==================================================================================
+// 🎨 COMPONENTE PRINCIPAL
+// ==================================================================================
 
 export const AnalyzeViral = () => {
     const navigate = useNavigate();
@@ -26,6 +92,15 @@ export const AnalyzeViral = () => {
     const [error, setError] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<'overview' | 'dna' | 'timeline' | 'production'>('overview');
     const [progress, setProgress] = useState(0);
+    
+    // --- 🆕 SISTEMA DE COSTOS DINÁMICO ---
+    const [costEstimate, setCostEstimate] = useState<CostEstimate>({
+        basePrice: 10,
+        whisperEstimate: 0,
+        total: 10,
+        category: 'reel',
+        categoryLabel: 'Reel/Short (estimado)'
+    });
 
     // --- CARGAR URL SI VIENE DE OTRA PÁGINA ---
     useEffect(() => {
@@ -50,6 +125,21 @@ export const AnalyzeViral = () => {
             setProgress(0);
         }
     }, [isAnalyzing]);
+
+    // --- 🆕 DETECTAR DURACIÓN CUANDO SE SUBE ARCHIVO ---
+    useEffect(() => {
+        if (uploadedFile) {
+            detectVideoDurationFromFile(uploadedFile)
+                .then(duration => {
+                    console.log(`[COST] Duración detectada: ${duration}s`);
+                    const estimate = calculateCostFromDuration(duration);
+                    setCostEstimate(estimate);
+                })
+                .catch(err => {
+                    console.error('[COST] Error detectando duración:', err);
+                });
+        }
+    }, [uploadedFile]);
 
     // --- MANEJADOR DE SUBIDA DE VIDEO ---
     const handleVideoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,6 +169,13 @@ export const AnalyzeViral = () => {
     const handleClearUpload = () => {
         setUploadedFile(null);
         setUploadedFileName('');
+        setCostEstimate({
+            basePrice: 10,
+            whisperEstimate: 0,
+            total: 10,
+            category: 'reel',
+            categoryLabel: 'Reel/Short (estimado)'
+        });
     };
 
     // --- EJECUTAR ANÁLISIS ---
@@ -92,10 +189,12 @@ export const AnalyzeViral = () => {
         }
         if (!user || !userProfile) return;
         
-        // Validar saldo
-        if (userProfile.tier !== 'admin' && (userProfile.credits || 0) < ANALYSIS_COST) {
-            if(confirm(`💰 Saldo insuficiente. Costo: ${ANALYSIS_COST} créditos. ¿Recargar?`)) {
-                navigate('/settings');
+        // 🆕 VALIDAR SALDO CON COSTO ESTIMADO REAL
+        const estimatedCost = costEstimate.total;
+        
+        if (userProfile.tier !== 'admin' && (userProfile.credits || 0) < estimatedCost) {
+            if(confirm(`💰 Saldo insuficiente. Costo estimado: ${estimatedCost} créditos. ¿Recargar?`)) {
+                navigate('/dashboard/settings');
             }
             return;
         }
@@ -114,7 +213,7 @@ export const AnalyzeViral = () => {
             // Construir payload
             const payload: any = {
                 selectedMode: 'autopsia_viral',
-                estimatedCost: ANALYSIS_COST,
+                estimatedCost: estimatedCost, // 🆕 COSTO REAL
                 platform: platform
             };
 
@@ -130,7 +229,8 @@ export const AnalyzeViral = () => {
                 mode: payload.selectedMode,
                 hasUrl: !!payload.url,
                 hasUpload: !!payload.uploadedVideo,
-                platform: payload.platform
+                platform: payload.platform,
+                estimatedCost: payload.estimatedCost // 🆕 LOG
             });
 
             // Llamada al backend
@@ -649,7 +749,7 @@ export const AnalyzeViral = () => {
                     
                     <div className="relative z-10 text-center mb-8">
                         <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 rounded-full text-[11px] font-black text-cyan-400 uppercase tracking-widest mb-4 backdrop-blur-sm">
-                            <Microscope size={14} /> Forensic Analysis Engine
+                            <Microscope size={14} /> Forensic Analysis Engine V2.0
                         </div>
                         
                         <h1 className="text-5xl md:text-7xl font-black text-white mb-4 tracking-tighter">
@@ -661,13 +761,23 @@ export const AnalyzeViral = () => {
                         </p>
                     </div>
 
-                    {/* Badge de costo */}
+                    {/* 🆕 Badge de costo DINÁMICO */}
                     <div className="flex justify-center">
-                        <div className="inline-flex items-center gap-2 bg-gray-900/80 backdrop-blur-sm border border-gray-800 px-4 py-2 rounded-xl">
-                            <Wallet size={16} className="text-cyan-400"/>
-                            <span className="text-sm text-gray-400">
-                                Costo de análisis: <span className="font-black text-white">{ANALYSIS_COST} créditos</span>
-                            </span>
+                        <div className="inline-flex items-center gap-3 bg-gray-900/80 backdrop-blur-sm border border-gray-800 px-5 py-3 rounded-xl">
+                            <Wallet size={18} className="text-cyan-400"/>
+                            <div className="text-left">
+                                <span className="text-xs text-gray-500 block">Costo estimado:</span>
+                                <div className="flex items-baseline gap-2">
+                                    <span className="font-black text-white text-xl">{costEstimate.total}</span>
+                                    <span className="text-xs text-gray-400">créditos</span>
+                                    <span className="text-[10px] text-gray-600">({costEstimate.categoryLabel})</span>
+                                </div>
+                            </div>
+                            {costEstimate.whisperEstimate > 0 && (
+                                <div className="ml-2 px-2 py-1 bg-yellow-500/10 border border-yellow-500/20 rounded text-[10px] text-yellow-400 font-bold">
+                                    +{costEstimate.whisperEstimate} Whisper
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -779,6 +889,31 @@ export const AnalyzeViral = () => {
                             </div>
                         )}
                     </div>
+
+                    {/* 🆕 Info sobre costos */}
+                    {(uploadedFile || url) && !isAnalyzing && !result && (
+                        <div className="bg-blue-500/5 border border-blue-500/20 rounded-xl p-4 flex items-start gap-3">
+                            <Info size={18} className="text-blue-400 shrink-0 mt-0.5"/>
+                            <div className="text-sm text-blue-200">
+                                <p className="font-bold mb-1">Sistema de Costos Inteligente</p>
+                                <p className="text-xs text-blue-300/80">
+                                    El costo se calcula según la duración del video:
+                                    <span className="block mt-1">
+                                        • <strong>Reels/Shorts</strong> (0-90s): 10 créditos
+                                    </span>
+                                    <span className="block">
+                                        • <strong>Videos Largos</strong> (90s-10min): 30 créditos
+                                    </span>
+                                    <span className="block">
+                                        • <strong>Masterclass</strong> (+10min): 45 créditos
+                                    </span>
+                                    <span className="block mt-1 text-yellow-400">
+                                        + Costo adicional de Whisper según duración
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    )}
 
                     {/* Barra de progreso */}
                     {isAnalyzing && (

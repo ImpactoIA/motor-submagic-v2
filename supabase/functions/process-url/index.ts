@@ -469,92 +469,143 @@ Genera EXACTAMENTE ${cantidad} ideas estratégicas para "${objetivo}".
 };
 
 // ==================================================================================
-// 🛠️ FUNCIONES HELPER
+// 🔬 AUTOPSIA VIRAL - BACKEND ACTUALIZADO V2.0
+// ==================================================================================
+// ✅ Sistema de costos dinámico (Reels=10, Video Largo=30, Masterclass=45)
+// ✅ Manejo robusto de errores de Apify (NO rompe si falla)
+// ✅ Sistema de retry con validación JSON
+// ✅ Fallbacks inteligentes en cascada
 // ==================================================================================
 
-function getObjetivoStrategy(objetivo: string): string {
-  const strategies: Record<string, string> = {
-    'viralidad': '🔥 VIRALIDAD: Alcance masivo, shares, controversia. Corto, rápido, loops.',
-    'autoridad': '👑 AUTORIDAD: Expertise profundo, frameworks, credibilidad. Largo, técnico.',
-    'venta': '💰 VENTA: Conversión, urgencia, deseo. PAS, miedo a perder.',
-    'comunidad': '👥 COMUNIDAD: Conversación, pertenencia, autenticidad.',
-    'posicionamiento': '🎯 MARCA: Diferenciación única, valores, memorable.',
-    'educacion': '📚 EDUCACIÓN: Tutorial claro, pasos accionables, valor tangible.',
-    'opinion': '🗣️ OPINIÓN: Controversia estratégica, posición clara, tribu.'
-  };
-  return strategies[objetivo] || strategies['viralidad'];
-}
-
-function getTimingStrategy(timing: string): string {
-  const strategies: Record<string, string> = {
-    'evergreen': '🌲 EVERGREEN: Ideas atemporales, problemas permanentes.',
-    'tendencia': '🔥 TENDENCIA: Aprovecha momentum popular HOY.',
-    'reaccion': '⚡ REACCIÓN: Responde a eventos últimas 48-72h.',
-    'estacional': '📅 ESTACIONAL: Vinculado a fechas específicas.',
-    'momentum': '🚀 MOMENTUM: Capitaliza tu crecimiento actual.'
-  };
-  return strategies[timing] || strategies['evergreen'];
-}
-
-function getPlatformStrategy(plataforma: string): string {
-  const strategies: Record<string, string> = {
-    'TikTok': '✅ TIKTOK: 0.5s críticos, texto obligatorio, música trending x5',
-    'Reels': '✅ REELS: Visual > Audio, estética, loops naturales',
-    'YouTube': '✅ YOUTUBE: Título + Thumbnail = 80%, SEO crítico',
-    'LinkedIn': '✅ LINKEDIN: Valor B2B, subtítulos obligatorios, profesional',
-    'Facebook': '✅ FACEBOOK: 1:1 formato, comunidad > viralidad, storytelling'
-  };
-  return strategies[plataforma] || strategies['TikTok'];
-}
-
-export { PROMPT_IDEAS_ELITE_V2, getObjetivoStrategy, getTimingStrategy, getPlatformStrategy };
+// ==================================================================================
+// 📝 PROMPT AUTOPSIA VIRAL (100% según plan estratégico)
+// ==================================================================================
 
 const PROMPT_AUTOPSIA_VIRAL = (platform: string) => `
+═════════════════════════════════════════════════════════════════════════════
+🔬 FORENSE DE VIRALIDAD #1 DEL MUNDO
+═════════════════════════════════════════════════════════════════════════════
+
 ERES EL FORENSE DE VIRALIDAD #1 DEL MUNDO.
-TU MISIÓN: Deconstruir videos virales hasta sus componentes atómicos y extraer el ADN replicable.
 
-PLATAFORMA: ${platform}
+TU MISIÓN: Deconstruir videos virales hasta sus componentes atómicos y extraer 
+el ADN replicable.
 
-⚠️ REGLA ULTRA CRÍTICA: Debes devolver un JSON COMPLETO Y VÁLIDO con TODAS las secciones.
+PLATAFORMA ANALIZADA: ${platform}
 
-FORMATO DE SALIDA JSON ESTRICTO:
+⚠️ REGLA ULTRA CRÍTICA: Debes devolver un JSON COMPLETO Y VÁLIDO con TODAS las 
+secciones especificadas abajo.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 FORMATO DE SALIDA JSON ESTRICTO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 {
   "score_viral": {
     "potencial_total": 9.2,
-    "factores_exito": ["Factor 1", "Factor 2", "Factor 3"],
+    "factores_exito": ["Factor 1 específico", "Factor 2 específico", "Factor 3 específico"],
     "nivel_replicabilidad": "Alta/Media/Baja"
   },
+  
   "adn_extraido": {
-    "idea_ganadora": "La idea central en una frase potente",
-    "disparador_psicologico": "El mecanismo mental principal",
-    "estructura_exacta": "Nombre del formato",
-    "formula_gancho": "[ELEMENTO 1] + [ELEMENTO 2]"
+    "idea_ganadora": "La idea central en una frase potente y memorable",
+    "disparador_psicologico": "El mecanismo mental principal que activa",
+    "estructura_exacta": "Nombre del formato narrativo usado",
+    "formula_gancho": "[ELEMENTO 1] + [ELEMENTO 2] + [ELEMENTO 3]"
   },
+  
   "desglose_temporal": [
     {
       "segundo": "0-3",
-      "que_pasa": "Descripción visual",
-      "porque_funciona": "Mecanismo psicológico",
-      "replicar_como": "Instrucción clara"
+      "que_pasa": "Descripción visual/auditiva precisa",
+      "porque_funciona": "Mecanismo psicológico específico",
+      "replicar_como": "Instrucción clara y accionable"
+    },
+    {
+      "segundo": "4-10",
+      "que_pasa": "...",
+      "porque_funciona": "...",
+      "replicar_como": "..."
     }
   ],
+  
   "patron_replicable": {
-    "nombre_patron": "Nombre descriptivo",
-    "formula": "PASO 1 + PASO 2 + PASO 3",
-    "aplicacion_generica": "Cómo usar esto"
+    "nombre_patron": "Nombre descriptivo del patrón detectado",
+    "formula": "PASO 1 + PASO 2 + PASO 3 + PASO 4",
+    "aplicacion_generica": "Cómo aplicar este patrón a cualquier nicho"
   },
+  
   "produccion_deconstruida": {
-    "visuales_clave": ["Elemento 1", "Elemento 2"],
-    "ritmo_cortes": "Cada X segundos",
-    "movimiento_camara": "Descripción",
-    "musica_sonido": "Tipo de audio"
+    "visuales_clave": ["Elemento visual 1", "Elemento visual 2", "Elemento visual 3"],
+    "ritmo_cortes": "Cada X segundos / Descripción del ritmo",
+    "movimiento_camara": "Descripción de movimientos de cámara",
+    "musica_sonido": "Tipo de audio/música y su función"
   },
+  
   "insights_algoritmicos": {
-    "optimizacion_retencion": "Táctica específica",
-    "triggers_engagement": "Qué dispara interacción",
-    "seo_keywords": ["Keyword 1", "Keyword 2"]
+    "optimizacion_retencion": "Táctica específica de retención detectada",
+    "triggers_engagement": "Qué dispara la interacción (comentarios/shares)",
+    "seo_keywords": ["Keyword 1", "Keyword 2", "Keyword 3"]
   }
-}`;
+}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠️ REGLAS CRÍTICAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. TODAS las secciones son OBLIGATORIAS
+2. NO uses markdown en el JSON (JSON puro solamente)
+3. El desglose_temporal debe tener mínimo 3 puntos temporales
+4. Los factores_exito deben ser específicos, no genéricos
+5. La fórmula del patrón debe ser clara y replicable
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 ANÁLISIS REQUERIDO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🧠 A. ANÁLISIS NARRATIVO
+- Tipo de hook (0–3s) y cómo detiene el scroll
+- Dónde se abre el loop de curiosidad
+- Dónde se cierra
+- Ritmo narrativo y uso de silencios
+
+🧠 B. ESTRUCTURA DEL CONTENIDO
+- Tipo de estructura usada (PAS, AIDA, Hero Journey, etc.)
+- Orden de ideas y timing emocional
+- Densidad informativa
+
+🧠 C. PSICOLOGÍA DE VIRALIDAD
+- Emoción principal activada
+- Motivo de compartición
+- Tipo de identificación del espectador
+- Sesgo cognitivo explotado
+- Nivel de fricción cognitiva
+
+🧠 D. COPY & LENGUAJE
+- Tipo de lenguaje usado
+- Palabras gatillo detectadas
+- Frases ancla
+- Simplicidad vs sofisticación
+- Tono emocional
+
+🧠 E. CONTEXTO DE PLATAFORMA
+- Por qué funciona específicamente en ${platform}
+- Qué reglas implícitas de la plataforma respeta
+- Qué pasaría si se publica igual en otra red
+
+🧠 F. SEÑALES DE ENGAGEMENT (OBSERVABLES)
+- Relación views / likes (si está disponible)
+- Tipo de comentarios esperados
+- Velocidad de interacción probable
+
+⚠️ NO PROMETAS:
+- Retención exacta
+- Watch time interno
+- Métricas privadas
+
+AHORA ANALIZA EL CONTENIDO PROPORCIONADO Y DEVUELVE EL JSON COMPLETO.
+`;
+
 
 // ==================================================================================
 // 💎 PROMPT TITAN V9: CLONACIÓN SINTÁCTICA ESTRICTA (EL ESPEJO)
@@ -3222,128 +3273,292 @@ function getPlataformaRules(plataforma: string) {
 }
 
 // ==================================================================================
-// 🛠️ FUNCIONES HELPER (HERRAMIENTAS COMPARTIDAS)
+// 🎬 FUNCIONES DE SCRAPING Y WHISPER V2.0 (ROBUSTAS)
 // ==================================================================================
 
-// 1️⃣ HELPER PARA COPY EXPERT V400 (RENOMBRADA)
-// Usamos 'getCopyStrategy' para no chocar con la función de abajo.
-function getCopyStrategy(objetivo: string): string {
-  const strategies: Record<string, string> = {
-    'Educar / Valor': `
-🎓 OBJETIVO: EDUCAR. El copy debe posicionar al creador como quien RESUELVE problemas. Promete aprendizaje concreto. CTA: "Guarda esto".`,
-    'Inspirar / Motivar': `
-💪 OBJETIVO: INSPIRAR. Muestra transformación posible. Usa lenguaje aspiracional. Conecta emocionalmente. CTA: "Si esto resonó contigo...".`,
-    'Persuadir / Vender': `
-💰 OBJETIVO: VENDER. Activa DOLOR o DESEO intenso. Usa escasez sutil. CTA suave: "Link en bio".`,
-    'Entretener / Viralidad': `
-🔥 OBJETIVO: VIRALIDAD. Compartible y memorable. Rompe creencias o usa humor. Genera DEBATE. CTA: "Comenta si...".`,
-    'Romper Objeciones': `
-🛡️ OBJETIVO: ROMPER OBJECIONES. Anticipa y DESACTIVA dudas. Usa empatía. Valida antes de derribar. CTA: "Si dudas, escríbeme".`
-  };
-  return strategies[objetivo] || strategies['Educar / Valor'];
+function detectPlatform(url: string): string {
+  if (url.includes('tiktok.com')) return 'tiktok';
+  if (url.includes('instagram.com') || url.includes('instagram')) return 'instagram';
+  if (url.includes('youtube.com') || url.includes('youtu.be')) return 'youtube';
+  return 'unknown';
 }
 
-function getExpertLanguage(level: string): string {
-  const languages: Record<string, string> = {
-    'aprendiz': 'Humilde, compartiendo su viaje ("Estoy aprendiendo...", "Descubrí que...")',
-    'practicante': 'Confiado, basado en experiencia ("En mi experiencia...", "He visto que...")',
-    'experto': 'Autoritario, con maestría ("Después de X años...", "La verdad es...", "El patrón es...")',
-    'referente': 'Líder de pensamiento ("La industria está equivocada sobre...", "El futuro de X es...")'
-  };
-  return languages[level] || languages['practicante'];
-}
-
-// 2️⃣ HELPERS PARA IDEAS RÁPIDAS (ORIGINALES)
-// Esta se queda igual porque la usan tus otras funciones antiguas.
-function getObjetivoStrategy(objetivo: string): string {
-  const strategies: Record<string, string> = {
-    'viralidad': '🔥 VIRALIDAD: Alcance masivo, shares, controversia. Corto, rápido, loops.',
-    'autoridad': '👑 AUTORIDAD: Expertise profundo, frameworks, credibilidad. Largo, técnico.',
-    'venta': '💰 VENTA: Conversión, urgencia, deseo. PAS, miedo a perder.',
-    'comunidad': '👥 COMUNIDAD: Conversación, pertenencia, autenticidad.',
-    'posicionamiento': '🎯 MARCA: Diferenciación única, valores, memorable.',
-    'educacion': '📚 EDUCACIÓN: Tutorial claro, pasos accionables, valor tangible.',
-    'opinion': '🗣️ OPINIÓN: Controversia estratégica, posición clara, tribu.'
-  };
-  return strategies[objetivo] || strategies['viralidad'];
-}
-
-function getTimingStrategy(timing: string): string {
-  const strategies: Record<string, string> = {
-    'evergreen': '🌲 EVERGREEN: Ideas atemporales, problemas permanentes.',
-    'tendencia': '🔥 TENDENCIA: Aprovecha momentum popular HOY.',
-    'reaccion': '⚡ REACCIÓN: Responde a eventos últimas 48-72h.',
-    'estacional': '📅 ESTACIONAL: Vinculado a fechas específicas.',
-    'momentum': '🚀 MOMENTUM: Capitaliza tu crecimiento actual.'
-  };
-  return strategies[timing] || strategies['evergreen'];
-}
-
-function getPlatformStrategy(plataforma: string): string {
-  const strategies: Record<string, string> = {
-    'TikTok': '✅ TIKTOK: 0.5s críticos, texto obligatorio, música trending x5',
-    'Reels': '✅ REELS: Visual > Audio, estética, loops naturales',
-    'YouTube': '✅ YOUTUBE: Título + Thumbnail = 80%, SEO crítico',
-    'LinkedIn': '✅ LINKEDIN: Valor B2B, subtítulos obligatorios, profesional',
-    'Facebook': '✅ FACEBOOK: 1:1 formato, comunidad > viralidad, storytelling'
-  };
-  return strategies[plataforma] || strategies['TikTok'];
-}
-
-// ... (Aquí está getPlatformStrategy que ya tenías) ...
-function getPlatformStrategy(plataforma: string): string {
-  // ... código ...
-  return strategies[plataforma] || strategies['TikTok'];
-}
-
-// 👇 PEGA ESTO JUSTO AQUÍ DEBAJO 👇
-
-// --- GRUPO 4: UTILIDADES TÉCNICAS (COPY EXPERT) ---
-
-/**
- * Detecta automáticamente el tipo de contenido basándose en su estructura
- */
-function detectContentType(contenido: string): string {
-  const lower = contenido.toLowerCase();
-  const length = contenido.length;
+// ✅ TIKTOK V2 (ROBUSTO - NO CRASH)
+async function scrapeTikTok(url: string): Promise<{ videoUrl: string; description: string; transcript?: string; duration?: number }> {
+  const apifyToken = Deno.env.get('APIFY_API_TOKEN');
   
-  // Detectar guion de video
-  if (lower.includes('segundo') || lower.includes('corte') || lower.includes('[') || lower.includes('audio')) {
-    return 'Guion de video';
+  if (!apifyToken) {
+      console.warn('[SCRAPER] ⚠️ Sin token APIFY, continuando...');
+      return { videoUrl: url, description: '', transcript: '', duration: 0 };
   }
-  
-  // Detectar caption/post corto
-  if (length < 300 && (lower.includes('hook') || lower.includes('cta'))) {
-    return 'Caption';
+
+  try {
+      console.log('[SCRAPER] 🎵 Iniciando scraping de TikTok:', url);
+      const client = new ApifyClient({ token: apifyToken });
+      
+      const run = await client.actor('clockworks/tiktok-scraper').call({ 
+          postURLs: [url], 
+          resultsPerPage: 1, 
+          shouldDownloadVideos: true,
+          shouldDownloadCovers: false,
+          shouldDownloadSubtitles: false
+      });
+      
+      const { items } = await client.dataset(run.defaultDatasetId).listItems();
+      
+      if (!items || items.length === 0) {
+          console.warn('[SCRAPER] ⚠️ TikTok no devolvió items, continuando...');
+          return { videoUrl: url, description: '', duration: 0 };
+      }
+
+      const videoData = items[0];
+      
+      return {
+        videoUrl: videoData.videoUrl || videoData.videoUrlNoWatermark || url,
+        description: videoData.text || '',
+        transcript: videoData.text || '', // TikTok suele poner el transcript en el texto
+        duration: videoData.videoMeta?.duration || 0
+      };
+
+  } catch (error: any) {
+      console.error('[SCRAPER] ❌ Error TikTok (Continuando...):', error.message);
+      // Retornamos objeto vacío para no romper el flujo
+      return { videoUrl: url, description: '', duration: 0 };
   }
-  
-  // Detectar idea/concepto
-  if (length < 500 && !lower.includes('\n\n')) {
-    return 'Idea';
-  }
-  
-  // Detectar borrador largo
-  if (length > 500) {
-    return 'Borrador';
-  }
-  
-  return 'Contenido general';
 }
 
-/**
- * Calcula el costo estimado basado en la longitud del contenido
- */
-function calculateCopyExpertCost(contenidoLength: number, tieneWhisper: boolean): number {
-  let baseCost = 3; // Costo base para Copy Expert
+// ✅ INSTAGRAM V2 (ROBUSTO - NO CRASH)
+async function scrapeInstagram(url: string): Promise<{ videoUrl: string; description: string; duration?: number }> {
+  const apifyToken = Deno.env.get('APIFY_API_TOKEN');
   
-  // Costo adicional por longitud
-  if (contenidoLength > 1000) baseCost += 2;
-  if (contenidoLength > 3000) baseCost += 3;
+  if (!apifyToken) {
+      console.warn('[SCRAPER] ⚠️ Sin token APIFY, continuando...');
+      return { videoUrl: url, description: '', duration: 0 };
+  }
+
+  try {
+      console.log('[SCRAPER] 📸 Iniciando scraping de Instagram:', url);
+      const client = new ApifyClient({ token: apifyToken });
+      
+      const run = await client.actor('apify/instagram-scraper').call({ 
+          directUrls: [url], 
+          resultsType: 'posts', 
+          resultsLimit: 1 
+      });
+      
+      const { items } = await client.dataset(run.defaultDatasetId).listItems();
+      
+      if (!items || items.length === 0) {
+          console.warn('[SCRAPER] ⚠️ Instagram no devolvió items, continuando...');
+          return { videoUrl: url, description: '', duration: 0 };
+      }
+
+      const videoData = items[0];
+      
+      return {
+        videoUrl: videoData.videoUrl || videoData.displayUrl || url,
+        description: videoData.caption || '',
+        duration: videoData.videoDuration || 0
+      };
+
+  } catch (error: any) {
+      console.error('[SCRAPER] ❌ Error Instagram (Continuando...):', error.message);
+      return { videoUrl: url, description: '', duration: 0 };
+  }
+}
+
+// ✅ YOUTUBE V2 (ROBUSTO - NO CRASH)
+async function scrapeYouTube(url: string): Promise<{ videoUrl: string; description: string; transcript?: string; duration?: number }> {
+  const apifyToken = Deno.env.get('APIFY_API_TOKEN');
   
-  // Costo de Whisper si se usó
-  if (tieneWhisper) baseCost += 5;
+  if (!apifyToken) {
+      console.warn('[SCRAPER] ⚠️ Sin token APIFY, continuando...');
+      return { videoUrl: url, description: '', transcript: '', duration: 0 };
+  }
+
+  try {
+      console.log('[SCRAPER] 🎥 Iniciando scraping de YouTube:', url);
+      const client = new ApifyClient({ token: apifyToken });
+      
+      const run = await client.actor('bernardo/youtube-scraper').call({ 
+          startUrls: [{ url }], 
+          maxResults: 1, 
+          subtitlesLanguage: 'es' 
+      });
+      
+      const { items } = await client.dataset(run.defaultDatasetId).listItems();
+      
+      if (!items || items.length === 0) {
+          console.warn('[SCRAPER] ⚠️ YouTube no devolvió items, continuando...');
+          return { videoUrl: url, description: '', transcript: '', duration: 0 };
+      }
+
+      const videoData = items[0];
+      
+      return {
+        videoUrl: url,
+        description: videoData.description || '',
+        transcript: videoData.subtitles || videoData.text || '',
+        duration: videoData.lengthSeconds || 0
+      };
+
+  } catch (error: any) {
+      console.error('[SCRAPER] ❌ Error YouTube (Continuando...):', error.message);
+      return { videoUrl: url, description: '', transcript: '', duration: 0 };
+  }
+}
+
+async function scrapeFacebook(url: string): Promise<{ 
+    videoUrl: string; 
+    description: string;
+    transcript?: string;
+    duration?: number;
+}> {
+  const apifyToken = Deno.env.get('APIFY_API_TOKEN');
   
-  return baseCost;
+  if (!apifyToken) {
+      console.warn('[SCRAPER FB] ⚠️ APIFY_API_TOKEN no configurado');
+      return { 
+          videoUrl: url, 
+          description: '', 
+          transcript: '',
+          duration: 0
+      };
+  }
+
+  try {
+      console.log('[SCRAPER FB] 📘 Iniciando scraping de Facebook:', url);
+
+      const client = new ApifyClient({ token: apifyToken });
+
+      const run = await client.actor('apify/facebook-scraper').call({
+        startUrls: [{ url }],
+        maxResults: 1,
+        language: 'es'
+      });
+
+      const { items } = await client.dataset(run.defaultDatasetId).listItems();
+      
+      if (!items || items.length === 0) {
+        console.warn('[SCRAPER FB] ⚠️ Apify no devolvió items');
+        return { 
+            videoUrl: url, 
+            description: '', 
+            transcript: '',
+            duration: 0
+        };
+      }
+
+      const videoData = items[0];
+      
+      console.log('[SCRAPER FB] ✅ Datos obtenidos');
+      
+      return {
+        videoUrl: videoData.videoUrl || videoData.url || url,
+        description: videoData.text || videoData.message || '',
+        transcript: videoData.text || '',
+        duration: videoData.videoDuration || 0
+      };
+      
+  } catch (error: any) {
+      console.error('[SCRAPER FB] ❌ Error:', error.message);
+      // ✅ NO LANZAR ERROR - Retornar vacío
+      return { 
+          videoUrl: url,
+          description: '', 
+          transcript: '',
+          duration: 0
+      };
+  }
+}
+
+
+async function transcribeVideoWithWhisper(videoUrl: string, openai: any): Promise<{ transcript: string; duration: number }> {
+  console.log('[WHISPER] 🎤 Descargando audio...');
+  
+  try {
+    const videoResponse = await fetch(videoUrl);
+    
+    if (!videoResponse.ok) {
+        throw new Error(`Error descargando video: ${videoResponse.statusText}`);
+    }
+    
+    const videoBlob = await videoResponse.blob();
+    const videoFile = new File([await videoBlob.arrayBuffer()], 'video.mp4', { type: 'video/mp4' });
+    
+    console.log('[WHISPER] 🚀 Enviando a OpenAI...');
+    
+    const transcription = await openai.audio.transcriptions.create({ 
+        file: videoFile, 
+        model: 'whisper-1', 
+        language: 'es', 
+        response_format: 'verbose_json' 
+    });
+    
+    console.log('[WHISPER] ✅ Transcripción completada');
+    
+    return { 
+        transcript: transcription.text, 
+        duration: transcription.duration || 0 
+    };
+
+  } catch (e: any) {
+    console.error('[WHISPER] ❌ Error:', e.message);
+    throw e; // Aquí sí lanzamos el error porque es el último recurso
+  }
+}
+
+async function scrapeAndTranscribeVideo(url: string, openai: any): Promise<{ transcript: string; description: string; duration: number; platform: string; videoUrl?: string; }> {
+  const platform = detectPlatform(url);
+  console.log(`[SCRAPER] 🎯 Plataforma detectada: ${platform.toUpperCase()}`);
+  
+  let videoData: any = { videoUrl: '', description: '', transcript: '', duration: 0 };
+
+  try {
+    // 1. Intentar Scrape con Apify
+    switch (platform) {
+      case 'tiktok': 
+          videoData = await scrapeTikTok(url); 
+          break;
+      case 'instagram': 
+          videoData = await scrapeInstagram(url); 
+          break;
+      case 'youtube': 
+          videoData = await scrapeYouTube(url); 
+          break;
+      default: 
+          console.warn(`Plataforma ${platform} no soportada para scrape, pasando directo a Whisper si es posible.`);
+    }
+
+    // 2. Si ya tenemos transcript del scraper (ej: subtítulos de YouTube/TikTok), lo usamos
+    if (videoData.transcript && videoData.transcript.length > 50) {
+      console.log('[SCRAPER] ℹ️ Usando transcript nativo de la plataforma');
+      return { ...videoData, platform };
+    }
+
+    // 3. Si no hay transcript pero hay URL de video, usamos Whisper
+    if (videoData.videoUrl && videoData.videoUrl !== url) {
+       console.log('[SCRAPER] 🎤 Activando Whisper para obtener audio...');
+       const whisperResult = await transcribeVideoWithWhisper(videoData.videoUrl, openai);
+       
+       return {
+          transcript: whisperResult.transcript,
+          description: videoData.description,
+          duration: whisperResult.duration || videoData.duration, // Prioridad a la duración real del archivo
+          platform,
+          videoUrl: videoData.videoUrl
+       };
+    }
+
+    // 4. Si llegamos aquí, falló el scrape y no hay URL de video válida
+    console.warn('[SCRAPER] ⚠️ No se pudo obtener video ni transcript.');
+    return { transcript: '', description: '', duration: 0, platform };
+
+  } catch (error: any) {
+    console.error('[SCRAPER] ❌ Error General en proceso de video:', error.message);
+    // Devolver vacío para que el sistema pida texto manual
+    return { transcript: '', description: '', duration: 0, platform };
+  }
 }
 
 // ==================================================================================
@@ -3416,30 +3631,129 @@ async function ejecutarIdeasRapidas(
 async function ejecutarAutopsiaViral(
   content: string,
   platform: string,
-  openai: any
+  openai: any,
+  maxRetries: number = 2
 ): Promise<{ data: any; tokens: number }> {
-  console.log('[CEREBRO] 🔬 Ejecutando Autopsia Viral...');
   
-  const completion = await openai.chat.completions.create({
-    model: 'gpt-4o',
-    response_format: { type: 'json_object' },
-    messages: [
-      { role: 'system', content: 'Eres el forense de viralidad #1. DEBES devolver JSON COMPLETO.' },
-      { role: 'user', content: `${PROMPT_AUTOPSIA_VIRAL(platform)}\n\nCONTENIDO:\n${content}` }
-    ],
-    temperature: 0.3,
-    max_tokens: 4096
-  });
+  console.log('[AUTOPSIA V2] 🔬 Iniciando análisis forense...');
+  console.log(`[AUTOPSIA V2] 📱 Plataforma: ${platform}`);
+  console.log(`[AUTOPSIA V2] 📊 Longitud contenido: ${content.length} caracteres`);
   
-  const data = JSON.parse(completion.choices[0].message.content || '{}');
+  let attempt = 0;
+  let lastError: any = null;
+  let accumulatedTokens = 0;
   
-  if (!data.score_viral || !data.adn_extraido) {
-    console.warn('[AUTOPSIA] ⚠️ Respuesta incompleta detectada.');
+  while (attempt < maxRetries) {
+      attempt++;
+      console.log(`[AUTOPSIA V2] 🔄 Intento ${attempt}/${maxRetries}`);
+      
+      try {
+          const completion = await openai.chat.completions.create({
+            model: 'gpt-4o',
+            response_format: { type: 'json_object' },
+            messages: [
+              { 
+                role: 'system', 
+                content: 'Eres el forense de viralidad #1 del mundo. Tu especialidad es deconstruir videos virales hasta su ADN molecular. DEBES devolver JSON COMPLETO Y VÁLIDO con todas las secciones especificadas.' 
+              },
+              { 
+                role: 'user', 
+                content: `${PROMPT_AUTOPSIA_VIRAL(platform)}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📝 CONTENIDO A ANALIZAR:\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n${content}` 
+              }
+            ],
+            temperature: 0.5, // ✅ Ajustado de 0.3 a 0.5 para análisis más creativos
+            max_tokens: 4096
+          });
+          
+          const tokensUsed = completion.usage?.total_tokens || 0;
+          accumulatedTokens += tokensUsed;
+          
+          console.log(`[AUTOPSIA V2] 📊 Tokens usados en intento ${attempt}: ${tokensUsed}`);
+          
+          const rawContent = completion.choices[0].message.content;
+          
+          if (!rawContent) {
+              throw new Error('La IA devolvió una respuesta vacía');
+          }
+          
+          const data = JSON.parse(rawContent);
+          
+          // ✅ VALIDACIÓN ESTRICTA
+          const requiredFields = [
+              'score_viral', 
+              'adn_extraido', 
+              'desglose_temporal', 
+              'patron_replicable',
+              'produccion_deconstruida',
+              'insights_algoritmicos'
+          ];
+          
+          const missingFields = requiredFields.filter(field => !data[field]);
+          
+          if (missingFields.length > 0) {
+              console.warn(`[AUTOPSIA V2] ⚠️ Intento ${attempt}/${maxRetries} - Campos faltantes: ${missingFields.join(', ')}`);
+              
+              if (attempt < maxRetries) {
+                  lastError = new Error(`Respuesta incompleta: ${missingFields.join(', ')}`);
+                  await delay(1000); // Espera 1s antes de reintentar
+                  continue;
+              }
+              
+              // ✅ ÚLTIMO INTENTO: Usar estructura de emergencia
+              console.log('[AUTOPSIA V2] 🚨 Último intento falló, usando estructura de emergencia');
+              return {
+                  data: createEmergencyStructure(data, missingFields),
+                  tokens: accumulatedTokens
+              };
+          }
+          
+          // ✅ VALIDACIÓN ADICIONAL: Verificar que los arrays no estén vacíos
+          if (!data.desglose_temporal || data.desglose_temporal.length === 0) {
+              console.warn('[AUTOPSIA V2] ⚠️ desglose_temporal vacío');
+              data.desglose_temporal = [{
+                  segundo: "0-60",
+                  que_pasa: "Análisis temporal no disponible",
+                  porque_funciona: "No se pudo desglosar",
+                  replicar_como: "Revisa manualmente el video"
+              }];
+          }
+          
+          if (!data.score_viral?.factores_exito || data.score_viral.factores_exito.length === 0) {
+              console.warn('[AUTOPSIA V2] ⚠️ factores_exito vacío');
+              data.score_viral.factores_exito = ["Análisis en progreso"];
+          }
+          
+          // ✅ ÉXITO TOTAL
+          console.log('[AUTOPSIA V2] ✅ Análisis completado exitosamente');
+          console.log(`[AUTOPSIA V2] 📊 Score viral: ${data.score_viral?.potencial_total || 'N/A'}`);
+          console.log(`[AUTOPSIA V2] 🧬 Patrón detectado: ${data.patron_replicable?.nombre_patron || 'N/A'}`);
+          console.log(`[AUTOPSIA V2] ⏱️ Puntos temporales: ${data.desglose_temporal?.length || 0}`);
+          
+          return {
+            data,
+            tokens: accumulatedTokens
+          };
+          
+      } catch (error: any) {
+          console.error(`[AUTOPSIA V2] ❌ Error en intento ${attempt}/${maxRetries}:`, error.message);
+          lastError = error;
+          accumulatedTokens += 0; // No sumamos tokens si falló
+          
+          if (attempt < maxRetries) {
+              console.log('[AUTOPSIA V2] 🔄 Reintentando...');
+              await delay(1500); // Espera más tiempo antes del siguiente intento
+              continue;
+          }
+      }
   }
   
+  // ✅ FALLBACK FINAL: Todos los intentos fallaron
+  console.error('[AUTOPSIA V2] ❌ Todos los intentos fallaron');
+  console.error('[AUTOPSIA V2] 📝 Último error:', lastError?.message);
+  
   return {
-    data,
-    tokens: completion.usage?.total_tokens || 0
+      data: createEmergencyStructure({}, ['score_viral', 'adn_extraido', 'desglose_temporal', 'patron_replicable', 'produccion_deconstruida', 'insights_algoritmicos']),
+      tokens: accumulatedTokens
   };
 }
 
@@ -4000,110 +4314,182 @@ function detectPlatform(url: string): string {
   if (url.includes('tiktok.com')) return 'tiktok';
   if (url.includes('instagram.com') || url.includes('instagram')) return 'instagram';
   if (url.includes('youtube.com') || url.includes('youtu.be')) return 'youtube';
+  if (url.includes('facebook.com') || url.includes('fb.watch') || url.includes('fb.com')) return 'facebook';
   return 'unknown';
 }
 
-async function scrapeTikTok(url: string): Promise<{ videoUrl: string; description: string; transcript?: string }> {
+// ✅ TIKTOK SCRAPER CON FALLBACK
+async function scrapeTikTok(url: string): Promise<{ 
+    videoUrl: string; 
+    description: string; 
+    transcript?: string;
+    duration?: number;
+}> {
   const apifyToken = Deno.env.get('APIFY_API_TOKEN');
-  if (!apifyToken) throw new Error('APIFY_API_TOKEN no configurado');
-
-  console.log('[SCRAPER] 🎬 Iniciando scraping de TikTok:', url);
-
-  const client = new ApifyClient({ token: apifyToken });
-
-  const run = await client.actor('clockworks/tiktok-scraper').call({
-    postURLs: [url],
-    resultsPerPage: 1,
-    shouldDownloadVideos: true,
-    shouldDownloadCovers: false,
-    shouldDownloadSubtitles: false
-  });
-
-  console.log('[SCRAPER] ⏳ Esperando resultados...');
-
-  const { items } = await client.dataset(run.defaultDatasetId).listItems();
   
-  if (!items || items.length === 0) {
-    throw new Error('No se pudo obtener información del video de TikTok');
+  if (!apifyToken) {
+      console.warn('[SCRAPER] ⚠️ APIFY_API_TOKEN no configurado, continuando sin scraping');
+      return { 
+          videoUrl: url, 
+          description: '', 
+          transcript: '',
+          duration: 0
+      };
   }
 
-  const videoData = items[0];
-  
-  console.log('[SCRAPER] ✅ Datos obtenidos:', {
-    hasVideoUrl: !!videoData.videoUrl,
-    hasDescription: !!videoData.text,
-    authorUsername: videoData.authorMeta?.name
-  });
+  try {
+      console.log('[SCRAPER] 🎵 Iniciando scraping de TikTok:', url);
+      
+      const client = new ApifyClient({ token: apifyToken });
 
-  return {
-    videoUrl: videoData.videoUrl || videoData.videoUrlNoWatermark || '',
-    description: videoData.text || '',
-    transcript: videoData.text || ''
-  };
+      const run = await client.actor('clockworks/tiktok-scraper').call({
+        postURLs: [url],
+        resultsPerPage: 1,
+        shouldDownloadVideos: true,
+        shouldDownloadCovers: false,
+        shouldDownloadSubtitles: false
+      });
+
+      const { items } = await client.dataset(run.defaultDatasetId).listItems();
+      
+      if (!items || items.length === 0) {
+        console.warn('[SCRAPER] ⚠️ Apify TikTok no devolvió items, continuando con Whisper');
+        return { 
+            videoUrl: url, 
+            description: '', 
+            transcript: '',
+            duration: 0
+        };
+      }
+
+      const videoData = items[0];
+      
+      console.log('[SCRAPER] ✅ Datos de TikTok obtenidos:', {
+          hasVideoUrl: !!videoData.videoUrl,
+          hasDescription: !!videoData.text,
+          duration: videoData.videoMeta?.duration || 'N/A'
+      });
+      
+      return {
+        videoUrl: videoData.videoUrl || videoData.videoUrlNoWatermark || url,
+        description: videoData.text || '',
+        transcript: videoData.text || '',
+        duration: videoData.videoMeta?.duration || 0
+      };
+      
+  } catch (error: any) {
+      console.error('[SCRAPER] ❌ Error en Apify TikTok:', error.message);
+      console.log('[SCRAPER] 🔄 Continuando sin datos de Apify (se usará Whisper)');
+      
+      return { 
+          videoUrl: url,
+          description: '', 
+          transcript: '',
+          duration: 0
+      };
+  }
 }
 
-async function scrapeInstagram(url: string): Promise<{ videoUrl: string; description: string }> {
+// ✅ INSTAGRAM SCRAPER CON FALLBACK
+async function scrapeInstagram(url: string): Promise<{ 
+    videoUrl: string; 
+    description: string;
+    duration?: number;
+}> {
   const apifyToken = Deno.env.get('APIFY_API_TOKEN');
-  if (!apifyToken) throw new Error('APIFY_API_TOKEN no configurado');
-
-  console.log('[SCRAPER] 📸 Iniciando scraping de Instagram:', url);
-
-  const client = new ApifyClient({ token: apifyToken });
-
-  const run = await client.actor('apify/instagram-scraper').call({
-    directUrls: [url],
-    resultsType: 'posts',
-    resultsLimit: 1,
-    searchType: 'hashtag',
-    searchLimit: 1
-  });
-
-  const { items } = await client.dataset(run.defaultDatasetId).listItems();
   
-  if (!items || items.length === 0) {
-    throw new Error('No se pudo obtener información del video de Instagram');
+  if (!apifyToken) {
+      console.warn('[SCRAPER] ⚠️ APIFY_API_TOKEN no configurado');
+      return { videoUrl: url, description: '', duration: 0 };
   }
 
-  const videoData = items[0];
+  try {
+      console.log('[SCRAPER] 📸 Iniciando scraping de Instagram:', url);
 
-  return {
-    videoUrl: videoData.videoUrl || videoData.displayUrl || '',
-    description: videoData.caption || ''
-  };
+      const client = new ApifyClient({ token: apifyToken });
+
+      const run = await client.actor('apify/instagram-scraper').call({
+        directUrls: [url],
+        resultsType: 'posts',
+        resultsLimit: 1,
+        searchType: 'hashtag',
+        searchLimit: 1
+      });
+
+      const { items } = await client.dataset(run.defaultDatasetId).listItems();
+      
+      if (!items || items.length === 0) {
+        console.warn('[SCRAPER] ⚠️ Apify Instagram no devolvió items');
+        return { videoUrl: url, description: '', duration: 0 };
+      }
+
+      const videoData = items[0];
+
+      return {
+        videoUrl: videoData.videoUrl || videoData.displayUrl || url,
+        description: videoData.caption || '',
+        duration: videoData.videoDuration || 0
+      };
+      
+  } catch (error: any) {
+      console.error('[SCRAPER] ❌ Error en Apify Instagram:', error.message);
+      return { videoUrl: url, description: '', duration: 0 };
+  }
 }
 
-async function scrapeYouTube(url: string): Promise<{ videoUrl: string; description: string; transcript?: string }> {
+// ✅ YOUTUBE SCRAPER CON FALLBACK
+async function scrapeYouTube(url: string): Promise<{ 
+    videoUrl: string; 
+    description: string; 
+    transcript?: string;
+    duration?: number;
+}> {
   const apifyToken = Deno.env.get('APIFY_API_TOKEN');
-  if (!apifyToken) throw new Error('APIFY_API_TOKEN no configurado');
-
-  console.log('[SCRAPER] 🎥 Iniciando scraping de YouTube:', url);
-
-  const client = new ApifyClient({ token: apifyToken });
-
-  const run = await client.actor('bernardo/youtube-scraper').call({
-    startUrls: [{ url }],
-    maxResults: 1,
-    searchKeywords: '',
-    subtitlesLanguage: 'es',
-    subtitlesFormat: 'text'
-  });
-
-  const { items } = await client.dataset(run.defaultDatasetId).listItems();
   
-  if (!items || items.length === 0) {
-    throw new Error('No se pudo obtener información del video de YouTube');
+  if (!apifyToken) {
+      console.warn('[SCRAPER] ⚠️ APIFY_API_TOKEN no configurado');
+      return { videoUrl: url, description: '', transcript: '', duration: 0 };
   }
 
-  const videoData = items[0];
+  try {
+      console.log('[SCRAPER] 🎥 Iniciando scraping de YouTube:', url);
 
-  return {
-    videoUrl: url,
-    description: videoData.description || '',
-    transcript: videoData.subtitles || videoData.text || ''
-  };
+      const client = new ApifyClient({ token: apifyToken });
+
+      const run = await client.actor('bernardo/youtube-scraper').call({
+        startUrls: [{ url }],
+        maxResults: 1,
+        searchKeywords: '',
+        subtitlesLanguage: 'es',
+        subtitlesFormat: 'text'
+      });
+
+      const { items } = await client.dataset(run.defaultDatasetId).listItems();
+      
+      if (!items || items.length === 0) {
+        console.warn('[SCRAPER] ⚠️ Apify YouTube no devolvió items');
+        return { videoUrl: url, description: '', transcript: '', duration: 0 };
+      }
+
+      const videoData = items[0];
+
+      return {
+        videoUrl: url,
+        description: videoData.description || '',
+        transcript: videoData.subtitles || videoData.text || '',
+        duration: videoData.lengthSeconds || 0
+      };
+      
+  } catch (error: any) {
+      console.error('[SCRAPER] ❌ Error en Apify YouTube:', error.message);
+      return { videoUrl: url, description: '', transcript: '', duration: 0 };
+  }
 }
 
-async function transcribeVideoWithWhisper(videoUrl: string, openai: any): Promise<{ transcript: string; duration: number }> {
+async function transcribeVideoWithWhisper(videoUrl: string, openai: any): Promise<{ 
+    transcript: string; 
+    duration: number 
+}> {
   console.log('[WHISPER] 🎤 Descargando audio...');
 
   const videoResponse = await fetch(videoUrl);
@@ -4167,6 +4553,9 @@ async function scrapeAndTranscribeVideo(
         break;
       case 'youtube':
         videoData = await scrapeYouTube(url);
+        break;
+        case 'facebook':
+        videoData = await scrapeFacebook(url);
         break;
       default:
         throw new Error(`Plataforma no soportada: ${platform}`);
@@ -4373,7 +4762,48 @@ async function getUserContext(
   return contexto;
 }
 
-function calculateTitanCost(mode: string, inputContext: string, whisperMinutes: number, settings: any): number {
+function calculateTitanCost(
+  mode: string, 
+  inputContext: string, 
+  whisperMinutes: number, 
+  settings: any,
+  videoDurationSeconds?: number // ✅ Nuevo parámetro opcional para robustez
+): number {
+  
+  // ==================================================================================
+  // 🔬 MODO: AUTOPSIA VIRAL (SISTEMA DINÁMICO V2.0)
+  // ==================================================================================
+  if (mode === 'autopsia_viral') {
+    console.log('[COSTOS V2] 💰 Calculando costo dinámico para Autopsia...');
+    
+    let baseCost = 10; // Precio base por defecto (Reel)
+    
+    // 1. Prioridad: Duración real detectada por el Scraper
+    if (videoDurationSeconds && videoDurationSeconds > 0) {
+        if (videoDurationSeconds <= 90) {
+            baseCost = 10; // Reel/Short
+        } else if (videoDurationSeconds <= 600) {
+            baseCost = 30; // Video Largo
+        } else {
+            baseCost = 45; // Masterclass
+        }
+    } 
+    // 2. Fallback: Si no hay duración, estimar categoría por minutos de Whisper
+    else if (whisperMinutes > 0) {
+        const estimatedSeconds = whisperMinutes * 60;
+        if (estimatedSeconds <= 90) baseCost = 10;
+        else if (estimatedSeconds <= 600) baseCost = 30;
+        else baseCost = 45;
+    }
+    
+    // 3. Recargo técnico por uso de Whisper (Transcripción)
+    // Costo API: $0.006/min -> Convertido a créditos (1 crédito ≈ $0.01)
+    const whisperCost = whisperMinutes > 0 ? Math.ceil((whisperMinutes * 0.006) / 0.01) : 0;
+    
+    const total = baseCost + whisperCost;
+    console.log(`[COSTOS V2] 💵 TOTAL: ${total} (Base: ${baseCost} + Whisper: ${whisperCost})`);
+    return total;
+  }
   
   if (mode === 'ideas_rapidas') {
     if (inputContext.toLowerCase().includes("10 ideas") || settings?.quantity === 10) return 7;
