@@ -1492,6 +1492,6 @@ Devuelve en formato JSON:
                 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; } 
                 .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
             `}</style>
-        </div> {/* 👈 ESTE ES EL DIV QUE TE FALTA (Cierra el contenedor principal) */}
+        </div>
     );
 };
