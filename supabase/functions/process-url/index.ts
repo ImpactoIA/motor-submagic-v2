@@ -3272,6 +3272,16 @@ function getPlataformaRules(plataforma: string) {
   return rules[plataforma] || rules['TikTok'];
 }
 
+// ✅ PEGA LA FUNCIÓN AQUÍ (Justo antes del serve)
+function detectContentType(content: string): string {
+  const lower = content.toLowerCase();
+  if (lower.includes("paso 1") || lower.includes("tip #1") || lower.includes("cómo hacer")) return "Educativo";
+  if (lower.includes("historia") || lower.includes("me pasó") || lower.includes("cuando")) return "Storytelling";
+  if (lower.includes("oferta") || lower.includes("descuento") || lower.includes("compra")) return "Ventas";
+  if (lower.includes("verdad") || lower.includes("mentira") || lower.includes("opinión")) return "Autoridad";
+  return "Contenido General";
+}
+
 // ==================================================================================
 // 🎬 FUNCIONES DE SCRAPING Y WHISPER V2.0 (ROBUSTAS)
 // ==================================================================================
