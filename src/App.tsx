@@ -83,7 +83,7 @@ function AppContent() {
           <Route path="viral-calculator" element={<ViralCalculator />} />
           <Route path="recreate-viral" element={<TitanViral />} />
           <Route path="quick-ideas" element={<QuickIdeas />} />
-          <Route path="/copy-expert" element={<CopyExpert />} />
+          <Route path="copy-expert" element={<CopyExpert />} />
           {/* Gestión */}
           <Route path="calendar" element={<Calendar />} />
           <Route path="ai-assistant" element={<AiAssistant />} />
