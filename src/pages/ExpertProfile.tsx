@@ -312,7 +312,7 @@ const ExpertAuditReportV2 = ({ data }: { data: any }) => {
         </div>
       )}
 
-      {/* Siguiente Paso */}
+        {/* Siguiente Paso */}
       {siguiente_paso && (
         <div className="bg-gradient-to-r from-yellow-900/10 to-orange-900/10 border border-yellow-500/20 rounded-xl p-5 text-center">
           <h4 className="text-yellow-400 text-xs font-black uppercase mb-3 flex items-center justify-center gap-2">
@@ -322,6 +322,7 @@ const ExpertAuditReportV2 = ({ data }: { data: any }) => {
         </div>
       )}
 
+      </div>
     </div>
   );
 };
