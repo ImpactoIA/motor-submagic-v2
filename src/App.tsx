@@ -21,7 +21,7 @@ import { AnalyzeViral } from './pages/AnalyzeViral';
 import { ViralCalculator } from './pages/ViralCalculator';
 import { TitanViral } from './pages/TitanViral'; // ✅ ESTA ES LA INGENIERÍA INVERSA
 import { QuickIdeas } from './pages/QuickIdeas';
-import { TranscribeVideo } from './pages/TranscribeVideo';
+import { CopyExpert } from './pages/CopyExpert';
 
 // Gestión y Estrategia
 import { Calendar } from './pages/Calendar';
@@ -83,8 +83,7 @@ function AppContent() {
           <Route path="viral-calculator" element={<ViralCalculator />} />
           <Route path="recreate-viral" element={<TitanViral />} />
           <Route path="quick-ideas" element={<QuickIdeas />} />
-          <Route path="transcriptor" element={<TranscribeVideo />} />
-
+          <Route path="/copy-expert" element={<CopyExpert />} />
           {/* Gestión */}
           <Route path="calendar" element={<Calendar />} />
           <Route path="ai-assistant" element={<AiAssistant />} />
