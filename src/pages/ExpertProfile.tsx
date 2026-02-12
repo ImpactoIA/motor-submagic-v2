@@ -1481,6 +1481,6 @@ Devuelve en formato JSON:
                 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
                 .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
             `}</style>
-        </div> {/* 5. Cierra el contenedor raíz (max-w-7xl) */}
+        </div>
     ); // Cierra el return
 }; // Cierra la función ExpertProfile
