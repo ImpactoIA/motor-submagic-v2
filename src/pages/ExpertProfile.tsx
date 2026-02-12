@@ -1447,47 +1447,43 @@ Devuelve en formato JSON:
                                 </button>
                             )}
 
-                            {aiMode === 'test' && (
-                                <div className="relative">
+                          {aiMode === 'test' && (
+                                <div className="relative mt-4">
                                     <input 
                                         type="text" 
                                         value={chatInput} 
                                         onChange={(e) => setChatInput(e.target.value)} 
                                         onKeyPress={(e) => e.key === 'Enter' && handleVoiceTest()} 
                                         placeholder="Hazle una pregunta técnica..." 
-                                        className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl py-3 pl-4 pr-12 text-white text-sm outline-none"
+                                        className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl py-3 pl-4 pr-12 text-white text-sm outline-none focus:border-indigo-500 transition-all"
                                     />
                                     <button 
                                         onClick={handleVoiceTest} 
                                         disabled={isProcessing || !chatInput} 
-                                        className="absolute right-2 top-2 p-1.5 bg-green-600 hover:bg-green-500 text-white rounded-lg disabled:opacity-50 shadow-lg shadow-green-900/20"
+                                        className="absolute right-2 top-2 p-1.5 bg-green-600 hover:bg-green-500 text-white rounded-lg disabled:opacity-50 shadow-lg shadow-green-900/20 transition-all"
                                     >
                                         {isProcessing ? <RefreshCw size={14} className="animate-spin"/> : <Send size={14}/>}
                                     </button>
                                 </div>
                             )}
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        </div> {/* Cierra el contenedor de resultados de IA */}
+                    </div> {/* Cierra el AI LAB (contenedor oscuro) */}
+                </div> {/* Cierra la columna derecha (lg:col-span-4) */}
+            </div> {/* Cierra el Grid principal (grid-cols-12) */}
 
-        <style>{`
+            <style>{`
                 .input-viral { 
                     width: 100%; background-color: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); 
                     border-radius: 0.75rem; padding: 0.75rem; color: white; font-size: 0.875rem; 
                     outline: none; transition: all 0.2s; 
                 } 
-                .input-viral:focus { 
-                    border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1); 
-                } 
+                .input-viral:focus { border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1); } 
                 .textarea-viral { 
                     width: 100%; background-color: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); 
                     border-radius: 0.75rem; padding: 0.75rem; color: white; font-size: 0.875rem; 
                     outline: none; resize: none; transition: all 0.2s; 
                 } 
-                .textarea-viral:focus { 
-                    border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1); 
-                } 
+                .textarea-viral:focus { border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1); } 
                 .custom-scrollbar::-webkit-scrollbar { width: 4px; } 
                 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; } 
                 .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
