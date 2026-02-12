@@ -7,13 +7,8 @@ import {
   Award, Flame, Heart, Lock, Unlock
 } from 'lucide-react';
 
-// ✅ IMPORTS CORREGIDOS:
-import { AvatarWidget } from '../components/AvatarWidget'; // Botón flotante
-import { MentorStrategic, ContextualSuggestions } from '../components/AvatarComponents'; // Alertas
-
-// ==================================================================================
-// 🧬 AVATAR PROFILE - FORMULARIO CORE (CORREGIDO)
-// ==================================================================================
+import { AvatarWidget } from '../components/AvatarWidget';
+import { MentorStrategic, ContextualSuggestions } from '../components/AvatarComponents';
 
 export const AvatarProfile: React.FC = () => {
   const { user, refreshProfile } = useAuth();
@@ -23,13 +18,9 @@ export const AvatarProfile: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'core' | 'advanced' | 'evolution'>('core');
 
-  // FORMULARIO CON CAMPOS OBLIGATORIOS
   const [formData, setFormData] = useState({
-    // Metadatos
     name: '',
     is_active: true,
-    
-    // === CAMPOS OBLIGATORIOS (CORE) ===
     experience_level: 'intermedio' as 'principiante' | 'intermedio' | 'avanzado' | 'experto',
     primary_goal: 'autoridad' as 'viralidad' | 'autoridad' | 'venta' | 'comunidad' | 'posicionamiento',
     communication_style: 'didactico' as 'directo' | 'analitico' | 'inspirador' | 'provocador' | 'didactico',
@@ -37,8 +28,6 @@ export const AvatarProfile: React.FC = () => {
     content_priority: 'educativo' as 'educativo' | 'opinion' | 'storytelling' | 'venta_encubierta' | 'viral_corto',
     dominant_emotion: 'curiosidad' as 'curiosidad' | 'deseo' | 'miedo' | 'aspiracion' | 'autoridad',
     success_model: 'educador_serio' as 'educador_serio' | 'empresario_premium' | 'influencer_agresivo' | 'mentor_disruptivo' | 'experto_tecnico' | 'creativo_viral',
-    
-    // Prohibiciones
     prohibitions: {
       lenguaje_vulgar: false,
       promesas_exageradas: false,
@@ -48,15 +37,11 @@ export const AvatarProfile: React.FC = () => {
       comparaciones_directas: false,
       contenido_negativo: false
     },
-    
-    // === CAMPOS AVANZADOS ===
     signature_vocabulary: [] as string[],
     banned_vocabulary: [] as string[],
     narrative_structure: 'problema_solucion' as string,
     preferred_length: 'medio' as string,
     preferred_cta_style: 'directo' as string,
-    
-    // Objetivos secundarios
     secondary_goals: [] as string[]
   });
 
@@ -69,16 +54,14 @@ export const AvatarProfile: React.FC = () => {
   const fetchAvatars = async () => {
     try {
       const { data } = await supabase
-        .from('avatars') // ✅ CORREGIDO: Nombre de tabla consistente
+        .from('avatars')
         .select('*')
         .eq('user_id', user?.id)
         .order('created_at', { ascending: false });
 
       if (data) {
         setAvatarsList(data);
-        
-        // Seleccionar avatar activo
-        const active = data.find(a => a.is_active);
+        const active = data.find((a: any) => a.is_active);
         if (active) {
           selectAvatar(active);
         } else if (data.length > 0) {
@@ -157,12 +140,11 @@ export const AvatarProfile: React.FC = () => {
 
     setLoading(true);
     try {
-      // 1. Si marcamos este como activo, desactivamos los otros primero
       if (formData.is_active) {
-          await supabase
-            .from('avatars')
-            .update({ is_active: false })
-            .eq('user_id', user?.id);
+        await supabase
+          .from('avatars')
+          .update({ is_active: false })
+          .eq('user_id', user?.id);
       }
 
       const dataToSave = {
@@ -173,7 +155,6 @@ export const AvatarProfile: React.FC = () => {
 
       let result;
       if (selectedAvatarId) {
-        // Actualizar
         result = await supabase
           .from('avatars')
           .update(dataToSave)
@@ -181,7 +162,6 @@ export const AvatarProfile: React.FC = () => {
           .select()
           .single();
       } else {
-        // Crear nuevo
         result = await supabase
           .from('avatars')
           .insert(dataToSave)
@@ -191,7 +171,6 @@ export const AvatarProfile: React.FC = () => {
 
       if (result.error) throw result.error;
 
-      // Actualizar perfil de usuario
       if (formData.is_active && result.data) {
         await supabase
           .from('profiles')
@@ -201,7 +180,6 @@ export const AvatarProfile: React.FC = () => {
 
       if (refreshProfile) refreshProfile();
       await fetchAvatars();
-      
       alert('✅ Avatar guardado exitosamente');
     } catch (e: any) {
       alert(`Error: ${e.message}`);
@@ -210,7 +188,6 @@ export const AvatarProfile: React.FC = () => {
     }
   };
 
-  // 🧠 FUNCIÓN: AUDITORÍA CON IA (TITAN ENGINE)
   const handleAudit = async () => {
     if (!formData.name) {
       return alert('⚠️ Escribe un nombre para el avatar antes de auditar.');
@@ -218,12 +195,9 @@ export const AvatarProfile: React.FC = () => {
     
     setLoading(true);
     try {
-      // 1. Obtener sesión para el token de seguridad
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) throw new Error("No hay sesión activa");
 
-      // 2. Llamada al Backend (Titan Engine)
-      // ⚠️ IMPORTANTE: Reemplaza esta URL con la tuya de Supabase Edge Functions
       const response = await fetch('https://oochxlakqxbwjpzqtghy.supabase.co/functions/v1/process-url', { 
         method: 'POST',
         headers: {
@@ -231,28 +205,24 @@ export const AvatarProfile: React.FC = () => {
           'Authorization': `Bearer ${session.access_token}`
         },
         body: JSON.stringify({
-          selectedMode: 'audit_avatar', // 👈 Esto activa el case que creamos en el backend
-          transcript: JSON.stringify(formData), // Enviamos todo el formulario como string
-          niche: "General" // O usa user?.niche si lo tienes disponible
+          selectedMode: 'audit_avatar',
+          transcript: JSON.stringify(formData),
+          niche: "General"
         })
       });
 
       const result = await response.json();
-
       if (!result.success) throw new Error(result.error || "Error en la auditoría");
 
-      // 3. Mostrar Resultados (Por ahora en Alert y Consola)
       console.log("📊 Resultado Auditoría:", result.generatedData);
       
       const calidad = result.generatedData.auditoria_calidad;
-      
       alert(
         `🛡️ VEREDICTO TITAN:\n\n` +
         `🏆 Score: ${calidad.score_global}/100\n` +
         `💀 Veredicto: "${calidad.veredicto_brutal}"\n\n` +
         `Revisa la consola (F12) para ver el análisis detallado.`
       );
-
     } catch (e: any) {
       console.error(e);
       alert(`❌ Error en auditoría: ${e.message}`);
@@ -280,7 +250,7 @@ export const AvatarProfile: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto space-y-6 pb-20 px-4">
-      
+
       {/* HEADER */}
       <div className="flex justify-between items-end gap-4 pt-6">
         <div>
@@ -294,24 +264,24 @@ export const AvatarProfile: React.FC = () => {
             Define cómo piensa, habla y actúa tu marca en TODAS las funciones de Titan
           </p>
         </div>
-        
+
         <div className="flex gap-2">
           <select
             onChange={(e) => {
-              const selected = avatarsList.find(a => a.id === e.target.value);
+              const selected = avatarsList.find((a: any) => a.id === e.target.value);
               if (selected) selectAvatar(selected);
             }}
             value={selectedAvatarId || ''}
             className="bg-[#0a0a0a] border border-white/10 text-white text-sm rounded-xl p-3 outline-none"
           >
             <option value="" disabled>Seleccionar Avatar...</option>
-            {avatarsList.map(a => (
+            {avatarsList.map((a: any) => (
               <option key={a.id} value={a.id}>
                 {a.name} {a.is_active ? '(Activo)' : ''}
               </option>
             ))}
           </select>
-          
+
           <button
             onClick={handleNewAvatar}
             className="p-3 bg-indigo-600 rounded-xl hover:bg-indigo-500 text-white"
@@ -321,19 +291,18 @@ export const AvatarProfile: React.FC = () => {
         </div>
       </div>
 
+      {/* GRID PRINCIPAL */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
+
         {/* FORMULARIO (8 cols) */}
         <div className="lg:col-span-8 space-y-6">
-          
+
           {/* Tabs */}
           <div className="flex gap-2 bg-gray-900/50 p-2 rounded-2xl border border-gray-800">
             <button
               onClick={() => setActiveTab('core')}
               className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
-                activeTab === 'core'
-                  ? 'bg-indigo-600 text-white shadow-lg'
-                  : 'text-gray-500 hover:text-white'
+                activeTab === 'core' ? 'bg-indigo-600 text-white shadow-lg' : 'text-gray-500 hover:text-white'
               }`}
             >
               <Shield size={14} className="inline mr-1" /> Core (Obligatorio)
@@ -341,9 +310,7 @@ export const AvatarProfile: React.FC = () => {
             <button
               onClick={() => setActiveTab('advanced')}
               className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
-                activeTab === 'advanced'
-                  ? 'bg-purple-600 text-white shadow-lg'
-                  : 'text-gray-500 hover:text-white'
+                activeTab === 'advanced' ? 'bg-purple-600 text-white shadow-lg' : 'text-gray-500 hover:text-white'
               }`}
             >
               <Brain size={14} className="inline mr-1" /> Avanzado
@@ -351,9 +318,7 @@ export const AvatarProfile: React.FC = () => {
             <button
               onClick={() => setActiveTab('evolution')}
               className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
-                activeTab === 'evolution'
-                  ? 'bg-cyan-600 text-white shadow-lg'
-                  : 'text-gray-500 hover:text-white'
+                activeTab === 'evolution' ? 'bg-cyan-600 text-white shadow-lg' : 'text-gray-500 hover:text-white'
               }`}
             >
               <TrendingUp size={14} className="inline mr-1" /> Evolución
@@ -362,7 +327,7 @@ export const AvatarProfile: React.FC = () => {
 
           {/* CONTENIDO TABS */}
           <div className="bg-[#0B0E14] border border-gray-800 rounded-3xl p-6 shadow-xl min-h-[600px]">
-            
+
             {/* TAB: CORE */}
             {activeTab === 'core' && (
               <div className="space-y-6">
@@ -408,8 +373,7 @@ export const AvatarProfile: React.FC = () => {
 
                 {/* Grid de campos obligatorios */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  
-                  {/* Nivel de Experiencia */}
+
                   <div className="bg-blue-900/10 p-4 rounded-xl border border-blue-500/20">
                     <label className="text-[10px] font-black text-blue-400 uppercase mb-2 block flex items-center gap-2">
                       <Award size={12} /> Nivel de Experiencia *
@@ -429,7 +393,6 @@ export const AvatarProfile: React.FC = () => {
                     </p>
                   </div>
 
-                  {/* Objetivo Principal */}
                   <div className="bg-purple-900/10 p-4 rounded-xl border border-purple-500/20">
                     <label className="text-[10px] font-black text-purple-400 uppercase mb-2 block flex items-center gap-2">
                       <Target size={12} /> Objetivo Principal * (Solo 1)
@@ -450,7 +413,6 @@ export const AvatarProfile: React.FC = () => {
                     </p>
                   </div>
 
-                  {/* Personalidad Comunicativa */}
                   <div className="bg-pink-900/10 p-4 rounded-xl border border-pink-500/20">
                     <label className="text-[10px] font-black text-pink-400 uppercase mb-2 block flex items-center gap-2">
                       <MessageSquare size={12} /> Personalidad Comunicativa *
@@ -471,7 +433,6 @@ export const AvatarProfile: React.FC = () => {
                     </p>
                   </div>
 
-                  {/* Nivel de Riesgo */}
                   <div className="bg-red-900/10 p-4 rounded-xl border border-red-500/20">
                     <label className="text-[10px] font-black text-red-400 uppercase mb-2 block flex items-center gap-2">
                       <Flame size={12} /> Nivel de Riesgo *
@@ -490,7 +451,6 @@ export const AvatarProfile: React.FC = () => {
                     </p>
                   </div>
 
-                  {/* Prioridad de Contenido */}
                   <div className="bg-green-900/10 p-4 rounded-xl border border-green-500/20">
                     <label className="text-[10px] font-black text-green-400 uppercase mb-2 block flex items-center gap-2">
                       <Zap size={12} /> Tipo de Contenido Prioritario *
@@ -508,7 +468,6 @@ export const AvatarProfile: React.FC = () => {
                     </select>
                   </div>
 
-                  {/* Emoción Dominante */}
                   <div className="bg-yellow-900/10 p-4 rounded-xl border border-yellow-500/20">
                     <label className="text-[10px] font-black text-yellow-400 uppercase mb-2 block flex items-center gap-2">
                       <Heart size={12} /> Emoción Dominante *
@@ -557,7 +516,7 @@ export const AvatarProfile: React.FC = () => {
                     ))}
                   </div>
                   <p className="text-xs text-gray-400 mt-3">
-                    ⚠️ Esto es una referencia cognitiva, NO copia. Define el arquetipo que guía tu comunicación.
+                    Esto es una referencia cognitiva, NO copia. Define el arquetipo que guía tu comunicación.
                   </p>
                 </div>
 
@@ -612,7 +571,6 @@ export const AvatarProfile: React.FC = () => {
                   Estos campos son opcionales pero permiten mayor control sobre tu avatar.
                 </p>
 
-                {/* Estructura Narrativa */}
                 <div>
                   <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">
                     Estructura Narrativa Preferida
@@ -630,7 +588,6 @@ export const AvatarProfile: React.FC = () => {
                   </select>
                 </div>
 
-                {/* Longitud Preferida */}
                 <div>
                   <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">
                     Longitud de Contenido Preferida
@@ -647,7 +604,6 @@ export const AvatarProfile: React.FC = () => {
                   </select>
                 </div>
 
-                {/* Estilo de CTA */}
                 <div>
                   <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">
                     Estilo de CTA Preferido
@@ -665,7 +621,6 @@ export const AvatarProfile: React.FC = () => {
                   </select>
                 </div>
 
-                {/* Vocabulario Característico */}
                 <div>
                   <label className="text-[10px] font-black text-green-400 uppercase mb-2 block">
                     Vocabulario Característico (Palabras que SÍ usas)
@@ -674,7 +629,7 @@ export const AvatarProfile: React.FC = () => {
                     value={formData.signature_vocabulary.join(', ')}
                     onChange={(e) => setFormData({
                       ...formData,
-                      signature_vocabulary: e.target.value.split(',').map(w => w.trim()).filter(Boolean)
+                      signature_vocabulary: e.target.value.split(',').map((w: string) => w.trim()).filter(Boolean)
                     })}
                     className="textarea-avatar h-20"
                     placeholder="Ej: momentum, leverage, ecosistema, framework, estrategia..."
@@ -682,7 +637,6 @@ export const AvatarProfile: React.FC = () => {
                   <p className="text-xs text-gray-500 mt-1">Separa por comas</p>
                 </div>
 
-                {/* Vocabulario Prohibido */}
                 <div>
                   <label className="text-[10px] font-black text-red-400 uppercase mb-2 block">
                     Vocabulario Prohibido (Palabras que NUNCA usas)
@@ -691,7 +645,7 @@ export const AvatarProfile: React.FC = () => {
                     value={formData.banned_vocabulary.join(', ')}
                     onChange={(e) => setFormData({
                       ...formData,
-                      banned_vocabulary: e.target.value.split(',').map(w => w.trim()).filter(Boolean)
+                      banned_vocabulary: e.target.value.split(',').map((w: string) => w.trim()).filter(Boolean)
                     })}
                     className="textarea-avatar h-20"
                     placeholder="Ej: gratis, secreto, explosivo..."
@@ -714,7 +668,6 @@ export const AvatarProfile: React.FC = () => {
                   Genera más contenido para desbloquear nuevas capacidades.
                 </p>
 
-                {/* Aquí podríamos mostrar stats de evolución si las tuviéramos */}
                 <div className="bg-cyan-900/10 border border-cyan-500/20 rounded-xl p-4">
                   <p className="text-cyan-400 font-bold text-sm mb-2">🎯 Próximos Hitos</p>
                   <ul className="space-y-2">
@@ -731,7 +684,6 @@ export const AvatarProfile: React.FC = () => {
 
           {/* Botones de Acción */}
           <div className="flex justify-between items-center gap-4 pt-4 border-t border-gray-800">
-            {/* Lado Izquierdo: Botón Eliminar */}
             <div>
               {selectedAvatarId && (
                 <button
@@ -743,42 +695,39 @@ export const AvatarProfile: React.FC = () => {
               )}
             </div>
 
-            {/* Lado Derecho: Grupo de Botones (Auditar + Guardar) */}
             <div className="flex items-center gap-3">
-                {/* 👇 NUEVO BOTÓN: AUDITAR CON IA */}
-                <button
-                  onClick={handleAudit}
-                  disabled={loading}
-                  className="px-6 py-3 bg-indigo-500/10 border border-indigo-500/50 text-indigo-400 font-bold rounded-xl hover:bg-indigo-500 hover:text-white transition-all flex items-center gap-2"
-                >
-                  {loading ? <TrendingUp size={18} className="animate-spin" /> : <Shield size={18} />}
-                  AUDITAR CON IA
-                </button>
+              <button
+                onClick={handleAudit}
+                disabled={loading}
+                className="px-6 py-3 bg-indigo-500/10 border border-indigo-500/50 text-indigo-400 font-bold rounded-xl hover:bg-indigo-500 hover:text-white transition-all flex items-center gap-2"
+              >
+                {loading ? <TrendingUp size={18} className="animate-spin" /> : <Shield size={18} />}
+                AUDITAR CON IA
+              </button>
 
-                {/* BOTÓN EXISTENTE: GUARDAR */}
-                <button
-                  onClick={handleSave}
-                  disabled={loading}
-                  className="px-8 py-3 bg-white text-black font-black rounded-xl hover:bg-gray-200 transition-all flex items-center gap-2 shadow-lg"
-                >
-                  {loading ? <TrendingUp size={18} className="animate-spin" /> : <Save size={18} />}
-                  GUARDAR AVATAR
-                </button>
+              <button
+                onClick={handleSave}
+                disabled={loading}
+                className="px-8 py-3 bg-white text-black font-black rounded-xl hover:bg-gray-200 transition-all flex items-center gap-2 shadow-lg"
+              >
+                {loading ? <TrendingUp size={18} className="animate-spin" /> : <Save size={18} />}
+                GUARDAR AVATAR
+              </button>
             </div>
           </div>
-          
+
+        </div>
+        {/* FIN FORMULARIO (8 cols) */}
+
         {/* SIDEBAR (4 cols) */}
         <div className="lg:col-span-4 space-y-6">
-          {/* Avatar Widget */}
           <AvatarWidget />
 
-          {/* Sugerencias Contextuales */}
           <ContextualSuggestions
-            avatar={selectedAvatarId ? avatarsList.find(a => a.id === selectedAvatarId) : null}
+            avatar={selectedAvatarId ? avatarsList.find((a: any) => a.id === selectedAvatarId) : null}
             currentMode="avatar_config"
           />
 
-          {/* Ayuda */}
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
             <p className="text-white font-bold text-sm mb-3">💡 ¿Por qué es obligatorio?</p>
             <p className="text-xs text-gray-400 leading-relaxed mb-3">
@@ -791,8 +740,10 @@ export const AvatarProfile: React.FC = () => {
             </p>
           </div>
         </div>
+        {/* FIN SIDEBAR (4 cols) */}
 
       </div>
+      {/* FIN GRID PRINCIPAL */}
 
       <style>{`
         .input-avatar {
@@ -827,6 +778,9 @@ export const AvatarProfile: React.FC = () => {
           box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
         }
       `}</style>
+
     </div>
   );
 };
+
+export default AvatarProfile;
