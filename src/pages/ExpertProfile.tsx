@@ -1467,20 +1467,55 @@ Devuelve en formato JSON:
                                     </button>
                                 </div>
                             )}
-                        </div> {/* 1. Cierra el área de scroll/resultados */}
-                    </div> {/* 2. Cierra el contenedor interno del AI LAB (bg-[#0f1115]) */}
-                </div> {/* 3. Cierra la columna derecha (lg:col-span-4) */}
-            </div> {/* 4. Cierra el Grid principal (grid-cols-12) */}
+                      </div>
+                    </div>
+                </div>
+            </div>
 
+            {/* Estilos globales */}
             <style>{`
-                .input-viral { width: 100%; background-color: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); border-radius: 0.75rem; padding: 0.75rem; color: white; font-size: 0.875rem; outline: none; transition: all 0.2s; }
-                .input-viral:focus { border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1); }
-                .textarea-viral { width: 100%; background-color: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); border-radius: 0.75rem; padding: 0.75rem; color: white; font-size: 0.875rem; outline: none; resize: none; transition: all 0.2s; }
-                .textarea-viral:focus { border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1); }
-                .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-                .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-                .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
+                .input-viral { 
+                    width: 100%; 
+                    background-color: #0a0a0a; 
+                    border: 1px solid rgba(255,255,255,0.1); 
+                    border-radius: 0.75rem; 
+                    padding: 0.75rem; 
+                    color: white; 
+                    font-size: 0.875rem; 
+                    outline: none; 
+                    transition: all 0.2s; 
+                }
+                .input-viral:focus { 
+                    border-color: #6366f1; 
+                    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1); 
+                }
+                .textarea-viral { 
+                    width: 100%; 
+                    background-color: #0a0a0a; 
+                    border: 1px solid rgba(255,255,255,0.1); 
+                    border-radius: 0.75rem; 
+                    padding: 0.75rem; 
+                    color: white; 
+                    font-size: 0.875rem; 
+                    outline: none; 
+                    resize: none; 
+                    transition: all 0.2s; 
+                }
+                .textarea-viral:focus { 
+                    border-color: #6366f1; 
+                    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1); 
+                }
+                .custom-scrollbar::-webkit-scrollbar { 
+                    width: 4px; 
+                }
+                .custom-scrollbar::-webkit-scrollbar-track { 
+                    background: transparent; 
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb { 
+                    background: #374151; 
+                    border-radius: 10px; 
+                }
             `}</style>
         </div>
-    ); // Cierra el return
-}; // Cierra la función ExpertProfile
+    );
+};
