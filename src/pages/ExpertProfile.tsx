@@ -312,18 +312,17 @@ const ExpertAuditReportV2 = ({ data }: { data: any }) => {
         </div>
       )}
 
-        {/* Siguiente Paso */}
-      {siguiente_paso && (
-        <div className="bg-gradient-to-r from-yellow-900/10 to-orange-900/10 border border-yellow-500/20 rounded-xl p-5 text-center">
-          <h4 className="text-yellow-400 text-xs font-black uppercase mb-3 flex items-center justify-center gap-2">
-            <ArrowRight size={14}/> Tu Siguiente Paso HOY
-          </h4>
-          <p className="text-sm text-white font-medium leading-relaxed">{siguiente_paso}</p>
-        </div>
-      )}
+    {/* Siguiente Paso */}
+        {siguiente_paso && (
+          <div className="bg-gradient-to-r from-yellow-900/10 to-orange-900/10 border border-yellow-500/20 rounded-xl p-5 text-center">
+            <h4 className="text-yellow-400 text-xs font-black uppercase mb-3 flex items-center justify-center gap-2">
+              <ArrowRight size={14}/> Tu Siguiente Paso HOY
+            </h4>
+            <p className="text-sm text-white font-medium leading-relaxed">{siguiente_paso}</p>
+          </div>
+        )}
 
-      </div>
-    </div>
+      </div>   // ← Este es el único que debe quedar (cierra space-y-6)
   );
 };
 
@@ -1468,55 +1467,16 @@ Devuelve en formato JSON:
                                     </button>
                                 </div>
                             )}
-                      </div>
-                    </div>
-                </div>
-            </div>
+                        </div> 
+                    </div> 
+                </div> 
+            </div> 
 
-            {/* Estilos globales */}
             <style>{`
-                .input-viral { 
-                    width: 100%; 
-                    background-color: #0a0a0a; 
-                    border: 1px solid rgba(255,255,255,0.1); 
-                    border-radius: 0.75rem; 
-                    padding: 0.75rem; 
-                    color: white; 
-                    font-size: 0.875rem; 
-                    outline: none; 
-                    transition: all 0.2s; 
-                }
-                .input-viral:focus { 
-                    border-color: #6366f1; 
-                    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1); 
-                }
-                .textarea-viral { 
-                    width: 100%; 
-                    background-color: #0a0a0a; 
-                    border: 1px solid rgba(255,255,255,0.1); 
-                    border-radius: 0.75rem; 
-                    padding: 0.75rem; 
-                    color: white; 
-                    font-size: 0.875rem; 
-                    outline: none; 
-                    resize: none; 
-                    transition: all 0.2s; 
-                }
-                .textarea-viral:focus { 
-                    border-color: #6366f1; 
-                    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1); 
-                }
-                .custom-scrollbar::-webkit-scrollbar { 
-                    width: 4px; 
-                }
-                .custom-scrollbar::-webkit-scrollbar-track { 
-                    background: transparent; 
-                }
-                .custom-scrollbar::-webkit-scrollbar-thumb { 
-                    background: #374151; 
-                    border-radius: 10px; 
-                }
-            <style>{`
+                .input-viral { width: 100%; background-color: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); border-radius: 0.75rem; padding: 0.75rem; color: white; font-size: 0.875rem; outline: none; transition: all 0.2s; }
+                .input-viral:focus { border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1); }
+                .textarea-viral { width: 100%; background-color: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); border-radius: 0.75rem; padding: 0.75rem; color: white; font-size: 0.875rem; outline: none; resize: none; transition: all 0.2s; }
+                .textarea-viral:focus { border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1); }
                 .custom-scrollbar::-webkit-scrollbar { width: 4px; }
                 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
                 .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
