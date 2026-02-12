@@ -1447,7 +1447,8 @@ Devuelve en formato JSON:
                                 </button>
                             )}
 
-                          {aiMode === 'test' && (
+                           {/* --- AQUÍ TERMINA EL BLOQUE DEL CHAT --- */}
+                            {aiMode === 'test' && (
                                 <div className="relative mt-4">
                                     <input 
                                         type="text" 
@@ -1460,34 +1461,26 @@ Devuelve en formato JSON:
                                     <button 
                                         onClick={handleVoiceTest} 
                                         disabled={isProcessing || !chatInput} 
-                                        className="absolute right-2 top-2 p-1.5 bg-green-600 hover:bg-green-500 text-white rounded-lg disabled:opacity-50 shadow-lg shadow-green-900/20 transition-all"
+                                        className="absolute right-2 top-2 p-1.5 bg-green-600 hover:bg-green-500 text-white rounded-lg disabled:opacity-50 shadow-lg shadow-green-900/20"
                                     >
                                         {isProcessing ? <RefreshCw size={14} className="animate-spin"/> : <Send size={14}/>}
                                     </button>
                                 </div>
                             )}
-                        </div> {/* Cierra el contenedor de resultados de IA */}
-                    </div> {/* Cierra el AI LAB (contenedor oscuro) */}
-                </div> {/* Cierra la columna derecha (lg:col-span-4) */}
-            </div> {/* Cierra el Grid principal (grid-cols-12) */}
+                        </div> {/* 1. Cierra el área de scroll/resultados */}
+                    </div> {/* 2. Cierra el contenedor interno del AI LAB (bg-[#0f1115]) */}
+                </div> {/* 3. Cierra la columna derecha (lg:col-span-4) */}
+            </div> {/* 4. Cierra el Grid principal (grid-cols-12) */}
 
             <style>{`
-                .input-viral { 
-                    width: 100%; background-color: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); 
-                    border-radius: 0.75rem; padding: 0.75rem; color: white; font-size: 0.875rem; 
-                    outline: none; transition: all 0.2s; 
-                } 
-                .input-viral:focus { border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1); } 
-                .textarea-viral { 
-                    width: 100%; background-color: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); 
-                    border-radius: 0.75rem; padding: 0.75rem; color: white; font-size: 0.875rem; 
-                    outline: none; resize: none; transition: all 0.2s; 
-                } 
-                .textarea-viral:focus { border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1); } 
-                .custom-scrollbar::-webkit-scrollbar { width: 4px; } 
-                .custom-scrollbar::-webkit-scrollbar-track { background: transparent; } 
+                .input-viral { width: 100%; background-color: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); border-radius: 0.75rem; padding: 0.75rem; color: white; font-size: 0.875rem; outline: none; transition: all 0.2s; }
+                .input-viral:focus { border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1); }
+                .textarea-viral { width: 100%; background-color: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); border-radius: 0.75rem; padding: 0.75rem; color: white; font-size: 0.875rem; outline: none; resize: none; transition: all 0.2s; }
+                .textarea-viral:focus { border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1); }
+                .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+                .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
                 .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
             `}</style>
-        </div>
-    );
-};
+        </div> {/* 5. Cierra el contenedor raíz (max-w-7xl) */}
+    ); // Cierra el return
+}; // Cierra la función ExpertProfile
