@@ -4,7 +4,8 @@ import { supabase } from '../lib/supabase';
 import { 
   LayoutDashboard, Zap, FileText, Calculator, BarChart2, 
   RefreshCw, Mic, User, Briefcase, Database, Calendar, 
-  Bot, Settings, Archive, Rocket, HelpCircle, LogOut, X
+  Bot, Settings, Archive, Rocket, HelpCircle, LogOut, X,
+  Wand2 // 👈 AGREGA ESTO AQUÍ
 } from 'lucide-react';
 
 // Definimos las props para el manejo móvil
@@ -20,7 +21,7 @@ const menuItems = [
   { section: 'Creación Viral' },
   { icon: Zap, label: 'Ideas Rápidas', path: '/dashboard/quick-ideas' },
   { icon: FileText, label: 'Generador Guiones', path: '/dashboard/script-generator' },
-  { icon: Mic, label: 'Transcriptor', path: '/dashboard/transcriptor' },
+  { icon: Wand2, label: 'Copy Expert', path: '/dashboard/copy-expert' },,
   
   { section: 'Laboratorio de Análisis' },
   { icon: Calculator, label: 'Juez Viral', path: '/dashboard/viral-calculator' },
