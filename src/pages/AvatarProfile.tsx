@@ -18,6 +18,10 @@ export const AvatarProfile: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'core' | 'advanced' | 'evolution'>('core');
 
+  const [nicheInput, setNicheInput] = useState('');
+  const [showGenerator, setShowGenerator] = useState(false);
+  const [generating, setGenerating] = useState(false);
+
   const [formData, setFormData] = useState({
     name: '',
     is_active: true,
@@ -27,6 +31,13 @@ export const AvatarProfile: React.FC = () => {
     risk_level: 'balanceado' as 'conservador' | 'balanceado' | 'agresivo',
     content_priority: 'educativo' as 'educativo' | 'opinion' | 'storytelling' | 'venta_encubierta' | 'viral_corto',
     dominant_emotion: 'curiosidad' as 'curiosidad' | 'deseo' | 'miedo' | 'aspiracion' | 'autoridad',
+    
+    // ✅ CAPAS OLIMPO (Asegúrate de que estén estas 4 líneas)
+    central_pain: '',       // Capa 3
+    hidden_desire: '',      // Capa 4
+    common_objections: '',  // Capa 6
+    emotional_triggers: '', // Capa 7
+
     success_model: 'educador_serio' as 'educador_serio' | 'empresario_premium' | 'influencer_agresivo' | 'mentor_disruptivo' | 'experto_tecnico' | 'creativo_viral',
     prohibitions: {
       lenguaje_vulgar: false,
@@ -99,7 +110,12 @@ export const AvatarProfile: React.FC = () => {
       narrative_structure: avatar.narrative_structure || 'problema_solucion',
       preferred_length: avatar.preferred_length || 'medio',
       preferred_cta_style: avatar.preferred_cta_style || 'directo',
-      secondary_goals: avatar.secondary_goals || []
+      secondary_goals: avatar.secondary_goals || [],
+      // ✅ PSICOLOGÍA COMPLETA (4 CAMPOS):
+      central_pain: avatar.central_pain || '',
+      hidden_desire: avatar.hidden_desire || '',
+      common_objections: avatar.common_objections || '',
+      emotional_triggers: avatar.emotional_triggers || '' // <-- ESTE FALTABA
     });
   };
 
@@ -129,7 +145,12 @@ export const AvatarProfile: React.FC = () => {
       narrative_structure: 'problema_solucion',
       preferred_length: 'medio',
       preferred_cta_style: 'directo',
-      secondary_goals: []
+      secondary_goals: [],
+      // ✅ PSICOLOGÍA COMPLETA (4 CAMPOS):
+      central_pain: '',
+      hidden_desire: '',
+      common_objections: '',
+      emotional_triggers: '' // <-- ESTE FALTABA
     });
   };
 
@@ -172,11 +193,11 @@ export const AvatarProfile: React.FC = () => {
       if (result.error) throw result.error;
 
       if (formData.is_active && result.data) {
-        await supabase
-          .from('profiles')
-          .update({ active_avatar_id: result.data.id })
-          .eq('id', user?.id);
-      }
+     await supabase
+    .from('profiles')
+    .update({ active_avatar_id: result.data.id })
+    .eq('id', user?.id);
+  }
 
       if (refreshProfile) refreshProfile();
       await fetchAvatars();
@@ -188,63 +209,72 @@ export const AvatarProfile: React.FC = () => {
     }
   };
 
+    // --- 1. FUNCIÓN DE AUDITORÍA (MANTENER ESTA VERSIÓN) ---
   const handleAudit = async () => {
-    if (!formData.name) {
-      return alert('⚠️ Escribe un nombre para el avatar antes de auditar.');
-    }
-    
+    if (!formData.name) return alert('⚠️ Ponle nombre antes de auditar.');
     setLoading(true);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error("No hay sesión activa");
-
-      const response = await fetch('https://oochxlakqxbwjpzqtghy.supabase.co/functions/v1/process-url', { 
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`
-        },
-        body: JSON.stringify({
-          selectedMode: 'audit_avatar',
+      const { data, error } = await supabase.functions.invoke('process-url', {
+        body: {
+          selectedMode: 'audit_avatar', 
           transcript: JSON.stringify(formData),
-          niche: "General"
-        })
+          estimatedCost: 1
+        }
       });
 
-      const result = await response.json();
-      if (!result.success) throw new Error(result.error || "Error en la auditoría");
-
-      console.log("📊 Resultado Auditoría:", result.generatedData);
+      if (error) throw error;
       
-      const calidad = result.generatedData.auditoria_calidad;
-      alert(
-        `🛡️ VEREDICTO TITAN:\n\n` +
-        `🏆 Score: ${calidad.score_global}/100\n` +
-        `💀 Veredicto: "${calidad.veredicto_brutal}"\n\n` +
-        `Revisa la consola (F12) para ver el análisis detallado.`
-      );
+      const res = data.generatedData || data.result || "Análisis completado.";
+      alert(`🛡️ VEREDICTO TITAN:\n\n${typeof res === 'string' ? res : JSON.stringify(res, null, 2)}`);
+
     } catch (e: any) {
       console.error(e);
-      alert(`❌ Error en auditoría: ${e.message}`);
+      alert("Error de conexión. Revisa que tu Edge Function esté activa.");
     } finally {
       setLoading(false);
     }
   };
 
+  // --- 2. FUNCIÓN DE ELIMINACIÓN ---
   const handleDelete = async () => {
     if (!selectedAvatarId || !confirm('¿Eliminar este avatar?')) return;
 
     try {
-      await supabase
-        .from('avatars')
-        .delete()
-        .eq('id', selectedAvatarId);
-
+      await supabase.from('avatars').delete().eq('id', selectedAvatarId);
       handleNewAvatar();
       await fetchAvatars();
       if (refreshProfile) refreshProfile();
     } catch (e) {
       console.error('Error deleting avatar:', e);
+    }
+  };
+
+  // --- 3. FUNCIÓN GENERADOR IA ---
+  const handleGenerateWithAI = async () => {
+    if (!nicheInput.trim()) return alert("Escribe tu nicho.");
+    setGenerating(true);
+    try {
+      const nicheLower = nicheInput.toLowerCase();
+      let style: any = 'didactico';
+      let goal: any = 'autoridad';
+      
+      if(nicheLower.includes('fitness')) { style = 'inspirador'; goal = 'comunidad'; }
+      else if(nicheLower.includes('marketing')) { style = 'directo'; goal = 'venta'; }
+
+      setFormData(prev => ({
+        ...prev,
+        name: `Experto en ${nicheInput}`,
+        communication_style: style,
+        primary_goal: goal,
+        signature_vocabulary: ['estrategia', nicheInput],
+        experience_level: 'avanzado'
+      }));
+      setShowGenerator(false);
+      alert("✅ Perfil base generado.");
+    } catch (e) { 
+      console.error(e); 
+    } finally { 
+      setGenerating(false); 
     }
   };
 
@@ -291,6 +321,30 @@ export const AvatarProfile: React.FC = () => {
         </div>
       </div>
 
+       {/* BOTÓN ASISTENTE IA */}
+{!selectedAvatarId && !showGenerator && (
+  <button onClick={() => setShowGenerator(true)} className="w-full py-4 mb-6 border border-dashed border-gray-700 rounded-2xl text-gray-400 hover:border-indigo-500 hover:text-white transition-all flex justify-center items-center gap-2">
+    <Zap size={16} className="text-yellow-500"/> Asistente de Creación con IA
+  </button>
+)}
+
+{/* INPUT DEL GENERADOR */}
+{showGenerator && (
+  <div className="bg-indigo-900/10 border border-indigo-500/30 p-6 rounded-2xl flex gap-3 mb-6 animate-in slide-in-from-top-2">
+    <input 
+      type="text" 
+      value={nicheInput} 
+      onChange={e => setNicheInput(e.target.value)} 
+      placeholder="Ej: Coach de Marketing para emprendedores..." 
+      className="flex-1 bg-black/50 border border-gray-700 rounded-xl px-4 py-2 text-white outline-none focus:border-indigo-500"
+    />
+    <button onClick={handleGenerateWithAI} disabled={generating} className="bg-white text-black font-bold px-6 rounded-xl hover:bg-gray-200">
+      {generating ? 'Generando...' : 'Generar'}
+    </button>
+    <button onClick={() => setShowGenerator(false)} className="text-gray-500 hover:text-white">Cancelar</button>
+  </div>
+)}
+
       {/* GRID PRINCIPAL */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
@@ -328,48 +382,155 @@ export const AvatarProfile: React.FC = () => {
           {/* CONTENIDO TABS */}
           <div className="bg-[#0B0E14] border border-gray-800 rounded-3xl p-6 shadow-xl min-h-[600px]">
 
-            {/* TAB: CORE */}
-            {activeTab === 'core' && (
-              <div className="space-y-6">
-                <h3 className="text-white font-bold text-lg flex items-center gap-2 mb-6">
-                  <Shield size={20} className="text-indigo-400" /> Configuración Core (Obligatoria)
-                </h3>
+           {/* TAB: CORE — EL OLIMPO ABSOLUTO */}
+{activeTab === 'core' && (
+  <div className="space-y-6 animate-in fade-in">
+    
+    {/* CAPA 1: IDENTIDAD BASE */}
+    <div>
+      <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">
+        Nombre del Avatar *
+      </label>
+      <input
+        type="text"
+        value={formData.name}
+        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+        className="input-avatar"
+        placeholder="Ej: El Mentor Digital, Coach Premium..."
+      />
+    </div>
 
-                {/* Nombre */}
-                <div>
-                  <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">
-                    Nombre del Avatar *
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="input-avatar"
-                    placeholder="Ej: El Mentor Digital, Coach Premium, Disruptor Viral..."
-                  />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Este nombre identifica tu marca/personalidad en el sistema
-                  </p>
-                </div>
+    {/* CAPA 3 Y 4: PSICOLOGÍA PROFUNDA (DOLOR Y DESEO) */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8 border-t border-gray-800 pt-8">
+      <div>
+        <label className="text-[10px] font-black text-red-400 uppercase mb-2 block flex items-center gap-2">
+          <Zap size={12} /> Capa 3: Dolor Central (¿Qué le duele hoy?)
+        </label>
+        <textarea
+          value={formData.central_pain}
+          onChange={(e) => setFormData({ ...formData, central_pain: e.target.value })}
+          className="textarea-avatar h-28"
+          placeholder="Ej: Siento que publico y nadie me hace caso..."
+        />
+      </div>
 
-                {/* Estado Activo */}
-                <div className="bg-green-900/10 border border-green-500/20 p-4 rounded-xl">
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={formData.is_active}
-                      onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-                      className="w-5 h-5"
-                    />
-                    <div className="flex-1">
-                      <span className="text-white font-bold text-sm block">Marcar como Avatar Activo</span>
-                      <span className="text-gray-400 text-xs">
-                        Solo 1 avatar puede estar activo. Este controlará TODAS las funciones de Titan.
-                      </span>
-                    </div>
-                    {formData.is_active ? <Unlock className="text-green-400" size={20} /> : <Lock className="text-gray-500" size={20} />}
-                  </label>
-                </div>
+      <div>
+        <label className="text-[10px] font-black text-cyan-400 uppercase mb-2 block flex items-center gap-2">
+          <Heart size={12} /> Capa 4: Deseo Oculto (Motor emocional)
+        </label>
+        <textarea
+          value={formData.hidden_desire}
+          onChange={(e) => setFormData({ ...formData, hidden_desire: e.target.value })}
+          className="textarea-avatar h-28"
+          placeholder="Ej: Autoridad absoluta y libertad financiera..."
+        />
+      </div>
+    </div>
+
+    {/* CAPA 6 Y 7: BLOQUEOS Y DISPARADORES */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label className="text-[10px] font-black text-orange-400 uppercase mb-2 block flex items-center gap-2">
+          <AlertTriangle size={12} /> Capa 6: Objeciones (¿Por qué no actúa?)
+        </label>
+        <textarea
+          value={formData.common_objections}
+          onChange={(e) => setFormData({ ...formData, common_objections: e.target.value })}
+          className="textarea-avatar h-24"
+          placeholder="Ej: 'No tengo tiempo', 'Ya lo intenté antes'..."
+        />
+      </div>
+      <div>
+        <label className="text-[10px] font-black text-yellow-400 uppercase mb-2 block flex items-center gap-2">
+          <Flame size={12} /> Capa 7: Triggers (Gatillos de Reacción)
+        </label>
+        <textarea
+          value={formData.emotional_triggers}
+          onChange={(e) => setFormData({ ...formData, emotional_triggers: e.target.value })}
+          className="textarea-avatar h-24"
+          placeholder="Ej: Miedo a perderse la oportunidad (FOMO), estatus social..."
+        />
+      </div>
+    </div>
+
+    {/* ESTADO ACTIVO (Solo 1 bloque) */}
+    <div className={`p-4 rounded-xl border transition-colors mt-6 ${formData.is_active ? 'bg-green-900/10 border-green-500/30' : 'bg-gray-900 border-gray-800'}`}>
+      <label className="flex items-center gap-3 cursor-pointer">
+        <input
+          type="checkbox"
+          checked={formData.is_active}
+          onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
+          className="w-5 h-5 accent-green-500"
+        />
+        <div className="flex-1">
+          <span className="text-white font-bold text-sm block">Marcar como Avatar Activo</span>
+          <span className="text-gray-400 text-xs">Este avatar controlará TODAS las funciones de Titan.</span>
+        </div>
+        {formData.is_active ? <Unlock className="text-green-400" size={20} /> : <Lock className="text-gray-500" size={20} />}
+      </label>
+    </div>
+
+    {/* CONFIGURACIÓN TÉCNICA (Nivel y Objetivo) */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-gray-800 pt-6">
+      <div className="bg-blue-900/10 p-4 rounded-xl">
+        <label className="text-[10px] font-black text-blue-400 uppercase mb-2 block">Nivel de Experiencia</label>
+        <select
+          value={formData.experience_level}
+          onChange={(e) => setFormData({ ...formData, experience_level: e.target.value as any })}
+          className="input-avatar"
+        >
+          <option value="principiante">Principiante</option>
+          <option value="intermedio">Intermedio</option>
+          <option value="avanzado">Avanzado</option>
+          <option value="experto">Experto</option>
+        </select>
+      </div>
+
+      <div className="bg-purple-900/10 p-4 rounded-xl">
+        <label className="text-[10px] font-black text-purple-400 uppercase mb-2 block">Objetivo Principal</label>
+        <select
+          value={formData.primary_goal}
+          onChange={(e) => setFormData({ ...formData, primary_goal: e.target.value as any })}
+          className="input-avatar"
+        >
+          <option value="autoridad">Autoridad</option>
+          <option value="viralidad">Viralidad</option>
+          <option value="venta">Venta</option>
+          <option value="comunidad">Comunidad</option>
+        </select>
+      </div>
+    </div>
+
+    {/* RESTO DE SELECTS (Comunicación, Riesgo, etc.) */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Personalidad Comunicativa</label>
+        <select
+          value={formData.communication_style}
+          onChange={(e) => setFormData({ ...formData, communication_style: e.target.value as any })}
+          className="input-avatar"
+        >
+          <option value="directo">Directo</option>
+          <option value="analitico">Analítico</option>
+          <option value="inspirador">Inspirador</option>
+          <option value="didactico">Didáctico</option>
+        </select>
+      </div>
+      <div>
+        <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Nivel de Riesgo</label>
+        <select
+          value={formData.risk_level}
+          onChange={(e) => setFormData({ ...formData, risk_level: e.target.value as any })}
+          className="input-avatar"
+        >
+          <option value="conservador">Conservador</option>
+          <option value="balanceado">Balanceado</option>
+          <option value="agresivo">Agresivo</option>
+        </select>
+      </div>
+    </div>
+  </div>
+)}
 
                 {/* Grid de campos obligatorios */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
