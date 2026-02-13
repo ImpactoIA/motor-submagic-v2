@@ -46,6 +46,12 @@ export interface AvatarDNA {
     // EVOLUCIÓN
     evolution_level: number;
     coherence_score?: number;
+
+    // ✅ AGREGA ESTO: CAPAS OLIMPO
+    central_pain?: string;
+    hidden_desire?: string;
+    common_objections?: string;
+    emotional_triggers?: string;
 }
 
 export interface AvatarValidationResult {
@@ -214,6 +220,32 @@ ${this.getContentDirectives(avatar.content_priority)}
 ${this.getEmotionDirectives(avatar.dominant_emotion)}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🧠 PSICOLOGÍA PROFUNDA DEL AVATAR (EL OLIMPO)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+• DOLOR CENTRAL: ${avatar.central_pain || 'No definido'}
+• DESEO OCULTO: ${avatar.hidden_desire || 'No definido'}
+• OBJECIONES COMUNES: ${avatar.common_objections || 'No definidas'}
+• DISPARADORES EMOCIONALES: ${avatar.emotional_triggers || 'No definidos'}
+
+⚠️ INSTRUCCIÓN PSICOLÓGICA:
+- Usa el "Dolor Central" para agitar el problema en los ganchos (hooks).
+- Usa el "Deseo Oculto" para pintar la transformación en la resolución.
+- Usa los "Disparadores" para forzar la llamada a la acción (CTA).
+
+// ... antes de PERSONALIZACIÓN AVANZADA ...
+
+• OBJECIONES COMUNES: ${avatar.common_objections || 'No definidas'}
+• DISPARADORES EMOCIONALES: ${avatar.emotional_triggers || 'No definidos'}
+
+⚠️ INSTRUCCIÓN PSICOLÓGICA:
+- Usa el "Dolor Central" para agitar el problema en los ganchos (hooks).
+- Usa el "Deseo Oculto" para pintar la transformación en la resolución.
+- Usa los "Disparadores" para forzar la llamada a la acción (CTA).
+
+// ... antes de PERSONALIZACIÓN AVANZADA ...
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ❌ PROHIBICIONES ABSOLUTAS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -252,6 +284,11 @@ TODO lo que generes DEBE:
 ✓ Priorizar el tipo de contenido (${avatar.content_priority})
 ✓ Evocar la emoción dominante (${avatar.dominant_emotion})
 ✓ NO violar ninguna prohibición
+
+⚖️ CONSTITUCIÓN DE TITAN (JERARQUÍA):
+1. El AVATAR domina el POR QUÉ y el CÓMO SE SIENTE (Emoción).
+2. El EXPERTO domina el QUÉ y la PRUEBA TÉCNICA (Autoridad).
+3. Si la petición del usuario rompe una PROHIBICIÓN del avatar, el sistema se bloquea.
 
 Si hay conflicto entre lo que pide el usuario y el avatar → EL AVATAR GANA.
 

@@ -17,8 +17,13 @@ export class ExpertAuthoritySystem {
       prohibitions = {}
     } = expertProfile;
 
-    const prohibitionsObj = typeof prohibitions === 'string' ? JSON.parse(prohibitions) : prohibitions;
-
+let prohibitionsObj = {};
+try {
+    prohibitionsObj = typeof prohibitions === 'string' ? JSON.parse(prohibitions) : (prohibitions || {});
+} catch (e) {
+    console.error("⚠️ Error parseando prohibiciones en generateDirectives");
+    prohibitionsObj = {};
+}
     return `
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🛡️ PERFIL DE EXPERTO (DIRECTIVAS OBLIGATORIAS)
@@ -196,7 +201,15 @@ Pero EL EXPERTO GANA en:
     }
 
     // REGLA 3: PROHIBICIONES (HARD STOP)
-    const prohibitionsObj = typeof prohibitions === 'string' ? JSON.parse(prohibitions) : prohibitions;
+
+    let prohibitionsObj = {};
+try {
+    prohibitionsObj = typeof prohibitions === 'string' ? JSON.parse(prohibitions) : (prohibitions || {});
+} catch (e) {
+    console.error("⚠️ Error parseando prohibiciones en applyFilter");
+    prohibitionsObj = {};
+}
+    
 
     if (contentType === 'guion' || contentType === 'hook') {
       const texto = typeof content === 'string' ? content : (content.texto || content.guion_sugerido || content.guion_completo || '');
