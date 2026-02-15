@@ -1407,8 +1407,7 @@ FÓRMULAS:
         'Autopromoción',
         'Opiniones sin fundamento'
       ]
-    };
-
+    },  // <--- PON UNA COMA (,) AQUÍ PARA QUE FACEBOOK PUEDA ENTRAR
   'Facebook': {
       comportamiento: 'Comunidad y conversación - Busca conexión emocional y debate',
       porque_se_va: 'No conecta emocionalmente / No invita a opinar / Parece publicidad',
@@ -1460,11 +1459,11 @@ FÓRMULAS:
       tono: 'Cálido, cercano, conversacional, auténtico',
       ritmo: 'Pausado y natural - Respira entre ideas',
       longitud_frase: 'Media (12-20 palabras)',
-      prohibiciones: ['Ritmo agresivo', 'Hype', 'Venta directa', 'Múltiples CTAs']
-     }  
-    };
-
-   const platformConfig = PLATFORM_DNA_LOCAL[platform] || PLATFORM_DNA_LOCAL['TikTok'];
+     prohibiciones: ['Ritmo agresivo', 'Hype', 'Venta directa', 'Múltiples CTAs']
+    }
+  }; // <--- AGREGA ESTE PUNTO Y COMA AQUÍ. ESTO CIERRA LA VARIABLE GIGANTE.
+  
+  const platformConfig = PLATFORM_DNA_LOCAL[platform] || PLATFORM_DNA_LOCAL['TikTok'];
   
   // ==================================================================================
   // 🎯 PROMPT MAESTRO V500 ÉLITE
