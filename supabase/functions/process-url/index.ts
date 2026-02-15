@@ -413,7 +413,7 @@ ${contexto.knowledge_base_content ? `
 📱 PLATAFORMA DESTINO:
 ${plataforma}
 
-${platformStrategy}
+
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📤 FORMATO DE SALIDA JSON
@@ -728,8 +728,14 @@ const PROMPT_GENERADOR_GUIONES = (contexto: any, viralDNA: any, settings: any = 
   const structureData = TITAN_STRUCTURE_DEFINITIONS[structureType] || TITAN_STRUCTURE_DEFINITIONS['winner_rocket'];
   const modeInstruction = structureData.modes[modeId] || "Prioridad: Viralidad Genérica";
   const backbone = structureData.base;
-  
-  // ==================================================================================
+  const structureId = structureType;
+const objetivo = contentObjective;
+const situacion = settings.situation || avatarSituation || 'Dolor Agudo';
+const consciencia = settings.awareness || awarenessLevel || 'Consciente del Problema';
+const hookStyle = settings.hookStyle || settings.hook_style || 
+  (structureType === 'viral_shock' ? 'Shock y Polémica' : 'Ataque Directo al Dolor');
+
+// ==================================================================================
   // 🧬 CAPA 0: OBJETIVO VIRAL (PRE-GENERACIÓN)
   // ==================================================================================
   
@@ -3172,6 +3178,202 @@ AHORA EJECUTA LA TRADUCCIÓN CON PRECISIÓN QUIRÚRGICA.
 };
 
 // ==================================================================================
+// 🔧 PATCH: FUNCIONES Y VARIABLES FALTANTES — index.ts
+// ==================================================================================
+// INSTRUCCIONES:
+//   Pega TODO este bloque JUSTO ANTES de la línea:
+//   "function getModoConfig(modo: string)"
+//   (que está en la sección "🛠️ FUNCIONES HELPER")
+// ==================================================================================
+
+// ==================================================================================
+// 🎯 getObjetivoStrategy — Estrategia según objetivo del usuario
+// ==================================================================================
+// Usada en: PROMPT_IDEAS_ELITE_V2, PROMPT_COPY_EXPERT_V400
+// ==================================================================================
+
+function getObjetivoStrategy(objetivo: string): string {
+  const strategies: Record<string, string> = {
+    'viralidad': `
+ESTRATEGIA DE VIRALIDAD:
+→ PRIORIZA: Contenido que genera debate, sorpresa o identificación masiva.
+→ FORMATO: Hooks disruptivos, opiniones polémicas, datos impactantes.
+→ MÉTRICA OBJETIVO: Shares y comentarios > Guardados.
+→ TÁCTICA: "Si no me sigo, me pierdo algo" — curiosidad + FOMO.
+→ TONO: Energético, directo, sin pausas. Cada segundo compite contra el scroll.`,
+
+    'autoridad': `
+ESTRATEGIA DE AUTORIDAD:
+→ PRIORIZA: Contenido que demuestra expertise real y diferenciación.
+→ FORMATO: Insights de segundo nivel, marcos mentales únicos, datos de industria.
+→ MÉTRICA OBJETIVO: Guardados + Comentarios de calidad > Shares virales.
+→ TÁCTICA: "Este creador sabe algo que otros no" — credibilidad instantánea.
+→ TONO: Seguro, preciso, sin exageración. Demuestra antes de afirmar.`,
+
+    'venta': `
+ESTRATEGIA DE VENTA:
+→ PRIORIZA: Contenido que mueve al avatar desde el dolor hacia la solución.
+→ FORMATO: Testimonios, casos de éxito, objeciones destruidas, urgencia real.
+→ MÉTRICA OBJETIVO: Clics en bio / DMs / Conversiones > Métricas de vanidad.
+→ TÁCTICA: "Vende la transformación, no el producto" — deseo antes que oferta.
+→ TONO: Empático con el dolor, firme con la solución. Sin hype vacío.`,
+
+    'comunidad': `
+ESTRATEGIA DE COMUNIDAD:
+→ PRIORIZA: Contenido que genera sentido de pertenencia y tribu.
+→ FORMATO: Preguntas, retos, "¿te identificas?", contenido de identidad.
+→ MÉTRICA OBJETIVO: Comentarios de tribu + Seguidores fieles > Alcance masivo.
+→ TÁCTICA: "Nosotros vs ellos" — crea un in-group exclusivo.
+→ TONO: Cercano, inclusivo, como un líder de movimiento.`,
+
+    'posicionamiento': `
+ESTRATEGIA DE POSICIONAMIENTO:
+→ PRIORIZA: Contenido que establece tu territorio mental único en el nicho.
+→ FORMATO: Opiniones contrastantes, nuevos marcos de referencia, conceptos propios.
+→ MÉTRICA OBJETIVO: Reconocimiento de marca + Búsquedas directas.
+→ TÁCTICA: "Ocupa un espacio mental que nadie más tiene" — sé el primero en algo.
+→ TONO: Distintivo, con voz única. Diferente por diseño, no por accidente.`,
+  };
+
+  return strategies[objetivo?.toLowerCase()] || strategies['viralidad'];
+}
+
+// ==================================================================================
+// ⏰ getTimingStrategy — Estrategia según contexto temporal
+// ==================================================================================
+// Usada en: PROMPT_IDEAS_ELITE_V2
+// ==================================================================================
+
+function getTimingStrategy(timing: string): string {
+  const strategies: Record<string, string> = {
+    'evergreen': `
+TIMING EVERGREEN (Sin fecha de caducidad):
+→ Contenido que funciona hoy, en 6 meses y en 2 años.
+→ Temáticas: Dolores eternos del nicho, principios fundamentales, verdades profundas.
+→ Ventaja: Acumula vistas a lo largo del tiempo (efecto bola de nieve).
+→ Señal: No incluyas referencias a fechas, eventos o tendencias actuales.`,
+
+    'trending': `
+TIMING TRENDING (Ahora o nunca):
+→ Capitaliza una conversación que YA está activa en la cultura pop o el nicho.
+→ URGENCIA: Este contenido tiene ventana de 48-72 horas máximo.
+→ Táctica: Conecta el trending con el nicho del usuario de forma inesperada.
+→ Señal: Incluye la tendencia en el hook para activar el algoritmo ahora.`,
+
+    'seasonal': `
+TIMING ESTACIONAL (Evento o temporada específica):
+→ Contenido diseñado para un momento predecible del año (Q1, verano, navidad, etc.).
+→ Ventaja: Alta intención de búsqueda y consumo en ese período.
+→ Táctica: Publicar 1-2 semanas ANTES del pico para capturar el ascenso.
+→ Señal: El hook debe incluir la referencia temporal como gancho de relevancia.`,
+
+    'launch': `
+TIMING DE LANZAMIENTO (Producto/Servicio/Evento propio):
+→ Contenido que caliente a la audiencia ANTES de la oferta principal.
+→ Secuencia: Problema → Solución parcial → Presentación de la solución completa.
+→ Táctica: El contenido de hoy planta la semilla para la venta de mañana.
+→ Señal: No hagas venta directa. Genera deseo y anticipación primero.`,
+  };
+
+  return strategies[timing?.toLowerCase()] || strategies['evergreen'];
+}
+
+// ==================================================================================
+// 🗣️ getExpertLanguage — Directivas de lenguaje según nivel de autoridad
+// ==================================================================================
+// Usada en: PROMPT_COPY_EXPERT_V400
+// ==================================================================================
+
+function getExpertLanguage(level: string): string {
+  const languages: Record<string, string> = {
+    'aprendiz': 'Compartir viaje con humildad. "Estoy aprendiendo que..." "Descubrí que..." Sin afirmaciones absolutas.',
+    'practicante': 'Experiencia práctica aplicada. "En mi experiencia..." "Lo que funciona es..." Casos reales propios.',
+    'experto': 'Maestría y conocimiento profundo. Afirmaciones directas. Datos, sistemas, frameworks propios.',
+    'referente': 'Desafía la industria. "La mayoría se equivoca en..." "El estándar actual falla porque..." Pensamiento de segundo nivel.',
+  };
+
+  return languages[level?.toLowerCase()] || languages['practicante'];
+}
+
+// ==================================================================================
+// 📋 getCopyStrategy — Estrategia de copy según objetivo
+// ==================================================================================
+// Usada en: PROMPT_COPY_EXPERT_V400
+// ==================================================================================
+
+function getCopyStrategy(objetivo: string): string {
+  const strategies: Record<string, string> = {
+    'Educar / Valor': 'Prioriza claridad y utilidad inmediata. El copy debe comunicar el valor concreto que recibirá el espectador.',
+    'Inspirar / Motivar': 'Prioriza el impacto emocional. El copy debe generar deseo de acción y pertenencia a algo más grande.',
+    'Persuadir / Vender': 'Prioriza la transformación prometida. El copy debe conectar el dolor actual con el resultado deseado.',
+    'Entretener / Viralidad': 'Prioriza el gancho y el debate. El copy debe generar curiosidad extrema o polarización sana.',
+    'Construir Autoridad': 'Prioriza la credibilidad y la diferenciación. El copy debe posicionar como referente único.',
+    'Romper Objeciones': 'Prioriza la empatía con el escepticismo. El copy debe validar la duda antes de destruirla.',
+  };
+
+  // Buscar match parcial
+  for (const [key, value] of Object.entries(strategies)) {
+    if (objetivo?.toLowerCase().includes(key.split(' ')[0].toLowerCase())) {
+      return value;
+    }
+  }
+
+  return strategies['Educar / Valor'];
+}
+
+// ==================================================================================
+// 📘 scrapeFacebook — Scraper de Facebook con fallback
+// ==================================================================================
+// Usada en: scrapeAndTranscribeVideo (case 'facebook')
+// ==================================================================================
+
+async function scrapeFacebook(url: string): Promise<{
+  videoUrl: string;
+  description: string;
+  duration?: number;
+}> {
+  const apifyToken = Deno.env.get('APIFY_API_TOKEN');
+
+  if (!apifyToken) {
+    console.warn('[SCRAPER] ⚠️ APIFY_API_TOKEN no configurado para Facebook');
+    return { videoUrl: url, description: '', duration: 0 };
+  }
+
+  try {
+    console.log('[SCRAPER] 👍 Iniciando scraping de Facebook:', url);
+    const { ApifyClient } = await import('npm:apify-client');
+    const client = new ApifyClient({ token: apifyToken });
+
+    const run = await client.actor('apify/facebook-posts-scraper').call({
+      startUrls: [{ url }],
+      resultsLimit: 1,
+    });
+
+    const { items } = await client.dataset(run.defaultDatasetId).listItems();
+
+    if (!items || items.length === 0) {
+      console.warn('[SCRAPER] ⚠️ Apify Facebook no devolvió items');
+      return { videoUrl: url, description: '', duration: 0 };
+    }
+
+    const postData = items[0];
+
+    return {
+      videoUrl: (postData as any).videoUrl || url,
+      description: (postData as any).text || (postData as any).message || '',
+      duration: (postData as any).videoDuration || 0,
+    };
+  } catch (error: any) {
+    console.error('[SCRAPER] ❌ Error en Apify Facebook:', error.message);
+    return { videoUrl: url, description: '', duration: 0 };
+  }
+}
+
+// ==================================================================================
+// FIN DEL PATCH — Pega esto justo antes de "function getModoConfig"
+// ==================================================================================
+
+// ==================================================================================
 // 🛠️ FUNCIONES HELPER
 // ==================================================================================
 
@@ -4879,9 +5081,9 @@ serve(async (req) => {
         break;
       }
 
-      
-       case 'generar_guion': {
-    console.log('[MODE] ✨ Generar Guion con Motor V500');
+      case 'generar_guion':
+      case 'generador_guiones': {
+      console.log('[MODE] ✨ Generar Guion con Motor V500');
 
     // 1. Capturar el Tema (Prioridad: Input directo > Contexto > Nicho)
     const temaUsuario = body.text || body.userInput || processedContext || settings.topic || userContext.nicho || "Tema General";
