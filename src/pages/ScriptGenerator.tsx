@@ -334,6 +334,11 @@ export const ScriptGenerator = () => {
     const [result, setResult] = useState<ScriptResult | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [cost, setCost] = useState(5);
+    useEffect(() => {
+    const selected = DURATIONS.find(d => d.id === durationId);
+    if (selected) setCost(selected.cost);
+}, [durationId]);
+
 
     // --- Estados de Auditoría ---
     const [isAuditing, setIsAuditing] = useState(false);
@@ -435,7 +440,8 @@ export const ScriptGenerator = () => {
                         // Configuración Técnica
                         durationId: durationId,
                         duration: durationId,
-                        hook_type: hookType
+                        hook_style: hookType,
+                        hookStyle: hookType,
                     },
                     // 👆 FIN DE LA ACTUALIZACIÓN 👆
 

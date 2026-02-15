@@ -794,7 +794,7 @@ const hookStyle = settings.hookStyle || settings.hook_style ||
   // 🧬 DNA POR PLATAFORMA (ADAPTACIÓN OBLIGATORIA)
   // ==================================================================================
   
-  const PLATFORM_DNA: Record<string, any> = {
+  const PLATFORM_DNA_LOCAL: Record<string, any> = {
     
     // ═════════════════════════════════════════════════════════════════════════════
     // 🎵 TIKTOK - RETENCIÓN AGRESIVA
@@ -1402,7 +1402,7 @@ FÓRMULAS:
     }
   };
   
-  const platformConfig = PLATFORM_DNA[platform] || PLATFORM_DNA['TikTok'];
+  const platformConfig = PLATFORM_DNA_LOCAL[platform] || PLATFORM_DNA_LOCAL['TikTok'];
   
   // ==================================================================================
   // 🎯 PROMPT MAESTRO V500 ÉLITE
@@ -3766,6 +3766,7 @@ Define qué sesgos psicológicos usarás en cada segundo.
   
   const normalizedData = {
     ...parsedData,
+    guion_completo: parsedData.guion_completo || parsedData.guion_tecnico_completo || parsedData.guion_completo_adaptado,
     guion_tecnico_completo: parsedData.guion_tecnico_completo || parsedData.guion_completo || parsedData.guion_completo_adaptado,
     plan_visual_director: parsedData.plan_visual_director || parsedData.plan_visual,
     analisis_estrategico: {
