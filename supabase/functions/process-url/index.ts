@@ -1040,7 +1040,7 @@ FUNCIÓN: Tensión emocional, no solo lógica. Historia relatable.
 
 FÓRMULAS:
 • "Yo también creí que ${enemigoComun} en ${temaEspecifico}..."
-• "Durante años luché con ${dolor} hasta que..."
+• "Durante años luché con ${dolorPrincipal} hasta que..."
 • "El momento en que entendí que ${temaEspecifico} no era lo que pensaba..."
 
 REGLAS:
@@ -3531,9 +3531,7 @@ function getPlataformaRules(plataforma: string) {
 ❌ Exageración emocional
 ❌ Hype sin sustancia
 ❌ Tono informal excesivo
-`
-  };
-
+`,
 'Facebook': `
 ✅ Hook narrativo o pregunta relatable
 ✅ Tono conversacional y humano
