@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { 
     RefreshCw, Wand2, Zap, Copy, Save, Calendar as CalendarIcon, Gavel,
-    Video, Instagram, Youtube, Linkedin, CheckCircle2, AlignLeft,
+    Video, Instagram, Youtube, Linkedin, Globe, CheckCircle2, AlignLeft,
     User, AlertCircle, PenTool, Layout, Brain, Target, XCircle,
     X, ChevronRight, Flame, TrendingUp, MessageCircle, Award, Eye
 } from 'lucide-react';
@@ -295,7 +295,8 @@ const PLATFORMS = [
     { id: 'TikTok', icon: Video, label: 'TikTok', color: 'text-cyan-400', bg: 'bg-cyan-900/20' },
     { id: 'Reels', icon: Instagram, label: 'Reels', color: 'text-pink-500', bg: 'bg-pink-900/20' },
     { id: 'YouTube', icon: Youtube, label: 'YouTube', color: 'text-red-500', bg: 'bg-red-900/20' },
-    { id: 'LinkedIn', icon: Linkedin, label: 'LinkedIn', color: 'text-blue-400', bg: 'bg-blue-900/20' }
+    { id: 'LinkedIn', icon: Linkedin, label: 'LinkedIn', color: 'text-blue-400', bg: 'bg-blue-900/20' },
+    { id: 'Facebook', icon: Globe, label: 'Facebook', color: 'text-blue-500', bg: 'bg-blue-800/20' }
 ];
 
 // ==================================================================================
@@ -628,7 +629,7 @@ export const ScriptGenerator = () => {
                         />
                         
                         {/* Selector de Plataforma */}
-                        <div className="grid grid-cols-4 gap-2 mt-4">
+                        <div className="grid grid-cols-5 gap-2 mt-4">
                             {PLATFORMS.map(p => (
                                 <button 
                                     key={p.id} 

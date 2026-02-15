@@ -247,6 +247,14 @@ const PLATFORM_DNA: any = {
     cta_focus: '🔄 REPOST (Difusión) o 🤝 CONECTAR.',
     duracion_ideal: '45s - 90s.',
     regla_oro: 'Aporta insight de negocio, no solo entretenimiento.'
+  },
+  'Facebook': {
+    ritmo: '📖 CONVERSACIONAL: Pausas naturales, como hablar con un amigo.',
+    lenguaje: 'Cercano, familiar, coloquial. Sin jerga técnica ni slang de internet.',
+    estructura_visual: 'Subtítulos obligatorios (70% sin audio). Portada con texto claro.',
+    cta_focus: '💬 COMENTARIOS (Debate/Opinión) y ↗️ COMPARTIR (Etiquetar amigos).',
+    duracion_ideal: '60s - 3min.',
+    regla_oro: 'Empieza con historia o pregunta relatable. Facebook premia la conversación, no el shock.'
   }
 };
 
@@ -917,8 +925,8 @@ FUNCIÓN: Mostrar ANTES vs DESPUÉS mental/social.
 
 FÓRMULAS:
 • "Cuando apliqué esto en ${temaEspecifico}, pasé de X a Y"
-• "Hace 6 meses no sabía esto. Hoy ${resultado_deseado}"
-• "Y ahora, cada vez que hago esto, ${transformación}"
+• "Hace 6 meses no sabía esto. Hoy ${deseoPrincipal}"
+• "Y ahora, cada vez que hago esto, ${deseoPrincipal}"
 
 REGLAS:
 ✓ Generar FOMO (miedo a perderse esto)
@@ -1031,7 +1039,7 @@ REGLAS:
 FUNCIÓN: Tensión emocional, no solo lógica. Historia relatable.
 
 FÓRMULAS:
-• "Yo también creí que ${creencia_falsa} en ${temaEspecifico}..."
+• "Yo también creí que ${enemigoComun} en ${temaEspecifico}..."
 • "Durante años luché con ${dolor} hasta que..."
 • "El momento en que entendí que ${temaEspecifico} no era lo que pensaba..."
 
@@ -1158,9 +1166,9 @@ FÓRMULAS:
 FUNCIÓN: Exactamente lo que promete el título.
 
 FÓRMULAS:
-• "En este video te voy a enseñar EXACTAMENTE cómo ${resultado_específico} en ${temaEspecifico}"
+• "En este video te voy a enseñar EXACTAMENTE cómo ${deseoPrincipal} en ${temaEspecifico}"
 • "Voy a mostrarte los 3 pasos EXACTOS para ${objetivo} en ${temaEspecifico}"
-• "Al final de este video sabrás ${promesa_concreta}"
+• "Al final de este video sabrás dominar ${temaEspecifico}"
 
 REGLAS:
 ✓ Ser específico desde el segundo 1
@@ -1213,9 +1221,9 @@ La clave es que esa tarea es SIEMPRE la que menos quieres hacer. Porque es incó
 FUNCIÓN: Qué hacer con esta información.
 
 FÓRMULAS:
-• "Cuando apliques esto en ${temaEspecifico}, verás que ${resultado_esperado}"
-• "Empieza HOY con ${primer_paso_concreto}"
-• "El resultado: ${transformación_específica}"
+• "Cuando apliques esto en ${temaEspecifico}, verás que ${deseoPrincipal}"
+• "Empieza HOY con aplica esto hoy mismo"
+• "El resultado: ${deseoPrincipal}"
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 5. CTA LÓGICO (56-60s) 🔔
@@ -1226,7 +1234,7 @@ FUNCIÓN: CTA específico y relacionado.
 FÓRMULAS:
 • "Suscríbete si quieres más sistemas probados sobre ${temaEspecifico}"
 • "Comenta qué parte te fue más útil"
-• "En el próximo video: ${tema_relacionado}"
+• "En el próximo video: ${temaEspecifico} avanzado"
 
 ═══════════════════════════════════════════════════════════════════════════
 🧠 REGLAS YOUTUBE (INQUEBRANTABLES)
@@ -1303,7 +1311,7 @@ FUNCIÓN: Experiencia que valida tu opinión.
 FÓRMULAS:
 • "En mi trabajo con 50+ empresas Fortune 500 en ${temaEspecifico}..."
 • "Analicé 10,000+ horas de datos en ${temaEspecifico}. Los resultados son contundentes."
-• "Como Director de ${rol} durante X años..."
+• "Como Director de ${nicho} durante X años..."
 
 REGLAS:
 ✓ Credibilidad establecida
@@ -1351,7 +1359,7 @@ FUNCIÓN: Sin exageración emocional.
 
 FÓRMULAS:
 • "Esto cambiará cómo tu organización ve ${temaEspecifico}."
-• "No es sobre ${creencia_común}. Es sobre ${verdad_profunda}."
+• "No es sobre ${enemigoComun}. Es sobre ${deseoPrincipal}."
 • "Las implicaciones para la industria de ${temaEspecifico} son claras."
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1399,16 +1407,71 @@ FÓRMULAS:
         'Autopromoción',
         'Opiniones sin fundamento'
       ]
-    }
-  };
-  
-  const platformConfig = PLATFORM_DNA_LOCAL[platform] || PLATFORM_DNA_LOCAL['TikTok'];
+    };
+
+  'Facebook': {
+      comportamiento: 'Comunidad y conversación - Busca conexión emocional y debate',
+      porque_se_va: 'No conecta emocionalmente / No invita a opinar / Parece publicidad',
+      que_retiene: 'Historias humanas + Preguntas + Opiniones que generan debate',
+
+      estructura_obligatoria: `
+═══════════════════════════════════════════════════════════════════════════
+📘 ESTRUCTURA FACEBOOK (COMUNIDAD + CONVERSACIÓN - 60-90s)
+═══════════════════════════════════════════════════════════════════════════
+
+⚠️ REGLA DE ORO: Facebook NO es TikTok. La gente viene a CONECTAR, no a consumir rápido.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. HOOK NARRATIVO (0-5s) 📖
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- "¿Alguna vez te pasó que ${dolorPrincipal}?"
+- "Hace un tiempo yo también estaba exactamente en esa situación..."
+✓ Tono cálido y cercano — NO empezar con "Hola soy..."
+✓ Generar identificación inmediata
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2. CONTEXTO HUMANO (6-20s) 🤝
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- "Durante años creí que ${enemigoComun} era la solución..."
+✓ Mostrar vulnerabilidad o aprendizaje personal
+✓ Facebook tolera más contexto que TikTok
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+3. INSIGHT CLARO (21-50s) 💡
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ Sin tecnicismos — usa analogías cotidianas
+✓ Máximo 2-3 puntos clave (no listas largas)
+✓ Explica el "por qué" — Facebook premia profundidad
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+4. PREGUNTA DEBATE (51-60s) 🗣️
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- "¿Tú qué harías en esta situación? Cuéntame abajo"
+- "Etiqueta a alguien que necesita escuchar esto sobre ${temaEspecifico}"
+✓ UNA sola pregunta — comentarios = alcance orgánico en Facebook
+
+⚠️ PROHIBIDO EN FACEBOOK:
+❌ Ritmo agresivo de TikTok
+❌ Lenguaje de influencer / hype vacío
+❌ Venta directa agresiva
+❌ Múltiples CTAs
+`,
+
+      tono: 'Cálido, cercano, conversacional, auténtico',
+      ritmo: 'Pausado y natural - Respira entre ideas',
+      longitud_frase: 'Media (12-20 palabras)',
+      prohibiciones: ['Ritmo agresivo', 'Hype', 'Venta directa', 'Múltiples CTAs']
+     }  
+    };
+
+   const platformConfig = PLATFORM_DNA_LOCAL[platform] || PLATFORM_DNA_LOCAL['TikTok'];
   
   // ==================================================================================
   // 🎯 PROMPT MAESTRO V500 ÉLITE
   // ==================================================================================
   
-  return `
+return `
+
 ═════════════════════════════════════════════════════════════════════════════
 🔥 MOTOR VIRAL V500 ÉLITE - CODIFICADOR DE INFLUENCIA MUNDIAL
 ═════════════════════════════════════════════════════════════════════════════
@@ -3469,6 +3532,21 @@ function getPlataformaRules(plataforma: string) {
 ❌ Exageración emocional
 ❌ Hype sin sustancia
 ❌ Tono informal excesivo
+`
+  };
+
+'Facebook': `
+✅ Hook narrativo o pregunta relatable
+✅ Tono conversacional y humano
+✅ Subtítulos obligatorios
+✅ Profundidad permitida
+✅ Pregunta debate al final
+✅ Duración: 60s - 3min
+
+❌ Ritmo agresivo de TikTok
+❌ Lenguaje de influencer
+❌ Venta directa agresiva
+❌ Múltiples CTAs
 `
   };
   return rules[plataforma] || rules['TikTok'];
