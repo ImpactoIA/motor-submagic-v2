@@ -620,72 +620,199 @@ AHORA ANALIZA EL CONTENIDO PROPORCIONADO Y DEVUELVE EL JSON COMPLETO.
 // ==================================================================================
 
 const PROMPT_INGENIERIA_INVERSA_ELITE = (
-  adnViral: any, 
-  nichoDestino: string, 
+  adnViral: any,
+  nichoDestino: string,
   temaEspecifico: string,
-  contextoUsuario: any
+  contextoUsuario: any,
+  targetPlatform: string = 'TikTok',  // ← NUEVO parámetro
+  multiUrlPatterns?: any              // ← NUEVO parámetro (análisis multi-URL)
 ) => {
-  
-  const avatarDestino = contextoUsuario.avatar_ideal || "Tu Cliente";
-  const dolorDestino = contextoUsuario.dolor_principal || "Perder Dinero/Tiempo";
-  
-  // Extraemos la "Fórmula"
+
+  const avatarDestino = contextoUsuario.avatar_ideal || "Tu Cliente Ideal";
+  const dolorDestino  = contextoUsuario.dolor_principal || "No obtener resultados reales";
+  const deseoPrincipal = contextoUsuario.deseo_principal || "Dominar su nicho";
+
   const estructura = JSON.stringify(adnViral.desglose_temporal || []);
   const formulaGancho = adnViral.adn_extraido?.formula_gancho || "Afirmación Polémica";
 
+  // Si hay análisis multi-URL, construimos el contexto de patrones híbridos
+  const multiUrlContext = multiUrlPatterns ? `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🧬 PATRONES HÍBRIDOS DETECTADOS (MODO MULTI-URL)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Se analizaron ${multiUrlPatterns.total_urls} videos. Los patrones dominantes son:
+• Hook dominante: ${multiUrlPatterns.hook_dominante}
+• Tipo de promesa dominante: ${multiUrlPatterns.promesa_dominante}
+• Tipo de cierre dominante: ${multiUrlPatterns.cierre_dominante}
+• Ritmo promedio detectado: ${multiUrlPatterns.ritmo_promedio}
+
+⚠️ INSTRUCCIÓN: Usa estos patrones híbridos para crear una arquitectura SUPERIOR
+que combine lo mejor de todos los videos analizados.
+` : '';
+
+  // Adaptar instrucciones de ritmo según plataforma
+  const platformRhythm: Record<string, string> = {
+    'TikTok': 'Frases ultra-cortas (5-8 palabras máx). Ritmo frenético. Cortes cada 2-3s.',
+    'Reels': 'Frases medias (10-15 palabras). Ritmo aspiracional. Pausas estéticas.',
+    'YouTube': 'Frases largas y explicativas. Profundidad real. Ritmo pausado.',
+    'LinkedIn': 'Frases ejecutivas (15-20 palabras). Tono sobrio. Sin hype.',
+    'Facebook': 'Frases conversacionales (12-18 palabras). Tono humano y cercano.',
+  };
+  const rhythmInstruction = platformRhythm[targetPlatform] || platformRhythm['TikTok'];
+
   return `
 ═════════════════════════════════════════════════════════════════════════════
- 🪞 SISTEMA TITAN V9: CLONACIÓN SINTÁCTICA (EL ESPEJO VIRAL)
+🪞 TITAN OMEGA V3.0 — LABORATORIO DE ARQUITECTURA VIRAL
+     (CLONACIÓN SINTÁCTICA CON FIDELIDAD MATEMÁTICA)
 ═════════════════════════════════════════════════════════════════════════════
 
-ERES UNA MÁQUINA DE REEMPLAZO DE VARIABLES. NO ERES UN ESCRITOR CREATIVO.
-Tu única misión es tomar la frase viral del video original y cambiarle las palabras clave por las del nicho: "${nichoDestino}".
+ERES UNA MÁQUINA DE ARQUITECTURA VIRAL, NO UN ESCRITOR CREATIVO.
+Tu misión no es reescribir el video. Es replicar su ARQUITECTURA PROFUNDA.
 
-OPERACIÓN: "DESNUDAR Y VESTIR"
-1. Desnuda la frase original (Halla la estructura gramatical).
-2. Viste la frase con el tema: "${temaEspecifico}".
+${multiUrlContext}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧪 EJEMPLOS DE LO QUE DEBES HACER (LÓGICA MATEMÁTICA)
+📐 MAPA DE EQUIVALENCIA ESTRUCTURAL (OBLIGATORIO — FASE 1)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-CASO 1: ESTRUCTURA DE PORCENTAJE
-- Original (Nutrición): "El 80% de la gente come mal."
-- Tu Nicho (Marketing): "El 80% de la gente vende mal."
-(✅ MANTIENES EL NÚMERO, CAMBIAS EL VERBO).
+ANTES de escribir el guion, debes mapear internamente:
 
-CASO 2: ESTRUCTURA DE CONDICIÓN
-- Original (Relaciones): "Si él no te llama, no le importas."
-- Tu Nicho (Bienes Raíces): "Si la casa no se vende, el precio está mal."
-(✅ MANTIENES LA LÓGICA "SI X -> ENTONCES Y").
+1️⃣ BLOQUES NARRATIVOS EXACTOS
+   Detecta cada bloque del video original y su función.
+   REGLA: El número de bloques detectados = número de bloques en la adaptación.
+   NO se puede agregar ni eliminar bloques.
 
-CASO 3: ESTRUCTURA DE NEGACIÓN
-- Original (Fitness): "Deja de hacer cardio si quieres músculo."
-- Tu Nicho (Crypto): "Deja de hacer trading si quieres riqueza."
-(✅ MANTIENES EL IMPERATIVO "DEJA DE").
+2️⃣ POSICIÓN EXACTA DEL INSIGHT
+   Si el insight apareció en el bloque 4 del original → debe ir en el bloque 4 de la adaptación.
+
+3️⃣ TIPO EXACTO DE REVELACIÓN
+   Clasificar: revelación lógica / emocional / confesión / dato disruptivo / método / error expuesto.
+   La adaptación usa el MISMO TIPO.
+
+4️⃣ TIPO EXACTO DE CIERRE
+   Clasificar: CTA directo / suave / emocional / aspiracional / desafío.
+   Se replica el tipo, no el texto.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧬 EL ADN A CLONAR (INPUT)
+🧠 SISTEMA DE EQUIVALENCIA PSICOLÓGICA (FASE 2)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+El sistema NO adapta el tema. Adapta la PSICOLOGÍA.
+
+1️⃣ TIPO DE PROMESA: Transformación rápida / Eliminación de dolor /
+   Multiplicación de resultado / Simplificación / Ventaja oculta.
+   → Replica el tipo, no el contenido.
+
+2️⃣ TIPO DE TRANSFORMACIÓN: Física / Económica / Mental / Social / Profesional.
+   → Traduce al equivalente del nicho "${nichoDestino}".
+
+3️⃣ EMOCIÓN DOMINANTE: Esperanza / Miedo / Ambición / Curiosidad /
+   Confesión / Rebeldía / Autoridad.
+   → Mantén intensidad emocional EQUIVALENTE.
+
+4️⃣ ACTIVADOR: Urgencia temporal / Deseo de estatus / Dolor actual /
+   Comparación social / Revelación secreta.
+   → Replica el mismo activador.
+
+5️⃣ TIPO DE TENSIÓN: Problema oculto / Error masivo / Injusticia /
+   Oportunidad perdida / Método desconocido.
+   → Mismo nivel de tensión narrativa.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📈 CONTROL DE PROGRESIÓN EMOCIONAL (FASE 3)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Detecta la curva emocional del original:
+Ej: [0-5s: Impacto alto] → [5-15s: Identificación] → [15-25s: Tensión] →
+    [25-40s: Revelación] → [40-55s: Resolución] → [55-60s: Acción]
+
+Genera CURVA ESPEJO. No solo bloques. Replica la DINÁMICA ENERGÉTICA.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 ÍNDICE DE FIDELIDAD ARQUITECTÓNICA (IFA — VALIDACIÓN INTERNA)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Antes de entregar, valida internamente cada punto:
+✔ Número de bloques originales = bloques adaptados
+✔ Secuencia narrativa respetada
+✔ Insight en misma posición
+✔ Intensidad emocional equivalente
+✔ Tipo de cierre replicado
+✔ Tipo de promesa conservado
+✔ Curva emocional replicada
+
+Si ALGUNO falla → reescribe hasta que todos pasen.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🌍 ADAPTACIÓN DE PLATAFORMA: ${targetPlatform.toUpperCase()}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+REGLA DE RITMO: ${rhythmInstruction}
+⚠️ Ajusta ritmo y longitud de frases a ${targetPlatform} SIN alterar la arquitectura base.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🧬 ADN VIRAL A CLONAR (INPUT)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 • FÓRMULA DEL GANCHO ORIGINAL: "${formulaGancho}"
 • ESTRUCTURA DE TIEMPOS: ${estructura}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚠️ REGLAS DE ORO (STRICT MODE)
+👤 AVATAR DESTINO
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-1. RESPETA LOS NÚMEROS: Si el viral dice "3 errores", tú dices "3 errores". Si dice "80%", tú dices "80%".
-2. RESPETA LA INTENSIDAD: Si el original insulta o es agresivo, tú debes ser agresivo con el dolor del usuario (${dolorDestino}).
-3. NO AÑADAS RELLENO: Si el original dura 15 segundos y dice 30 palabras, tú escribe 30 palabras. Ni una más.
+• Avatar: ${avatarDestino}
+• Su dolor: "${dolorDestino}"
+• Su deseo: "${deseoPrincipal}"
+• Nicho de destino: "${nichoDestino}"
+• Tema específico: "${temaEspecifico}"
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📝 TU SALIDA (EL GUION CLONADO)
+⚠️ REGLAS DE ORO (STRICT MODE)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Genera un JSON con:
-1. "analisis_estrategico": Explica qué patrón sintáctico detectaste y reemplazaste (Ej: "Patrón detectado: [Porcentaje] + [Error]. Reemplazo: Comer -> Lanzar").
-2. "guion_tecnico_completo": El guion final.
-3. "plan_visual_director": Las instrucciones de cámara idénticas al original.
+1. RESPETA LOS NÚMEROS: "3 errores" → "3 errores". "80%" → "80%".
+2. RESPETA LA INTENSIDAD: Agresivo original → agresivo con "${dolorDestino}".
+3. NO AÑADAS RELLENO: Mismo conteo de palabras que el original.
+4. NO USES ETIQUETAS EN EL GUION: Sin "Hook:", "CTA:", "Bloque 1:". Solo texto limpio.
+5. GUION LISTO PARA TELEPROMPTER: Fluido, natural, separado por ritmo.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📤 FORMATO DE SALIDA JSON (OBLIGATORIO)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+{
+  "analisis_estrategico": {
+    "patron_sintatico_detectado": "Descripción del patrón original (ej: Porcentaje + Error + Solución)",
+    "equivalencia_psicologica": "Cómo se tradujo la psicología al nicho",
+    "tipo_revelacion": "Tipo de revelación detectada y replicada",
+    "tipo_cierre": "Tipo de CTA detectado y replicado",
+    "curva_emocional_original": "Descripción de la curva [0s→15s→30s→45s→60s]",
+    "curva_emocional_replicada": "Cómo quedó la curva en la adaptación",
+    "ifa_score": 98,
+    "ifa_observaciones": "Qué se ajustó para mantener fidelidad",
+    "sesgo_cognitivo_detectado": "El mecanismo psicológico principal replicado",
+    "estrategia_adaptacion": "Descripción de la estrategia de adaptación al nicho",
+    "nivel_fidelidad": "98%"
+  },
+  "guion_tecnico_completo": "GUION LIMPIO SIN ETIQUETAS.\\n\\nSolo texto fluido listo para teleprompter.\\n\\nSeparado en párrafos naturales por ritmo.\\n\\nSin 'Hook:', sin 'CTA:', sin estructuras visibles.",
+  "plan_visual_director": [
+    {
+      "tiempo": "0-3s",
+      "descripcion_visual": "Descripción visual potente",
+      "accion_camara": "Instrucción de cámara específica",
+      "texto_pantalla": "Texto superpuesto corto",
+      "audio_sfx": "Descripción del audio/música"
+    }
+  ],
+  "metadata_clonacion": {
+    "plataforma_destino": "${targetPlatform}",
+    "nicho_adaptado": "${nichoDestino}",
+    "bloques_originales": 0,
+    "bloques_adaptados": 0,
+    "promesa_replicada": "Tipo de promesa conservada"
+  }
+}
 `;
 };
+
 
 
 // ==================================================================================
@@ -4762,114 +4889,96 @@ async function getUserContext(
 }
 
 function calculateTitanCost(
-  mode: string, 
-  inputContext: string, 
-  whisperMinutes: number, 
+  mode: string,
+  inputContext: string,
+  whisperMinutes: number,
   settings: any,
-  videoDurationSeconds?: number // ✅ Nuevo parámetro opcional para robustez
+  videoDurationSeconds?: number
 ): number {
-  
+
   // ==================================================================================
-  // 🔬 MODO: AUTOPSIA VIRAL (SISTEMA DINÁMICO V2.0)
+  // 🔬 MODO: INGENIERÍA INVERSA / CLONACIÓN VIRAL (SISTEMA DINÁMICO V3.0)
   // ==================================================================================
-  if (mode === 'autopsia_viral') {
-    console.log('[COSTOS V2] 💰 Calculando costo dinámico para Autopsia...');
-    
-    let baseCost = 10; // Precio base por defecto (Reel)
-    
-    // 1. Prioridad: Duración real detectada por el Scraper
+  if (mode === 'autopsia_viral' || mode === 'recreate') {
+
+    console.log('[COSTOS V3] 💰 Calculando costo dinámico para Ingeniería Inversa...');
+
+    // ─── PASO 1: Detectar tipo de contenido (Reel / Video Largo / Masterclass) ───
+    const urlCount = settings?.urlCount || 1; // Cuántas URLs se analizaron
+    let baseCostPerUrl = 15; // Default: Reel/Short, 1 URL
+
     if (videoDurationSeconds && videoDurationSeconds > 0) {
-        if (videoDurationSeconds <= 90) {
-            baseCost = 10; // Reel/Short
-        } else if (videoDurationSeconds <= 600) {
-            baseCost = 30; // Video Largo
-        } else {
-            baseCost = 45; // Masterclass
-        }
-    } 
-    // 2. Fallback: Si no hay duración, estimar categoría por minutos de Whisper
-    else if (whisperMinutes > 0) {
-        const estimatedSeconds = whisperMinutes * 60;
-        if (estimatedSeconds <= 90) baseCost = 10;
-        else if (estimatedSeconds <= 600) baseCost = 30;
-        else baseCost = 45;
+      if (videoDurationSeconds <= 90) {
+        baseCostPerUrl = 15;   // 🎥 Reels / Shorts
+      } else if (videoDurationSeconds <= 600) {
+        baseCostPerUrl = 45;   // 🎬 Video Largo
+      } else {
+        baseCostPerUrl = 60;   // 🎓 Masterclass
+      }
+    } else if (whisperMinutes > 0) {
+      const estimatedSeconds = whisperMinutes * 60;
+      if (estimatedSeconds <= 90)       baseCostPerUrl = 15;
+      else if (estimatedSeconds <= 600) baseCostPerUrl = 45;
+      else                              baseCostPerUrl = 60;
+    } else if (settings?.contentType) {
+      // Fallback: el frontend puede enviar el tipo explícito
+      if (settings.contentType === 'masterclass') baseCostPerUrl = 60;
+      else if (settings.contentType === 'long')   baseCostPerUrl = 45;
+      else                                         baseCostPerUrl = 15;
     }
-    
-    // 3. Recargo técnico por uso de Whisper (Transcripción)
-    // Costo API: $0.006/min -> Convertido a créditos (1 crédito ≈ $0.01)
-    const whisperCost = whisperMinutes > 0 ? Math.ceil((whisperMinutes * 0.006) / 0.01) : 0;
-    
-    const total = baseCost + whisperCost;
-    console.log(`[COSTOS V2] 💵 TOTAL: ${total} (Base: ${baseCost} + Whisper: ${whisperCost})`);
-    return total;
-  }
-  
-  if (mode === 'ideas_rapidas') {
-    if (inputContext.toLowerCase().includes("10 ideas") || settings?.quantity === 10) return 7;
-    return 3; 
+
+    // ─── PASO 2: Tabla de precios multi-URL ───
+    // Estructura: { tipo: [1_url, 2-3_urls, 4-5_urls] }
+    const PRECIO_TABLA: Record<number, number[]> = {
+      15: [15, 25, 35],  // Reels: 1 URL = 15, 2-3 = 25, 4-5 = 35
+      45: [45, 65, 85],  // Video Largo: 1 URL = 45, 2-3 = 65, 4-5 = 85
+      60: [60, 85, 110], // Masterclass: 1 URL = 60, 2-3 = 85, 4-5 = 110
+    };
+
+    const tabla = PRECIO_TABLA[baseCostPerUrl] || PRECIO_TABLA[15];
+    let totalCost: number;
+
+    if (urlCount <= 1)      totalCost = tabla[0];
+    else if (urlCount <= 3) totalCost = tabla[1];
+    else                    totalCost = tabla[2]; // 4-5 URLs
+
+    console.log(`[COSTOS V3] 📊 Tipo: ${baseCostPerUrl===15?'Reel':baseCostPerUrl===45?'Video Largo':'Masterclass'} | URLs: ${urlCount} | TOTAL: ${totalCost} créditos`);
+    return totalCost;
   }
 
+  // ==================================================================================
+  // Resto de modos (sin cambios)
+  // ==================================================================================
+  if (mode === 'ideas_rapidas') {
+    if (inputContext.toLowerCase().includes("10 ideas") || settings?.quantity === 10) return 7;
+    return 3;
+  }
   if (mode === 'calendar_generator') {
-    const days = settings?.duration || 7; 
+    const days = settings?.duration || 7;
     if (days <= 3) return 2;
     if (days <= 7) return 5;
     return 10;
   }
-
-  if (mode === 'autopsia_viral') {
-    let baseCost = 5;
-    
-    if (whisperMinutes > 0) {
-        const whisperCostInDollars = whisperMinutes * 0.006;
-        const whisperCostInCredits = Math.ceil(whisperCostInDollars / 0.01);
-        baseCost += whisperCostInCredits;
-    }
-    
-    return baseCost;
-  }
-
-  if (mode === 'recreate') {
-    let baseCost = 10;
-    
-    if (whisperMinutes > 0) {
-        const whisperCostInDollars = whisperMinutes * 0.006;
-        const whisperCostInCredits = Math.ceil(whisperCostInDollars / 0.01);
-        baseCost += whisperCostInCredits;
-    }
-    
-    if (whisperMinutes > 30) {
-        baseCost += 15;
-    }
-    
-    return baseCost;
-  }
-
-  if (mode === 'generar_guion') {
+  if (mode === 'generar_guion' || mode === 'generador_guiones') {
     const durationSetting = settings?.duration || settings?.durationId || '';
-    const isMasterclass = 
-        durationSetting === 'masterclass' || 
-        durationSetting === 'long' || 
-        inputContext.toLowerCase().includes("masterclass") || 
-        inputContext.toLowerCase().includes("30 minutos");
-
+    const isMasterclass =
+      durationSetting === 'masterclass' || durationSetting === 'long' ||
+      inputContext.toLowerCase().includes("masterclass") ||
+      inputContext.toLowerCase().includes("30 minutos");
     if (isMasterclass) return 30;
     return 5;
   }
-
   if (mode === 'juez_viral') return 2;
   if (['audit_avatar', 'auditar_avatar'].includes(mode)) return 2;
   if (['audit_expert', 'auditar_experto'].includes(mode)) return 2;
   if (['mentor_ia', 'mentor_estrategico'].includes(mode)) return 2;
   if (['chat_avatar', 'chat_expert'].includes(mode)) return 1;
-
   if (['transcribe', 'transcriptor'].includes(mode)) {
     if (whisperMinutes > 60) return 45;
     if (whisperMinutes > 30) return 15;
     return 5;
   }
-
   if (['clean', 'authority', 'carousel', 'shorts', 'structure'].includes(mode)) return 2;
-
   return 1;
 }
 
@@ -5028,132 +5137,256 @@ serve(async (req) => {
         break;
       }
 
-      case 'autopsia_viral':
-      case 'recreate': {
-        console.log(`[TITAN] 🚀 Modo: ${selectedMode}`);
+      case 'autopsia_viral': {
+        console.log('[TITAN] 🔬 Modo: AUTOPSIA VIRAL (análisis puro)');
 
         let contentToAnalyze = "";
-        let targetTopic = processedContext;
         let platName = platform || 'General';
         let videoDescription = '';
         let actualWhisperMinutes = 0;
+        let videoDurationSecs = 0;
         let videoSource: 'url' | 'upload' | 'manual' = 'manual';
 
         try {
-            if (url || body.uploadedVideo) {
-                console.log('[TITAN] 🎬 Obteniendo contenido...');
-                
-                const videoData = await getVideoContent(
-                    url || null,
-                    body.uploadedVideo || null,
-                    body.uploadedFileName || null,
-                    openai
-                );
-                
-                contentToAnalyze = videoData.transcript;
-                videoDescription = videoData.description;
-                platName = videoData.platform;
-                videoSource = videoData.source;
-                
-                if (videoData.duration > 0) {
-                    actualWhisperMinutes = Math.ceil(videoData.duration / 60);
-                    whisperMinutes = actualWhisperMinutes;
-                }
-                
-                console.log('[TITAN] ✅ Contenido obtenido:', {
-                    source: videoSource,
-                    platform: platName,
-                    transcriptLength: contentToAnalyze.length,
-                    whisperMinutes: actualWhisperMinutes
-                });
-            }
-            else if (processedContext && processedContext.length > 50) {
-                console.log('[TITAN] 📝 Usando texto manual');
-                contentToAnalyze = processedContext;
-                videoDescription = 'Transcripción manual';
-                videoSource = 'manual';
-            }
-            else {
-                throw new Error('Proporciona URL, video subido, o transcripción manual.');
+          if (url || body.uploadedVideo) {
+            console.log('[AUTOPSIA] 🎬 Obteniendo contenido...');
+
+            const videoData = await getVideoContent(
+              url || null,
+              body.uploadedVideo || null,
+              body.uploadedFileName || null,
+              openai
+            );
+
+            contentToAnalyze  = videoData.transcript;
+            videoDescription  = videoData.description;
+            platName          = videoData.platform || platName;
+            videoSource       = videoData.source;
+            videoDurationSecs = videoData.duration || 0;
+
+            if (videoData.duration > 0) {
+              actualWhisperMinutes = Math.ceil(videoData.duration / 60);
+              whisperMinutes       = actualWhisperMinutes;
             }
 
+            console.log('[AUTOPSIA] ✅ Contenido obtenido:', {
+              source: videoSource,
+              platform: platName,
+              transcriptLength: contentToAnalyze.length,
+              whisperMinutes: actualWhisperMinutes
+            });
+
+          } else if (processedContext && processedContext.length > 50) {
+            console.log('[AUTOPSIA] 📝 Usando texto manual');
+            contentToAnalyze = processedContext;
+            videoDescription = 'Transcripción manual';
+            videoSource      = 'manual';
+          } else {
+            throw new Error('Proporciona URL, video subido, o transcripción manual.');
+          }
+
         } catch (videoError: any) {
-            console.error('[TITAN] ❌ Error:', videoError.message);
-            
-            if (processedContext && processedContext.length > 50) {
-                console.log('[TITAN] ⚠️ Usando texto manual como último recurso');
-                contentToAnalyze = processedContext;
-                videoSource = 'manual';
-            } else {
-                throw new Error(`Error: ${videoError.message}`);
-            }
+          console.error('[AUTOPSIA] ❌ Error:', videoError.message);
+          if (processedContext && processedContext.length > 50) {
+            contentToAnalyze = processedContext;
+            videoSource      = 'manual';
+          } else {
+            throw new Error(`Error: ${videoError.message}`);
+          }
         }
 
         if (!contentToAnalyze || contentToAnalyze.length < 20) {
-            throw new Error('Contenido insuficiente para análisis (mínimo 20 caracteres).');
+          throw new Error('Contenido insuficiente para análisis (mínimo 20 caracteres).');
         }
 
-        console.log('[TITAN] 🔬 Ejecutando autopsia...');
-        
+        console.log('[AUTOPSIA] 🔬 Ejecutando análisis forense...');
+
         const autopsiaRes = await ejecutarAutopsiaViral(
-            contentToAnalyze, 
-            platName, 
-            openai
+          contentToAnalyze,
+          platName,
+          openai
         );
-        
+
+        result = {
+          ...autopsiaRes.data,
+          metadata_video: {
+            source:       videoSource,
+            platform:     platName,
+            description:  videoDescription,
+            whisper_used: actualWhisperMinutes > 0,
+            whisper_minutes: actualWhisperMinutes,
+            duration_seconds: videoDurationSecs,
+            original_url: url || null,
+            uploaded_file: body.uploadedFileName || null,
+          }
+        };
+
+        tokensUsed = autopsiaRes.tokens;
+
+        // Costo dinámico autopsia (Reel=10 | Largo=30 | Masterclass=45)
+        // calculateTitanCost lo maneja con videoDurationSecs
+        settings._videoDurationSecs = videoDurationSecs;
+
+        break;
+      }
+
+      case 'recreate': {
+        console.log('[TITAN] 🪞 Modo: INGENIERÍA INVERSA OMEGA 3.0');
+
+        // ── Multi-URL: el frontend envía body.urls (array) o body.url (string) ──
+        const rawUrls: string[] = body.urls || (body.url ? [body.url] : []);
+        const urlCount = rawUrls.filter((u: string) => u && u.trim()).length;
+
+        // Pasar urlCount al sistema de costos
+        settings.urlCount = urlCount;
+
+        let contentToAnalyze = "";
+        let targetTopic      = processedContext;
+        let platName         = settings.platform || platform || 'TikTok';
+        let videoDescription = '';
+        let actualWhisperMinutes = 0;
+        let videoDurationSecs    = 0;
+        let videoSource: 'url' | 'upload' | 'manual' = 'manual';
+
+        // Colección de análisis individuales para modo multi-URL
+        const multiAnalysis: any[] = [];
+
+        try {
+          if (rawUrls.length > 0 || body.uploadedVideo) {
+            const sources = rawUrls.length > 0 ? rawUrls : [null];
+
+            for (let i = 0; i < sources.length; i++) {
+              const singleUrl = sources[i];
+              console.log(`[RECREATE] 🎬 Procesando fuente ${i + 1}/${sources.length}...`);
+
+              const videoData = await getVideoContent(
+                singleUrl,
+                i === 0 ? (body.uploadedVideo || null) : null,
+                i === 0 ? (body.uploadedFileName || null) : null,
+                openai
+              );
+
+              if (i === 0) {
+                // Primera URL: datos principales
+                contentToAnalyze  = videoData.transcript;
+                videoDescription  = videoData.description;
+                platName          = videoData.platform || platName;
+                videoSource       = videoData.source;
+                videoDurationSecs = videoData.duration || 0;
+              } else {
+                // URLs adicionales: acumular contenido con separador
+                contentToAnalyze += `\n\n[VIDEO ${i + 1}]:\n${videoData.transcript}`;
+              }
+
+              if (videoData.duration > 0) {
+                actualWhisperMinutes += Math.ceil(videoData.duration / 60);
+              }
+
+              // Análisis individual por URL (solo en modo multi-URL)
+              if (rawUrls.length > 1) {
+                console.log(`[RECREATE] 🔬 Analizando ADN del video ${i + 1}...`);
+                const autopsiaIndividual = await ejecutarAutopsiaViral(
+                  videoData.transcript,
+                  platName,
+                  openai
+                );
+                multiAnalysis.push(autopsiaIndividual.data);
+              }
+            }
+
+            whisperMinutes = actualWhisperMinutes;
+
+          } else if (processedContext && processedContext.length > 50) {
+            console.log('[RECREATE] 📝 Usando texto manual');
+            contentToAnalyze = processedContext;
+            videoDescription = 'Transcripción manual';
+            videoSource      = 'manual';
+          } else {
+            throw new Error('Proporciona URL(s), video subido, o transcripción manual.');
+          }
+
+        } catch (videoError: any) {
+          console.error('[RECREATE] ❌ Error obteniendo contenido:', videoError.message);
+          if (processedContext && processedContext.length > 50) {
+            contentToAnalyze = processedContext;
+            videoSource      = 'manual';
+          } else {
+            throw new Error(`Error: ${videoError.message}`);
+          }
+        }
+
+        if (!contentToAnalyze || contentToAnalyze.length < 20) {
+          throw new Error('Contenido insuficiente para análisis (mínimo 20 caracteres).');
+        }
+
+        // ── Autopsia del contenido principal (o contenido combinado) ──
+        console.log('[RECREATE] 🔬 Ejecutando autopsia del ADN viral...');
+        const autopsiaRes = await ejecutarAutopsiaViral(
+          contentToAnalyze,
+          platName,
+          openai
+        );
         const adnViral = autopsiaRes.data;
 
-        if (selectedMode === 'recreate') {
-            console.log(`[RECREATE] 🧬 Clonando al nicho: "${targetTopic}"...`);
-            
-            const contextoRecreate = { 
-                ...userContext, 
-                tema_especifico: targetTopic || userContext.nicho 
-            };
-            
-            const guionRes = await ejecutarGeneradorGuiones(
-                contextoRecreate, 
-                adnViral,
-                openai, 
-                settings
-            );
-            
-            result = {
-                autopsia: adnViral,
-                guion_generado: guionRes.data,
-                modo: "ingenieria_inversa_exitosa",
-                metadata_video: {
-                    source: videoSource,
-                    platform: platName,
-                    description: videoDescription,
-                    whisper_used: actualWhisperMinutes > 0,
-                    whisper_minutes: actualWhisperMinutes,
-                    original_url: url || null,
-                    uploaded_file: body.uploadedFileName || null
-                }
-            };
-            
-            tokensUsed = autopsiaRes.tokens + guionRes.tokens;
-
-        } else {
-            console.log('[AUTOPSIA] 📊 Devolviendo análisis...');
-            
-            result = {
-                ...adnViral,
-                metadata_video: {
-                    source: videoSource,
-                    platform: platName,
-                    description: videoDescription,
-                    whisper_used: actualWhisperMinutes > 0,
-                    whisper_minutes: actualWhisperMinutes,
-                    original_url: url || null,
-                    uploaded_file: body.uploadedFileName || null
-                }
-            };
-            
-            tokensUsed = autopsiaRes.tokens;
+        // ── Construir patrones híbridos (solo multi-URL) ──
+        let multiUrlPatterns = null;
+        if (multiAnalysis.length > 1) {
+          console.log('[RECREATE] 🧬 Construyendo arquitectura híbrida multi-URL...');
+          multiUrlPatterns = {
+            total_urls:       urlCount,
+            hook_dominante:   multiAnalysis[0]?.adn_extraido?.formula_gancho || 'Afirmación disruptiva',
+            promesa_dominante: multiAnalysis
+              .map((a: any) => a.adn_extraido?.idea_ganadora)
+              .filter(Boolean)[0] || 'Transformación rápida',
+            cierre_dominante: 'CTA emocional',
+            ritmo_promedio:   platName === 'TikTok' ? 'Frenético 2-3s' : 'Medio 4-5s',
+          };
         }
-        
+
+        // ── Clonar al nicho del usuario ──
+        console.log(`[RECREATE] 🪞 Clonando al nicho: "${targetTopic}"...`);
+
+        const contextoRecreate = {
+          ...userContext,
+          tema_especifico: targetTopic || userContext.nicho
+        };
+
+        const guionRes = await ejecutarGeneradorGuiones(
+          contextoRecreate,
+          adnViral,
+          openai,
+          {
+            ...settings,
+            platform:         platName,
+            multiUrlPatterns, // patrones híbridos para el prompt Omega
+          }
+        );
+
+        result = {
+          autopsia:       adnViral,
+          guion_generado: guionRes.data,
+          modo: urlCount > 1
+            ? 'ingenieria_inversa_hibrida'
+            : 'ingenieria_inversa_exitosa',
+          multi_url_analysis: multiAnalysis.length > 1 ? multiAnalysis : undefined,
+          metadata_video: {
+            source:           videoSource,
+            platform:         platName,
+            description:      videoDescription,
+            whisper_used:     actualWhisperMinutes > 0,
+            whisper_minutes:  actualWhisperMinutes,
+            duration_seconds: videoDurationSecs,
+            urls_analizadas:  urlCount,
+            original_url:     rawUrls[0] || null,
+            uploaded_file:    body.uploadedFileName || null,
+          }
+        };
+
+        tokensUsed = autopsiaRes.tokens + guionRes.tokens;
+
+        // Pasar duración al sistema de costos
+        settings._videoDurationSecs = videoDurationSecs;
+
         break;
       }
 
@@ -5582,7 +5815,13 @@ ${Object.entries(avatarData.prohibitions || {})
     // 💰 SISTEMA DE COBROS Y GUARDADO
     // ==================================================================================
 
-    const calculatedPrice = calculateTitanCost(selectedMode, processedContext, whisperMinutes, settings);
+    const calculatedPrice = calculateTitanCost(
+  selectedMode,
+  processedContext,
+  whisperMinutes,
+  settings,
+  settings._videoDurationSecs || 0
+);
     const finalCost = Math.max(calculatedPrice, estimatedCost || 0);
 
     // 1. Cobrar créditos
