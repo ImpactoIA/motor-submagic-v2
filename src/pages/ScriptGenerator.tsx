@@ -14,15 +14,53 @@ import {
 // ==================================================================================
 
 interface ScriptResult {
-    metadata_guion?: {
-        tema_tratado?: string;
-        plataforma?: string;
-        arquitectura?: string;
-        objetivo_viral?: string;
-        percepcion_creador?: string;
-        duracion_estimada?: string;
-        tono_voz?: string;
-        ritmo?: string;
+  hook?: string;
+  estructura_desglosada?: any;
+  guion_completo: string;
+  micro_loops_detectados?: any[];
+  curva_emocional?: any;
+  activadores_psicologicos?: any[];
+  score_predictivo?: {
+    retention_score: number;
+    share_score: number;
+    save_score: number;
+    authority_score: number;
+    impact_score?: number;
+    viral_index: number;
+    metricas_cualitativas?: {
+      nivel_de_disrupcion: number;
+      nivel_de_memorabilidad: number;
+      nivel_de_polarizacion: number;
+      nivel_de_control_de_frame: number;
+      nivel_de_diferenciacion_competitiva: number;
+    };
+    umbral_dominancia_superado?: boolean;
+    razonamiento?: string;
+  };
+  nivel_intensidad?: string;
+  identidad_verbal?: any;
+  tipo_de_cierre?: string;
+  auto_validacion?: {
+    arquitectura_completa?: boolean;
+    tension_progresiva?: boolean;
+    identidad_presente?: boolean;
+    sin_cliches?: boolean;
+    activadores_insertados?: boolean;
+    cierre_coherente?: boolean;
+    nativo_plataforma?: boolean;
+    curva_emocional_dinamica?: boolean;
+    hace_sentir_inspirado?: boolean;
+    suena_distinto?: boolean;
+    podria_molestar?: boolean;
+    sera_recordado?: boolean;
+    nivel_de_disrupcion_alto?: boolean;
+    diferenciacion_real?: boolean;
+    control_de_frame_logrado?: boolean;
+    supera_contenido_promedio?: boolean;
+    cumple_umbral_dominancia?: boolean;
+    decision?: string;
+    razon?: string;
+ 
     };
     ganchos_opcionales?: Array<{
         tipo: string;
@@ -253,7 +291,7 @@ const SITUATIONS = [
     "Escepticismo"
 ];
 
-onst INTENSITY_MODES = [
+const INTENSITY_MODES = [
     { 
         id: 'conservador', 
         label: '🕊️ Conservador', 
@@ -1108,11 +1146,152 @@ export const ScriptGenerator = () => {
                                         </div>
                                     </div>
                                     
+                                    
                                     {result.auto_validacion.razon && (
                                         <p className="text-xs text-gray-400 mt-3 italic">
                                             💭 {result.auto_validacion.razon}
                                         </p>
                                     )}
+                                </div>
+                            )}
+
+                            {/* 🔴 UMBRAL DE DOMINANCIA V600 */}
+                            {result.score_predictivo?.umbral_dominancia_superado !== undefined && (
+                                <div style={{
+                                    marginBottom: '24px',
+                                    padding: '14px 18px',
+                                    borderRadius: '12px',
+                                    backgroundColor: result.score_predictivo.umbral_dominancia_superado 
+                                        ? 'rgba(13,45,26,0.8)' 
+                                        : 'rgba(45,13,13,0.8)',
+                                    border: `1px solid ${result.score_predictivo.umbral_dominancia_superado 
+                                        ? '#22c55e' 
+                                        : '#ef4444'}`,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '12px'
+                                }}>
+                                    <span style={{ fontSize: '24px' }}>
+                                        {result.score_predictivo.umbral_dominancia_superado ? '✅' : '🔴'}
+                                    </span>
+                                    <div className="flex-1">
+                                        <p style={{ 
+                                            margin: 0, 
+                                            fontWeight: 800, 
+                                            fontSize: '13px',
+                                            color: result.score_predictivo.umbral_dominancia_superado 
+                                                ? '#22c55e' 
+                                                : '#ef4444' 
+                                        }}>
+                                            {result.score_predictivo.umbral_dominancia_superado
+                                                ? 'UMBRAL DE DOMINANCIA SUPERADO'
+                                                : 'UMBRAL DE DOMINANCIA NO ALCANZADO'}
+                                        </p>
+                                        <p style={{ margin: 0, fontSize: '11px', color: '#6b7280', marginTop: '2px' }}>
+                                            viral_index: <strong style={{ color: '#fff' }}>{result.score_predictivo.viral_index}</strong> / mínimo requerido: 75
+                                        </p>
+                                    </div>
+                                    <div className="text-right">
+                                        <span style={{ 
+                                            fontSize: '28px', 
+                                            fontWeight: 900, 
+                                            color: result.score_predictivo.viral_index >= 75 ? '#22c55e' : '#ef4444' 
+                                        }}>
+                                            {result.score_predictivo.viral_index}
+                                        </span>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* 🧠 MÉTRICAS CUALITATIVAS V600 */}
+                            {result.score_predictivo?.metricas_cualitativas && (
+                                <div className="mb-6 bg-purple-900/10 border border-purple-500/20 rounded-2xl p-5">
+                                    <h3 className="text-sm font-black text-purple-400 mb-4 flex items-center gap-2">
+                                        <Brain size={16}/> Impacto Estratégico Real
+                                    </h3>
+                                    
+                                    {/* 5 barras de métricas */}
+                                    {[
+                                        { key: 'nivel_de_disrupcion',               label: '⚡ Disrupción',        color: '#f59e0b' },
+                                        { key: 'nivel_de_memorabilidad',             label: '🧠 Memorabilidad',     color: '#06b6d4' },
+                                        { key: 'nivel_de_polarizacion',              label: '🔥 Polarización',      color: '#ef4444' },
+                                        { key: 'nivel_de_control_de_frame',          label: '🎯 Control de Frame',  color: '#8b5cf6' },
+                                        { key: 'nivel_de_diferenciacion_competitiva',label: '⚔️ Diferenciación',   color: '#22c55e' },
+                                    ].map(({ key, label, color }) => {
+                                        const value = (result.score_predictivo!.metricas_cualitativas as any)[key] as number;
+                                        const isLow = value < 70;
+                                        return (
+                                            <div key={key} className="mb-3">
+                                                <div className="flex justify-between items-center mb-1">
+                                                    <span className="text-xs text-gray-300">{label}</span>
+                                                    <span className="text-xs font-bold" style={{ color: isLow ? '#ef4444' : color }}>
+                                                        {value}/100 {isLow ? '⚠️' : ''}
+                                                    </span>
+                                                </div>
+                                                <div className="w-full bg-gray-800 rounded-full h-2">
+                                                    <div 
+                                                        className="h-2 rounded-full transition-all duration-700"
+                                                        style={{ 
+                                                            width: `${value}%`,
+                                                            backgroundColor: isLow ? '#ef4444' : color
+                                                        }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+
+                                    {/* impact_score total */}
+                                    {result.score_predictivo?.impact_score !== undefined && (
+                                        <div className="mt-4 flex justify-between items-center bg-black/40 p-3 rounded-xl border border-gray-700">
+                                            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                                                Impact Score Total
+                                            </span>
+                                            <span className="text-2xl font-black" style={{ 
+                                                color: result.score_predictivo.impact_score >= 70 ? '#a78bfa' : '#ef4444' 
+                                            }}>
+                                                {typeof result.score_predictivo.impact_score === 'number' 
+                                                    ? result.score_predictivo.impact_score.toFixed(1) 
+                                                    : result.score_predictivo.impact_score}
+                                            </span>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* 🛡️ VALIDACIÓN V600 — 5 checks nuevos */}
+                            {result.auto_validacion && (
+                                result.auto_validacion.nivel_de_disrupcion_alto !== undefined ||
+                                result.auto_validacion.diferenciacion_real !== undefined
+                            ) && (
+                                <div className="mb-6 bg-gray-900/30 border border-gray-700 rounded-2xl p-5">
+                                    <h3 className="text-sm font-black text-gray-400 mb-3 uppercase tracking-widest">
+                                        🛡️ Validación V600
+                                    </h3>
+                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                                        {[
+                                            { key: 'nivel_de_disrupcion_alto',  label: 'Disrupción Alta' },
+                                            { key: 'diferenciacion_real',       label: 'Diferenciación Real' },
+                                            { key: 'control_de_frame_logrado',  label: 'Frame Controlado' },
+                                            { key: 'supera_contenido_promedio', label: 'Sobre el Promedio' },
+                                            { key: 'cumple_umbral_dominancia',  label: 'Umbral ≥75 ✓' },
+                                        ].map(({ key, label }) => {
+                                            const val = (result.auto_validacion as any)[key];
+                                            return (
+                                                <div 
+                                                    key={key}
+                                                    className={`p-2 rounded-lg border flex items-center gap-2 text-[11px] font-bold ${
+                                                        val 
+                                                            ? 'bg-green-500/10 border-green-500/30 text-green-400' 
+                                                            : 'bg-red-500/10 border-red-500/30 text-red-400'
+                                                    }`}
+                                                >
+                                                    <span>{val ? '✅' : '❌'}</span>
+                                                    <span>{label}</span>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
                                 </div>
                             )}
 
