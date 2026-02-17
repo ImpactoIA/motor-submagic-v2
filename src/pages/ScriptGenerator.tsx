@@ -253,6 +253,33 @@ const SITUATIONS = [
     "Escepticismo"
 ];
 
+onst INTENSITY_MODES = [
+    { 
+        id: 'conservador', 
+        label: '🕊️ Conservador', 
+        desc: 'Tono suave, sin polarizar',
+        color: 'border-gray-500 bg-gray-500/10 text-gray-300'
+    },
+    { 
+        id: 'equilibrado', 
+        label: '⚖️ Equilibrado', 
+        desc: 'Balance impacto/accesibilidad',
+        color: 'border-blue-500 bg-blue-500/10 text-blue-300'
+    },
+    { 
+        id: 'agresivo', 
+        label: '🔥 Agresivo', 
+        desc: 'Alta confrontación, máximo impacto',
+        color: 'border-orange-500 bg-orange-500/10 text-orange-300'
+    },
+    { 
+        id: 'dominante', 
+        label: '👑 Dominante', 
+        desc: 'Autoridad absoluta, sin concesiones',
+        color: 'border-red-500 bg-red-500/10 text-red-300'
+    },
+];
+
 const MASTER_HOOKS = [
     { name: '👁️ Frame Break (Ruptura Visual)' }, 
     { name: '🔮 Objeto Mágico' }, 
@@ -286,8 +313,8 @@ const MASTER_HOOKS = [
 
 const DURATIONS = [
     { id: 'short', label: 'Flash (30s)', cost: 5 },
-    { id: 'medium', label: 'Estándar (60s)', cost: 5 },
-    { id: 'long', label: 'Profundo (90s)', cost: 5 },
+    { id: 'medium', label: 'Estándar (60s)', cost: 7 },
+    { id: 'long', label: 'Profundo (90s)', cost: 8 },
     { id: 'masterclass', label: 'Masterclass (+5m)', cost: 30 },
 ];
 
@@ -319,7 +346,17 @@ export const ScriptGenerator = () => {
     const [selectedInternalMode, setSelectedInternalMode] = useState(TITAN_STRUCTURES[0].modes[0]);
     
     // 👇👇👇 AGRÉGALO AQUÍ 👇👇👇
-    const [selectedLens, setSelectedLens] = useState('auto'); // Factor X (Variabilidad)
+    const [selectedLens, setSelectedLens] = useState('auto'); // Factor X (Variabilidad) 
+    const [selectedIntensity, setSelectedIntensity] = useState('equilibrado');
+    
+    const CLOSING_OBJECTIVES = [
+    { id: 'seguidores', label: '👥 Ganar Seguidores' },
+    { id: 'leads', label: '📥 Captar Leads' },
+    { id: 'venta', label: '💰 Vender' },
+    { id: 'autoridad', label: '👑 Construir Autoridad' },
+];
+
+    const [closingObjective, setClosingObjective] = useState('seguidores');
 
     // --- Estados Psicológicos ---
     const [awareness, setAwareness] = useState(AWARENESS_LEVELS[1]);
@@ -421,29 +458,31 @@ export const ScriptGenerator = () => {
                     topic: topic.trim(),
                     
                     // 👇 AQUÍ ESTÁ LA ACTUALIZACIÓN CLAVE PARA V500 👇
+                    
                     settings: {
-                        // Plataforma
-                        platform: selectedPlatform.label,
-                        
-                        // Matriz Titan (IDs exactos para el Cerebro)
-                        structure: selectedStructure.id,        // Ej: 'winner_rocket'
-                        internal_mode: selectedInternalMode.id, // Ej: 'viral_rapido'
-                        
-                        // 👇👇👇 AGREGA ESTA LÍNEA OBLIGATORIA 👇👇👇
-                        creative_lens: selectedLens,            // Ej: 'contrarian'
-                        // 👆👆👆 SIN ESTO, LA VARIABILIDAD NO FUNCIONA 👆👆👆
-                        
-                        // Configuración Psicológica
-                        awareness: awareness,
-                        objective: objective,
-                        situation: situation,
-                        
-                        // Configuración Técnica
-                        durationId: durationId,
-                        duration: durationId,
-                        hook_style: hookType,
-                        hookStyle: hookType,
-                    },
+                   // Plataforma
+                   platform: selectedPlatform.label,
+    
+                   // Matriz Titan
+                   structure: selectedStructure.id,
+                   internal_mode: selectedInternalMode.id,
+                   creative_lens: selectedLens,
+    
+                   // ✅ NUEVOS: Módulos del plan estratégico
+                   intensity: selectedIntensity,        // Módulo 6: Intensidad estratégica
+                   closing_objective: closingObjective, // Módulo 8: Cierre según objetivo
+    
+                   // Configuración Psicológica
+                   awareness: awareness,
+                   objective: objective,
+                   situation: situation,
+    
+                   // Configuración Técnica
+                   durationId: durationId,
+                   duration: durationId,
+                   hook_style: hookType,
+                   hookStyle: hookType,
+            },
                     // 👆 FIN DE LA ACTUALIZACIÓN 👆
 
                     expertId: selectedExpertId || undefined,
@@ -691,6 +730,29 @@ export const ScriptGenerator = () => {
                             ))}
                         </div>
                     </div>
+                     
+                    {/* 🔥 MÓDULO 6: INTENSIDAD ESTRATÉGICA */}
+<div className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-5 shadow-lg">
+    <label className="text-xs font-black text-gray-500 uppercase mb-3 flex items-center gap-2 tracking-widest">
+        <Flame size={14} /> Intensidad Estratégica
+    </label>
+    <div className="grid grid-cols-2 gap-2">
+        {INTENSITY_MODES.map(mode => (
+            <button
+                key={mode.id}
+                onClick={() => setSelectedIntensity(mode.id)}
+                className={`p-3 rounded-xl border text-left transition-all ${
+                    selectedIntensity === mode.id
+                        ? mode.color + ' ring-1 ring-current'
+                        : 'bg-gray-900/50 border-gray-800 text-gray-500 hover:bg-gray-800'
+                }`}
+            >
+                <span className="text-xs font-bold block">{mode.label}</span>
+                <span className="text-[9px] opacity-70 mt-0.5 block">{mode.desc}</span>
+            </button>
+        ))}
+    </div>
+</div>
 
                     {/* CONFIGURACIÓN PSICOLÓGICA */}
                     <div className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-5 shadow-lg space-y-4 relative overflow-hidden">
@@ -734,67 +796,94 @@ export const ScriptGenerator = () => {
                     </div>
 
                     {/* CONFIGURACIÓN FINAL */}
-                    <div className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-5 shadow-lg space-y-4">
-                        <div>
-                            <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block tracking-widest">
-                                Estilo de Gancho
-                            </label>
-                            <select 
-                                value={hookType} 
-                                onChange={(e) => setHookType(e.target.value)} 
-                                className="w-full bg-gray-900 border border-gray-800 text-gray-300 text-xs rounded-xl p-2.5 outline-none focus:border-indigo-500"
-                            >
-                                {MASTER_HOOKS.map((h, i) => <option key={i} value={h.name}>{h.name}</option>)}
-                            </select>
-                        </div>
+<div className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-5 shadow-lg space-y-4">
+    
+    {/* Estilo de Gancho */}
+    <div>
+        <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block tracking-widest">
+            Estilo de Gancho
+        </label>
+        <select 
+            value={hookType} 
+            onChange={(e) => setHookType(e.target.value)} 
+            className="w-full bg-gray-900 border border-gray-800 text-gray-300 text-xs rounded-xl p-2.5 outline-none focus:border-indigo-500"
+        >
+            {MASTER_HOOKS.map((h, i) => <option key={i} value={h.name}>{h.name}</option>)}
+        </select>
+    </div>
 
-                        <div>
-                            <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block tracking-widest">
-                                Duración del Video
-                            </label>
-                            <div className="grid grid-cols-2 gap-2">
-                                {DURATIONS.map(d => (
-                                    <button 
-                                        key={d.id} 
-                                        onClick={() => setDurationId(d.id)} 
-                                        className={`p-2.5 rounded-xl border flex justify-between items-center transition-all ${
-                                            durationId === d.id 
-                                                ? 'bg-indigo-600/20 border-indigo-500 shadow-md shadow-indigo-900/20' 
-                                                : 'bg-gray-900/50 border-gray-800 text-gray-500 hover:bg-gray-800'
-                                        }`}
-                                    >
-                                        <span className="text-[10px] font-bold text-white">{d.label}</span>
-                                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
-                                            durationId === d.id 
-                                                ? 'bg-indigo-500 text-white' 
-                                                : 'bg-gray-800 text-gray-500'
-                                        }`}>
-                                            {d.cost}CR
-                                        </span>
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
+    {/* Duración del Video */}
+    <div>
+        <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block tracking-widest">
+            Duración del Video
+        </label>
+        <div className="grid grid-cols-2 gap-2">
+            {DURATIONS.map(d => (
+                <button 
+                    key={d.id} 
+                    onClick={() => setDurationId(d.id)} 
+                    className={`p-2.5 rounded-xl border flex justify-between items-center transition-all ${
+                        durationId === d.id 
+                            ? 'bg-indigo-600/20 border-indigo-500 shadow-md shadow-indigo-900/20' 
+                            : 'bg-gray-900/50 border-gray-800 text-gray-500 hover:bg-gray-800'
+                    }`}
+                >
+                    <span className="text-[10px] font-bold text-white">{d.label}</span>
+                    <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
+                        durationId === d.id 
+                            ? 'bg-indigo-500 text-white' 
+                            : 'bg-gray-800 text-gray-500'
+                    }`}>
+                        {d.cost}CR
+                    </span>
+                </button>
+            ))}
+        </div>
+    </div>
 
-                        <div className="relative">
-                            <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block tracking-widest">
-                                Perfil de Experto (Opcional)
-                            </label>
-                            <select 
-                                value={selectedExpertId} 
-                                onChange={(e) => setSelectedExpertId(e.target.value)} 
-                                className="w-full bg-gray-900 border border-gray-800 text-gray-300 text-xs rounded-xl p-3 outline-none focus:border-indigo-500 appearance-none"
-                            >
-                                <option value="">-- Sin experto --</option>
-                                {experts.map(e => (
-                                    <option key={e.id} value={e.id}>
-                                        {e.name} ({e.niche})
-                                    </option>
-                                ))}
-                            </select>
-                            <User size={14} className="absolute right-3 top-10 text-gray-500 pointer-events-none"/>
-                        </div>
-                    </div>
+    {/* ✅ CAMBIO 7 — Objetivo del Cierre (CTA) */}
+    <div>
+        <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block tracking-widest">
+            Objetivo del Cierre (CTA)
+        </label>
+        <div className="grid grid-cols-2 gap-2">
+            {CLOSING_OBJECTIVES.map(obj => (
+                <button
+                    key={obj.id}
+                    onClick={() => setClosingObjective(obj.id)}
+                    className={`p-2.5 rounded-xl border text-xs font-bold transition-all ${
+                        closingObjective === obj.id
+                            ? 'bg-pink-600/20 border-pink-500 text-pink-300 shadow-md shadow-pink-900/20'
+                            : 'bg-gray-900/50 border-gray-800 text-gray-500 hover:bg-gray-800'
+                    }`}
+                >
+                    {obj.label}
+                </button>
+            ))}
+        </div>
+    </div>
+
+    {/* Perfil de Experto */}
+    <div className="relative">
+        <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block tracking-widest">
+            Perfil de Experto (Opcional)
+        </label>
+        <select 
+            value={selectedExpertId} 
+            onChange={(e) => setSelectedExpertId(e.target.value)} 
+            className="w-full bg-gray-900 border border-gray-800 text-gray-300 text-xs rounded-xl p-3 outline-none focus:border-indigo-500 appearance-none"
+        >
+            <option value="">-- Sin experto --</option>
+            {experts.map(e => (
+                <option key={e.id} value={e.id}>
+                    {e.name} ({e.niche})
+                </option>
+            ))}
+        </select>
+        <User size={14} className="absolute right-3 top-10 text-gray-500 pointer-events-none"/>
+    </div>
+
+</div>
 
                     {/* BOTÓN PRINCIPAL */}
                     <button 
@@ -1068,94 +1157,151 @@ export const ScriptGenerator = () => {
                             </div>
 
                             {/* AUDITORÍA */}
-                            {showAudit && (
-                                <div className="mt-8 pt-6 border-t border-gray-700 animate-in fade-in slide-in-from-bottom-4">
-                                    <h3 className="text-lg font-black text-pink-500 mb-4 flex items-center gap-2">
-                                        <Gavel size={18}/> Veredicto del Juez Viral
-                                    </h3>
-                                    
-                                    {isAuditing ? (
-                                        <div className="flex flex-col items-center gap-4 py-12">
-                                            <div className="relative">
-                                                <Gavel className="animate-pulse text-pink-500" size={48}/>
-                                                <div className="absolute inset-0 animate-ping">
-                                                    <Gavel className="text-pink-500 opacity-20" size={48}/>
-                                                </div>
-                                            </div>
-                                            <p className="text-sm font-bold text-pink-400 animate-pulse">
-                                                Analizando con 10 criterios virales...
-                                            </p>
-                                        </div>
-                                    ) : auditResult ? (
-                                        <div className="bg-pink-900/10 border border-pink-500/20 rounded-2xl p-6">
-                                            <div className="flex justify-between items-center mb-6">
-                                                <div className="text-5xl font-black text-white">
-                                                    {auditResult.veredicto_final?.score_total}
-                                                    <span className="text-lg text-gray-500">/100</span>
-                                                </div>
-                                                <div className="text-right">
-                                                    <div className="text-sm font-bold text-pink-400 uppercase tracking-widest">
-                                                        {auditResult.veredicto_final?.clasificacion}
-                                                    </div>
-                                                    <div className="text-xs text-gray-500">
-                                                        Probabilidad: {auditResult.veredicto_final?.probabilidad_viral}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                <div>
-                                                    <span className="text-xs font-black text-green-400 uppercase block mb-2">
-                                                        ✅ Fortalezas
-                                                    </span>
-                                                    <ul className="space-y-1">
-                                                        {auditResult.fortalezas_clave?.map((f, i) => (
-                                                            <li key={i} className="text-xs text-gray-300 flex items-start gap-2">
-                                                                <CheckCircle2 size={12} className="text-green-500 mt-0.5 shrink-0"/> 
-                                                                {f}
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </div>
-                                                <div>
-                                                    <span className="text-xs font-black text-red-400 uppercase block mb-2">
-                                                        ⚠️ Puntos Críticos
-                                                    </span>
-                                                    <ul className="space-y-1">
-                                                        {auditResult.debilidades_criticas?.map((d, i) => (
-                                                            <li key={i} className="text-xs text-gray-300 flex items-start gap-2">
-                                                                <AlertCircle size={12} className="text-red-500 mt-0.5 shrink-0"/> 
-                                                                {d.problema}
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </div>
-                                            </div>
+{showAudit && (
+    <div className="mt-8 pt-6 border-t border-gray-700 animate-in fade-in slide-in-from-bottom-4">
+        <h3 className="text-lg font-black text-pink-500 mb-4 flex items-center gap-2">
+            <Gavel size={18}/> Veredicto del Juez Viral
+        </h3>
+        
+        {isAuditing ? (
+            <div className="flex flex-col items-center gap-4 py-12">
+                <div className="relative">
+                    <Gavel className="animate-pulse text-pink-500" size={48}/>
+                    <div className="absolute inset-0 animate-ping">
+                        <Gavel className="text-pink-500 opacity-20" size={48}/>
+                    </div>
+                </div>
+                <p className="text-sm font-bold text-pink-400 animate-pulse">
+                    Analizando con 10 criterios virales...
+                </p>
+            </div>
+        ) : auditResult ? (
+            <div className="bg-pink-900/10 border border-pink-500/20 rounded-2xl p-6">
+                <div className="flex justify-between items-center mb-6">
+                    <div className="text-5xl font-black text-white">
+                        {auditResult.veredicto_final?.score_total}
+                        <span className="text-lg text-gray-500">/100</span>
+                    </div>
+                    <div className="text-right">
+                        <div className="text-sm font-bold text-pink-400 uppercase tracking-widest">
+                            {auditResult.veredicto_final?.clasificacion}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                            Probabilidad: {auditResult.veredicto_final?.probabilidad_viral}
+                        </div>
+                    </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <span className="text-xs font-black text-green-400 uppercase block mb-2">
+                            ✅ Fortalezas
+                        </span>
+                        <ul className="space-y-1">
+                            {auditResult.fortalezas_clave?.map((f, i) => (
+                                <li key={i} className="text-xs text-gray-300 flex items-start gap-2">
+                                    <CheckCircle2 size={12} className="text-green-500 mt-0.5 shrink-0"/> 
+                                    {f}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    <div>
+                        <span className="text-xs font-black text-red-400 uppercase block mb-2">
+                            ⚠️ Puntos Críticos
+                        </span>
+                        <ul className="space-y-1">
+                            {auditResult.debilidades_criticas?.map((d, i) => (
+                                <li key={i} className="text-xs text-gray-300 flex items-start gap-2">
+                                    <AlertCircle size={12} className="text-red-500 mt-0.5 shrink-0"/> 
+                                    {d.problema}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
 
-                                            {auditResult.optimizaciones_rapidas && auditResult.optimizaciones_rapidas.length > 0 && (
-                                                <div className="mt-6 pt-6 border-t border-pink-500/20">
-                                                    <span className="text-xs font-black text-yellow-400 uppercase block mb-2">
-                                                        💡 Optimizaciones Rápidas
-                                                    </span>
-                                                    <ul className="space-y-1">
-                                                        {auditResult.optimizaciones_rapidas.map((opt, i) => (
-                                                            <li key={i} className="text-xs text-gray-300">
-                                                                • {opt}
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </div>
-                                            )}
-                                        </div>
-                                    ) : (
-                                        <div className="text-center py-8 text-gray-500">
-                                            <AlertCircle size={24} className="mx-auto mb-2"/>
-                                            <p className="text-xs">No se pudo obtener la auditoría</p>
-                                        </div>
-                                    )}
-                                </div>
+                {auditResult.optimizaciones_rapidas && auditResult.optimizaciones_rapidas.length > 0 && (
+                    <div className="mt-6 pt-6 border-t border-pink-500/20">
+                        <span className="text-xs font-black text-yellow-400 uppercase block mb-2">
+                            💡 Optimizaciones Rápidas
+                        </span>
+                        <ul className="space-y-1">
+                            {auditResult.optimizaciones_rapidas.map((opt, i) => (
+                                <li key={i} className="text-xs text-gray-300">
+                                    • {opt}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+
+                {/* ✅ CAMBIO 8 — BOTÓN REGENERAR CON JUEZ */}
+                {auditResult?.veredicto_final?.score_total !== undefined && 
+                 auditResult.veredicto_final.score_total < 75 && (
+                    <div className="mt-6 pt-6 border-t border-pink-500/20 animate-in fade-in slide-in-from-bottom-2">
+                        <div className="bg-yellow-900/20 border border-yellow-500/30 rounded-xl p-4 mb-4">
+                            <p className="text-xs text-yellow-400 mb-1 flex items-center gap-2 font-bold">
+                                <AlertCircle size={14}/>
+                                Score Bajo Detectado ({auditResult.veredicto_final.score_total}/100)
+                            </p>
+                            <p className="text-xs text-gray-400">
+                                El Juez Viral detectó áreas de mejora críticas. ¿Deseas regenerar el guion aplicando automáticamente su análisis?
+                            </p>
+                        </div>
+                        <button
+                            onClick={async () => {
+                                if (!auditResult || !topic) return;
+                                
+                                // Construir instrucciones de mejora desde el análisis del juez
+                                const sugerencias = auditResult.optimizaciones_rapidas?.join('. ') || '';
+                                const debilidades = auditResult.debilidades_criticas?.map(d => d.solucion).join('. ') || '';
+                                const mejoras = [sugerencias, debilidades].filter(Boolean).join('. ');
+                                
+                                // Enriquecer el topic con las sugerencias
+                                const topicEnriquecido = topic + (mejoras 
+                                    ? `\n\n[INSTRUCCIONES DE MEJORA DEL JUEZ VIRAL]:\n${mejoras}` 
+                                    : '');
+                                
+                                // Resetear estados
+                                setTopic(topicEnriquecido);
+                                setAuditResult(null);
+                                setShowAudit(false);
+                                setResult(null);
+                                
+                                // Regenerar después de que el estado se actualice
+                                setTimeout(() => handleGenerate(), 100);
+                            }}
+                            disabled={isGenerating}
+                            className="w-full py-3 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-500 hover:to-orange-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-black rounded-xl text-sm flex justify-center items-center gap-2 transition-all shadow-lg shadow-orange-500/20 hover:shadow-orange-500/40 hover:scale-[1.02] active:scale-95"
+                        >
+                            {isGenerating ? (
+                                <>
+                                    <RefreshCw className="animate-spin" size={16}/>
+                                    Regenerando con mejoras...
+                                </>
+                            ) : (
+                                <>
+                                    <RefreshCw size={16}/> 
+                                    Regenerar Guion con Mejoras del Juez
+                                </>
                             )}
+                        </button>
+                        <p className="text-[10px] text-gray-500 text-center mt-2">
+                            Esto consumirá {cost} créditos adicionales
+                        </p>
+                    </div>
+                )}
 
+            </div>
+        ) : (
+            <div className="text-center py-8 text-gray-500">
+                <AlertCircle size={24} className="mx-auto mb-2"/>
+                <p className="text-xs">No se pudo obtener la auditoría</p>
+            </div>
+        )}
+    </div>
+)}
                             {/* PLAN VISUAL */}
                             {result.plan_visual && result.plan_visual.length > 0 && (
                                 <div className="border-t border-gray-800 pt-6 mt-6">
