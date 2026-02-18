@@ -1201,4 +1201,4 @@ export const ViralCalculatorV500 = () => {
     );
 };
 
-export default ViralCalculator;
+export default ViralCalculatorV500;
