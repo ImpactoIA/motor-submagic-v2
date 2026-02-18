@@ -1200,3 +1200,5 @@ export const ViralCalculatorV500 = () => {
         </div>
     );
 };
+
+export default ViralCalculator;
