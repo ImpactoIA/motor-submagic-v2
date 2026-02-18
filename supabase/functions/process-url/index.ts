@@ -4012,119 +4012,217 @@ async function ejecutarAutopsiaViral(
   };
 }
 
+const MIN_VIRAL_SCORE = 75;
+const MAX_RETRIES = 3;
+
 async function ejecutarGeneradorGuiones(
   contexto: any,
   viralDNA: any | null,
   openai: any,
   settings: any = {}
 ): Promise<{ data: any; tokens: number }> {
-  
-  console.log('[MOTOR V500] 🔥 Iniciando generación de guion...');
-  console.log(`[MOTOR V500] 📱 Plataforma: ${settings.platform || 'TikTok'}`);
-  console.log(`[MOTOR V500] 🏗️ Estructura: ${settings.structure || 'winner_rocket'}`);
-  console.log(`[MOTOR V500] 🎯 Tema: ${contexto.tema_especifico || contexto.nicho}`);
-  
+
+  console.log('[MOTOR V600] 🔥 Iniciando generación con loop de optimización...');
+  console.log(`[MOTOR V600] 📱 Plataforma: ${settings.platform || 'TikTok'}`);
+  console.log(`[MOTOR V600] 🏗️ Estructura: ${settings.structure || 'winner_rocket'}`);
+  console.log(`[MOTOR V600] 🎯 Tema: ${contexto.tema_especifico || contexto.nicho}`);
+  console.log(`[MOTOR V600] 🔁 Umbral mínimo: ${MIN_VIRAL_SCORE} | Máx intentos: ${MAX_RETRIES}`);
+
   let tokensTotal = 0;
+  let mejorResultado: any = null;
+  let mejorScore = 0;
+  let intentoActual = 0;
 
   // ==================================================================================
-  // PASO 1: EL ESTRATEGA (Reasoning Phase)
+  // LOOP DE OPTIMIZACIÓN
   // ==================================================================================
-  
-  console.log('[PASO 1] ♟️ El Estratega está diseñando la estructura...');
-  
-  let promptEstrategia = "";
-  if (viralDNA) {
-    promptEstrategia = `
+
+  while (intentoActual < MAX_RETRIES) {
+    intentoActual++;
+    console.log(`[MOTOR V600] 🔄 Intento ${intentoActual}/${MAX_RETRIES}...`);
+
+    // ── Activar modo refinamiento a partir del intento 2 ──
+    const settingsIntento = {
+      ...settings,
+      intensidad_extra: intentoActual > 1,
+      intento_numero: intentoActual,
+    };
+
+    if (intentoActual > 1) {
+      console.log(`[MOTOR V600] ⚡ Modo refinamiento ACTIVO (intento ${intentoActual})`);
+    }
+
+    // ── PASO 1: El Estratega ──
+    let promptEstrategia = '';
+
+    if (intentoActual > 1) {
+      promptEstrategia = `
+INTENTO ${intentoActual} — MODO REFINAMIENTO OBLIGATORIO:
+El guion anterior NO alcanzó el umbral de dominancia (viral_index < ${MIN_VIRAL_SCORE}).
+Debes generar una versión RADICALMENTE DIFERENTE y más poderosa.
+
+TEMA: "${contexto.tema_especifico}" | NICHO: "${contexto.nicho}"
+PLATAFORMA: ${settings.platform || 'TikTok'}
+
+INSTRUCCIONES DE REFUERZO OBLIGATORIAS:
+1. Aumenta la tensión narrativa — cada bloque debe escalar más que el anterior
+2. Aumenta la polarización estratégica — toma postura más definida y confrontacional
+3. Refuerza los hooks — hook principal debe atacar ego o creencia central del avatar
+4. Inserta más micro-loops — mínimo 3 loops de curiosidad abiertos
+5. Eleva activadores psicológicos — al menos 3 activadores de guardado/share
+6. Aumenta diferenciación estructural — debe sonar COMPLETAMENTE diferente al creador promedio
+
+NO puedes repetir la misma estructura con cambios superficiales.
+Elige variantes de ejecución completamente distintas al intento anterior.
+
+Diseña un esquema de máxima disrupción para este tema.
+`;
+    } else {
+      if (viralDNA) {
+        promptEstrategia = `
 ANALIZA este ADN Viral: ${JSON.stringify(viralDNA.adn_extraido || {})}
 OBJETIVO: Adaptarlo al nicho "${settings.manual_niche || contexto.nicho}".
 TAREA: Crea un ESQUEMA LÓGICO paso a paso de cómo adaptar la estructura al nuevo nicho.
 NO escribas el guion aún. Solo define los puntos clave de la trama.
-    `;
-  } else {
-    promptEstrategia = `
+`;
+      } else {
+        promptEstrategia = `
 OBJETIVO: Crear un guion viral para "${contexto.tema_especifico}" en el nicho "${contexto.nicho}".
 PLATAFORMA: ${settings.platform || 'TikTok'}
 TAREA: Diseña una estructura ganadora (Gancho -> Retención -> Payoff).
 Define qué sesgos psicológicos usarás en cada segundo.
-    `;
+`;
+      }
+    }
+
+    const estrategia = await openai.chat.completions.create({
+      model: 'gpt-4o',
+      messages: [
+        { role: 'system', content: 'Eres un Estratega de Marketing Viral de clase mundial.' },
+        { role: 'user', content: promptEstrategia }
+      ],
+      temperature: intentoActual === 1 ? 0.7 : 0.9, // Más creatividad en reintentos
+      max_tokens: 1500
+    });
+
+    const planEstrategico = estrategia.choices[0].message.content;
+    tokensTotal += estrategia.usage?.total_tokens || 0;
+
+    // ── PASO 2: El Ejecutor ──
+    const systemPrompt = PROMPT_GENERADOR_GUIONES(contexto, viralDNA, settingsIntento);
+
+    const refinamientoExtra = intentoActual > 1 ? `
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔴 MODO REFINAMIENTO ACTIVO — INTENTO ${intentoActual}/${MAX_RETRIES}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+El intento anterior NO superó viral_index ≥ ${MIN_VIRAL_SCORE}.
+
+INSTRUCCIONES DE EMERGENCIA OBLIGATORIAS:
+✦ Tensión narrativa: MÁXIMA — cada bloque debe escalar sin pausa
+✦ Polarización: ACTIVA — toma postura radical y definida sin concesiones  
+✦ Hook: REFORZADO — ataca ego, creencia o dolor central en los primeros 2 segundos
+✦ Micro-loops: MÍNIMO 3 — abrir preguntas sin respuesta antes del insight
+✦ Activadores: MÍNIMO 3 — frase memorable + dato contraintuitivo + reencuadre mental
+✦ Diferenciación: RADICAL — debe sonar imposible de confundir con otro creador
+✦ Variante de ejecución: COMPLETAMENTE DISTINTA al intento anterior
+
+⚠️ NO REPITAS: misma apertura, misma estructura, mismas fórmulas del intento anterior.
+REINVENTA el ángulo narrativo desde cero.
+` : '';
+
+    const finalPrompt = systemPrompt + refinamientoExtra + `\n\n🛡️ PLAN ESTRATÉGICO:\n${planEstrategico}`;
+
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o',
+      response_format: { type: 'json_object' },
+      messages: [
+        { role: 'system', content: 'Eres el Motor de Viralidad e Influencia V600.' },
+        { role: 'user', content: finalPrompt }
+      ],
+      temperature: intentoActual === 1 ? 0.75 : Math.min(0.75 + (intentoActual * 0.1), 0.95),
+      max_tokens: 4500
+    });
+
+    tokensTotal += completion.usage?.total_tokens || 0;
+
+    let parsedData: any = {};
+    try {
+      parsedData = JSON.parse(completion.choices[0].message.content || '{}');
+    } catch (e) {
+      console.error(`[MOTOR V600] ❌ Error parseando JSON en intento ${intentoActual}`);
+      continue;
+    }
+
+    // ── PASO 3: Validación obligatoria del score ──
+    const scorePredictivo = parsedData.score_predictivo;
+
+    if (!scorePredictivo) {
+      console.warn(`[MOTOR V600] ⚠️ Intento ${intentoActual}: score_predictivo ausente — rechazando`);
+      // Guardar como fallback si no hay nada mejor
+      if (!mejorResultado) mejorResultado = parsedData;
+      continue;
+    }
+
+    const viralIndex = scorePredictivo.viral_index;
+
+    if (typeof viralIndex !== 'number' || isNaN(viralIndex)) {
+      console.warn(`[MOTOR V600] ⚠️ Intento ${intentoActual}: viral_index no es numérico (${viralIndex}) — rechazando`);
+      if (!mejorResultado) mejorResultado = parsedData;
+      continue;
+    }
+
+    console.log(`[MOTOR V600] 📊 Intento ${intentoActual} — viral_index: ${viralIndex}`);
+
+    // ── Guardar el mejor resultado obtenido ──
+    if (viralIndex > mejorScore) {
+      mejorScore = viralIndex;
+      mejorResultado = parsedData;
+      console.log(`[MOTOR V600] ✅ Nuevo mejor score: ${mejorScore}`);
+    }
+
+    // ── Verificar si superó el umbral ──
+    if (viralIndex >= MIN_VIRAL_SCORE) {
+      console.log(`[MOTOR V600] 🏆 Umbral superado en intento ${intentoActual} (${viralIndex} ≥ ${MIN_VIRAL_SCORE})`);
+      break;
+    }
+
+    console.log(`[MOTOR V600] 🔁 Score insuficiente (${viralIndex} < ${MIN_VIRAL_SCORE}) — reintentando...`);
   }
 
-  const estrategia = await openai.chat.completions.create({
-    model: 'gpt-4o',
-    messages: [
-      { role: 'system', content: 'Eres un Estratega de Marketing Viral de clase mundial.' },
-      { role: 'user', content: promptEstrategia }
-    ],
-    temperature: 0.7,
-    max_tokens: 1500
-  });
+  // ── PASO 4: Usar el mejor resultado obtenido ──
+  if (!mejorResultado) {
+    throw new Error('El generador no pudo producir un guion válido tras todos los intentos.');
+  }
 
-  const planEstrategico = estrategia.choices[0].message.content;
-  tokensTotal += estrategia.usage?.total_tokens || 0;
+  console.log(`[MOTOR V600] 🎯 Resultado final — viral_index: ${mejorScore} | Intentos: ${intentoActual}`);
 
-  console.log('[PASO 1] ✅ Plan estratégico completado');
-
-  // ==================================================================================
-  // PASO 2: EL EJECUTOR (Writing Phase con Motor V500)
-  // ==================================================================================
-  
-  console.log('[PASO 2] ✍️ El Guionista está ejecutando el plan con Motor V500...');
-
-  // Generar prompt usando Motor V500
-  const systemPrompt = PROMPT_GENERADOR_GUIONES(contexto, viralDNA, settings);
-  
-  // Inyectar el plan estratégico al prompt
-  const finalPrompt = systemPrompt + `\n\n🛡️ INSTRUCCIÓN DE MANDO: Sigue estrictamente este PLAN ESTRATÉGICO:\n${planEstrategico}`;
-
-  const completion = await openai.chat.completions.create({
-    model: 'gpt-4o', 
-    response_format: { type: 'json_object' },
-    messages: [
-      { role: 'system', content: 'Eres el Motor de Viralidad e Influencia V500.' },
-      { role: 'user', content: finalPrompt }
-    ],
-    temperature: 0.75,
-    max_tokens: 4500
-  });
-
-  tokensTotal += completion.usage?.total_tokens || 0;
-  const parsedData = JSON.parse(completion.choices[0].message.content || '{}');
-
-  console.log('[PASO 2] ✅ Guion generado exitosamente');
-
-  // ==================================================================================
-  // PASO 3: NORMALIZACIÓN Y ENTREGA
-  // ==================================================================================
-  
   const normalizedData = {
-    ...parsedData,
-    guion_completo: parsedData.guion_completo || parsedData.guion_tecnico_completo || parsedData.guion_completo_adaptado,
-    guion_tecnico_completo: parsedData.guion_tecnico_completo || parsedData.guion_completo || parsedData.guion_completo_adaptado,
-    plan_visual_director: parsedData.plan_visual_director || parsedData.plan_visual,
+    ...mejorResultado,
+    guion_completo: mejorResultado.guion_completo || mejorResultado.guion_tecnico_completo || mejorResultado.guion_completo_adaptado,
+    guion_tecnico_completo: mejorResultado.guion_tecnico_completo || mejorResultado.guion_completo,
+    plan_visual_director: mejorResultado.plan_visual_director || mejorResultado.plan_visual,
     analisis_estrategico: {
-        ...(parsedData.analisis_estrategico || {}),
-        razonamiento_interno: "Motor V500 - Planificación Estratégica Ejecutada"
+      ...(mejorResultado.analisis_estrategico || {}),
+      razonamiento_interno: `Motor V600 — ${intentoActual} intento(s) | Mejor viral_index: ${mejorScore}`,
+      intentos_realizados: intentoActual,
+      umbral_superado: mejorScore >= MIN_VIRAL_SCORE,
     }
   };
 
-  // ==================================================================================
-  // PASO 4: VALIDACIÓN DE EXPERTO (si existe)
-  // ==================================================================================
-  
+  // ── PASO 5: Validación de experto ──
   if ((contexto as any).expertProfile) {
-      console.log('[PASO 3] 🛡️ El Experto está auditando el guion...');
-      
-      const validation = ExpertAuthoritySystem.applyFilter(
-          (contexto as any).expertProfile, 
-          'guion', 
-          normalizedData
-      );
-      
-      (normalizedData as any).expert_validation = validation;
+    console.log('[MOTOR V600] 🛡️ Validando con perfil de experto...');
+    const validation = ExpertAuthoritySystem.applyFilter(
+      (contexto as any).expertProfile,
+      'guion',
+      normalizedData
+    );
+    (normalizedData as any).expert_validation = validation;
   }
 
-  console.log('[MOTOR V500] 🎉 Proceso completado exitosamente');
-  console.log(`[MOTOR V500] 📊 Tokens usados: ${tokensTotal}`);
+  console.log(`[MOTOR V600] 🎉 Proceso completado | Tokens: ${tokensTotal}`);
 
   return {
     data: normalizedData,

@@ -18,7 +18,7 @@ import { AvatarProfile } from './pages/AvatarProfile';
 import { ScriptGenerator } from './pages/ScriptGenerator';
 import { AnalyzeViral } from './pages/AnalyzeViral';
 // import { ReverseEngineering } from './pages/ReverseEngineering'; // 🗑️ ELIMINADO: No existe
-import { ViralCalculator } from './pages/ViralCalculator';
+import ViralCalculator from './pages/ViralCalculator';
 import { TitanViral } from './pages/TitanViral'; // ✅ ESTA ES LA INGENIERÍA INVERSA
 import { QuickIdeas } from './pages/QuickIdeas';
 import { CopyExpert } from './pages/CopyExpert';
