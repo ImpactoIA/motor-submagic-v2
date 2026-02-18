@@ -3837,13 +3837,14 @@ async function ejecutarIdeasRapidas(
 
   // 2. Generar el Prompt usando la función del Bloque 1
   const prompt = PROMPT_IDEAS_ELITE_V2(
-    topic,
-    quantity,
-    platform,
-    objective,
-    timing,
-    contexto
-  );
+      topic,
+      quantity,
+      platform,
+      objective,
+      timing,
+      contexto,
+      settings   // ✅ FIX: creative_lens ahora llega al prompt
+    );
 
   // 3. Llamar a OpenAI
   try {
@@ -4376,16 +4377,9 @@ async function ejecutarJuezViralV500(
     console.log(`[JUEZ V500] 📊 Score Global: ${result.veredicto_final?.score_total || 'N/A'}/100`);
     console.log(`[JUEZ V500] 🎯 Clasificación: ${result.veredicto_final?.clasificacion || 'N/A'}`);
 
-    // 4. Guardar en historial si hay userId
-    if (contexto.userId) {
-      await supabase.from('viral_generations').insert({
-        user_id: contexto.userId,
-        type: 'juez_viral_v500',
-        content: {
-          original: contenido,
-          analisis: result,
-          version: 'V500_OMEGA'
-        },
+    // 4. [Guardado manejado por el servidor principal - no duplicar aquí]
+//    // El save lo hace el serve() después del switch, no duplicar aquí.
+
         platform: plataforma,
         cost_credits: settings.estimatedCost || 2,
         tokens_used: tokens,
@@ -5120,6 +5114,41 @@ async function getVideoContent(
   throw new Error('Debes proporcionar una URL o subir un video');
 }
 
+async function analizarImagenEstrategica(
+  imageBase64: string,
+  openai: any
+): Promise<string> {
+  console.log('[VISION] 👁️ Analizando imagen para extracción de concepto...');
+
+  const response = await openai.chat.completions.create({
+    model: "gpt-4o",
+    messages: [
+      {
+        role: "system",
+        content: "Eres un Director Creativo Visionario. Tu trabajo es mirar una imagen y extraer su ÁNGULO VIRAL. No describas la imagen simplemente. Dime: ¿Qué historia de dolor, deseo o curiosidad cuenta esta imagen? ¿Qué concepto abstracto representa? Dame un párrafo potente que sirva como semilla para un guion viral."
+      },
+      {
+        role: "user",
+        content: [
+          { type: "text", text: "Analiza esta imagen y extrae el concepto central para un video viral." },
+          {
+            type: "image_url",
+            image_url: {
+              url: imageBase64.startsWith('data:') ? imageBase64 : `data:image/jpeg;base64,${imageBase64}`,
+              detail: "high"
+            }
+          }
+        ]
+      }
+    ],
+    max_tokens: 300
+  });
+
+  const analisis = response.choices[0].message.content;
+  console.log('[VISION] ✅ Concepto extraído:', analisis);
+  return analisis;
+}
+
 // ==================================================================================
 // 🔄 CONTEXTO Y COSTOS
 // ==================================================================================
@@ -5689,50 +5718,74 @@ if (body.platform)  settings.platform  = body.platform;
 
       case 'generar_guion':
       case 'generador_guiones': {
-      console.log('[MODE] ✨ Generar Guion con Motor V500');
+        console.log('[MODE] ✨ Generar Guion con Motor V600 (Texto + Visión)');
 
-    // 1. Capturar el Tema (Prioridad: Input directo > Contexto > Nicho)
-    const temaUsuario = body.text || body.userInput || processedContext || settings.topic || userContext.nicho || "Tema General";
-    
-    console.log(`[MOTOR V500] 🎯 Tema: "${temaUsuario}"`);
-    console.log(`[MOTOR V500] 📱 Plataforma: ${settings.platform || 'TikTok'}`);
-    console.log(`[MOTOR V500] 🏗️ Estructura: ${settings.structure || 'winner_rocket'}`);
+        // 1. Detección de Input (Imagen vs Texto)
+        let temaUsuario = "";
 
-    // 2. Validación de tema
-    if (!temaUsuario || temaUsuario === "Tema General") {
-        if (!processedContext) {
-            throw new Error("⚠️ Debes ingresar un tema para generar el guion.");
+        if (body.image) {
+            // 👁️ A) RUTA VISUAL (OJO BIÓNICO)
+            console.log('[MOTOR V600] 📸 Imagen detectada. Activando análisis visual...');
+            try {
+                // Convertimos la imagen en un concepto textual potente usando GPT-4o Vision
+                // Nota: Asegúrate de haber pegado la función 'analizarImagenEstrategica' antes del serve
+                const conceptoVisual = await analizarImagenEstrategica(body.image, openai);
+                
+                // Si el usuario escribió algo también (ej: "Hazlo divertido"), lo combinamos
+                const contextoAdicional = body.text || body.userInput || processedContext || "";
+                
+                // Fusión de Contextos
+                temaUsuario = `[ANÁLISIS DE IMAGEN]: ${conceptoVisual}\n\n[INSTRUCCIÓN ADICIONAL USUARIO]: ${contextoAdicional}`;
+                
+                console.log('[MOTOR V600] 🧬 Fusión Visual completada.');
+            } catch (imgError: any) {
+                console.error('[ERROR VISION]', imgError);
+                throw new Error("Error analizando la imagen. Asegúrate de que sea un formato válido (JPG/PNG).");
+            }
+        } else {
+            // 📝 B) RUTA TEXTO (CLÁSICA)
+            temaUsuario = body.text || body.userInput || processedContext || settings.topic || userContext.nicho || "Tema General";
         }
-    }
+        
+        console.log(`[MOTOR V600] 🎯 Tema Final a Procesar: "${temaUsuario.substring(0, 100)}..."`);
 
-    // 3. Enriquecer Contexto
-    const contextoEnriquecido = {
-        ...userContext,
-        tema_especifico: temaUsuario
-    };
-    
-    // 4. Ejecutar Motor V500
-    // Al pasar 'null' en el segundo argumento, activamos la ruta del Motor V500 puro
-    const res = await ejecutarGeneradorGuiones(
-        contextoEnriquecido, 
-        null,  // Sin DNA viral (modo original)
-        openai, 
-        settings // ✅ CRITICAL: Debe incluir 'platform'
-    );
-    
-    result = res.data;
-    tokensUsed = res.tokens;
-    
-    console.log('[MOTOR V500] ✅ Guion generado exitosamente');
-    console.log(`[MOTOR V500] 📊 Metadata:`, result.metadata_guion);
-    
-    // 5. Validar que se generó correctamente
-    if (!result.guion_completo && !result.guion_tecnico_completo) {
-        console.warn('[MOTOR V500] ⚠️ Guion incompleto detectado');
-    }
-    
-    break;
-}
+        // 2. Validación
+        if (!temaUsuario || temaUsuario === "Tema General") {
+             // Validación de seguridad final
+             if (!body.image && (!processedContext || processedContext.length < 3)) {
+                 throw new Error("⚠️ Debes ingresar un tema o subir una imagen para generar el guion.");
+             }
+        }
+
+        // 3. Enriquecer Contexto (Inyectamos el resultado visual/textual aquí)
+        const contextoEnriquecido = {
+            ...userContext,
+            tema_especifico: temaUsuario 
+        };
+        
+        // 4. Ejecutar Motor V600 (Tu lógica de optimización y bucles)
+        // Al pasarle 'temaUsuario' ya procesado, el motor aplica toda la potencia viral
+        // independientemente de si vino de una foto o de un texto.
+        const res = await ejecutarGeneradorGuiones(
+            contextoEnriquecido, 
+            null, // null = No es ingeniería inversa, es creación desde cero
+            openai, 
+            settings 
+        );
+        
+        result = res.data;
+        tokensUsed = res.tokens;
+        
+        console.log('[MOTOR V600] ✅ Guion generado exitosamente');
+        console.log(`[MOTOR V600] 📊 Metadata:`, result.metadata_guion);
+        
+        // 5. Validar integridad de respuesta
+        if (!result.guion_completo && !result.guion_tecnico_completo) {
+            console.warn('[MOTOR V600] ⚠️ Guion incompleto detectado');
+        }
+        
+        break;
+      }
       case 'juez_viral': {
   console.log('🚀 [ROUTER] Activando Juez Viral V500 OMEGA...');
   
@@ -5996,7 +6049,7 @@ ${Object.entries(avatarData.prohibitions || {})
     console.log('[TITAN] 📝 Iniciando Copy Expert Multiplataforma...');
 
     let contenidoOriginal = "";
-    let whisperMinutes = 0;
+    let copyWhisperMinutes = 0;        // ✅ FIX: nombre distinto, no shadow
     let videoSource: 'url' | 'upload' | 'manual' = 'manual';
 
     // ==================================================================================
@@ -6019,7 +6072,8 @@ ${Object.entries(avatarData.prohibitions || {})
             videoSource = videoData.source;
             
             if (videoData.duration > 0) {
-                whisperMinutes = Math.ceil(videoData.duration / 60);
+                copyWhisperMinutes = Math.ceil(videoData.duration / 60);
+        //    whisperMinutes = copyWhisperMinutes;  // ← actualiza la variable externa
                 console.log(`[COPY EXPERT] 🎤 Whisper usado: ${whisperMinutes} minutos`);
             }
         }
@@ -6091,9 +6145,10 @@ ${Object.entries(avatarData.prohibitions || {})
 
     result.metadata_procesamiento = {
         source: videoSource,
-        whisper_usado: whisperMinutes > 0,
-        whisper_minutos: whisperMinutes,
-        longitud_original: contenidoOriginal.length,
+        whisper_usado: copyWhisperMinutes > 0,
+    // whisper_minutos: copyWhisperMinutes,
+
+       longitud_original: contenidoOriginal.length,
         url_original: url || null,
         archivo_subido: body.uploadedFileName || null,
         timestamp: new Date().toISOString()

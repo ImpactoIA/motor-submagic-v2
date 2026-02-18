@@ -6,7 +6,8 @@ import {
     RefreshCw, Wand2, Zap, Copy, Save, Calendar as CalendarIcon, Gavel,
     Video, Instagram, Youtube, Linkedin, Globe, CheckCircle2, AlignLeft,
     User, AlertCircle, PenTool, Layout, Brain, Target, XCircle,
-    X, ChevronRight, Flame, TrendingUp, MessageCircle, Award, Eye
+    X, ChevronRight, Flame, TrendingUp, MessageCircle, Award, Eye,
+    Image as ImageIcon, UploadCloud // ✅ Nuevos iconos agregados
 } from 'lucide-react';
 
 // ==================================================================================
@@ -379,6 +380,10 @@ export const ScriptGenerator = () => {
     const [durationId, setDurationId] = useState('medium');
     const [hookType, setHookType] = useState(MASTER_HOOKS[0].name);
 
+    // ... otros estados ...
+    const [selectedImage, setSelectedImage] = useState<string | null>(null); // Base64
+    const [imagePreview, setImagePreview] = useState<string | null>(null);   // Para mostrarla
+
     // ✅ NUEVO: Estados para la Matriz V500
     const [selectedStructure, setSelectedStructure] = useState(TITAN_STRUCTURES[0]); 
     const [selectedInternalMode, setSelectedInternalMode] = useState(TITAN_STRUCTURES[0].modes[0]);
@@ -459,6 +464,30 @@ export const ScriptGenerator = () => {
 
     }, [user, userProfile, location]);
 
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Validar tamaño (ej: max 4MB)
+        if (file.size > 4 * 1024 * 1024) {
+            alert("La imagen es muy pesada. Máximo 4MB.");
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const base64String = reader.result as string;
+            setSelectedImage(base64String); // Esto va al backend
+            setImagePreview(base64String);  // Esto se muestra al usuario
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const clearImage = () => {
+        setSelectedImage(null);
+        setImagePreview(null);
+    };
+
     // ==================================================================================
     // 🎯 GENERACIÓN (CONEXIÓN AL CEREBRO V500)
     // ==================================================================================
@@ -494,6 +523,9 @@ export const ScriptGenerator = () => {
                     selectedMode: 'generador_guiones',
                     userInput: topic.trim(),
                     topic: topic.trim(),
+
+                    // ✅ AQUÍ ES DONDE SE ENVÍA LA FOTO (Faltaba esto)
+                    image: selectedImage
                     
                     // 👇 AQUÍ ESTÁ LA ACTUALIZACIÓN CLAVE PARA V500 👇
                     
@@ -694,6 +726,43 @@ export const ScriptGenerator = () => {
                 <div className="lg:col-span-5 space-y-6">
                     
                     {/* TEMA PRINCIPAL */}
+                    {/* INPUT DE IMAGEN (NUEVO) */}
+                    <div className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-5 shadow-lg mb-6">
+                        <label className="text-xs font-black text-gray-500 uppercase mb-3 flex items-center gap-2 tracking-widest">
+                            <ImageIcon size={14} /> Inspiración Visual (Opcional)
+                        </label>
+                        
+                        {!imagePreview ? (
+                            <div className="border-2 border-dashed border-gray-800 rounded-xl p-6 text-center hover:border-indigo-500/50 transition-colors cursor-pointer relative group">
+                                <input 
+                                    type="file" 
+                                    accept="image/*" 
+                                    onChange={handleImageUpload}
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                />
+                                <div className="flex flex-col items-center gap-2 text-gray-500 group-hover:text-indigo-400 transition-colors">
+                                    <UploadCloud size={24} />
+                                    <span className="text-xs font-bold">Haz clic o arrastra una imagen aquí</span>
+                                    <span className="text-[10px] opacity-60">El Motor V600 analizará su concepto viral</span>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="relative rounded-xl overflow-hidden border border-indigo-500/30 group">
+                                <img src={imagePreview} alt="Preview" className="w-full h-48 object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-4">
+                                    <p className="text-xs font-bold text-white flex items-center gap-2">
+                                        <CheckCircle2 size={12} className="text-green-400"/> Imagen Cargada
+                                    </p>
+                                </div>
+                                <button 
+                                    onClick={clearImage}
+                                    className="absolute top-2 right-2 p-1.5 bg-black/60 hover:bg-red-500/80 text-white rounded-lg backdrop-blur-sm transition-colors"
+                                >
+                                    <X size={14} />
+                                </button>
+                            </div>
+                        )}
+                    </div>
                     <div className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-5 shadow-lg">
                         <label className="text-xs font-black text-gray-500 uppercase mb-2 block tracking-widest">
                             1. Tema Principal
