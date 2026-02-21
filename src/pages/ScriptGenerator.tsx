@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { TCAFeedbackWidget } from './TCAFeedbackWidget';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
@@ -21,6 +22,22 @@ interface ScriptResult {
   micro_loops_detectados?: any[];
   curva_emocional?: any;
   activadores_psicologicos?: any[];
+  nivel_intensidad?: string;
+  identidad_verbal?: any;
+  tipo_de_cierre?: string;
+  ganchos_opcionales?: Array<{
+    tipo: string;
+    texto: string;
+    retencion_predicha: number;
+    mecanismo?: string;
+  }>;
+  plan_visual?: Array<{
+    tiempo: string;
+    accion_en_pantalla: string;
+    instruccion_produccion: string;
+    audio?: string;
+    texto_pantalla?: string;
+  }>;
   score_predictivo?: {
     retention_score: number;
     share_score: number;
@@ -38,9 +55,15 @@ interface ScriptResult {
     umbral_dominancia_superado?: boolean;
     razonamiento?: string;
   };
-  nivel_intensidad?: string;
-  identidad_verbal?: any;
-  tipo_de_cierre?: string;
+  analisis_viral?: {
+    loops_abiertos?: string[];
+    loops_cerrados?: string[];
+    loop_emocional?: string;
+    frases_autoridad?: string[];
+    trigger_comentarios?: string;
+    score_viralidad_predicho?: number;
+    advertencias?: string[];
+  };
   auto_validacion?: {
     arquitectura_completa?: boolean;
     tension_progresiva?: boolean;
@@ -61,67 +84,63 @@ interface ScriptResult {
     cumple_umbral_dominancia?: boolean;
     decision?: string;
     razon?: string;
- 
+  };
+  metadata_guion?: {
+    tema_tratado?: string;
+    plataforma?: string;
+    arquitectura?: string;
+    objetivo_viral?: string;
+    percepcion_creador?: string;
+    tono_voz?: string;
+    ritmo?: string;
+    nivel_intensidad?: string;
+    objetivo_cierre?: string;
+    estructura_usada?: string;
+  };
+  estrategia_tca?: {
+    nivel_posicionamiento?: string;
+    sector_utilizado?: string;
+    mass_appeal_score?: number;
+    tipo_contenido_embudo?: string;
+    equilibrio_masividad_calificacion?: boolean;
+    hook_sectorial?: string;
+    capa_visible?: string;
+    capa_estrategica?: string;
+    angulo_activo?: string;
+    plataforma_calibrada?: string;
+    cultural_tension_index?: {
+      score_total?: number;
+      descripcion_tension?: string;
     };
-    ganchos_opcionales?: Array<{
-        tipo: string;
-        texto: string;
-        retencion_predicha: number;
-        mecanismo?: string;
-    }>;
-    guion_completo: string;
-    plan_visual?: Array<{
-        tiempo: string;
-        accion_en_pantalla: string;
-        instruccion_produccion: string;
-        audio?: string;
-        texto_pantalla?: string;
-    }>;
-    analisis_viral?: {
-        loops_abiertos?: string[];
-        loops_cerrados?: string[];
-        loop_emocional?: string;
-        frases_autoridad?: string[];
-        trigger_comentarios?: string;
-        score_viralidad_predicho?: number;
-        advertencias?: string[];
-    };
-    auto_validacion?: {
-        hace_sentir_inspirado: boolean;
-        suena_distinto: boolean;
-        podria_molestar: boolean;
-        sera_recordado: boolean;
-        decision: string;
-        razon?: string;
-    };
+  };
 }
 
 interface AuditResult {
-    veredicto_final?: {
-        score_total: number;
-        clasificacion: string;
-        probabilidad_viral: string;
-        confianza_prediccion?: string;
-    };
-    evaluacion_criterios?: Array<{
-        criterio: string;
-        score: number;
-        analisis: string;
-        sugerencia: string;
-    }>;
-    fortalezas_clave?: string[];
-    debilidades_criticas?: Array<{
-        problema: string;
-        impacto: string;
-        solucion: string;
-    }>;
-    optimizaciones_rapidas?: string[];
-    prediccion_metricas?: {
-        vistas_estimadas: string;
-        engagement_rate: string;
-        tiempo_viralizacion: string;
-    };
-    decision_recomendada?: string;
+  veredicto_final?: {
+    score_total: number;
+    clasificacion: string;
+    probabilidad_viral: string;
+    confianza_prediccion?: string;
+  };
+  evaluacion_criterios?: Array<{
+    criterio: string;
+    score: number;
+    analisis: string;
+    sugerencia: string;
+  }>;
+  fortalezas_clave?: string[];
+  debilidades_criticas?: Array<{
+    problema: string;
+    impacto: string;
+    solucion: string;
+  }>;
+  optimizaciones_rapidas?: string[];
+  prediccion_metricas?: {
+    vistas_estimadas: string;
+    engagement_rate: string;
+    tiempo_viralizacion: string;
+  };
+  decision_recomendada?: string;
 }
 
 // ==================================================================================
@@ -402,6 +421,9 @@ export const ScriptGenerator = () => {
     const [closingObjective, setClosingObjective] = useState('seguidores');
 
     // --- Estados Psicológicos ---
+    const [mostrarFeedback, setMostrarFeedback]     = useState(false);
+    const [guionParaFeedback, setGuionParaFeedback] = useState<any>(null);
+    const [culturalContext, setCulturalContext]     = useState('');
     const [awareness, setAwareness] = useState(AWARENESS_LEVELS[1]);
     const [objective, setObjective] = useState(OBJECTIVES[0]);
     const [situation, setSituation] = useState(SITUATIONS[0]);
@@ -523,38 +545,23 @@ export const ScriptGenerator = () => {
                     selectedMode: 'generador_guiones',
                     userInput: topic.trim(),
                     topic: topic.trim(),
-
-                    // ✅ AQUÍ ES DONDE SE ENVÍA LA FOTO (Faltaba esto)
-                    image: selectedImage
-                    
-                    // 👇 AQUÍ ESTÁ LA ACTUALIZACIÓN CLAVE PARA V500 👇
-                    
+                    image: selectedImage,   // ← COMA CORREGIDA
                     settings: {
-                   // Plataforma
-                   platform: selectedPlatform.label,
-    
-                   // Matriz Titan
-                   structure: selectedStructure.id,
-                   internal_mode: selectedInternalMode.id,
-                   creative_lens: selectedLens,
-    
-                   // ✅ NUEVOS: Módulos del plan estratégico
-                   intensity: selectedIntensity,        // Módulo 6: Intensidad estratégica
-                   closing_objective: closingObjective, // Módulo 8: Cierre según objetivo
-    
-                   // Configuración Psicológica
-                   awareness: awareness,
-                   objective: objective,
-                   situation: situation,
-    
-                   // Configuración Técnica
-                   durationId: durationId,
-                   duration: durationId,
-                   hook_style: hookType,
-                   hookStyle: hookType,
-            },
-                    // 👆 FIN DE LA ACTUALIZACIÓN 👆
-
+                        platform: selectedPlatform.label,
+                        structure: selectedStructure.id,
+                        internal_mode: selectedInternalMode.id,
+                        creative_lens: selectedLens,
+                        intensity: selectedIntensity,
+                        closing_objective: closingObjective,
+                        awareness: awareness,
+                        objective: objective,
+                        situation: situation,
+                        durationId: durationId,
+                        duration: durationId,
+                        hook_style: hookType,
+                        hookStyle: hookType,
+                        cultural_context_usuario: culturalContext || null,
+                    },
                     expertId: selectedExpertId || undefined,
                     avatarId: userProfile?.active_avatar_id || undefined,
                     estimatedCost: cost
@@ -573,6 +580,8 @@ export const ScriptGenerator = () => {
             }
 
             setResult(finalResult);
+            setGuionParaFeedback(finalResult);
+            setTimeout(() => setMostrarFeedback(true), 48 * 60 * 60 * 1000);
             
             // 7. Actualizar créditos del usuario
             if (refreshProfile) await refreshProfile();
@@ -701,6 +710,7 @@ export const ScriptGenerator = () => {
     // ==================================================================================
 
     return (
+        <>
         <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in pb-20 p-4 font-sans text-white">
             
             {/* HEADER */}
@@ -902,6 +912,31 @@ export const ScriptGenerator = () => {
                         </div>
                     </div>
 
+                    {/* ── CONTEXTO CULTURAL TCA ── */}
+                    <div className="bg-[#0B0E14] border border-yellow-900/40 rounded-2xl p-4 space-y-2">
+                        <label className="text-[10px] font-black text-yellow-600 uppercase tracking-widest block">
+                            🔥 Contexto actual del sector
+                            <span className="text-gray-600 font-normal normal-case tracking-normal ml-2">
+                                opcional — potencia el alcance masivo
+                            </span>
+                        </label>
+                        <textarea
+                            value={culturalContext}
+                            onChange={e => setCulturalContext(e.target.value.slice(0, 300))}
+                            placeholder="¿Qué está pasando esta semana en tu sector que conecte con tu tema? Ej: Salió un reporte que dice que el 70% de negocios necesitará IA, mis clientes me preguntan mucho sobre esto..."
+                            rows={3}
+                            className="w-full bg-gray-900 border border-gray-700 text-gray-300 text-xs rounded-lg p-2.5 outline-none focus:border-yellow-600 resize-none"
+                        />
+                        <div className="flex justify-between items-center">
+                            <span className="text-[10px] text-gray-600">
+                                💡 Calibra la tensión cultural del sistema TCA en tiempo real
+                            </span>
+                            <span className={`text-[10px] ${culturalContext.length > 250 ? 'text-yellow-500' : 'text-gray-600'}`}>
+                                {culturalContext.length}/300
+                            </span>
+                        </div>
+                    </div>
+
                     {/* CONFIGURACIÓN FINAL */}
 <div className="bg-[#0B0E14] border border-gray-800 rounded-2xl p-5 shadow-lg space-y-4">
     
@@ -1047,7 +1082,7 @@ export const ScriptGenerator = () => {
                                         )}
                                         
                                         <span className="text-[10px] text-gray-500 uppercase tracking-widest border border-gray-800 px-2 py-0.5 rounded bg-gray-900">
-                                            {result.metadata_guion?.estructura_usada || result.metadata_guion?.arquitectura || selectedStructure}
+                                            {result.metadata_guion?.estructura_usada || result.metadata_guion?.arquitectura || selectedStructure.label}
                                         </span>
                                     </div>
                                     <h2 className="text-xl font-black text-white leading-tight max-w-lg">
@@ -1177,6 +1212,39 @@ export const ScriptGenerator = () => {
                                     )}
                                 </div>
                             )}
+
+                            {/* 🧹 REPORTE ANTI-CLICHÉS P4 */}
+{(result as any)._anti_saturation_report?.guion_fue_reescrito && (
+    <div className="mb-4 bg-yellow-900/10 border border-yellow-500/20 rounded-xl p-4">
+        <h3 className="text-xs font-black text-yellow-400 mb-2 flex items-center gap-2">
+            🧹 Anti-Saturación Activo — Clichés Eliminados
+        </h3>
+        <div className="flex flex-wrap gap-2">
+            {(result as any)._anti_saturation_report.cliches_detectados.map((c: string, i: number) => (
+                <span key={i} className="text-[10px] bg-yellow-500/10 text-yellow-300 px-2 py-0.5 rounded line-through">
+                    {c}
+                </span>
+            ))}
+        </div>
+    </div>
+)}
+
+{/* ⚖️ REPORTE SCORE VERIFICADO P5 */}
+{(result as any)._score_verification_report && (
+    <div className="mb-4 bg-blue-900/10 border border-blue-500/20 rounded-xl p-4">
+        <h3 className="text-xs font-black text-blue-400 mb-2">
+            ⚖️ Score Verificado Programáticamente (P5)
+        </h3>
+        <div className="grid grid-cols-2 gap-2 text-[10px]">
+            {Object.entries((result as any)._score_verification_report).map(([k, v]: any) => (
+                <div key={k} className="flex justify-between bg-black/20 px-2 py-1 rounded">
+                    <span className="text-gray-400">{k.replace('_real','').replace('_',' ')}</span>
+                    <span className="text-blue-300 font-bold">{v}</span>
+                </div>
+            ))}
+        </div>
+    </div>
+)}
 
                             {/* 🔥 NUEVO: AUTO-VALIDACIÓN */}
                             {result.auto_validacion && (
@@ -1655,5 +1723,13 @@ export const ScriptGenerator = () => {
             )}
 
         </div>
+
+        {mostrarFeedback && guionParaFeedback && (
+            <TCAFeedbackWidget
+                guionData={guionParaFeedback}
+                onClose={() => setMostrarFeedback(false)}
+            />
+        )}
+        </>
     );
 };

@@ -1441,6 +1441,7 @@ DIAGNOSTICA por qué el score no alcanzó el umbral y EJECUTA las siguientes acc
    - blueprint_replicable: mantén el objeto exactamente como estaba
 
 DEVUELVE únicamente el JSON completo actualizado con los 17 motores. Sin texto adicional.
+`;
 
 const PROMPT_REFINAMIENTO_LOOP = buildPromptRefinamientoLoop;
 
@@ -6145,6 +6146,43 @@ DEVUELVE SOLO ESTE JSON:
 }
 
 // ==================================================================================
+// 📊 TCA FEEDBACK — Guarda resultado real para calibración del sistema
+// ==================================================================================
+
+async function guardarFeedbackTCA(
+  supabase: any,
+  userId: string,
+  guionData: any,
+  feedbackData: any
+): Promise<void> {
+  try {
+    const tca   = guionData.estrategia_tca   || {};
+    const meta  = guionData.metadata_guion   || {};
+    const score = guionData.score_predictivo || {};
+
+    await supabase.from('tca_feedback').insert({
+      user_id:                userId,
+      guion_id:               guionData.id || `guion_${Date.now()}`,
+      plataforma:             tca.plataforma_calibrada              || meta.plataforma || 'N/A',
+      angulo_utilizado:       tca.angulo_activo                     || 'N/A',
+      mass_appeal_score:      tca.mass_appeal_score                 || 0,
+      cultural_tension_index: tca.cultural_tension_index?.score_total || 0,
+      viral_index_predicho:   score.viral_index                     || 0,
+      estructura:             meta.arquitectura                     || 'N/A',
+      intensidad:             meta.nivel_intensidad                 || 'N/A',
+      resultado_categoria:    feedbackData.resultado_categoria      || 'normal',
+      vistas_48h:             feedbackData.vistas_48h               || null,
+      notas_usuario:          feedbackData.notas                    || null
+    });
+
+    console.log(`[TCA FEEDBACK] ✅ Guardado — ${feedbackData.resultado_categoria} | vistas: ${feedbackData.vistas_48h || 'no reportadas'}`);
+
+  } catch (err: any) {
+    console.warn('[TCA FEEDBACK] ⚠️ Error guardando feedback:', err.message);
+  }
+}
+
+// ==================================================================================
 // 🌀 SISTEMA TCA IMPERIO — CAPA 0 DE ALCANCE MASIVO
 // Teoría Circular de Alcance — Integración V600
 // Se ejecuta ANTES del motor. No modifica P1-P6 ni el loop.
@@ -6156,6 +6194,7 @@ async function ejecutarSistemaTCA(
   openai: any
 ): Promise<{
   tema_expandido: string;
+  instruccion_tca: string;
   estrategia_tca: any;
   aprobado: boolean;
   advertencias: string[];
@@ -6170,6 +6209,7 @@ async function ejecutarSistemaTCA(
     console.log('[TCA IMPERIO] ⚡ Bypass activo — objetivo de autoridad profunda detectado.');
     return {
       tema_expandido: temaOriginal,
+      instruccion_tca: '',
       estrategia_tca: { modo: 'bypass_autoridad_profunda' },
       aprobado: true,
       advertencias: []
@@ -6217,6 +6257,16 @@ async function ejecutarSistemaTCA(
 
   const platConfig = PLATFORM_AGGRESSION[platform] || PLATFORM_AGGRESSION['TikTok'];
 
+  // ── Contexto cultural del usuario ─────────────────────────────────
+  const contextoCultural = settings.cultural_context_usuario || null;
+  const tieneContexto    = !!contextoCultural;
+
+  console.log(
+    tieneContexto
+      ? `[TCA TIMING] 🌡️ Contexto activo: "${contextoCultural?.substring(0, 60)}"`
+      : '[TCA TIMING] 📊 Sin contexto — usando inferencia del modelo'
+  );
+
   const promptTCA = `
 Eres el Sistema TCA Imperio V2 — Teoría Circular de Alcance con Tensión Cultural.
 Tu misión: posicionar el tema en el punto de máximo alcance masivo sincronizado
@@ -6244,6 +6294,19 @@ Mide si el tema está culturalmente sincronizado con el momento actual.
 Los videos que llegan a 5M no solo son masivos — son masivos Y culturalmente activos.
 
 Evalúa y puntúa cada señal (0-25 por señal, máximo 100):
+
+${tieneContexto ? `
+⚡ CONTEXTO CULTURAL DIRECTO DEL CREADOR (PRIORIDAD MÁXIMA):
+"${contextoCultural}"
+Este dato es inteligencia de primera mano del nicho.
+Vale más que cualquier API de tendencias con 48h de retraso.
+Si conecta directamente con el tema, refléjalo en el CTI.
+Con contexto relevante el CTI puede llegar a 90+/100.
+` : `
+Sin contexto directo del creador.
+Usar inferencia conservadora basada en patrones estructurales del sector.
+CTI máximo sin evidencia directa: 60/100.
+`}
 
 CTI Señal 1 — Momentum cultural activo (+25):
 ¿El tema conecta con una conversación social que está ocurriendo AHORA?
@@ -6392,14 +6455,29 @@ Responde SOLO con este JSON válido. Sin markdown, sin texto extra:
       model: 'gpt-4o',
       messages: [{ role: 'user', content: promptTCA }],
       temperature: 0.4,
-      max_tokens: 1400
+      max_tokens: 2000  // V2 necesita espacio para CTI + Angle Amplifier + JSON completo
     });
 
     const raw = response.choices[0].message.content || '';
+    // Extrae el JSON más largo (el objeto principal, no un sub-objeto)
+    const jsonMatches = [...raw.matchAll(/\{[\s\S]*?\}/g)];
     const jsonMatch = raw.match(/\{[\s\S]*\}/);
     if (!jsonMatch) throw new Error('TCA: JSON no encontrado en respuesta');
 
-    const tcaData = JSON.parse(jsonMatch[0]);
+    let tcaData: any;
+    try {
+      tcaData = JSON.parse(jsonMatch[0]);
+    } catch (parseErr) {
+      // Si el JSON está truncado, intentar reparación básica
+      const truncated = jsonMatch[0];
+      const repaired = truncated.endsWith('}') ? truncated : truncated + '}}';
+      try {
+        tcaData = JSON.parse(repaired);
+        console.warn('[TCA IMPERIO] ⚠️ JSON reparado tras truncamiento — considera aumentar max_tokens');
+      } catch {
+        throw new Error('TCA: JSON inválido incluso tras reparación');
+      }
+    }
     // V2 — leer score ponderado por plataforma
     const score = tcaData.mass_appeal_score_v2?.score_final || tcaData.mass_appeal_score || 0;
     const cti   = tcaData.cultural_tension_index?.score_total || 0;
@@ -6470,7 +6548,8 @@ Responde SOLO con este JSON válido. Sin markdown, sin texto extra:
 
     // 👇 RETORNO DEL OBJETO
     return {
-      tema_expandido: temaFinal + '\n\n' + instruccionDobleCapa,
+      tema_expandido: temaFinal,               // Tema limpio para tema_especifico
+      instruccion_tca: instruccionDobleCapa,    // Instrucción separada para el prompt
       estrategia_tca: {
         version: 'TCA_IMPERIO_V2',
         nivel_posicionamiento: 'Interseccion N2-N3',
@@ -6501,6 +6580,7 @@ Responde SOLO con este JSON válido. Sin markdown, sin texto extra:
     console.warn('[TCA IMPERIO] ⚠️ Error en análisis. Bypass activado — V600 continúa normalmente.', err.message);
     return {
       tema_expandido: temaOriginal,
+      instruccion_tca: '',
       estrategia_tca: { modo: 'bypass_error', error: err.message },
       aprobado: true,
       advertencias: ['TCA: análisis no disponible — tema usado como fue ingresado']
@@ -8377,8 +8457,12 @@ ${instruccionEstructura}
     estrategiaTCA = tcaResult.estrategia_tca;
 
     // Solo reemplazar el tema si TCA lo expandió exitosamente
-    if (tcaResult.aprobado && tcaResult.tema_expandido && tcaResult.tema_expandido !== temaUsuario) {
+    if (tcaResult.aprobado && tcaResult.tema_expandido && tcaResult.tema_expandido !== temaParaTCA) {
       temaUsuario = tcaResult.tema_expandido;
+      // Guardar instrucción TCA separada para el contexto
+      if (tcaResult.instruccion_tca) {
+        (settings as any)._tca_instruccion = tcaResult.instruccion_tca;
+      }
       console.log(`[TCA IMPERIO] ✅ Tema expandido al sector masivo`);
       console.log(`[TCA IMPERIO] 📊 Mass Appeal Score: ${estrategiaTCA?.mass_appeal_score || 0}/100`);
       console.log(`[TCA IMPERIO] 🎯 Nivel: ${estrategiaTCA?.nivel_original} → Intersección N2-N3`);
@@ -8432,6 +8516,33 @@ ${instruccionEstructura}
   console.log(`[MOTOR V600] ✅ Guion generado | Modo: ${modoGeneracion} | Score: ${result.score_predictivo?.viral_index || 'N/A'}`);
   break;
 }
+
+case 'tca_feedback': {
+  console.log('[ROUTER] 📊 Guardando feedback TCA...');
+
+  if (!userId) {
+    result = { success: false, error: 'Usuario no identificado' };
+    break;
+  }
+
+  await guardarFeedbackTCA(
+    supabase,
+    userId,
+    body.guion_data || {},
+    {
+      resultado_categoria: body.resultado_categoria || 'normal',
+      vistas_48h:          body.vistas_48h          || null,
+      notas:               body.notas               || null
+    }
+  );
+
+  result = {
+    success: true,
+    mensaje: '✅ Resultado guardado. El sistema aprende de tu experiencia.'
+  };
+  break;
+}
+
       case 'juez_viral': {
   console.log('🚀 [ROUTER] Activando Juez Viral V500 OMEGA...');
   

@@ -418,6 +418,109 @@ export const AvatarProfile: React.FC = () => {
                   </div>
                 </div>
 
+                {/* CAPA OLIMPO — AUDIENCIA PROFUNDA */}
+<div className="border-t border-gray-800 pt-8">
+  <div className="flex items-center gap-2 mb-5">
+    <div className="w-7 h-7 rounded-full bg-yellow-600 flex items-center justify-center text-white text-xs font-black">★</div>
+    <h3 className="text-white font-black text-sm uppercase tracking-wider">Audiencia Profunda (Olimpo)</h3>
+    {layerComplete(8) && <span className="ml-auto text-[10px] text-yellow-400 font-black">✓ ACTIVA</span>}
+  </div>
+  <div className="space-y-4 pl-3 border-l border-yellow-900/40">
+    
+    {/* Nivel de Conciencia — EL MÁS CRÍTICO */}
+    <div className="bg-yellow-900/10 p-4 rounded-xl border border-yellow-500/20">
+      <label className="text-[10px] font-black text-yellow-400 uppercase mb-3 block">
+        🧠 Nivel de Conciencia del Problema (CRÍTICO)
+      </label>
+      <div className="space-y-2">
+        {[
+          { v: 'inconsciente', l: '1️⃣ Inconsciente', d: 'No sabe que tiene el problema' },
+          { v: 'consciente_problema', l: '2️⃣ Consciente del Problema', d: 'Sabe que sufre, no sabe por qué' },
+          { v: 'consciente_solucion', l: '3️⃣ Consciente de Soluciones', d: 'Buscando opciones, no ha decidido' },
+          { v: 'consciente_producto', l: '4️⃣ Conoce tu Producto', d: 'Te conoce pero no ha comprado' },
+          { v: 'listo_decidir', l: '5️⃣ Listo para Decidir', d: 'Solo necesita el empujón final' },
+        ].map(opt => (
+          <button key={opt.v} onClick={() => setFormData({...formData, awareness_level: opt.v as any})}
+            className={`w-full p-3 rounded-lg border text-left transition-all ${formData.awareness_level === opt.v ? 'border-yellow-500 bg-yellow-500/20' : 'border-gray-700 bg-gray-900/50 hover:border-gray-600'}`}>
+            <p className="text-white font-bold text-xs">{opt.l}</p>
+            <p className="text-gray-400 text-[10px]">{opt.d}</p>
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <div className="grid grid-cols-2 gap-4">
+      <div>
+        <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Resistencia al Cambio</label>
+        <select value={formData.change_resistance || 'media'} onChange={e => setFormData({...formData, change_resistance: e.target.value as any})} className="input-avatar">
+          <option value="baja">Baja — Listo para actuar</option>
+          <option value="media">Media — Necesita evidencia</option>
+          <option value="alta">Alta — Escéptico, resistente</option>
+        </select>
+      </div>
+      <div>
+        <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Temperatura de Audiencia</label>
+        <select value={formData.audience_temperature || 'tibio'} onChange={e => setFormData({...formData, audience_temperature: e.target.value as any})} className="input-avatar">
+          <option value="frio">❄️ Fría — No te conoce</option>
+          <option value="tibio">🌤 Tibia — Te conoce algo</option>
+          <option value="caliente">🔥 Caliente — Lista para comprar</option>
+        </select>
+      </div>
+      <div>
+        <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Tono Interno del Avatar</label>
+        <select value={formData.internal_tone || ''} onChange={e => setFormData({...formData, internal_tone: e.target.value as any})} className="input-avatar">
+          <option value="">Sin definir</option>
+          <option value="victima">Víctima — Se siente atrapado</option>
+          <option value="ambicioso">Ambicioso — Quiere más</option>
+          <option value="confundido">Confundido — No sabe cómo</option>
+          <option value="frustrado">Frustrado — Lo intentó y falló</option>
+          <option value="esperanzado">Esperanzado — Cree que puede</option>
+        </select>
+      </div>
+      <div>
+        <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Horizonte Temporal</label>
+        <select value={formData.timeline_expectation || ''} onChange={e => setFormData({...formData, timeline_expectation: e.target.value})} className="input-avatar">
+          <option value="">Sin definir</option>
+          <option value="inmediato">Inmediato (ya mismo)</option>
+          <option value="30_dias">30 días</option>
+          <option value="3_meses">3 meses</option>
+          <option value="6_meses">6 meses</option>
+          <option value="1_anio">1 año o más</option>
+        </select>
+      </div>
+    </div>
+
+    <div>
+      <label className="text-[10px] font-black text-red-300 uppercase mb-2 block">Dolor Social (¿qué teme que otros piensen?)</label>
+      <textarea value={formData.social_pain || ''} onChange={e => setFormData({...formData, social_pain: e.target.value})} className="textarea-avatar h-16" placeholder="Ej: Teme que sus amigos lo vean como un fracasado..." />
+    </div>
+    
+    {/* Mapa de Transformación */}
+    <div className="bg-indigo-900/10 p-4 rounded-xl border border-indigo-500/20">
+      <label className="text-[10px] font-black text-indigo-400 uppercase mb-3 block">🗺️ Mapa de Transformación</label>
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="text-[10px] text-gray-500 uppercase mb-1 block">Punto A — Estado actual exacto</label>
+          <textarea value={formData.transformation_point_a || ''} onChange={e => setFormData({...formData, transformation_point_a: e.target.value})} className="textarea-avatar h-16" placeholder="Ej: Publica sin estrategia, 200 seguidores, sin ventas..." />
+        </div>
+        <div>
+          <label className="text-[10px] text-gray-500 uppercase mb-1 block">Obstáculo Interno</label>
+          <textarea value={formData.internal_obstacle || ''} onChange={e => setFormData({...formData, internal_obstacle: e.target.value})} className="textarea-avatar h-16" placeholder="Ej: Cree que no es lo suficientemente bueno..." />
+        </div>
+        <div>
+          <label className="text-[10px] text-gray-500 uppercase mb-1 block">Obstáculo Externo</label>
+          <textarea value={formData.external_obstacle || ''} onChange={e => setFormData({...formData, external_obstacle: e.target.value})} className="textarea-avatar h-16" placeholder="Ej: No tiene presupuesto para ads, falta tiempo..." />
+        </div>
+        <div>
+          <label className="text-[10px] text-gray-500 uppercase mb-1 block">Fricción Emocional</label>
+          <textarea value={formData.emotional_friction || ''} onChange={e => setFormData({...formData, emotional_friction: e.target.value})} className="textarea-avatar h-16" placeholder="Ej: Miedo al rechazo al publicar, parálisis por análisis..." />
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
                 {/* CAPA 3 — DOLOR CENTRAL */}
                 <div className="border-t border-gray-800 pt-8">
                   <div className="flex items-center gap-2 mb-5">
@@ -757,8 +860,13 @@ export const AvatarProfile: React.FC = () => {
         <div className="lg:col-span-4 space-y-6">
           <AvatarWidget />
           <MentorStrategic
-            avatar={selectedAvatarId ? avatarsList.find((a: any) => a.id === selectedAvatarId) : null}
-            mode="avatar_config"
+          alerts={[
+          ...(formData.central_pain ? [] : [{ type: 'error', message: 'Dolor Principal vacío', suggestion: 'Sin dolor definido el hook no puede personalizar' }]),
+          ...(formData.hidden_desire ? [] : [{ type: 'warning', message: 'Deseo Oculto no definido', suggestion: 'El motor no puede pintar la transformación sin este campo' }]),
+          ...(formData.awareness_level ? [] : [{ type: 'warning', message: 'Nivel de Conciencia no definido', suggestion: 'Define el nivel para calibrar hooks y promesas' }]),
+          ...(formData.urgency_trigger ? [] : [{ type: 'info', message: 'Trigger de Urgencia vacío', suggestion: 'El CTA pierde fuerza sin un disparador de urgencia' }]),
+          ...((formData.central_pain && formData.hidden_desire && formData.urgency_trigger) ? [{ type: 'success', message: '✓ Núcleo Emocional Activo', suggestion: 'Hook, resolución y CTA tienen combustible real' }] : [])
+          ].filter(Boolean)}
           />
           <ContextualSuggestions
             avatar={selectedAvatarId ? avatarsList.find((a: any) => a.id === selectedAvatarId) : null}
