@@ -253,6 +253,305 @@ interface JuezViralV500Result {
   siguiente_paso_sugerido: string;
 }
 
+// ============================================================
+// INGENIERÍA INVERSA PRO DOMINANTE — TIPOS COMPLETOS
+// 15 Motores · Compatible con Generador + Juez Viral V2
+// ============================================================
+
+// ─── MOTOR 1: Descomposición Estructural ───────────────────
+export interface BloqueProfundo {
+  tipo: "hook" | "setup" | "escalada" | "giro" | "climax" | "resolucion" | "cierre_estrategico";
+  inicio_segundos: number;
+  fin_segundos: number;
+  duracion_segundos: number;
+  descripcion: string;
+  funcion_narrativa: string;
+  intensidad: number; // 0-100
+}
+
+export interface AdnEstructura {
+  bloques: BloqueProfundo[];
+  tipo_apertura: string;
+  tipo_cierre: string;
+  proporcion_hook_porcentaje: number;
+  velocidad_escalada: "lenta" | "media" | "rapida" | "explosiva";
+  patron_narrativo_detectado: string;
+  complejidad_estructural: number; // 0-100
+}
+
+// ─── MOTOR 2: Curva Emocional ───────────────────────────────
+export interface PicoEmocional {
+  segundo: number;
+  emocion: string;
+  intensidad: number; // 0-100
+  detonante: string;
+}
+
+export interface CurvaEmocional {
+  emocion_dominante: string;
+  emocion_secundaria: string;
+  emocion_final: string;
+  picos_emocionales: PicoEmocional[];
+  intensidad_promedio: number; // 0-100
+  variabilidad_emocional: number; // 0-100 (qué tanto varía)
+  arco_emocional: string; // descripción del recorrido emocional completo
+  segmentos: Array<{
+    bloque: string;
+    emocion: string;
+    intensidad: number;
+  }>;
+}
+
+// ─── MOTOR 3: Micro-Loops y Tensión ────────────────────────
+export interface MicroLoop {
+  tipo: "promesa_abierta" | "cliffhanger" | "pregunta_pendiente" | "anticipacion" | "gancho_diferido";
+  descripcion: string;
+  segundo_apertura: number;
+  segundo_cierre: number | null; // null = nunca se cierra
+  intensidad: number; // 0-100
+}
+
+export interface MicroLoops {
+  loops: MicroLoop[];
+  total_loops: number;
+  intervalo_promedio_segundos: number;
+  densidad_anticipacion: number; // 0-100
+  loops_sin_resolver: number;
+  estrategia_tension: string;
+}
+
+// ─── MOTOR 4: Polarización ──────────────────────────────────
+export interface Polarizacion {
+  nivel_confrontacion: number; // 0-100
+  ruptura_creencia_detectada: string;
+  enemigo_implicito: string | null;
+  nivel_friccion_narrativa: number; // 0-100
+  mecanismo_polarizacion: string;
+  afirmaciones_divisivas: string[];
+  posicionamiento_vs: string; // "vs qué se posiciona el contenido"
+}
+
+// ─── MOTOR 5: Identidad Verbal ──────────────────────────────
+export interface IdentidadVerbal {
+  longitud_promedio_frases: number; // palabras
+  ritmo_sintactico: "staccato" | "fluido" | "mixto" | "explosivo";
+  proporcion_frases_cortas_pct: number;
+  proporcion_frases_largas_pct: number;
+  uso_metaforas: number; // 0-100
+  uso_imperativos: number; // 0-100
+  sofisticacion_lexica: number; // 0-100
+  nivel_agresividad_verbal: number; // 0-100
+  firma_linguistica: string; // descripción única del estilo
+  palabras_poder_detectadas: string[];
+}
+
+// ─── MOTOR 6: Status y Posicionamiento ─────────────────────
+export interface StatusYPosicionamiento {
+  tipo_autoridad: "mentor" | "rebelde" | "experto_tecnico" | "disruptor" | "insider" | "testigo" | "transformado";
+  experiencia_proyectada: "implicita" | "explicita" | "mixta";
+  rol_narrativo: string;
+  nivel_confianza_percibida: number; // 0-100
+  distancia_con_audiencia: "cercana" | "media" | "distante";
+  prueba_social_detectada: boolean;
+  mecanismos_autoridad: string[];
+}
+
+// ─── MOTOR 7: Densidad de Valor ────────────────────────────
+export interface DensidadValor {
+  valor_por_minuto: number; // 0-100
+  porcentaje_contenido_abierto: number; // % de contenido que genera más preguntas
+  porcentaje_contenido_cerrado: number; // % de contenido que entrega respuestas
+  profundidad_insight: number; // 0-100
+  micro_aprendizajes: string[]; // lista de aprendizajes concretos detectados
+  ratio_promesa_entrega: number; // cuánto promete vs cuánto entrega
+  tipo_valor_dominante: "educativo" | "inspiracional" | "entretenimiento" | "provocacion" | "solucion";
+}
+
+// ─── MOTOR 8: Manipulación de Atención ─────────────────────
+export interface ManipulacionAtencion {
+  cambios_ritmo: Array<{ segundo: number; tipo: string; descripcion: string }>;
+  interrupciones_patron: number; // conteo
+  reencuadres_mentales: string[];
+  golpes_narrativos: Array<{ segundo: number; descripcion: string; impacto: number }>;
+  reactivaciones_atencion: number; // conteo
+  tecnicas_detalladas: string[];
+  frecuencia_estimulacion: number; // 0-100 (qué tan seguido activa la atención)
+}
+
+// ─── MOTOR 9: Activadores de Guardado ──────────────────────
+export interface ActivadorGuardado {
+  tipo: "frase_memorable" | "reencuadre" | "dato_contraintuitivo" | "formula_repetible" | "revelacion";
+  contenido: string;
+  segundo_aproximado: number;
+  potencia_guardado: number; // 0-100
+}
+
+// ─── MOTOR 10: Adaptabilidad al Nicho ──────────────────────
+export interface AdaptabilidadNicho {
+  contexto_usuario: string;
+  sofisticacion_audiencia_target: "basica" | "intermedia" | "avanzada" | "experta";
+  nivel_conciencia_mercado: number; // 0-100
+  intensidad_psicologica_tolerable: number; // 0-100
+  ajustes_necesarios: string[];
+  riesgos_adaptacion: string[];
+}
+
+// ─── MOTOR 11: Anti-Saturación ─────────────────────────────
+export interface ElementoCliché {
+  tipo: "frase_cliche" | "hook_generico" | "formula_repetida" | "plantilla_obvia";
+  contenido: string;
+  nivel_saturacion: number; // 0-100
+  alternativa_sugerida: string;
+}
+
+// ─── MOTOR 12: Ritmo Narrativo ──────────────────────────────
+export interface RitmoNarrativo {
+  velocidad_progresion: "lenta" | "media" | "rapida" | "variable";
+  intervalo_promedio_entre_estimulos_seg: number;
+  variacion_intensidad: number; // 0-100 (qué tan variable es)
+  fluidez_estructural: number; // 0-100
+  momentos_pausa: number; // conteo de pausas narrativas intencionales
+  aceleraciones: Array<{ segundo: number; causa: string }>;
+}
+
+// ─── MOTOR 13: Score Viral Estructural ──────────────────────
+export interface ScoreViralEstructural {
+  retencion_estructural: number; // 0-100
+  intensidad_emocional: number; // 0-100
+  polarizacion: number; // 0-100
+  manipulacion_atencion: number; // 0-100
+  densidad_valor: number; // 0-100
+  viralidad_estructural_global: number; // 0-100
+  // Breakdown por motor
+  breakdown_motores: Record<string, number>;
+}
+
+// ─── MOTOR 14: Adaptación Estratégica ───────────────────────
+// El guion_adaptado_al_nicho es string directo en el output principal
+
+// ─── MOTOR 15: Blueprint para Conexión Directa ──────────────
+export interface BlueprintReplicable {
+  nombre_patron: string;
+  formula_base: string;
+  pasos_estructurales: string[];
+  equivalencias_estructurales: {
+    hook_type: string;
+    escalation_pattern: string;
+    giro_type: string;
+    closure_type: string;
+  };
+  equivalencias_psicologicas: {
+    emocion_entrada: string;
+    emocion_escalada: string;
+    emocion_salida: string;
+    tension_type: string;
+    activation_mechanism: string;
+  };
+  equivalencias_verbales: {
+    ritmo: string;
+    agresividad: string;
+    sofisticacion: string;
+  };
+  instrucciones_para_generador: string;
+  instrucciones_para_juez_viral: string;
+}
+
+// ─── MOTOR 16: Análisis TCA ─────────────────────────────────
+export type NivelTCA = "N0" | "N1" | "N2" | "N3" | "N4";
+
+export interface AnalisisTCA {
+  nivel_tca_detectado: NivelTCA;
+  sector_detectado: string;
+  tipo_alcance: string;
+  mass_appeal_score: number; // 0-100
+  equilibrio_masividad_calificacion: boolean;
+  diagnostico_tca: string;
+  capa_visible: string;
+  capa_estrategica: string;
+  filtro_audiencia_implicito: string;
+  tipo_trafico_que_atrae: string;
+  nivel_conversion_probable: "bajo" | "medio" | "alto" | "muy_alto";
+  esta_muy_tecnico: boolean;
+  esta_muy_mainstream: boolean;
+}
+
+export interface MapaAdaptacionTCA {
+  nivel_tca_recomendado: string;
+  sector_recomendado: string;
+  nuevo_hook_sectorial: string;
+  nueva_capa_visible: string;
+  capa_estrategica_conservada: string;
+  estructura_espejo: boolean;
+  version_tecnica: string;
+  version_equilibrio_ideal: string;
+  version_sector_masivo: string;
+  advertencia_micronicho: string | null;
+}
+
+// ─── OUTPUT COMPLETO ────────────────────────────────────────
+export interface IngenieriaInversaProOutput {
+  // Metadata
+  url_analizada: string;
+  nicho_origen: string;
+  nicho_usuario: string;
+  timestamp: string;
+  iteracion_loop: number;
+
+  // 15 Motores originales
+  adn_estructura: AdnEstructura;
+  curva_emocional: CurvaEmocional;
+  micro_loops: MicroLoops;
+  polarizacion: Polarizacion;
+  identidad_verbal: IdentidadVerbal;
+  status_y_posicionamiento: StatusYPosicionamiento;
+  densidad_valor: DensidadValor;
+  manipulacion_atencion: ManipulacionAtencion;
+  activadores_guardado: ActivadorGuardado[];
+  adaptabilidad_nicho: AdaptabilidadNicho;
+  elementos_cliche_detectados: ElementoCliché[];
+  ritmo_narrativo: RitmoNarrativo;
+  score_viral_estructural: ScoreViralEstructural;
+
+  // Motor 14 Output
+  guion_adaptado_al_nicho: string;
+  guion_adaptado_espejo: string;
+
+  // Motor 15 Output — Blueprint para Generador + Juez
+  blueprint_replicable: BlueprintReplicable;
+
+  // Motor 16 Output — TCA OLIMPO
+  analisis_tca: AnalisisTCA;
+  mapa_de_adaptacion: MapaAdaptacionTCA;
+  validacion_olimpo?: {
+    arquitectura_completa: boolean;
+    loops_reales_detectados: boolean;
+    nivel_tca_identificado: boolean;
+    equilibrio_ideal_detectado: boolean;
+    filtro_implicito_extraido: boolean;
+    adaptacion_sin_micronicho: boolean;
+    adn_estructural_conservado: boolean;
+    score_validacion: number;
+  };
+
+  // Extras
+  recomendaciones_estrategicas: string[];
+  alertas_criticas: string[];
+
+  // Loop info
+  loop_alcanzado_minimo: boolean;
+  score_final_obtenido: number;
+}
+// ─── PARÁMETROS DE ENTRADA ──────────────────────────────────
+export interface IngenieriaInversaProParams {
+  transcripcion: string;
+  url: string;
+  nicho_origen: string;       // nicho del video analizado
+  nicho_usuario: string;      // nicho del usuario (para adaptación)
+  objetivo_usuario: string;   // qué quiere lograr el usuario
+  umbral_score_minimo?: number; // default: 75
+  max_iteraciones?: number;     // default: 3
+}
+
 const MEMORIA_SISTEMA: SystemMemory = {
   videos_analizados: [],
   estructuras_exitosas: [],
@@ -575,18 +874,31 @@ ${timingStrategy}
 📊 TEMA ESPECÍFICO:
 "${temaEspecifico}"
 
-🔹 PERFIL DE EXPERTO (Desde qué posición de autoridad hablo):
-- Nicho: ${contexto.nicho || 'General'}
-- Posicionamiento: ${contexto.posicionamiento || 'Experto práctico'}
+🔹 PERFIL DE EXPERTO OLIMPO (Desde qué posición de autoridad hablo):
+- Nicho: ${contexto.nicho || 'General'}${contexto.expertProfile?.sub_niche ? ` / ${contexto.expertProfile.sub_niche}` : ''}
+- Posicionamiento: ${contexto.expertProfile?.unique_positioning || contexto.posicionamiento || 'Experto práctico'}
 - Nivel de Autoridad: ${contexto.expertProfile?.authority_level || 'practicante'}
 - Tipo de Autoridad: ${contexto.expertProfile?.authority_type || 'practica'}
 - Profundidad Permitida: ${contexto.expertProfile?.depth_level || 'media'}
 - Tipo de Prueba: ${contexto.expertProfile?.proof_type || 'casos_reales'}
+- Sofisticación del Mercado: ${contexto.expertProfile?.market_sophistication || 'aware'}
+- Objetivo Principal de Contenido: ${contexto.expertProfile?.main_objective || 'autoridad'}
+${contexto.expertProfile?.point_a ? `- Punto A (dolor de origen): "${contexto.expertProfile.point_a}"` : ''}
+${contexto.expertProfile?.point_b ? `- Punto B (destino prometido): "${contexto.expertProfile.point_b}"` : ''}
+${contexto.expertProfile?.transformation_promise ? `- Promesa: "${contexto.expertProfile.transformation_promise}"` : ''}
+${contexto.expertProfile?.confrontation_level ? `- Nivel de Confrontación: ${contexto.expertProfile.confrontation_level}/5` : ''}
+${contexto.expertProfile?.narrative_rhythm ? `- Ritmo Narrativo: ${contexto.expertProfile.narrative_rhythm}` : ''}
+${contexto.expertProfile?.storytelling_ratio !== undefined ? `- Ratio Storytelling/Enseñanza: ${contexto.expertProfile.storytelling_ratio}%/${100 - contexto.expertProfile.storytelling_ratio}%` : ''}
+${contexto.expertProfile?.enemy ? `- Enemigo Común: "${contexto.expertProfile.enemy}"` : ''}
 
 ${contexto.expertProfile?.mental_territory ? `
-🧠 TERRITORIO MENTAL (Mis conceptos trademark):
+🧠 TERRITORIO MENTAL™ (Mis conceptos trademark):
 "${contexto.expertProfile.mental_territory}"
 ⚠️ Debes reforzar ESTAS ideas en el contenido.
+` : ''}
+${contexto.expertProfile?.mechanism_name ? `
+⚙️ MECANISMO PROPIETARIO: "${contexto.expertProfile.mechanism_name}"
+⚠️ Este sistema diferencia al experto. Refuérzalo cuando sea relevante.
 ` : ''}
 
 🎯 AVATAR IDEAL (A quién le hablo):
@@ -802,199 +1114,335 @@ AHORA ANALIZA EL CONTENIDO PROPORCIONADO Y DEVUELVE EL JSON COMPLETO.
 // 💎 PROMPT TITAN V9: CLONACIÓN SINTÁCTICA ESTRICTA (EL ESPEJO)
 // ==================================================================================
 
-const PROMPT_INGENIERIA_INVERSA_ELITE = (
-  adnViral: any,
-  nichoDestino: string,
-  temaEspecifico: string,
-  contextoUsuario: any,
-  targetPlatform: string = 'TikTok',  // ← NUEVO parámetro
-  multiUrlPatterns?: any              // ← NUEVO parámetro (análisis multi-URL)
-) => {
+const PROMPT_INGENIERIA_INVERSA_PRO = (
+  transcripcion: string,
+  nichoOrigen: string,
+  nichoUsuario: string,
+  objetivoUsuario: string,
+  expertProfile?: any
+) => `
+Eres TITAN OMEGA OLIMPO — el laboratorio de ADN viral más avanzado del mundo.
+Tu función no es resumir. No es describir. No es copiar.
+Tu función es DISECCIONAR con precisión quirúrgica el ADN narrativo, estructural y estratégico de este contenido, detectar su nivel TCA real, y traducirlo en inteligencia 100% replicable.
 
-  const avatarDestino = contextoUsuario.avatar_ideal || "Tu Cliente Ideal";
-  const dolorDestino  = contextoUsuario.dolor_principal || "No obtener resultados reales";
-  const deseoPrincipal = contextoUsuario.deseo_principal || "Dominar su nicho";
+=============================================================
+TRANSCRIPCIÓN A ANALIZAR:
+Nicho de origen: ${nichoOrigen}
+Nicho del usuario: ${nichoUsuario}
+Objetivo del usuario: ${objetivoUsuario}
 
-  const estructura = JSON.stringify(adnViral.desglose_temporal || []);
-  const formulaGancho = adnViral.adn_extraido?.formula_gancho || "Afirmación Polémica";
+TRANSCRIPCIÓN:
+${transcripcion}
+=============================================================
 
-  // Si hay análisis multi-URL, construimos el contexto de patrones híbridos
-  const multiUrlContext = multiUrlPatterns ? `
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧬 PATRONES HÍBRIDOS DETECTADOS (MODO MULTI-URL)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Se analizaron ${multiUrlPatterns.total_urls} videos. Los patrones dominantes son:
-• Hook dominante: ${multiUrlPatterns.hook_dominante}
-• Tipo de promesa dominante: ${multiUrlPatterns.promesa_dominante}
-• Tipo de cierre dominante: ${multiUrlPatterns.cierre_dominante}
-• Ritmo promedio detectado: ${multiUrlPatterns.ritmo_promedio}
+${expertProfile ? `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🛡️ PERFIL DEL EXPERTO (FILTRO OLIMPO OBLIGATORIO)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Al extraer el ADN viral y generar la adaptación, DEBES respetar estas restricciones:
 
-⚠️ INSTRUCCIÓN: Usa estos patrones híbridos para crear una arquitectura SUPERIOR
-que combine lo mejor de todos los videos analizados.
-` : '';
+- Nivel de Autoridad: ${expertProfile.authority_level || 'practicante'}
+- Objetivo de Contenido: ${expertProfile.main_objective || 'autoridad'}
+- Confrontación Máxima: ${expertProfile.confrontation_level || 3}/5
+- Polémica Máxima: ${expertProfile.max_controversy || 3}/5
+${expertProfile.mechanism_name ? `- Mecanismo Propietario: "${expertProfile.mechanism_name}" → intégralo en la adaptación` : ''}
+${expertProfile.point_a ? `- Punto A del Avatar: "${expertProfile.point_a}"` : ''}
+${expertProfile.point_b ? `- Punto B (destino): "${expertProfile.point_b}"` : ''}
+${expertProfile.mental_territory ? `- Territorio Mental™: "${expertProfile.mental_territory}" → refuérzalo` : ''}
+${expertProfile.enemy ? `- Enemigo Común: "${expertProfile.enemy}"` : ''}
+${expertProfile.narrative_rhythm ? `- Ritmo Narrativo Configurado: ${expertProfile.narrative_rhythm}` : ''}
+${expertProfile.market_sophistication ? `- Sofisticación del Mercado: ${expertProfile.market_sophistication}` : ''}
 
-  // Adaptar instrucciones de ritmo según plataforma
-  const platformRhythm: Record<string, string> = {
-    'TikTok': 'Frases ultra-cortas (5-8 palabras máx). Ritmo frenético. Cortes cada 2-3s.',
-    'Reels': 'Frases medias (10-15 palabras). Ritmo aspiracional. Pausas estéticas.',
-    'YouTube': 'Frases largas y explicativas. Profundidad real. Ritmo pausado.',
-    'LinkedIn': 'Frases ejecutivas (15-20 palabras). Tono sobrio. Sin hype.',
-    'Facebook': 'Frases conversacionales (12-18 palabras). Tono humano y cercano.',
-  };
-  const rhythmInstruction = platformRhythm[targetPlatform] || platformRhythm['TikTok'];
+⚠️ REGLA CRÍTICA: La adaptación NUNCA puede contradecir el posicionamiento del experto.
+Si el video original usa tácticas que violan sus límites, ADAPTA esa táctica a una versión compatible con su identidad.
+` : ''}
 
-  return `
-═════════════════════════════════════════════════════════════════════════════
-🪞 TITAN OMEGA V3.0 — LABORATORIO DE ARQUITECTURA VIRAL
-     (CLONACIÓN SINTÁCTICA CON FIDELIDAD MATEMÁTICA)
-═════════════════════════════════════════════════════════════════════════════
+EJECUTA LOS 16 MOTORES EN SECUENCIA. SIN EXCEPCIONES. SIN SIMPLIFICACIONES.
 
-ERES UNA MÁQUINA DE ARQUITECTURA VIRAL, NO UN ESCRITOR CREATIVO.
-Tu misión no es reescribir el video. Es replicar su ARQUITECTURA PROFUNDA.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔴 MOTOR 1 — DESCOMPOSICIÓN ESTRUCTURAL PROFUNDA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Identifica y mapea CADA bloque narrativo con:
+- tipo: EXACTAMENTE uno de [hook, setup, escalada, giro, climax, resolucion, cierre_estrategico]
+- inicio y fin en segundos (estimados por posición en transcripción)
+- duración en segundos
+- descripción de qué sucede
+- función narrativa (por qué está ahí)
+- intensidad 0-100
 
-${multiUrlContext}
+LUEGO determina:
+- tipo_apertura: cómo abre (pregunta, afirmación polémica, dato sorpresa, promesa, historia, problema)
+- tipo_cierre: cómo cierra (CTA directo, loop abierto, revelación, resolución, pregunta)
+- proporción del hook como % del total
+- velocidad de escalada: lenta / media / rapida / explosiva
+- patrón narrativo detectado (nombre del patrón ej: "Problema-Agitación-Solución", "Historia-Giro-Revelación")
+- complejidad estructural 0-100
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📐 MAPA DE EQUIVALENCIA ESTRUCTURAL (OBLIGATORIO — FASE 1)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🟠 MOTOR 2 — CURVA EMOCIONAL CUANTIFICABLE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Mapea el recorrido emocional completo:
+- emocion_dominante, emocion_secundaria, emocion_final
+- picos_emocionales: array de { segundo, emocion, intensidad 0-100, detonante }
+- intensidad_promedio: 0-100
+- variabilidad_emocional: 0-100
+- arco_emocional: descripción en 1 frase del recorrido completo
+- segmentos: emoción e intensidad por cada bloque
 
-ANTES de escribir el guion, debes mapear internamente:
+NO aceptes emociones genéricas. Sé específico: "curiosidad ansiosa", "indignación justificada", "alivio sorpresivo".
 
-1️⃣ BLOQUES NARRATIVOS EXACTOS
-   Detecta cada bloque del video original y su función.
-   REGLA: El número de bloques detectados = número de bloques en la adaptación.
-   NO se puede agregar ni eliminar bloques.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🟡 MOTOR 3 — MICRO-LOOPS Y TENSIÓN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Detecta CADA loop de tensión con:
+- tipo: [promesa_abierta, cliffhanger, pregunta_pendiente, anticipacion, gancho_diferido]
+- descripción, segundo de apertura, segundo de cierre (null si nunca se cierra), intensidad 0-100
 
-2️⃣ POSICIÓN EXACTA DEL INSIGHT
-   Si el insight apareció en el bloque 4 del original → debe ir en el bloque 4 de la adaptación.
+LUEGO calcula:
+- total de loops, intervalo promedio entre loops, densidad_anticipacion 0-100, loops_sin_resolver, estrategia_tension
 
-3️⃣ TIPO EXACTO DE REVELACIÓN
-   Clasificar: revelación lógica / emocional / confesión / dato disruptivo / método / error expuesto.
-   La adaptación usa el MISMO TIPO.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🟤 MOTOR 4 — POLARIZACIÓN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Extrae: nivel_confrontacion 0-100, ruptura_creencia_detectada, enemigo_implicito, nivel_friccion_narrativa 0-100, mecanismo_polarizacion, afirmaciones_divisivas, posicionamiento_vs.
+Si no hay polarización significativa, score 0-20 con análisis honesto.
 
-4️⃣ TIPO EXACTO DE CIERRE
-   Clasificar: CTA directo / suave / emocional / aspiracional / desafío.
-   Se replica el tipo, no el texto.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🟢 MOTOR 5 — IDENTIDAD VERBAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Analiza: longitud_promedio_frases, ritmo_sintactico [staccato/fluido/mixto/explosivo], proporcion_frases_cortas_pct, proporcion_frases_largas_pct, uso_metaforas 0-100, uso_imperativos 0-100, sofisticacion_lexica 0-100, nivel_agresividad_verbal 0-100, firma_linguistica, palabras_poder_detectadas.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧠 SISTEMA DE EQUIVALENCIA PSICOLÓGICA (FASE 2)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔵 MOTOR 6 — STATUS Y POSICIONAMIENTO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Detecta: tipo_autoridad [mentor/rebelde/experto_tecnico/disruptor/insider/testigo/transformado], experiencia_proyectada [implicita/explicita/mixta], rol_narrativo, nivel_confianza_percibida 0-100, distancia_con_audiencia [cercana/media/distante], prueba_social_detectada bool, mecanismos_autoridad lista.
 
-El sistema NO adapta el tema. Adapta la PSICOLOGÍA.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚪ MOTOR 7 — DENSIDAD DE VALOR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Mide: valor_por_minuto 0-100, porcentaje_contenido_abierto, porcentaje_contenido_cerrado, profundidad_insight 0-100, micro_aprendizajes lista, ratio_promesa_entrega, tipo_valor_dominante [educativo/inspiracional/entretenimiento/provocacion/solucion].
 
-1️⃣ TIPO DE PROMESA: Transformación rápida / Eliminación de dolor /
-   Multiplicación de resultado / Simplificación / Ventaja oculta.
-   → Replica el tipo, no el contenido.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🟣 MOTOR 8 — MANIPULACIÓN DE ATENCIÓN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Identifica: cambios_ritmo array {segundo, tipo, descripcion}, interrupciones_patron count, reencuadres_mentales lista, golpes_narrativos array {segundo, descripcion, impacto 0-100}, reactivaciones_atencion count, tecnicas_detalladas lista, frecuencia_estimulacion 0-100.
 
-2️⃣ TIPO DE TRANSFORMACIÓN: Física / Económica / Mental / Social / Profesional.
-   → Traduce al equivalente del nicho "${nichoDestino}".
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔶 MOTOR 9 — ACTIVADORES DE GUARDADO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Detecta CADA elemento que hace al usuario guardar:
+- tipo: [frase_memorable, reencuadre, dato_contraintuitivo, formula_repetible, revelacion]
+- contenido (parafrasea, NO copies), segundo_aproximado, potencia_guardado 0-100
+Mínimo 3 activadores.
 
-3️⃣ EMOCIÓN DOMINANTE: Esperanza / Miedo / Ambición / Curiosidad /
-   Confesión / Rebeldía / Autoridad.
-   → Mantén intensidad emocional EQUIVALENTE.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🟦 MOTOR 10 — ADAPTABILIDAD AL NICHO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Traduce el ADN al nicho del usuario (${nichoUsuario}):
+- contexto_usuario, sofisticacion_audiencia_target [basica/intermedia/avanzada/experta]
+- nivel_conciencia_mercado 0-100, intensidad_psicologica_tolerable 0-100
+- ajustes_necesarios lista, riesgos_adaptacion lista
 
-4️⃣ ACTIVADOR: Urgencia temporal / Deseo de estatus / Dolor actual /
-   Comparación social / Revelación secreta.
-   → Replica el mismo activador.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚫ MOTOR 11 — ANTI-SATURACIÓN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Detecta: tipo [frase_cliche/hook_generico/formula_repetida/plantilla_obvia], contenido, nivel_saturacion 0-100, alternativa_sugerida.
+Si originalidad es alta, lista pocos o ninguno y explica por qué.
 
-5️⃣ TIPO DE TENSIÓN: Problema oculto / Error masivo / Injusticia /
-   Oportunidad perdida / Método desconocido.
-   → Mismo nivel de tensión narrativa.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔷 MOTOR 12 — RITMO NARRATIVO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Mide: velocidad_progresion [lenta/media/rapida/variable], intervalo_promedio_entre_estimulos_seg, variacion_intensidad 0-100, fluidez_estructural 0-100, momentos_pausa count, aceleraciones array {segundo, causa}.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📈 CONTROL DE PROGRESIÓN EMOCIONAL (FASE 3)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Detecta la curva emocional del original:
-Ej: [0-5s: Impacto alto] → [5-15s: Identificación] → [15-25s: Tensión] →
-    [25-40s: Revelación] → [40-55s: Resolución] → [55-60s: Acción]
-
-Genera CURVA ESPEJO. No solo bloques. Replica la DINÁMICA ENERGÉTICA.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎯 ÍNDICE DE FIDELIDAD ARQUITECTÓNICA (IFA — VALIDACIÓN INTERNA)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Antes de entregar, valida internamente cada punto:
-✔ Número de bloques originales = bloques adaptados
-✔ Secuencia narrativa respetada
-✔ Insight en misma posición
-✔ Intensidad emocional equivalente
-✔ Tipo de cierre replicado
-✔ Tipo de promesa conservado
-✔ Curva emocional replicada
-
-Si ALGUNO falla → reescribe hasta que todos pasen.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🌍 ADAPTACIÓN DE PLATAFORMA: ${targetPlatform.toUpperCase()}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-REGLA DE RITMO: ${rhythmInstruction}
-⚠️ Ajusta ritmo y longitud de frases a ${targetPlatform} SIN alterar la arquitectura base.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧬 ADN VIRAL A CLONAR (INPUT)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-• FÓRMULA DEL GANCHO ORIGINAL: "${formulaGancho}"
-• ESTRUCTURA DE TIEMPOS: ${estructura}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-👤 AVATAR DESTINO
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-• Avatar: ${avatarDestino}
-• Su dolor: "${dolorDestino}"
-• Su deseo: "${deseoPrincipal}"
-• Nicho de destino: "${nichoDestino}"
-• Tema específico: "${temaEspecifico}"
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚠️ REGLAS DE ORO (STRICT MODE)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-1. RESPETA LOS NÚMEROS: "3 errores" → "3 errores". "80%" → "80%".
-2. RESPETA LA INTENSIDAD: Agresivo original → agresivo con "${dolorDestino}".
-3. NO AÑADAS RELLENO: Mismo conteo de palabras que el original.
-4. NO USES ETIQUETAS EN EL GUION: Sin "Hook:", "CTA:", "Bloque 1:". Solo texto limpio.
-5. GUION LISTO PARA TELEPROMPTER: Fluido, natural, separado por ritmo.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📤 FORMATO DE SALIDA JSON (OBLIGATORIO)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🏆 MOTOR 13 — SCORE VIRAL ESTRUCTURAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Calcula con base en los 12 motores anteriores:
 {
-  "analisis_estrategico": {
-    "patron_sintatico_detectado": "Descripción del patrón original (ej: Porcentaje + Error + Solución)",
-    "equivalencia_psicologica": "Cómo se tradujo la psicología al nicho",
-    "tipo_revelacion": "Tipo de revelación detectada y replicada",
-    "tipo_cierre": "Tipo de CTA detectado y replicado",
-    "curva_emocional_original": "Descripción de la curva [0s→15s→30s→45s→60s]",
-    "curva_emocional_replicada": "Cómo quedó la curva en la adaptación",
-    "ifa_score": 98,
-    "ifa_observaciones": "Qué se ajustó para mantener fidelidad",
-    "sesgo_cognitivo_detectado": "El mecanismo psicológico principal replicado",
-    "estrategia_adaptacion": "Descripción de la estrategia de adaptación al nicho",
-    "nivel_fidelidad": "98%"
-  },
-  "guion_tecnico_completo": "GUION LIMPIO SIN ETIQUETAS.\\n\\nSolo texto fluido listo para teleprompter.\\n\\nSeparado en párrafos naturales por ritmo.\\n\\nSin 'Hook:', sin 'CTA:', sin estructuras visibles.",
-  "plan_visual_director": [
-    {
-      "tiempo": "0-3s",
-      "descripcion_visual": "Descripción visual potente",
-      "accion_camara": "Instrucción de cámara específica",
-      "texto_pantalla": "Texto superpuesto corto",
-      "audio_sfx": "Descripción del audio/música"
-    }
-  ],
-  "metadata_clonacion": {
-    "plataforma_destino": "${targetPlatform}",
-    "nicho_adaptado": "${nichoDestino}",
-    "bloques_originales": 0,
-    "bloques_adaptados": 0,
-    "promesa_replicada": "Tipo de promesa conservada"
+  "retencion_estructural": 0-100,
+  "intensidad_emocional": 0-100,
+  "polarizacion": 0-100,
+  "manipulacion_atencion": 0-100,
+  "densidad_valor": 0-100,
+  "viralidad_estructural_global": 0-100,
+  "breakdown_motores": {
+    "motor_1_estructura": 0-100,
+    "motor_2_emocional": 0-100,
+    "motor_3_tension": 0-100,
+    "motor_4_polarizacion": 0-100,
+    "motor_5_identidad": 0-100,
+    "motor_6_status": 0-100,
+    "motor_7_valor": 0-100,
+    "motor_8_atencion": 0-100,
+    "motor_9_guardado": 0-100,
+    "motor_11_originalidad": 0-100,
+    "motor_12_ritmo": 0-100
   }
 }
+Pesos: retencion(25%) + emocional(20%) + atencion(20%) + valor(15%) + polarizacion(10%) + resto(10%)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 MOTOR 14 — ADAPTACIÓN ESTRATÉGICA ESPEJO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Genera el guion_adaptado_espejo (antes guion_adaptado_al_nicho):
+- Mismo ADN estructural del video original
+- Adaptado al nicho: ${nichoUsuario} para el objetivo: ${objetivoUsuario}
+- PROHIBIDO copiar frases textuales
+- PROHIBIDO perder tensión o micro-loops
+- PROHIBIDO bajar el nivel TCA detectado
+- DEBE mantener mismo patrón de escalada y arquitectura emocional
+- DEBE adaptar ejemplos, contexto y referencias al nicho del usuario
+- DEBE respetar el perfil del experto si existe
+El guion debe estar LISTO para producción con bloques visibles:
+Formato: [HOOK] → [SETUP] → [ESCALADA] → [GIRO] → [CLIMAX] → [CIERRE]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔗 MOTOR 15 — BLUEPRINT PARA CONEXIÓN DIRECTA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Genera el blueprint_replicable para el Generador de Guiones y Juez Viral:
+- nombre_patron, formula_base, pasos_estructurales lista
+- equivalencias_estructurales: { hook_type, escalation_pattern, giro_type, closure_type }
+- equivalencias_psicologicas: { emocion_entrada, emocion_escalada, emocion_salida, tension_type, activation_mechanism }
+- equivalencias_verbales: { ritmo, agresividad, sofisticacion }
+- instrucciones_para_generador: cómo usar este blueprint
+- instrucciones_para_juez_viral: qué criterios usar al auditar
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🌐 MOTOR 16 — ANÁLISIS TCA + MAPA DE EXPANSIÓN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PARTE A — NIVEL TCA DEL VIDEO ANALIZADO
+Detecta en qué nivel TCA opera este video:
+- N0: Micronicho técnico (ej: "Estrategias de link building para SaaS B2B")
+- N1: Nicho general (ej: "Cómo ganar dinero con marketing digital")
+- N2: Temática amplia (ej: "Cómo ganar dinero online")
+- N3: Sector masivo (Dinero / Salud / Relaciones / Desarrollo Personal)
+- N4: Mainstream absoluto — sin filtro de audiencia, no convertible
+
+Evalúa y devuelve:
+- nivel_tca_detectado: "N0" | "N1" | "N2" | "N3" | "N4"
+- sector_detectado: sector dominante (ej: "Dinero", "Salud", "Relaciones")
+- tipo_alcance: descripción del tipo de alcance
+- mass_appeal_score: 0-100 (qué tan masivo es el contenido)
+- equilibrio_masividad_calificacion: true si está en el punto ideal entre sector masivo y temática principal
+- diagnostico_tca: diagnóstico en 1 frase (ej: "Ubicado entre N2 y N3 — alto alcance con filtro natural")
+- capa_visible: qué tema ve el espectador a simple vista
+- capa_estrategica: qué audiencia REAL está filtrando (la que convierte)
+- filtro_audiencia_implicito: descripción del filtro natural que atrae solo a los que compran
+- tipo_trafico_que_atrae: qué tipo de persona llega (ej: "Emprendedores frustrados buscando monetización")
+- nivel_conversion_probable: "bajo" | "medio" | "alto" | "muy_alto"
+- esta_muy_tecnico: true si está por debajo de N1 (micronicho, pierde alcance)
+- esta_muy_mainstream: true si está en N4 (pierde conversión)
+
+PARTE B — MAPA DE EXPANSIÓN TCA PARA EL USUARIO
+Responde: ¿Cómo adaptar este ADN viral al nicho "${nichoUsuario}" sin perder alcance ni conversión?
+- nivel_tca_recomendado: nivel TCA ideal para el usuario (ej: "N2-N3")
+- sector_recomendado: sector masivo al que anclar el contenido del usuario
+- nuevo_hook_sectorial: hook reescrito para el nicho del usuario con el mismo nivel TCA
+- nueva_capa_visible: qué verá el espectador del usuario a simple vista
+- capa_estrategica_conservada: la capa que filtra y convierte, adaptada al nicho
+- estructura_espejo: true si se puede replicar la misma arquitectura
+- version_tecnica: descripción del guion si se lleva a N0-N1 (muy técnico — para autoridad pura)
+- version_equilibrio_ideal: descripción del guion en N2-N3 (equilibrio masividad + conversión)
+- version_sector_masivo: descripción del guion en N3 (máximo alcance, menor conversión)
+- advertencia_micronicho: advertencia si la adaptación baja demasiado a micronicho técnico, o null si no aplica
+
+PARTE C — VALIDACIÓN INTERNA OLIMPO
+Verifica antes de devolver el JSON:
+□ ¿Se detectó arquitectura completa? (Motor 1)
+□ ¿Se detectaron loops reales? (Motor 3)
+□ ¿Se identificó el nivel TCA? (Motor 16A)
+□ ¿Se detectó el equilibrio ideal? (Motor 16A)
+□ ¿Se extrajo el filtro implícito? (Motor 16A)
+□ ¿Se adaptó sin bajar a micronicho técnico? (Motor 16B)
+□ ¿Se mantuvo el ADN estructural en el guion? (Motor 14)
+
+Devuelve validacion_olimpo con cada check (bool) y score_validacion (0-7).
+Si score_validacion < 5 → REANALIZA antes de devolver.
+
+=============================================================
+INSTRUCCIONES DE OUTPUT — LEE ANTES DE GENERAR
+=============================================================
+PRIORIDAD DE TOKENS (en orden estricto):
+1. guion_adaptado_espejo → NUNCA lo truncues. Es el output más valioso.
+2. analisis_tca + mapa_de_adaptacion → Completos siempre.
+3. blueprint_replicable → Completo siempre.
+4. score_viral_estructural → Completo siempre.
+5. Motores 1-12 → Sé preciso pero conciso. Listas de máximo 5 items.
+6. elementos_cliche_detectados → Máximo 3 elementos.
+7. recomendaciones_estrategicas → Máximo 3 items.
+8. alertas_criticas → Máximo 2 items.
+
+DEVUELVE ÚNICAMENTE EL JSON. Sin markdown. Sin backticks. Solo JSON puro.
+=============================================================
+
+{
+  "adn_estructura": { ...Motor 1... },
+  "curva_emocional": { ...Motor 2... },
+  "micro_loops": { ...Motor 3... },
+  "polarizacion": { ...Motor 4... },
+  "identidad_verbal": { ...Motor 5... },
+  "status_y_posicionamiento": { ...Motor 6... },
+  "densidad_valor": { ...Motor 7... },
+  "manipulacion_atencion": { ...Motor 8... },
+  "activadores_guardado": [ ...Motor 9... ],
+  "adaptabilidad_nicho": { ...Motor 10... },
+  "elementos_cliche_detectados": [ ...Motor 11... ],
+  "ritmo_narrativo": { ...Motor 12... },
+  "score_viral_estructural": { ...Motor 13... },
+  "guion_adaptado_espejo": "...Motor 14...",
+  "guion_adaptado_al_nicho": "...Motor 14 (mismo valor, compatibilidad)...",
+  "blueprint_replicable": { ...Motor 15... },
+  "analisis_tca": { ...Motor 16A... },
+  "mapa_de_adaptacion": { ...Motor 16B... },
+  "validacion_olimpo": { ...Motor 16C... },
+  "recomendaciones_estrategicas": ["...", "...", "..."],
+  "alertas_criticas": ["..."]
+}
 `;
-};
+
+// ─── PROMPT PARA ITERACIÓN DE LOOP ──────────────────────────
+const buildPromptRefinamientoLoop = (
+  outputAnterior: string,
+  scoreActual: number,
+  umbralMinimo: number,
+  iteracion: number,
+  nichoUsuario: string
+): string => `
+Eres el motor de refinamiento del sistema Ingeniería Inversa PRO.
+
+El análisis anterior obtuvo un score viral estructural de ${scoreActual}/100.
+El umbral mínimo requerido es ${umbralMinimo}/100.
+Esta es la iteración #${iteracion}.
+
+ANÁLISIS ANTERIOR:
+${outputAnterior}
+
+DIAGNOSTICA por qué el score no alcanzó el umbral y EJECUTA las siguientes acciones:
+
+1. REAFINA el guion_adaptado_al_nicho para ${nichoUsuario}:
+   - Intensifica los micro-loops más débiles
+   - Potencia los picos emocionales de menor intensidad
+   - Elimina elementos cliché detectados
+   - Agrega activadores de guardado donde falten
+
+2. REEQUILIBRA la tensión narrativa:
+   - Asegura que haya un loop abierto cada 15-20 segundos máximo
+   - El hook debe generar curiosidad antes del segundo 5
+
+3. RECALCULA el score_viral_estructural honestamente.
+
+4. ACTUALIZA recomendaciones_estrategicas y alertas_criticas.
+
+5. CONSERVA OBLIGATORIAMENTE en el JSON de salida:
+   - analisis_tca: mantén el objeto exactamente como estaba (no recalcules)
+   - mapa_de_adaptacion: mantén el objeto exactamente como estaba
+   - validacion_olimpo: recalcula si mejoraste, o mantén el anterior
+   - blueprint_replicable: mantén el objeto exactamente como estaba
+
+DEVUELVE únicamente el JSON completo actualizado con los 17 motores. Sin texto adicional.
+
+const PROMPT_REFINAMIENTO_LOOP = buildPromptRefinamientoLoop;
 
 // ==================================================================================
 // 🔥 MOTOR VIRAL V600 ÉLITE - SISTEMA NARRATIVO DOMINANTE
@@ -1176,6 +1624,65 @@ const PROMPT_GENERADOR_GUIONES = (contexto: any, viralDNA: any, settings: any = 
     viralObjective = VIRAL_OBJECTIVES['validacion_social'];
   }
   
+  // ==================================================================================
+  // 📈 P3: CURVAS EMOCIONALES ESPECÍFICAS POR PLATAFORMA
+  // ==================================================================================
+
+  const EMOTIONAL_CURVES_BY_PLATFORM: Record<string, any> = {
+    'TikTok': {
+      tipo: 'Explosiva',
+      descripcion: 'Escalada agresiva desde el segundo 0. Sin calentamiento.',
+      inicio: { emocion: 'Shock / Curiosidad', intensidad: 70 },
+      pico_intermedio: { emocion: 'Urgencia / Intriga', intensidad: 85, segundo: '15-20s' },
+      pico_final: { emocion: 'Revelación / Indignación', intensidad: 95, segundo: '35-45s' },
+      cierre: { emocion: 'Identidad tribal / FOMO', intensidad: 80 },
+      regla: 'Intensidad mínima de entrada: 70. Nunca baja de 65 entre picos. Cada 10s debe haber un estímulo nuevo.',
+      prohibido: 'Inicio suave, reflexión pausada, conclusiones lentas'
+    },
+    'Reels': {
+      tipo: 'Ondulante Aspiracional',
+      descripcion: 'Sube con elegancia. Hay un momento de pausa reflexiva antes del pico final.',
+      inicio: { emocion: 'Curiosidad estética / Aspiración', intensidad: 55 },
+      pico_intermedio: { emocion: 'Identificación emocional', intensidad: 75, segundo: '20-30s' },
+      pico_final: { emocion: 'Inspiración / Deseo de ser', intensidad: 90, segundo: '45-55s' },
+      cierre: { emocion: 'Pertenencia / Comunidad', intensidad: 70 },
+      regla: 'Inicio más suave que TikTok. El pico final llega DESPUÉS de un momento humano/vulnerable.',
+      prohibido: 'Agresividad excesiva, ritmo frenético, datos fríos sin emoción'
+    },
+    'YouTube': {
+      tipo: 'Escalada Educativa',
+      descripcion: 'Curva gradual con picos en cada revelación. Profundidad sobre velocidad.',
+      inicio: { emocion: 'Curiosidad intelectual / Promesa', intensidad: 50 },
+      pico_intermedio: { emocion: 'Sorpresa informativa / Insight', intensidad: 70, segundo: '25-35s' },
+      pico_final: { emocion: 'Claridad / Satisfacción intelectual', intensidad: 85, segundo: '50-58s' },
+      cierre: { emocion: 'Autoridad percibida / Confianza', intensidad: 75 },
+      regla: 'Cada revelación eleva la intensidad. El espectador debe sentir que "aprendió algo valioso".',
+      prohibido: 'Shock sin fundamento, polarización vacía, ritmo caótico'
+    },
+    'LinkedIn': {
+      tipo: 'Reflexiva Ascendente',
+      descripcion: 'Inicio con tesis fuerte. Tensión intelectual. Cierre con marco mental.',
+      inicio: { emocion: 'Provocación intelectual', intensidad: 60 },
+      pico_intermedio: { emocion: 'Disonancia cognitiva / Reconsideración', intensidad: 75, segundo: '20-30s' },
+      pico_final: { emocion: 'Insight de negocio / Reencuadre', intensidad: 85, segundo: '40-50s' },
+      cierre: { emocion: 'Autoridad sobria / Pensamiento propio', intensidad: 70 },
+      regla: 'Tensión debe ser intelectual, no emocional. El clímax es un reencuadre mental, no un grito.',
+      prohibido: 'Emotividad excesiva, humor irreverente, shock de bajo valor'
+    },
+    'Facebook': {
+      tipo: 'Conversacional Cálida',
+      descripcion: 'Empieza cercano. Sube con historia humana. Cierra con conexión comunidad.',
+      inicio: { emocion: 'Empatía / Reconocimiento', intensidad: 45 },
+      pico_intermedio: { emocion: 'Identificación personal', intensidad: 65, segundo: '25-40s' },
+      pico_final: { emocion: 'Revelación relatable', intensidad: 80, segundo: '55-70s' },
+      cierre: { emocion: 'Comunidad / Debate abierto', intensidad: 60 },
+      regla: 'La curva es más suave. El valor viene de la conexión humana, no del shock.',
+      prohibido: 'Ritmo agresivo, datos fríos, polarización sin empatía'
+    }
+  };
+
+  const curvaPlataforma = EMOTIONAL_CURVES_BY_PLATFORM[platLabel] || EMOTIONAL_CURVES_BY_PLATFORM['TikTok'];
+
   // ==================================================================================
   // 🧬 DNA POR PLATAFORMA (ADAPTACIÓN OBLIGATORIA)
   // ==================================================================================
@@ -1411,8 +1918,35 @@ Si no supera el umbral de dominancia, lo rehaces desde cero.
 • Situación del Avatar: ${situacion}
 • Nivel de Consciencia: ${consciencia}
 • Nivel de Intensidad: ${intensityConfig.label} (${intensityLevel})
-• Objetivo de Cierre: ${closingConfig.label}
 • Hook Style: ${hookStyle}
+• Objetivo de Cierre: ${closingConfig.label}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🌍 CONTEXTO TCA (Teoría Circular de Alcance)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Nivel de Posicionamiento: ${contexto.estrategia_tca?.nivel_posicionamiento || 'N2-N3'}
+• Sector Utilizado: ${contexto.estrategia_tca?.sector_utilizado || 'General'}
+• Tipo de Contenido en Embudo: ${contexto.estrategia_tca?.tipo_contenido_embudo || 'TOFU'}
+• Hook Sectorial Detectado: ${contexto.estrategia_tca?.hook_sectorial || 'No definido'}
+• Capa Visible (Masiva): ${contexto.estrategia_tca?.capa_visible || 'No definida'}
+• Capa Estratégica (Calificadora): ${contexto.estrategia_tca?.capa_estrategica || 'No definida'}
+• Equilibrio Masividad-Calificación: ${contexto.estrategia_tca?.equilibrio_masividad_calificacion ?? true}
+• Mass Appeal Score: ${contexto.estrategia_tca?.mass_appeal_score || 0}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🧪 VERIFICACIÓN EN CONSOLA — TCA IMPERIO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Cuando un usuario genere un guion, el backend debe mostrar en logs:
+
+[TCA IMPERIO] 🌀 Ejecutando Sistema de Alcance Masivo...
+[TCA IMPERIO] 🌀 Iniciando análisis de posicionamiento masivo...
+[TCA IMPERIO] 📊 Mass Appeal Score: 87/100
+[TCA IMPERIO] 📍 Nivel: N1 → N2-N3
+[TCA IMPERIO] 🎯 Tema expandido: "Por qué el 90% del dinero en..."
+[TCA IMPERIO] ✅ Tema expandido al sector masivo
+[MOTOR V600] 🔥 Iniciando generación con loop de optimización...
+
 
 ${expertDirectives}
 
@@ -1485,20 +2019,40 @@ Selecciona internamente UNA forma de ejecutar el DESARROLLO:
 Nunca repitas la misma variante de hook en dos guiones consecutivos.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📈 MOTOR 2 — PROGRESIÓN EMOCIONAL
+📈 MOTOR 2 — PROGRESIÓN EMOCIONAL ESPECÍFICA PARA ${platLabel.toUpperCase()}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-La curva emocional OBLIGATORIA del guion:
+TIPO DE CURVA ACTIVA: ${curvaPlataforma.tipo}
+DESCRIPCIÓN: ${curvaPlataforma.descripcion}
 
-INICIO → Tensión o intriga (0-15s)
-PICO 1 → Dolor o disrupción máxima (15-25s) 
-PICO 2 → Revelación o insight sorpresivo (25-45s)
-CIERRE → Esperanza + Acción clara (45-60s)
+ARQUITECTURA EMOCIONAL OBLIGATORIA PARA ${platLabel.toUpperCase()}:
 
-REGLAS:
-✓ NO puedes tener un guion emocionalmente plano
-✓ Cada bloque debe elevar o cambiar el estado emocional del espectador
-✓ El espectador debe terminar en un estado DIFERENTE al que empezó
+INICIO (0-5s):
+- Emoción: ${curvaPlataforma.inicio.emocion}
+- Intensidad mínima: ${curvaPlataforma.inicio.intensidad}/100
+
+PICO INTERMEDIO (${curvaPlataforma.pico_intermedio.segundo}):
+- Emoción: ${curvaPlataforma.pico_intermedio.emocion}
+- Intensidad: ${curvaPlataforma.pico_intermedio.intensidad}/100
+
+PICO FINAL (${curvaPlataforma.pico_final.segundo}):
+- Emoción: ${curvaPlataforma.pico_final.emocion}
+- Intensidad: ${curvaPlataforma.pico_final.intensidad}/100 ← MÁXIMO DEL GUION
+
+EMOCIÓN DE CIERRE:
+- Emoción: ${curvaPlataforma.cierre.emocion}
+- Intensidad: ${curvaPlataforma.cierre.intensidad}/100
+
+REGLA MAESTRA DE ESTA PLATAFORMA:
+"${curvaPlataforma.regla}"
+
+⛔ PROHIBIDO EN ${platLabel.toUpperCase()}: ${curvaPlataforma.prohibido}
+
+VALIDACIONES OBLIGATORIAS:
+✓ La intensidad del PICO FINAL debe ser MAYOR que el PICO INTERMEDIO
+✓ El INICIO no puede superar la intensidad del PICO FINAL
+✓ El espectador debe terminar en un estado emocional DIFERENTE al inicial
+✓ Si la curva es plana (variación < 20 puntos) → REESCRIBE
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🔄 MOTOR 3 — TENSIÓN PROGRESIVA Y MICRO-LOOPS
@@ -1907,19 +2461,31 @@ ${modoConfig.prioridades.map((p: string) => `• ${p}`).join('\n')}
 TOLERANCIA: ${modoConfig.tolerancia}
 
 PLATAFORMA OBJETIVO: ${plataforma.toUpperCase()}
-COMPORTAMIENTO: ${platRules.comportamiento}
+RITMO: ${platRules.ritmo}
+LENGUAJE: ${platRules.lenguaje}
 REGLA DE ORO: ${platRules.regla_oro}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 👤 CONTEXTO DEL CREADOR
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-NICHO: ${contexto.nicho || 'General'}
+NICHO: ${contexto.nicho || 'General'}${contexto.expertProfile?.sub_niche ? ` / ${contexto.expertProfile.sub_niche}` : ''}
 AVATAR OBJETIVO: ${contexto.avatar_ideal || 'Audiencia general'}
 DOLOR PRINCIPAL: ${contexto.dolor_principal || 'N/A'}
 DESEO PRINCIPAL: ${contexto.deseo_principal || 'N/A'}
 NIVEL AUTORIDAD: ${expertLevel}
+TIPO DE AUTORIDAD: ${contexto.expertProfile?.authority_type || 'practica'}
+OBJETIVO DE CONTENIDO: ${contexto.expertProfile?.main_objective || 'autoridad'}
+SOFISTICACIÓN DEL MERCADO: ${contexto.expertProfile?.market_sophistication || 'aware'}
+${contexto.expertProfile?.point_a ? `PUNTO A (origen del avatar): "${contexto.expertProfile.point_a}"` : ''}
+${contexto.expertProfile?.point_b ? `PUNTO B (destino prometido): "${contexto.expertProfile.point_b}"` : ''}
+${contexto.expertProfile?.transformation_promise ? `PROMESA DIFERENCIAL: "${contexto.expertProfile.transformation_promise}"` : ''}
+${contexto.expertProfile?.mechanism_name ? `MECANISMO PROPIETARIO: "${contexto.expertProfile.mechanism_name}"` : ''}
+${contexto.expertProfile?.mental_territory ? `TERRITORIO MENTAL™: "${contexto.expertProfile.mental_territory}"` : ''}
+${contexto.expertProfile?.max_controversy ? `LÍMITE MÁXIMO DE POLÉMICA: ${contexto.expertProfile.max_controversy}/5` : ''}
+${contexto.expertProfile?.confrontation_level ? `NIVEL DE CONFRONTACIÓN: ${contexto.expertProfile.confrontation_level}/5` : ''}
 
+⚠️ VALIDACIÓN OLIMPO: El guion debe ser coherente con el Mapa de Transformación (Punto A → B), respetar el límite de polémica y reforzar el mecanismo propietario si existe.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📝 CONTENIDO A EVALUAR
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -2996,25 +3562,69 @@ const PROMPT_CALENDARIO_GOD_MODE = (settings: any, contexto: ContextoUsuario) =>
   const enfoque = settings.focus || 'Viralidad';
   const plataforma = settings.platform || 'TikTok';
   const tema = settings.topic || contexto.nicho;
+  const ep = (contexto as any).expertProfile;
 
-  return `ACTÚA COMO: IA Suprema de ${plataforma}.
+  // Leer config de red si existe
+  let netOverride = '';
+  if (ep?.network_config) {
+    try {
+      const nc = typeof ep.network_config === 'string' ? JSON.parse(ep.network_config) : ep.network_config;
+      const cfg = nc[plataforma.toLowerCase()];
+      if (cfg && Object.values(cfg).some((v: any) => v !== 'auto')) {
+        netOverride = `
+OVERRIDE DE RED PARA ${plataforma.toUpperCase()}:
+${cfg.tone !== 'auto' ? `- Tono: ${cfg.tone}` : ''}
+${cfg.depth !== 'auto' ? `- Profundidad: ${cfg.depth}` : ''}
+${cfg.close_type !== 'auto' ? `- Tipo de cierre: ${cfg.close_type}` : ''}`;
+      }
+    } catch {}
+  }
 
-OBJETIVO: Estrategia de ${dias} días.
+  return `ACTÚA COMO: Estratega de contenido OLIMPO para ${plataforma}.
 
-CONTEXTO:
+OBJETIVO: Calendario estratégico de ${dias} días alineado al perfil del experto.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CONTEXTO DEL CREADOR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 - Nicho: ${contexto.nicho}
 - Avatar: ${contexto.avatar_ideal}
-- Tema: "${tema}"
+- Tema Principal: "${tema}"
+- Enfoque del Calendario: ${enfoque}
+${ep ? `
+- Nivel de Autoridad: ${ep.authority_level || 'practicante'}
+- Objetivo Principal de Contenido: ${ep.main_objective || 'autoridad'}
+- Tipo de Autoridad: ${ep.authority_type || 'practica'}
+- Confrontación Permitida: ${ep.confrontation_level || 3}/5
+- Polarización Permitida: ${ep.polarization_level || 2}/5
+${ep.mechanism_name ? `- Mecanismo Propietario: "${ep.mechanism_name}"` : ''}
+${ep.point_a ? `- Punto A del Avatar: "${ep.point_a}"` : ''}
+${ep.point_b ? `- Punto B (destino): "${ep.point_b}"` : ''}
+${ep.enemy ? `- Enemigo Común: "${ep.enemy}"` : ''}
+${ep.mental_territory ? `- Territorio Mental™: "${ep.mental_territory}"` : ''}
+` : ''}
+${netOverride}
 
-FORMATO JSON:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+REGLAS DEL CALENDARIO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Cada día debe tener un objetivo distinto (autoridad, viralidad, leads, comunidad, ventas).
+2. El objetivo de cada día debe alinearse con el objetivo principal del experto: "${ep?.main_objective || enfoque}".
+3. Los ganchos deben respetar el nivel de confrontación del experto.
+4. Si existe mecanismo propietario, al menos 1 de cada 3 días debe reforzarlo.
+5. El tipo de cierre de cada pieza debe variar para no saturar.
+
+FORMATO JSON — responde SOLO con este JSON, sin markdown:
 {
   "calendar": [
     {
       "dia": 1,
       "tema": "TÍTULO ATRACTIVO",
-      "objetivo": "Viralidad/Autoridad",
-      "gancho_sugerido": "Primera frase...",
-      "disparador": "Curiosidad"
+      "objetivo": "autoridad | viralidad | leads | comunidad | ventas",
+      "gancho_sugerido": "Primera frase impactante...",
+      "disparador": "Curiosidad | Miedo | Esperanza | Indignación | Sorpresa",
+      "tipo_cierre": "pregunta | cta_link | reflexion | oferta | autoridad",
+      "refuerza_mecanismo": true
     }
   ]
 }`;
@@ -3296,14 +3906,49 @@ AVATAR IDEAL (A quién le hablas):
 • Deseo Principal: ${contexto.deseo_principal || 'N/A'}
 
 EXPERTO (Desde qué posición hablas):
-• Nivel de Autoridad: ${expertLevel}
-• Lenguaje esperado: ${expertLanguage}
+- Nivel de Autoridad: ${expertLevel}
+- Tipo de Autoridad: ${contexto.expertProfile?.authority_type || 'practica'}
+- Lenguaje esperado: ${expertLanguage}
+- Objetivo de Contenido: ${contexto.expertProfile?.main_objective || 'autoridad'}
+- Ritmo Narrativo: ${contexto.expertProfile?.narrative_rhythm || 'medio'}
+- Agresividad Verbal: ${contexto.expertProfile?.verbal_aggressiveness ?? 2}/5
+- Sofisticación Léxica: ${contexto.expertProfile?.lexical_sophistication ?? 3}/5
+- Ratio Storytelling: ${contexto.expertProfile?.storytelling_ratio ?? 50}% narrativa / ${100 - (contexto.expertProfile?.storytelling_ratio ?? 50)}% enseñanza directa
+${contexto.expertProfile?.enemy ? `• Enemigo Común: "${contexto.expertProfile.enemy}"` : ''}
+${contexto.expertProfile?.transformation_promise ? `• Promesa Diferencial: "${contexto.expertProfile.transformation_promise}"` : ''}
+${contexto.expertProfile?.mechanism_name ? `• Mecanismo Propietario: "${contexto.expertProfile.mechanism_name}"` : ''}
 
-${contexto.expertProfile?.mental_territory ? `
-🧠 TERRITORIO MENTAL (Conceptos propios):
-"${contexto.expertProfile.mental_territory}"
-⚠️ Debes reforzar ESTAS ideas en el copy.
-` : ''}
+${(() => {
+  try {
+    const nc = typeof contexto.expertProfile?.network_config === 'string'
+      ? JSON.parse(contexto.expertProfile.network_config)
+      : (contexto.expertProfile?.network_config || {});
+    const redKey = redSocial.toLowerCase();
+    const override = nc[redKey];
+    if (override && Object.values(override).some((v: any) => v !== 'auto')) {
+      return `⚙️ OVERRIDE PARA ${redSocial.toUpperCase()}:
+${override.tone !== 'auto' ? `• Tono específico: ${override.tone}` : ''}
+${override.depth !== 'auto' ? `• Profundidad específica: ${override.depth}` : ''}
+${override.aggressiveness !== 'auto' ? `• Agresividad específica: ${override.aggressiveness}` : ''}
+${override.close_type !== 'auto' ? `• Tipo de cierre: ${override.close_type}` : ''}
+⚠️ Esta configuración de red PREVALECE sobre los defaults del experto.`;
+    }
+  } catch {}
+  return '';
+})()}
+
+${(contexto as any).expertProfile && !(() => {
+  try {
+    const nc = typeof (contexto as any).expertProfile.network_config === 'string'
+      ? JSON.parse((contexto as any).expertProfile.network_config)
+      : ((contexto as any).expertProfile.network_config || {});
+    const cfg = nc[redSocial.toLowerCase()];
+    return cfg && Object.values(cfg).some((v: any) => v !== 'auto');
+  } catch { return false; }
+})() ? ExpertAuthoritySystem.getNetworkDirectives(
+  (contexto as any).expertProfile,
+  redSocial.toLowerCase() as any
+) : ''}
 
 ${contexto.knowledge_base_content ? `
 📚 BASE DE CONOCIMIENTO DISPONIBLE:
@@ -3884,6 +4529,813 @@ async function ejecutarIdeasRapidas(
   }
 }
 
+
+
+async function ejecutarIngenieriaInversaPro(
+  content: string,
+  contexto: any,
+  openai: any,
+  nichoOrigen: string = "General"
+): Promise<{ data: any; tokens: number }> {
+  
+// 1. Configuración de Dominancia adaptativa por tipo de contenido
+  const videoDuracion = contexto._videoDurationSecs || 0;
+  const esReel        = videoDuracion > 0 && videoDuracion <= 90;
+  const esMasterclass = videoDuracion > 600;
+
+  // Umbral adaptado al tipo de contenido:
+  // Masterclass → 65 (análisis más complejo, score naturalmente menor)
+  // Reel        → 78 (contenido corto, más fácil de diseccionar bien)
+  // Video largo → 75 (baseline estándar)
+  const UMBRAL_CALIDAD = esMasterclass ? 65
+                       : esReel        ? 78
+                       :                 75;
+
+  // Masterclass ya consume muchos tokens — limitar iteraciones
+  const MAX_ITERACIONES = esMasterclass ? 2 : 3;
+
+  // Tokens adaptados al tipo de contenido
+  const MAX_TOKENS_OUTPUT = esMasterclass ? 10000
+                          : esReel        ? 7000
+                          :                 8000;
+
+  console.log(`[MOTOR PRO] 🎬 Tipo: ${esMasterclass ? 'MASTERCLASS' : esReel ? 'REEL/SHORT' : 'VIDEO LARGO'}`);
+  console.log(`[MOTOR PRO] 🎯 Umbral: ${UMBRAL_CALIDAD}/100 | Iteraciones máx: ${MAX_ITERACIONES} | Tokens: ${MAX_TOKENS_OUTPUT}`);
+
+  let tokensTotal = 0;
+
+  // 2. Preparación de Contexto
+  const nichoUsuario = contexto.nicho || "General";
+  const objetivoUsuario = contexto.deseo_principal || "Dominancia y Viralidad";
+
+  // ─── FASE 1: ANÁLISIS INICIAL (FORENSE) ───
+  // Llamamos al Prompt Maestro que pegaste arriba
+  const promptInicial = PROMPT_INGENIERIA_INVERSA_PRO(
+    content, 
+    nichoOrigen, 
+    nichoUsuario, 
+    objetivoUsuario,
+    contexto.expertProfile
+  );
+  let outputActual: any = null;
+  let scoreActual = 0;
+  let iteracion = 0;
+
+  try {
+    // Primera inyección a la IA
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o', // OBLIGATORIO: Modelo de alta inteligencia
+      response_format: { type: 'json_object' },
+      messages: [
+        { role: 'system', content: 'Eres TITAN OMEGA. El sistema de extracción de ADN Viral más sofisticado del mundo.' },
+        { role: 'user', content: promptInicial }
+      ],
+      temperature: 0.2, // Frío y preciso para el análisis inicial
+      max_tokens: MAX_TOKENS_OUTPUT
+    });
+
+    outputActual = JSON.parse(completion.choices[0].message.content || '{}');
+    tokensTotal += completion.usage?.total_tokens || 0;
+    
+    // Extracción del Score Inicial (con protección anti-crash)
+    scoreActual = outputActual.score_viral_estructural?.viralidad_estructural_global || 0;
+    
+    console.log(`[MOTOR PRO] 📊 Análisis Inicial Completado.`);
+    console.log(`[MOTOR PRO] 🎲 Score Obtenido: ${scoreActual}/100`);
+
+    // ─── FASE 2: LOOP DE REFINAMIENTO AUTOMÁTICO (EL "TURBO") ───
+    // Si el contenido es débil, la IA se auto-corrige hasta alcanzar la excelencia
+    while (scoreActual < UMBRAL_CALIDAD && iteracion < MAX_ITERACIONES) {
+      iteracion++;
+      console.log(`[MOTOR PRO] ⚠️ Score bajo detectado. Iniciando Refinamiento Automático #${iteracion}...`);
+
+      // Llamamos al Prompt de Refinamiento que pegaste arriba
+      const promptRefinamiento = PROMPT_REFINAMIENTO_LOOP(
+        JSON.stringify(outputActual),
+        scoreActual,
+        UMBRAL_CALIDAD,
+        iteracion,
+        nichoUsuario
+      );
+
+      const completionRef = await openai.chat.completions.create({
+        model: 'gpt-4o',
+        response_format: { type: 'json_object' },
+        messages: [
+          { role: 'system', content: 'Eres el Motor de Refinamiento de Calidad Titan Omega.' },
+          { role: 'user', content: promptRefinamiento }
+        ],
+        temperature: 0.4, // Subimos temperatura para buscar soluciones creativas al problema
+        max_tokens: MAX_TOKENS_OUTPUT
+      });
+
+      const outputRefinado = JSON.parse(completionRef.choices[0].message.content || '{}');
+      tokensTotal += completionRef.usage?.total_tokens || 0;
+
+      // Evaluar si la mejora funcionó
+      const nuevoScore = outputRefinado.score_viral_estructural?.viralidad_estructural_global || 0;
+      console.log(`[MOTOR PRO] 📈 Resultado Refinamiento: ${scoreActual} -> ${nuevoScore}`);
+
+      if (nuevoScore > scoreActual) {
+        outputActual = outputRefinado; // Aceptamos la mejora
+        scoreActual = nuevoScore;
+      } else {
+        console.log('[MOTOR PRO] ⚠️ El refinamiento no logró superar la versión anterior. Manteniendo base.');
+        // No rompemos el loop, intentamos una vez más si quedan intentos
+      }
+    }
+
+    // ─── FASE 3: VALIDACIÓN Y MAPEO FINAL ───
+    
+    // Validación de Integridad (Anti-Pantalla Blanca)
+    // Validación completa de los 15 motores
+const MOTORES_OBLIGATORIOS = [
+  "adn_estructura",
+  "curva_emocional",
+  "micro_loops",
+  "polarizacion",
+  "identidad_verbal",
+  "status_y_posicionamiento",
+  "densidad_valor",
+  "manipulacion_atencion",
+  "activadores_guardado",
+  "adaptabilidad_nicho",
+  "elementos_cliche_detectados",
+  "ritmo_narrativo",
+  "score_viral_estructural",
+  "guion_adaptado_espejo",
+  "blueprint_replicable",
+  "analisis_tca",
+  "mapa_de_adaptacion"
+];
+
+const motoresFaltantes = MOTORES_OBLIGATORIOS.filter(
+  motor => !outputActual[motor] ||
+  (Array.isArray(outputActual[motor]) && outputActual[motor].length === 0)
+);
+
+if (motoresFaltantes.length > 5) {
+  throw new Error(`Motores faltantes críticos: ${motoresFaltantes.join(", ")}`);
+}
+
+if (motoresFaltantes.length > 0) {
+  console.warn(`[MOTOR PRO] ⚠️ Motores incompletos: ${motoresFaltantes.join(", ")}`);
+}
+
+// Marcar motores faltantes para el frontend
+outputActual._motores_faltantes = motoresFaltantes;
+outputActual._motores_completos = MOTORES_OBLIGATORIOS.length - motoresFaltantes.length;
+outputActual._completitud_pct = Math.round(
+  (outputActual._motores_completos / MOTORES_OBLIGATORIOS.length) * 100
+);
+// Log TCA detectado
+if (outputActual.analisis_tca) {
+  console.log(`[MOTOR PRO] 🌐 TCA Detectado: ${outputActual._nivel_tca} | Mass Appeal: ${outputActual._tca_score}/100 | Equilibrio: ${outputActual._equilibrio_tca}`);
+  if (outputActual._validacion_olimpo) {
+    console.log(`[MOTOR PRO] ✅ Validación OLIMPO: ${outputActual._validacion_olimpo.score_validacion}/7`);
+  }
+}
+
+    // Mapeo de compatibilidad para el Frontend (TitanViral.tsx)
+    // Esto asegura que las gráficas nuevas reciban la data correcta
+    // Compatibilidad: guion_adaptado_al_nicho apunta al nuevo nombre
+    outputActual.guion_adaptado_al_nicho = outputActual.guion_adaptado_espejo || outputActual.guion_adaptado_al_nicho;
+    outputActual.guion_tecnico_completo = outputActual.guion_adaptado_espejo || outputActual.guion_adaptado_al_nicho;
+    
+    // TCA — score para el indicador de completitud (ahora son 17 motores con TCA)
+    outputActual._tca_score = outputActual.analisis_tca?.mass_appeal_score || 0;
+    outputActual._nivel_tca = outputActual.analisis_tca?.nivel_tca_detectado || 'N/A';
+    outputActual._equilibrio_tca = outputActual.analisis_tca?.equilibrio_masividad_calificacion || false;
+    outputActual._validacion_olimpo = outputActual.validacion_olimpo || null;
+    outputActual.indice_fidelidad = calcularIndiceFidelidad(outputActual);
+    outputActual.equivalencia_psicologica_calculada = extraerEquivalenciaPsicologica(outputActual);
+    outputActual.progresion_emocional_calculada = calcularProgrecionEmocional(outputActual);
+    outputActual.metricas_micro_loops = calcularMetricasMicroLoops(outputActual);
+    outputActual.paquete_juez_viral = prepararPaqueteParaJuezViral(outputActual);
+    outputActual.listo_para_auditoria = outputActual.paquete_juez_viral?.listo_para_juez || false;
+
+    // Metadata del proceso para depuración
+    outputActual.loop_info = {
+      iteraciones_realizadas: iteracion,
+      score_final: scoreActual,
+      umbral_objetivo: UMBRAL_CALIDAD,
+      umbral_superado: scoreActual >= UMBRAL_CALIDAD
+    };
+
+    // Mapeo para tarjetas visuales antiguas (Retrocompatibilidad)
+    outputActual.analisis_estrategico = {
+      sesgo_cognitivo_detectado: outputActual.polarizacion?.ruptura_creencia_detectada || "Análisis Profundo",
+      estrategia_adaptacion: outputActual.adn_estructura?.patron_narrativo_detectado || "Estructura Viral Híbrida",
+      nivel_fidelidad: `${scoreActual}%`
+    };
+
+    console.log(`[MOTOR PRO] ✅ PROCESO FINALIZADO CON ÉXITO.`);
+    console.log(`[MOTOR PRO] 🏆 Score Final: ${scoreActual} | Tokens Totales: ${tokensTotal}`);
+    
+    return { data: outputActual, tokens: tokensTotal };
+
+  } catch (error: any) {
+    console.error("[MOTOR PRO] ❌ Error Crítico en el Proceso:", error);
+    
+    // SALVAVIDAS: Si el loop falló pero tenemos un resultado previo parcial, lo entregamos
+    // para no dejar al usuario con un error vacío.
+    if (outputActual && outputActual.adn_estructura) {
+        console.warn("[MOTOR PRO] ⚠️ Recuperando resultado parcial tras error en refinamiento.");
+        return { data: outputActual, tokens: tokensTotal };
+    }
+    
+    // Si no hay nada que salvar, lanzamos el error
+    throw new Error("Fallo crítico en Ingeniería Inversa Pro: " + error.message);
+  }
+}
+
+function prepararPaqueteParaJuezViral(outputMotores: any): any {
+  try {
+    const indice = outputMotores.indice_fidelidad || {};
+    const psicologia = outputMotores.equivalencia_psicologica_calculada || {};
+    const progresion = outputMotores.progresion_emocional_calculada || {};
+    const loopsMetricas = outputMotores.metricas_micro_loops || {};
+    const blueprint = outputMotores.blueprint_replicable || {};
+    const scoreViral = outputMotores.score_viral_estructural || {};
+
+    // Criterios que el Juez debe validar
+    const criteriosValidacion = [
+      {
+        criterio: "Fidelidad Arquitectónica",
+        valor_esperado: indice.indice_fidelidad || 0,
+        umbral_minimo: 70,
+        cumple: (indice.indice_fidelidad || 0) >= 70,
+        diagnostico: indice.diagnostico || "Sin datos"
+      },
+      {
+        criterio: "Progresión Emocional",
+        valor_esperado: progresion.variacion_total || 0,
+        umbral_minimo: 30,
+        cumple: (progresion.variacion_total || 0) >= 30,
+        diagnostico: progresion.diagnostico_curva || "Sin datos"
+      },
+      {
+        criterio: "Micro-Loops",
+        valor_esperado: loopsMetricas.total_loops || 0,
+        umbral_minimo: 2,
+        cumple: (loopsMetricas.total_loops || 0) >= 2,
+        diagnostico: loopsMetricas.diagnostico_loops || "Sin datos"
+      },
+      {
+        criterio: "Impacto Psicológico",
+        valor_esperado: psicologia.score_impacto || 0,
+        umbral_minimo: 50,
+        cumple: (psicologia.score_impacto || 0) >= 50,
+        diagnostico: psicologia.impacto_psicologico || "Sin datos"
+      },
+      {
+        criterio: "Score Viral Estructural",
+        valor_esperado: scoreViral.viralidad_estructural_global || 0,
+        umbral_minimo: 70,
+        cumple: (scoreViral.viralidad_estructural_global || 0) >= 70,
+        diagnostico: scoreViral.viralidad_estructural_global >= 70
+          ? "Score suficiente"
+          : "Score por debajo del umbral"
+      }
+    ];
+
+    // Calcular cuántos criterios se cumplen
+    const criteriosCumplidos = criteriosValidacion.filter(c => c.cumple).length;
+    const totalCriterios = criteriosValidacion.length;
+
+    // Score de preparación para el Juez
+    const scorePreparacion = Math.round((criteriosCumplidos / totalCriterios) * 100);
+
+    // Instrucciones específicas para el Juez Viral
+    const instruccionesJuez = blueprint.instrucciones_para_juez_viral ||
+      `Audita este contenido verificando:
+      1. Fidelidad al patrón: ${blueprint.nombre_patron || "detectado"}
+      2. Fórmula base: ${blueprint.formula_base || "no disponible"}
+      3. Equivalencia emocional: entrada=${psicologia.emocion_dominante}, salida=${psicologia.emocion_final}
+      4. Tipo de tensión replicada: ${psicologia.tipo_tension}
+      5. Loops mínimos requeridos: ${loopsMetricas.total_loops}`;
+
+    // Alertas para el Juez
+    const alertas: string[] = [];
+    if (!progresion.escalada_detectada) {
+      alertas.push("ALERTA: Sin escalada emocional detectada — verificar progresión");
+    }
+    if (loopsMetricas.loops_sin_resolver > 2) {
+      alertas.push(`ALERTA: ${loopsMetricas.loops_sin_resolver} loops sin resolver — puede generar frustración`);
+    }
+    if (progresion.riesgo_monotonia === "Alto") {
+      alertas.push("ALERTA: Riesgo alto de monotonía — curva emocional plana");
+    }
+    if ((indice.indice_fidelidad || 0) < 60) {
+      alertas.push("ALERTA: Fidelidad arquitectónica baja — revisar orden de bloques");
+    }
+
+    return {
+      listo_para_juez: scorePreparacion >= 60,
+      score_preparacion: scorePreparacion,
+      criterios_cumplidos: criteriosCumplidos,
+      total_criterios: totalCriterios,
+      criterios_validacion: criteriosValidacion,
+      instrucciones_juez: instruccionesJuez,
+      alertas_criticas: alertas,
+      resumen_adn: {
+        patron_detectado: blueprint.nombre_patron || "No detectado",
+        formula_base: blueprint.formula_base || "No disponible",
+        tipo_promesa: psicologia.tipo_promesa || "No detectada",
+        tipo_tension: psicologia.tipo_tension || "No detectada",
+        emocion_entrada: psicologia.emocion_dominante || "No detectada",
+        emocion_salida: psicologia.emocion_final || "No detectada",
+        sesgo_cognitivo: psicologia.sesgo_cognitivo_principal || "No detectado",
+        loops_activos: loopsMetricas.total_loops || 0,
+        indice_fidelidad: indice.indice_fidelidad || 0,
+        score_viral: scoreViral.viralidad_estructural_global || 0
+      }
+    };
+
+  } catch (e) {
+    return {
+      listo_para_juez: false,
+      score_preparacion: 0,
+      criterios_cumplidos: 0,
+      total_criterios: 5,
+      criterios_validacion: [],
+      instrucciones_juez: "Error preparando paquete para Juez Viral",
+      alertas_criticas: ["Error crítico en preparación"],
+      resumen_adn: {}
+    };
+  }
+}
+
+function calcularMetricasMicroLoops(outputMotores: any): any {
+  try {
+    const loops = outputMotores.micro_loops;
+    const estructura = outputMotores.adn_estructura;
+
+    if (!loops || !loops.loops || loops.loops.length === 0) {
+      return {
+        total_loops: 0,
+        loops_resueltos: 0,
+        loops_sin_resolver: 0,
+        frecuencia_promedio_segundos: 0,
+        distribucion: [],
+        efectividad_potencial: 0,
+        densidad_anticipacion: 0,
+        tipos_detectados: [],
+        diagnostico_loops: "Sin micro-loops detectados — riesgo alto de abandono",
+        recomendacion: "Agregar al menos 2 micro-loops entre el segundo 10 y 40"
+      };
+    }
+
+    const todosLoops = loops.loops;
+
+    // Contar resueltos vs sin resolver
+    const loopsSinResolver = todosLoops.filter(
+      (l: any) => l.segundo_cierre === null || l.segundo_cierre === undefined
+    ).length;
+    const loopsResueltos = todosLoops.length - loopsSinResolver;
+
+    // Calcular frecuencia promedio
+    const aperturas = todosLoops
+      .map((l: any) => l.segundo_apertura)
+      .filter((s: any) => typeof s === "number")
+      .sort((a: number, b: number) => a - b);
+
+    let frecuenciaPromedio = 0;
+    if (aperturas.length >= 2) {
+      const intervalos = aperturas.slice(1).map(
+        (s: number, idx: number) => s - aperturas[idx]
+      );
+      frecuenciaPromedio = Math.round(
+        intervalos.reduce((a: number, b: number) => a + b, 0) / intervalos.length
+      );
+    }
+
+    // Distribución por tipo
+    const tiposConteo: Record<string, number> = {};
+    todosLoops.forEach((l: any) => {
+      const tipo = l.tipo || "desconocido";
+      tiposConteo[tipo] = (tiposConteo[tipo] || 0) + 1;
+    });
+    const distribucion = Object.entries(tiposConteo).map(([tipo, cantidad]) => ({
+      tipo,
+      cantidad,
+      porcentaje: Math.round((cantidad / todosLoops.length) * 100)
+    }));
+
+    // Tipos únicos detectados
+    const tiposDetectados = Object.keys(tiposConteo);
+
+    // Calcular efectividad potencial
+    const intensidades = todosLoops.map((l: any) => l.intensidad || 0);
+    const intensidadPromedio = intensidades.length > 0
+      ? intensidades.reduce((a: number, b: number) => a + b, 0) / intensidades.length
+      : 0;
+
+    const penalizacionSinResolver = loopsSinResolver > 2 ? 15 : 0;
+    const bonusFrecuencia = frecuenciaPromedio > 0 && frecuenciaPromedio <= 20 ? 20 : 0;
+
+    const efectividadPotencial = Math.min(100, Math.round(
+      (intensidadPromedio * 0.5) +
+      (loopsResueltos / Math.max(todosLoops.length, 1) * 30) +
+      bonusFrecuencia -
+      penalizacionSinResolver
+    ));
+
+    // Diagnóstico
+    let diagnostico = "";
+    let recomendacion = "";
+
+    if (todosLoops.length >= 3 && efectividadPotencial >= 70) {
+      diagnostico = "Sistema de loops sólido — alta retención esperada";
+      recomendacion = "Mantener la frecuencia actual en la adaptación";
+    } else if (todosLoops.length >= 2 && efectividadPotencial >= 50) {
+      diagnostico = "Loops presentes pero con margen de mejora";
+      recomendacion = "Agregar un loop adicional entre el segundo 25 y 35";
+    } else {
+      diagnostico = "Loops insuficientes — riesgo medio de abandono";
+      recomendacion = "Reestructurar con al menos 3 loops distribuidos cada 15 segundos";
+    }
+
+    return {
+      total_loops: todosLoops.length,
+      loops_resueltos: loopsResueltos,
+      loops_sin_resolver: loopsSinResolver,
+      frecuencia_promedio_segundos: frecuenciaPromedio,
+      distribucion,
+      tipos_detectados: tiposDetectados,
+      efectividad_potencial: efectividadPotencial,
+      densidad_anticipacion: loops.densidad_anticipacion || 0,
+      estrategia_tension: loops.estrategia_tension || "No detectada",
+      diagnostico_loops: diagnostico,
+      recomendacion
+    };
+
+  } catch (e) {
+    return {
+      total_loops: 0,
+      loops_resueltos: 0,
+      loops_sin_resolver: 0,
+      frecuencia_promedio_segundos: 0,
+      distribucion: [],
+      tipos_detectados: [],
+      efectividad_potencial: 0,
+      densidad_anticipacion: 0,
+      diagnostico_loops: "Error calculando micro-loops",
+      recomendacion: "Revisar manualmente"
+    };
+  }
+}
+
+function calcularProgrecionEmocional(outputMotores: any): any {
+  try {
+    const curva = outputMotores.curva_emocional;
+    const estructura = outputMotores.adn_estructura;
+
+    if (!curva) {
+      return {
+        mapa_bloques: [],
+        escalada_detectada: false,
+        riesgo_monotonia: "Alto",
+        pico_maximo: 0,
+        pico_minimo: 0,
+        variacion_total: 0,
+        momento_pico_principal: "No detectado",
+        diagnostico_curva: "Sin datos de curva emocional"
+      };
+    }
+
+    // Construir mapa por bloque
+    const segmentos = curva.segmentos || [];
+    const mapaBloques = segmentos.map((seg: any, idx: number) => {
+      const intensidadAnterior = idx > 0 ? segmentos[idx - 1].intensidad : 0;
+      const dinamica = seg.intensidad > intensidadAnterior
+        ? "Subida"
+        : seg.intensidad < intensidadAnterior
+        ? "Bajada"
+        : "Sostenida";
+
+      return {
+        bloque: seg.bloque,
+        emocion: seg.emocion,
+        intensidad: seg.intensidad || 0,
+        dinamica,
+        es_pico: false // se actualiza abajo
+      };
+    });
+
+    // Detectar picos reales
+    mapaBloques.forEach((bloque: any, idx: number) => {
+      const anterior = idx > 0 ? mapaBloques[idx - 1].intensidad : 0;
+      const siguiente = idx < mapaBloques.length - 1
+        ? mapaBloques[idx + 1].intensidad
+        : 0;
+      if (bloque.intensidad > anterior && bloque.intensidad >= siguiente) {
+        bloque.es_pico = true;
+      }
+    });
+
+    // Calcular métricas
+    const intensidades = mapaBloques.map((b: any) => b.intensidad);
+    const picoMaximo = intensidades.length > 0 ? Math.max(...intensidades) : 0;
+    const picoMinimo = intensidades.length > 0 ? Math.min(...intensidades) : 0;
+    const variacionTotal = picoMaximo - picoMinimo;
+
+    // Detectar escalada
+    let escaladaDetectada = false;
+    if (intensidades.length >= 3) {
+      const primera_mitad = intensidades.slice(0, Math.floor(intensidades.length / 2));
+      const segunda_mitad = intensidades.slice(Math.floor(intensidades.length / 2));
+      const promedioPrimera = primera_mitad.reduce((a: number, b: number) => a + b, 0) / primera_mitad.length;
+      const promedioSegunda = segunda_mitad.reduce((a: number, b: number) => a + b, 0) / segunda_mitad.length;
+      escaladaDetectada = promedioSegunda > promedioPrimera;
+    }
+
+    // Riesgo de monotonía
+    let riesgoMonotonia = "Bajo";
+    if (variacionTotal < 20) riesgoMonotonia = "Alto";
+    else if (variacionTotal < 40) riesgoMonotonia = "Medio";
+
+    // Momento del pico principal
+    const indicePico = intensidades.indexOf(picoMaximo);
+    const momentoPico = mapaBloques[indicePico]?.bloque || "No detectado";
+
+    // Picos adicionales del array original
+    const picosOriginales = curva.picos_emocionales || [];
+
+    return {
+      mapa_bloques: mapaBloques,
+      picos_emocionales: picosOriginales,
+      escalada_detectada: escaladaDetectada,
+      riesgo_monotonia: riesgoMonotonia,
+      pico_maximo: picoMaximo,
+      pico_minimo: picoMinimo,
+      variacion_total: variacionTotal,
+      momento_pico_principal: momentoPico,
+      emocion_dominante: curva.emocion_dominante || "No detectada",
+      emocion_final: curva.emocion_final || "No detectada",
+      arco_emocional: curva.arco_emocional || "No detectado",
+      diagnostico_curva: escaladaDetectada
+        ? variacionTotal >= 40
+          ? "Curva dinámica con escalada fuerte — alta retención esperada"
+          : "Curva con escalada moderada — retención aceptable"
+        : riesgoMonotonia === "Alto"
+        ? "Curva plana — riesgo alto de abandono"
+        : "Curva sin escalada clara — revisar progresión"
+    };
+
+  } catch (e) {
+    return {
+      mapa_bloques: [],
+      escalada_detectada: false,
+      riesgo_monotonia: "Alto",
+      pico_maximo: 0,
+      pico_minimo: 0,
+      variacion_total: 0,
+      momento_pico_principal: "Error",
+      diagnostico_curva: "Error calculando progresión emocional"
+    };
+  }
+}
+
+function extraerEquivalenciaPsicologica(outputMotores: any): any {
+  try {
+    const polarizacion = outputMotores.polarizacion;
+    const curva = outputMotores.curva_emocional;
+    const densidad = outputMotores.densidad_valor;
+    const status = outputMotores.status_y_posicionamiento;
+    const activadores = outputMotores.activadores_guardado || [];
+
+    // Detectar tipo de promesa
+    const tipoValor = densidad?.tipo_valor_dominante || "educativo";
+    const mapaPromesas: Record<string, string> = {
+      "educativo": "Transformación de habilidad",
+      "inspiracional": "Transformación de mentalidad",
+      "entretenimiento": "Experiencia emocional",
+      "provocacion": "Ruptura de creencia",
+      "solucion": "Eliminación de dolor"
+    };
+    const tipoPromesa = mapaPromesas[tipoValor] || "Transformación general";
+
+    // Detectar tipo de transformación
+    const emocionFinal = curva?.emocion_final || "";
+    let tipoTransformacion = "Mental";
+    if (emocionFinal.toLowerCase().includes("esperanza") ||
+        emocionFinal.toLowerCase().includes("motivacion")) {
+      tipoTransformacion = "Emocional";
+    } else if (emocionFinal.toLowerCase().includes("alivio") ||
+               emocionFinal.toLowerCase().includes("claridad")) {
+      tipoTransformacion = "Cognitiva";
+    } else if (emocionFinal.toLowerCase().includes("ambicion") ||
+               emocionFinal.toLowerCase().includes("deseo")) {
+      tipoTransformacion = "Aspiracional";
+    }
+
+    // Detectar tipo de tensión
+    const nivelConfrontacion = polarizacion?.nivel_confrontacion || 0;
+    let tipoTension = "Tensión suave";
+    if (nivelConfrontacion >= 70) tipoTension = "Confrontación directa";
+    else if (nivelConfrontacion >= 40) tipoTension = "Fricción narrativa";
+    else tipoTension = "Curiosidad progresiva";
+
+    // Detectar tipo de activación
+    const emocionDominante = curva?.emocion_dominante || "";
+    let tipoActivacion = "Deseo";
+    if (emocionDominante.toLowerCase().includes("miedo") ||
+        emocionDominante.toLowerCase().includes("urgencia")) {
+      tipoActivacion = "Urgencia / Aversión a la pérdida";
+    } else if (emocionDominante.toLowerCase().includes("curiosidad")) {
+      tipoActivacion = "Curiosidad / FOMO";
+    } else if (emocionDominante.toLowerCase().includes("indignacion") ||
+               emocionDominante.toLowerCase().includes("ira")) {
+      tipoActivacion = "Indignación / Tribalismo";
+    }
+
+    // Detectar recompensa narrativa
+    const tiposActivadores = activadores.map((a: any) => a.tipo);
+    let recompensaNarrativa = "Insight accionable";
+    if (tiposActivadores.includes("revelacion")) {
+      recompensaNarrativa = "Revelación sorpresiva";
+    } else if (tiposActivadores.includes("reencuadre")) {
+      recompensaNarrativa = "Reencuadre mental";
+    } else if (tiposActivadores.includes("formula_repetible")) {
+      recompensaNarrativa = "Sistema replicable";
+    }
+
+    // Sesgo cognitivo principal
+    const autoridad = status?.tipo_autoridad || "";
+    let sesgoCognitivo = "Prueba social";
+    if (nivelConfrontacion >= 60) sesgoCognitivo = "Pensamiento de grupo / Tribalismo";
+    else if (autoridad === "experto_tecnico") sesgoCognitivo = "Autoridad";
+    else if (tipoActivacion.includes("Urgencia")) sesgoCognitivo = "Aversión a la pérdida";
+    else if (tipoActivacion.includes("Curiosidad")) sesgoCognitivo = "Curiosidad / Zeigarnik";
+
+    // Score de impacto
+    const intensidadPromedio = curva?.intensidad_promedio || 0;
+    const variabilidad = curva?.variabilidad_emocional || 0;
+    const scoreImpacto = Math.round(
+      (intensidadPromedio * 0.4) +
+      (variabilidad * 0.3) +
+      (nivelConfrontacion * 0.3)
+    );
+
+    return {
+      tipo_promesa: tipoPromesa,
+      tipo_transformacion: tipoTransformacion,
+      emocion_dominante: emocionDominante,
+      emocion_final: emocionFinal,
+      tipo_tension: tipoTension,
+      tipo_activacion: tipoActivacion,
+      recompensa_narrativa: recompensaNarrativa,
+      sesgo_cognitivo_principal: sesgoCognitivo,
+      impacto_psicologico: scoreImpacto >= 70 ? "Fuerte" : scoreImpacto >= 40 ? "Medio" : "Neutro",
+      score_impacto: Math.min(100, scoreImpacto),
+      nivel_activacion_emocional: Math.min(100, intensidadPromedio)
+    };
+
+  } catch (e) {
+    return {
+      tipo_promesa: "No detectado",
+      tipo_transformacion: "No detectado",
+      emocion_dominante: "No detectada",
+      emocion_final: "No detectada",
+      tipo_tension: "No detectada",
+      tipo_activacion: "No detectado",
+      recompensa_narrativa: "No detectada",
+      sesgo_cognitivo_principal: "No detectado",
+      impacto_psicologico: "Neutro",
+      score_impacto: 0,
+      nivel_activacion_emocional: 0
+    };
+  }
+}
+
+function calcularIndiceFidelidad(outputMotores: any): any {
+  try {
+    const estructura = outputMotores.adn_estructura;
+    const curva = outputMotores.curva_emocional;
+    const loops = outputMotores.micro_loops;
+
+    if (!estructura) {
+      return {
+        bloques_detectados: 0,
+        bloques_replicados: 0,
+        secuencia_respetada: false,
+        intensidad_equivalente: 0,
+        curva_conservada: 0,
+        indice_fidelidad: 0,
+        diagnostico: "No se pudo analizar la estructura"
+      };
+    }
+
+    // Contar bloques detectados
+    const bloquesDetectados = estructura.bloques?.length || 0;
+
+    // Verificar secuencia correcta
+    const ordenEsperado = ["hook", "setup", "escalada", "giro", "climax", "resolucion", "cierre_estrategico"];
+    const tiposDetectados = estructura.bloques?.map((b: any) => b.tipo) || [];
+    let bloquesEnOrden = 0;
+    tiposDetectados.forEach((tipo: string, idx: number) => {
+      const posicionEsperada = ordenEsperado.indexOf(tipo);
+      const posicionAnterior = idx > 0 ? ordenEsperado.indexOf(tiposDetectados[idx - 1]) : -1;
+      if (posicionEsperada > posicionAnterior) bloquesEnOrden++;
+    });
+
+    const secuenciaRespetada = bloquesEnOrden >= Math.floor(bloquesDetectados * 0.7);
+
+    // Calcular intensidad equivalente
+    const intensidades = estructura.bloques?.map((b: any) => b.intensidad || 0) || [];
+    const intensidadPromedio = intensidades.length > 0
+      ? intensidades.reduce((a: number, b: number) => a + b, 0) / intensidades.length
+      : 0;
+
+    // Calcular curva conservada
+    const picosCurva = curva?.picos_emocionales?.length || 0;
+    const variabilidad = curva?.variabilidad_emocional || 0;
+    const curvaConservada = Math.min(100, (picosCurva * 15) + (variabilidad * 0.5));
+
+    // Score de loops
+    const totalLoops = loops?.total_loops || 0;
+    const scoreLoops = Math.min(100, totalLoops * 20);
+
+    // Índice final ponderado
+    const indiceFidelidad = Math.round(
+      (secuenciaRespetada ? 30 : 0) +
+      (Math.min(bloquesDetectados, 7) / 7 * 25) +
+      (intensidadPromedio * 0.20) +
+      (curvaConservada * 0.15) +
+      (scoreLoops * 0.10)
+    );
+
+    return {
+      bloques_detectados: bloquesDetectados,
+      bloques_replicados: bloquesEnOrden,
+      secuencia_respetada: secuenciaRespetada,
+      intensidad_equivalente: Math.round(intensidadPromedio),
+      curva_conservada: Math.round(curvaConservada),
+      loops_detectados: totalLoops,
+      indice_fidelidad: Math.min(100, indiceFidelidad),
+      diagnostico: indiceFidelidad >= 80
+        ? "Fidelidad alta — estructura bien replicada"
+        : indiceFidelidad >= 60
+        ? "Fidelidad media — revisar secuencia de bloques"
+        : "Fidelidad baja — la adaptación alteró la arquitectura original"
+    };
+
+  } catch (e) {
+    return {
+      bloques_detectados: 0,
+      bloques_replicados: 0,
+      secuencia_respetada: false,
+      intensidad_equivalente: 0,
+      curva_conservada: 0,
+      indice_fidelidad: 0,
+      diagnostico: "Error calculando fidelidad"
+    };
+  }
+}
+
+function createEmergencyStructure(partialData: any, missingFields: string[]): any {
+  return {
+    score_viral: partialData.score_viral || {
+      potencial_total: 0,
+      factores_exito: ["Análisis parcial — datos insuficientes"],
+      nivel_replicabilidad: "Baja"
+    },
+    adn_extraido: partialData.adn_extraido || {
+      idea_ganadora: "No se pudo extraer",
+      disparador_psicologico: "No detectado",
+      estructura_exacta: "No detectada",
+      formula_gancho: "No disponible"
+    },
+    desglose_temporal: partialData.desglose_temporal || [
+      {
+        segundo: "0-60",
+        que_pasa: "Análisis temporal no disponible",
+        porque_funciona: "Error en procesamiento",
+        replicar_como: "Revisa el video manualmente"
+      }
+    ],
+    patron_replicable: partialData.patron_replicable || {
+      nombre_patron: "No detectado",
+      formula: "N/A",
+      aplicacion_generica: "No disponible"
+    },
+    produccion_deconstruida: partialData.produccion_deconstruida || {
+      visuales_clave: ["No disponible"],
+      ritmo_cortes: "No analizado",
+      movimiento_camara: "No analizado",
+      musica_sonido: "No analizado"
+    },
+    insights_algoritmicos: partialData.insights_algoritmicos || {
+      optimizacion_retencion: "No disponible",
+      triggers_engagement: "No disponible",
+      seo_keywords: []
+    },
+    _emergency: true,
+    _missing_fields: missingFields
+  };
+}
+
 async function ejecutarAutopsiaViral(
   content: string,
   platform: string,
@@ -4016,6 +5468,1045 @@ async function ejecutarAutopsiaViral(
 const MIN_VIRAL_SCORE = 75;
 const MAX_RETRIES = 3;
 
+// ==================================================================================
+// 🔬 VALIDADOR PROGRAMÁTICO DE OUTPUT — MOTOR DE CALIDAD V600
+// P2: Verifica micro-loops, curva emocional, activadores, anti-clichés, estructura
+// ==================================================================================
+
+const CLICHES_PROHIBIDOS = [
+  "en el mundo de hoy", "en este mundo tan", "hoy más que nunca",
+  "¿sabías que?", "te has preguntado alguna vez", "la verdad es que",
+  "sin más preámbulos", "a continuación te voy a", "voy a compartir contigo",
+  "esto cambiará tu vida", "lo que nadie te dice", "el secreto que",
+  "hace unos años yo también", "si yo pude tú también", "no te voy a mentir",
+  "seré honesto contigo", "déjame contarte algo", "esto es lo que descubrí",
+  "¿quieres saber cómo?", "quédate hasta el final", "no te vayas todavía",
+  "dale like si", "comparte si crees que", "sígueme para más"
+];
+
+interface ResultadoValidacion {
+  aprobado: boolean;
+  score_total: number; // 0-100
+  detalle: {
+    estructura_completa: boolean;
+    micro_loops_suficientes: boolean;
+    curva_emocional_valida: boolean;
+    activadores_presentes: boolean;
+    sin_cliches: boolean;
+    identidad_verbal: boolean;
+    score_coherente: boolean;
+  };
+  fallos: string[];
+  advertencias: string[];
+}
+
+// ==================================================================================
+// 🚫 SCANNER ANTI-CLICHÉS ACTIVO — P4
+// Escanea el guion_completo y reescribe frases débiles automáticamente
+// ==================================================================================
+
+async function escanearYLimpiarCliches(
+  output: any,
+  openai: any
+): Promise<{ output: any; clichesEliminados: number; limpioDesdeInicio: boolean }> {
+
+  const guionCompleto = output.guion_completo || output.guion || "";
+  const hook = output.hook || "";
+  const textoCompleto = guionCompleto + " " + hook;
+
+  // Detectar clichés presentes
+  const clichesEncontrados = CLICHES_PROHIBIDOS.filter(cliche =>
+    textoCompleto.toLowerCase().includes(cliche.toLowerCase())
+  );
+
+  // Si no hay clichés, devolver sin cambios
+  if (clichesEncontrados.length === 0) {
+    console.log('[SCANNER] ✅ Sin clichés detectados — guion limpio');
+    return { output, clichesEliminados: 0, limpioDesdeInicio: true };
+  }
+
+  console.log(`[SCANNER] ⚠️ ${clichesEncontrados.length} clichés detectados: "${clichesEncontrados.slice(0, 3).join('", "')}"`);
+  console.log('[SCANNER] 🔧 Ejecutando reescritura quirúrgica...');
+
+  const promptLimpieza = `
+Eres un editor quirúrgico de guiones virales. Tu trabajo es REEMPLAZAR frases débiles sin alterar la estructura.
+
+GUION ORIGINAL:
+${guionCompleto}
+
+HOOK ORIGINAL:
+${hook}
+
+FRASES PROHIBIDAS DETECTADAS QUE DEBES ELIMINAR:
+${clichesEncontrados.map((c, i) => `${i + 1}. "${c}"`).join('\n')}
+
+REGLAS DE REESCRITURA:
+1. Reemplaza ÚNICAMENTE las frases prohibidas — no toques el resto
+2. Mantén el tono, ritmo y estructura intactos
+3. El reemplazo debe ser más específico, más disruptivo, más original
+4. NO uses otras frases de la lista prohibida como reemplazo
+5. El guion resultante debe sonar como el mismo creador, pero sin clichés
+
+EJEMPLOS DE REEMPLAZO:
+❌ "En el mundo de hoy..." → ✅ "En [contexto específico del tema]..."
+❌ "Esto cambiará tu vida..." → ✅ "Esto explica por qué [resultado específico]..."
+❌ "Lo que nadie te dice..." → ✅ "Lo que [grupo específico] oculta deliberadamente..."
+
+DEVUELVE SOLO ESTE JSON:
+{
+  "guion_limpio": "El guion completo con las frases reemplazadas",
+  "hook_limpio": "El hook con las frases reemplazadas (si aplicaba)",
+  "reemplazos_realizados": [
+    {
+      "original": "frase eliminada",
+      "reemplazo": "frase nueva",
+      "razon": "por qué funciona mejor"
+    }
+  ]
+}
+`;
+
+  try {
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o',
+      response_format: { type: 'json_object' },
+      messages: [
+        { role: 'system', content: 'Eres un editor quirúrgico. Devuelves SOLO JSON válido.' },
+        { role: 'user', content: promptLimpieza }
+      ],
+      temperature: 0.4,
+      max_tokens: 3000
+    });
+
+    const resultado = JSON.parse(completion.choices[0].message.content || '{}');
+
+    // Aplicar correcciones al output
+    const outputLimpio = { ...output };
+
+    if (resultado.guion_limpio && resultado.guion_limpio.length > 100) {
+      outputLimpio.guion_completo = resultado.guion_limpio;
+      outputLimpio.guion_tecnico_completo = resultado.guion_limpio;
+    }
+
+    if (resultado.hook_limpio && resultado.hook_limpio.length > 5) {
+      outputLimpio.hook = resultado.hook_limpio;
+    }
+
+    // Agregar metadata de limpieza
+    outputLimpio._limpieza_cliches = {
+      cliches_detectados: clichesEncontrados,
+      reemplazos_realizados: resultado.reemplazos_realizados || [],
+      guion_fue_reescrito: true
+    };
+
+    const cantidadReemplazos = resultado.reemplazos_realizados?.length || clichesEncontrados.length;
+    console.log(`[SCANNER] ✅ Reescritura completada — ${cantidadReemplazos} reemplazos`);
+
+    return {
+      output: outputLimpio,
+      clichesEliminados: cantidadReemplazos,
+      limpioDesdeInicio: false
+    };
+
+  } catch (e) {
+    console.warn('[SCANNER] ⚠️ Fallo en reescritura — devolviendo original sin cambios');
+    return { output, clichesEliminados: 0, limpioDesdeInicio: false };
+  }
+}
+
+// ==================================================================================
+// 📊 RECALCULADOR DE SCORE — P5
+// Verifica coherencia entre score auto-reportado y estructura real del guion
+// ==================================================================================
+
+function recalcularScoreCoherente(output: any): {
+  score_verificado: any;
+  fue_ajustado: boolean;
+  ajustes_realizados: string[];
+} {
+  const ajustes: string[] = [];
+  const score = output.score_predictivo || {};
+  const guionCompleto = output.guion_completo || output.guion || "";
+  const estructura = output.estructura_desglosada || {};
+  const microLoops = output.micro_loops_detectados || [];
+  const activadores = output.activadores_psicologicos || [];
+  const curva = output.curva_emocional || {};
+  const identidad = output.identidad_verbal || {};
+
+  // ── RETENTION SCORE ──
+  // Criterios reales: hook + micro-loops + progresión
+  let retentionReal = 0;
+  const tieneHook = (output.hook || "").length > 10;
+  const tieneLoops = microLoops.length >= 2;
+  const tieneEstructura = Object.keys(estructura).length >= 4;
+  const guionLargo = guionCompleto.length >= 300;
+
+  if (tieneHook) retentionReal += 25;
+  if (tieneLoops) retentionReal += 25;
+  if (tieneEstructura) retentionReal += 25;
+  if (guionLargo) retentionReal += 25;
+
+  // ── SHARE SCORE ──
+  // Criterios reales: frases memorables + datos contraintuitivos + reencuadres
+  let shareReal = 0;
+  const tiposFrases = activadores.map((a: any) => a.tipo || "");
+  if (tiposFrases.includes('frase_memorable')) shareReal += 30;
+  if (tiposFrases.includes('dato_contraintuitivo')) shareReal += 30;
+  if (tiposFrases.includes('reencuadre') || tiposFrases.includes('marco_sistema')) shareReal += 20;
+  if (activadores.length >= 3) shareReal += 20;
+
+  // ── SAVE SCORE ──
+  // Criterios reales: framework/sistema + activadores de guardado
+  let saveReal = 0;
+  if (tiposFrases.includes('marco_sistema')) saveReal += 35;
+  if (activadores.length >= 2) saveReal += 35;
+  const textoLower = guionCompleto.toLowerCase();
+  const tieneNumeros = /\d+\s*(pasos?|puntos?|reglas?|claves?)/i.test(guionCompleto);
+  if (tieneNumeros) saveReal += 30;
+
+  // ── AUTHORITY SCORE ──
+  // Criterios reales: posicionamiento + identidad verbal definida
+  let authorityReal = 0;
+  const tieneIdentidad = (
+    identidad.nivel_agresividad !== undefined ||
+    identidad.agresividad !== undefined
+  );
+  if (tieneIdentidad) authorityReal += 30;
+  if (output.tipo_de_cierre && output.tipo_de_cierre.length > 5) authorityReal += 25;
+  if (output.analisis_viral?.frases_autoridad?.length > 0) authorityReal += 25;
+  if (curva.emocion_dominante || curva.inicio) authorityReal += 20;
+
+  // ── VIRAL INDEX REAL ──
+  const viralIndexReal = Math.round(
+    retentionReal * 0.30 +
+    shareReal * 0.20 +
+    saveReal * 0.15 +
+    authorityReal * 0.15 +
+    // Impact score: usar el reportado si existe, sino estimar
+    (Number(score.impact_score) || 50) * 0.20
+  );
+
+  // ── VERIFICAR COHERENCIA ──
+  const retentionReportado = Number(score.retention_score) || 0;
+  const shareReportado = Number(score.share_score) || 0;
+  const saveReportado = Number(score.save_score) || 0;
+  const authorityReportado = Number(score.authority_score) || 0;
+  const viralReportado = Number(score.viral_index) || 0;
+
+  const TOLERANCIA = 25; // Diferencia máxima aceptable entre reportado y real
+  let fueAjustado = false;
+
+  const scoreVerificado = { ...score };
+
+  // Corregir retention si está muy inflado
+  if (retentionReportado > retentionReal + TOLERANCIA) {
+    scoreVerificado.retention_score = Math.round((retentionReportado + retentionReal) / 2);
+    ajustes.push(`retention_score ajustado: ${retentionReportado} → ${scoreVerificado.retention_score} (real: ${retentionReal})`);
+    fueAjustado = true;
+  }
+
+  // Corregir share si está muy inflado
+  if (shareReportado > shareReal + TOLERANCIA) {
+    scoreVerificado.share_score = Math.round((shareReportado + shareReal) / 2);
+    ajustes.push(`share_score ajustado: ${shareReportado} → ${scoreVerificado.share_score} (real: ${shareReal})`);
+    fueAjustado = true;
+  }
+
+  // Corregir save si está muy inflado
+  if (saveReportado > saveReal + TOLERANCIA) {
+    scoreVerificado.save_score = Math.round((saveReportado + saveReal) / 2);
+    ajustes.push(`save_score ajustado: ${saveReportado} → ${scoreVerificado.save_score} (real: ${saveReal})`);
+    fueAjustado = true;
+  }
+
+  // Corregir authority si está muy inflado
+  if (authorityReportado > authorityReal + TOLERANCIA) {
+    scoreVerificado.authority_score = Math.round((authorityReportado + authorityReal) / 2);
+    ajustes.push(`authority_score ajustado: ${authorityReportado} → ${scoreVerificado.authority_score} (real: ${authorityReal})`);
+    fueAjustado = true;
+  }
+
+  // Corregir viral_index si está muy inflado respecto al real
+  if (viralReportado > viralIndexReal + TOLERANCIA) {
+    scoreVerificado.viral_index = Math.round((viralReportado + viralIndexReal) / 2);
+    ajustes.push(`viral_index ajustado: ${viralReportado} → ${scoreVerificado.viral_index} (real calculado: ${viralIndexReal})`);
+    fueAjustado = true;
+  }
+
+  // Agregar scores reales como referencia
+  scoreVerificado._scores_verificados = {
+    retention_real: retentionReal,
+    share_real: shareReal,
+    save_real: saveReal,
+    authority_real: authorityReal,
+    viral_index_real: viralIndexReal
+  };
+
+  if (fueAjustado) {
+    console.log(`[SCORE P5] ⚖️ Score ajustado por verificación estructural:`);
+    ajustes.forEach(a => console.log(`[SCORE P5]   → ${a}`));
+  } else {
+    console.log(`[SCORE P5] ✅ Score coherente con estructura real`);
+  }
+
+  return {
+    score_verificado: scoreVerificado,
+    fue_ajustado: fueAjustado,
+    ajustes_realizados: ajustes
+  };
+}
+
+function validarOutputGenerador(output: any, preAnalisis?: any): ResultadoValidacion {
+  const fallos: string[] = [];
+  const advertencias: string[] = [];
+
+  // ── 1. ESTRUCTURA COMPLETA ──
+  const bloquesRequeridos = ['hook', 'desarrollo', 'escalada', 'insight', 'resolucion', 'cierre'];
+  const estructuraDesglosada = output.estructura_desglosada || {};
+  const tieneTodosLosBloques = bloquesRequeridos.every(bloque => {
+    const existe = Object.keys(estructuraDesglosada).some(k =>
+      k.toLowerCase().includes(bloque) || bloque.includes(k.toLowerCase())
+    );
+    if (!existe) fallos.push(`Bloque faltante en estructura: ${bloque}`);
+    return existe;
+  });
+
+  // También verificar guion_completo no vacío
+  const guionCompleto = output.guion_completo || output.guion || "";
+  if (guionCompleto.length < 200) {
+    fallos.push(`Guion demasiado corto: ${guionCompleto.length} chars (mínimo 200)`);
+  }
+
+  // ── 2. MICRO-LOOPS ──
+  const microLoops = output.micro_loops_detectados || [];
+  const microLoopsSuficientes = microLoops.length >= 2;
+  if (!microLoopsSuficientes) {
+    fallos.push(`Micro-loops insuficientes: ${microLoops.length}/2 requeridos`);
+  }
+
+  // ── 3. CURVA EMOCIONAL VÁLIDA ──
+  const curvaEmocional = output.curva_emocional || {};
+  // Verificar campos reales que genera el prompt del motor
+  const camposCurva = ['inicio', 'pico_1', 'pico_2', 'cierre'];
+  const camposFaltantes = camposCurva.filter(campo => !curvaEmocional[campo]);
+  const curvaValida = camposFaltantes.length === 0;
+  if (!curvaValida) {
+    fallos.push(`Curva emocional incompleta. Faltan: ${camposFaltantes.join(', ')}`);
+  }
+
+  // Verificar también campos alternativos por si el modelo usa otro esquema
+  const tieneEsquemaAlternativo = (
+    curvaEmocional.emocion_dominante ||
+    curvaEmocional.pico_intermedio ||
+    curvaEmocional.inicio
+  );
+  const curvaValidaFinal = curvaValida || !!tieneEsquemaAlternativo;
+  if (!curvaValidaFinal) {
+    fallos.push(`Curva emocional vacía o sin campos reconocibles`);
+  }
+
+  // ── 4. ACTIVADORES PSICOLÓGICOS ──
+  const activadores = output.activadores_psicologicos || [];
+  const activadoresPresentes = activadores.length >= 3;
+  if (!activadoresPresentes) {
+    fallos.push(`Activadores insuficientes: ${activadores.length}/3 requeridos`);
+  }
+
+  // ── 5. ANTI-CLICHÉS ──
+  const textoCompleto = (guionCompleto + " " + (output.hook || "")).toLowerCase();
+  const clichesEncontrados = CLICHES_PROHIBIDOS.filter(cliche =>
+    textoCompleto.includes(cliche.toLowerCase())
+  );
+  const sinCliches = clichesEncontrados.length === 0;
+  if (!sinCliches) {
+    fallos.push(`Clichés detectados (${clichesEncontrados.length}): "${clichesEncontrados.slice(0,2).join('", "')}"`);
+  }
+
+  // ── 6. IDENTIDAD VERBAL ──
+  const identidadVerbal = output.identidad_verbal || {};
+  const tieneIdentidad = (
+    identidadVerbal.nivel_agresividad !== undefined ||
+    identidadVerbal.nivel_polarizacion !== undefined ||
+    identidadVerbal.sofisticacion_lexica !== undefined
+  );
+  if (!tieneIdentidad) {
+    advertencias.push("identidad_verbal sin métricas definidas");
+  }
+
+  // ── 7. SCORE COHERENTE ──
+  const score = output.score_predictivo || {};
+  const camposScore = ['retention_score', 'share_score', 'save_score', 'authority_score', 'viral_index'];
+  const todosScores = camposScore.every(campo => {
+    const val = Number(score[campo]);
+    return !isNaN(val) && val >= 0 && val <= 100;
+  });
+  const scoreCoherente = todosScores;
+  if (!scoreCoherente) {
+    fallos.push("Score predictivo con valores inválidos o ausentes");
+  }
+
+  // Verificar coherencia interna: viral_index no puede estar muy por encima del promedio de los demás
+  if (todosScores) {
+    const promedio = (
+      Number(score.retention_score) +
+      Number(score.share_score) +
+      Number(score.save_score) +
+      Number(score.authority_score)
+    ) / 4;
+    const viralIndex = Number(score.viral_index);
+    if (viralIndex > promedio + 25) {
+      advertencias.push(`viral_index (${viralIndex}) inflado vs promedio de otros scores (${promedio.toFixed(0)})`);
+    }
+  }
+
+  // ── SCORE TOTAL ──
+ const criterios = [
+    tieneTodosLosBloques,
+    microLoopsSuficientes,
+    curvaValidaFinal,   // ← era curvaValida
+    activadoresPresentes,
+    sinCliches,
+    tieneIdentidad,
+    scoreCoherente
+  ];
+  const pesos = [25, 20, 20, 15, 10, 5, 5];
+  const scoreTotal = criterios.reduce((acc, ok, i) => acc + (ok ? pesos[i] : 0), 0);
+
+  const aprobado = fallos.length === 0 && scoreTotal >= 80;
+
+  // Log detallado
+  console.log(`[VALIDADOR] 📊 Score calidad: ${scoreTotal}/100 | Fallos: ${fallos.length} | Advertencias: ${advertencias.length}`);
+  if (fallos.length > 0) {
+    console.log(`[VALIDADOR] ❌ Fallos: ${fallos.join(' | ')}`);
+  }
+  if (advertencias.length > 0) {
+    console.log(`[VALIDADOR] ⚠️  Advertencias: ${advertencias.join(' | ')}`);
+  }
+
+  return {
+    aprobado,
+    score_total: scoreTotal,
+    detalle: {
+      estructura_completa: tieneTodosLosBloques,
+      micro_loops_suficientes: microLoopsSuficientes,
+      curva_emocional_valida: curvaValida,
+      activadores_presentes: activadoresPresentes,
+      sin_cliches: sinCliches,
+      identidad_verbal: tieneIdentidad,
+      score_coherente: scoreCoherente
+    },
+    fallos,
+    advertencias
+  };
+}
+
+// ==================================================================================
+// 🏗️ ANALIZADOR DE ESTRUCTURA IMPLÍCITA — P6
+// Detecta si un texto pegado ya tiene arquitectura narrativa propia
+// ==================================================================================
+
+async function analizarEstructuraImplicita(
+  texto: string,
+  openai: any
+): Promise<{
+  tiene_estructura: boolean;
+  tipo_estructura: string;
+  elementos_fuertes: string[];
+  elementos_debiles: string[];
+  hook_existente: string;
+  cierre_existente: string;
+  nivel_tension_actual: number;
+  instruccion: 'preservar_y_elevar' | 'reestructurar_completo' | 'extraer_y_reconstruir';
+  razon: string;
+}> {
+
+  // Textos muy cortos no tienen estructura — construir desde cero
+  if (texto.length < 300) {
+    return {
+      tiene_estructura: false,
+      tipo_estructura: 'ninguna',
+      elementos_fuertes: [],
+      elementos_debiles: [],
+      hook_existente: '',
+      cierre_existente: '',
+      nivel_tension_actual: 20,
+      instruccion: 'reestructurar_completo',
+      razon: 'Texto demasiado corto para tener estructura propia'
+    };
+  }
+
+  console.log(`[P6] 🏗️ Analizando estructura implícita (${texto.length} chars)...`);
+
+  const prompt = `
+Eres un Arquitecto Narrativo. Tu trabajo es detectar si un texto tiene estructura narrativa propia.
+
+TEXTO A ANALIZAR:
+${texto.substring(0, 2500)}
+
+EJECUTA ESTOS 4 DETECTORES:
+
+━━━━━━━━━━━━━━━━━━
+DETECTOR 1 — ¿TIENE ESTRUCTURA?
+━━━━━━━━━━━━━━━━━━
+¿El texto tiene inicio, desarrollo y cierre distinguibles?
+¿Hay progresión lógica o narrativa?
+¿O es solo información plana sin arco?
+
+━━━━━━━━━━━━━━━━━━
+DETECTOR 2 — ELEMENTOS FUERTES
+━━━━━━━━━━━━━━━━━━
+¿Qué partes del texto tienen tensión, emoción o valor real?
+¿Hay algún hook natural en las primeras líneas?
+¿Hay algún cierre con fuerza?
+Lista máximo 3 elementos fuertes. Si no hay ninguno, array vacío.
+
+━━━━━━━━━━━━━━━━━━
+DETECTOR 3 — ELEMENTOS DÉBILES
+━━━━━━━━━━━━━━━━━━
+¿Qué partes son planas, repetitivas o sin valor narrativo?
+Lista máximo 3. Si no hay, array vacío.
+
+━━━━━━━━━━━━━━━━━━
+DETECTOR 4 — INSTRUCCIÓN PARA EL GENERADOR
+━━━━━━━━━━━━━━━━━━
+Basado en el análisis, elige UNA instrucción:
+- "preservar_y_elevar": El texto tiene buena estructura — conservar el arco, elevar tensión y lenguaje
+- "extraer_y_reconstruir": El texto tiene buenos elementos pero mala estructura — extraer lo valioso y reconstruir
+- "reestructurar_completo": El texto no tiene estructura útil — usar solo el tema/datos, construir desde cero
+
+DEVUELVE SOLO ESTE JSON:
+{
+  "tiene_estructura": true,
+  "tipo_estructura": "PAS / Storytelling / Educativo / Informativo / Sin estructura",
+  "elementos_fuertes": ["elemento 1", "elemento 2"],
+  "elementos_debiles": ["elemento 1", "elemento 2"],
+  "hook_existente": "Primera frase o apertura del texto original (vacío si no hay hook)",
+  "cierre_existente": "Última frase o cierre del texto original (vacío si no hay cierre)",
+  "nivel_tension_actual": 0,
+  "instruccion": "preservar_y_elevar | extraer_y_reconstruir | reestructurar_completo",
+  "razon": "Por qué elegiste esta instrucción en una frase"
+}
+`;
+
+  try {
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o',
+      response_format: { type: 'json_object' },
+      messages: [
+        { role: 'system', content: 'Eres el Arquitecto Narrativo. Devuelves SOLO JSON válido.' },
+        { role: 'user', content: prompt }
+      ],
+      temperature: 0.2,
+      max_tokens: 600
+    });
+
+    const resultado = JSON.parse(completion.choices[0].message.content || '{}');
+    console.log(`[P6] ✅ Estructura: ${resultado.tipo_estructura} | Instrucción: ${resultado.instruccion}`);
+    console.log(`[P6] 💪 Elementos fuertes: ${resultado.elementos_fuertes?.length || 0} | Débiles: ${resultado.elementos_debiles?.length || 0}`);
+
+    return resultado;
+
+  } catch (e) {
+    console.warn('[P6] ⚠️ Fallo en análisis, usando fallback');
+    return {
+      tiene_estructura: false,
+      tipo_estructura: 'desconocida',
+      elementos_fuertes: [],
+      elementos_debiles: [],
+      hook_existente: '',
+      cierre_existente: '',
+      nivel_tension_actual: 30,
+      instruccion: 'extraer_y_reconstruir',
+      razon: 'Error en análisis — reconstruir con lo disponible'
+    };
+  }
+}
+
+// ==================================================================================
+// 🔍 PRE-ANALIZADOR DE INPUT — DETECTOR DE ADN NARRATIVO
+// P1: Detecta conflicto, insight y partes planas antes de generar
+// ==================================================================================
+
+async function preAnalizarInput(
+  input: string,
+  tipoInput: 'idea' | 'texto' | 'imagen',
+  openai: any
+): Promise<{
+  conflicto_central: string;
+  insight_explotable: string;
+  partes_planas: string[];
+  transformacion_implicita: string;
+  emocion_dominante: string;
+  tension_detectada: number; // 0-100
+  instrucciones_para_generador: string;
+}> {
+  
+  // Ideas cortas no necesitan análisis profundo
+  if (tipoInput === 'idea' && input.length < 200) {
+    return {
+      conflicto_central: input,
+      insight_explotable: input,
+      partes_planas: [],
+      transformacion_implicita: "No definida — construir desde cero",
+      emocion_dominante: "Curiosidad",
+      tension_detectada: 50,
+      instrucciones_para_generador: `Construye arquitectura completa desde cero sobre: "${input}". No tienes restricciones estructurales del input original.`
+    };
+  }
+
+  console.log(`[PRE-ANÁLISIS] 🔍 Analizando input tipo: ${tipoInput} (${input.length} chars)`);
+
+  const prompt = `
+Eres el Detector de ADN Narrativo más preciso del mundo.
+Tu trabajo NO es resumir. Es DISECCIONAR.
+
+TIPO DE INPUT: ${tipoInput.toUpperCase()}
+
+CONTENIDO:
+${input.substring(0, 3000)}
+
+EJECUTA LOS 5 DETECTORES EN SECUENCIA:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DETECTOR 1 — CONFLICTO CENTRAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+¿Cuál es la tensión real explotable en este contenido?
+NO la descripción. SÍ el conflicto narrativo específico.
+Ejemplo malo: "Habla sobre redes sociales"
+Ejemplo bueno: "La brecha entre esfuerzo visible y resultados invisibles destruye motivación"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DETECTOR 2 — INSIGHT EXPLOTABLE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+¿Qué verdad contraintuitiva o reencuadre mental se puede extraer?
+Debe ser específico, no genérico.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DETECTOR 3 — PARTES PLANAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+¿Qué secciones son débiles, predecibles o no aportan tensión?
+Lista máximo 3. Si no hay, devuelve array vacío.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DETECTOR 4 — TRANSFORMACIÓN IMPLÍCITA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+¿De qué estado emocional/mental a qué estado debe llevar al espectador?
+Formato: "De [estado A] a [estado B]"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DETECTOR 5 — EMOCIÓN DOMINANTE + TENSIÓN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+¿Qué emoción domina este input?
+¿Qué nivel de tensión tiene (0-100)?
+0 = completamente plano, 100 = máxima tensión narrativa
+
+DEVUELVE SOLO ESTE JSON:
+{
+  "conflicto_central": "string específico del conflicto real",
+  "insight_explotable": "string del insight contraintuitivo",
+  "partes_planas": ["parte 1", "parte 2"],
+  "transformacion_implicita": "De X a Y",
+  "emocion_dominante": "nombre de la emoción específica",
+  "tension_detectada": 0,
+  "instrucciones_para_generador": "Instrucciones específicas de cómo usar este ADN para construir el guion. Mínimo 3 directivas concretas."
+}
+`;
+
+  try {
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o',
+      response_format: { type: 'json_object' },
+      messages: [
+        { role: 'system', content: 'Eres el Detector de ADN Narrativo. Devuelves SOLO JSON válido.' },
+        { role: 'user', content: prompt }
+      ],
+      temperature: 0.3,
+      max_tokens: 800
+    });
+
+    const resultado = JSON.parse(completion.choices[0].message.content || '{}');
+    console.log(`[PRE-ANÁLISIS] ✅ Conflicto: "${resultado.conflicto_central?.substring(0, 60)}..."`);
+    console.log(`[PRE-ANÁLISIS] ⚡ Tensión detectada: ${resultado.tension_detectada}/100`);
+    
+    return resultado;
+
+  } catch (e) {
+    console.warn('[PRE-ANÁLISIS] ⚠️ Fallo, usando fallback');
+    return {
+      conflicto_central: input.substring(0, 200),
+      insight_explotable: "Extraer desde el contenido",
+      partes_planas: [],
+      transformacion_implicita: "De problema a solución",
+      emocion_dominante: "Curiosidad",
+      tension_detectada: 40,
+      instrucciones_para_generador: "Usa el contenido base y construye tensión progresiva real."
+    };
+  }
+}
+
+// ==================================================================================
+// 🌀 SISTEMA TCA IMPERIO — CAPA 0 DE ALCANCE MASIVO
+// Teoría Circular de Alcance — Integración V600
+// Se ejecuta ANTES del motor. No modifica P1-P6 ni el loop.
+// ==================================================================================
+
+async function ejecutarSistemaTCA(
+  temaOriginal: string,
+  settings: any,
+  openai: any
+): Promise<{
+  tema_expandido: string;
+  estrategia_tca: any;
+  aprobado: boolean;
+  advertencias: string[];
+}> {
+
+  const objective = settings.objective || 'Educar';
+  const platform  = settings.platform  || 'TikTok';
+
+  // Si el objetivo es autoridad profunda, TCA hace bypass total
+  const esAlcanceMasivo = !['Autoridad Profunda', 'Deep Dive', 'Técnico'].includes(objective);
+  if (!esAlcanceMasivo) {
+    console.log('[TCA IMPERIO] ⚡ Bypass activo — objetivo de autoridad profunda detectado.');
+    return {
+      tema_expandido: temaOriginal,
+      estrategia_tca: { modo: 'bypass_autoridad_profunda' },
+      aprobado: true,
+      advertencias: []
+    };
+  }
+
+  console.log('[TCA IMPERIO] 🌀 Iniciando análisis de posicionamiento masivo...');
+  console.log(`[TCA IMPERIO] 📋 Tema original: "${temaOriginal.substring(0, 80)}"`);
+
+  // ── Pesos de agresión por plataforma ──────────────────────────────────────────
+  const PLATFORM_AGGRESSION: Record<string, any> = {
+    'TikTok': {
+      angulo_dominante: 'Ataque + Shock',
+      peso_intensidad: 0.40,
+      peso_universalidad: 0.20,
+      peso_debate: 0.20,
+      peso_cti: 0.20,
+      descripcion: 'Prioriza reacción inmediata. El shock y la amenaza directa superan la profundidad.'
+    },
+    'Instagram': {
+      angulo_dominante: 'Identidad + Estatus',
+      peso_intensidad: 0.30,
+      peso_universalidad: 0.25,
+      peso_debate: 0.20,
+      peso_cti: 0.25,
+      descripcion: 'Prioriza identidad aspiracional y estatus social. El espectador debe verse reflejado.'
+    },
+    'YouTube': {
+      angulo_dominante: 'Debate Profundo + Revelación',
+      peso_intensidad: 0.25,
+      peso_universalidad: 0.25,
+      peso_debate: 0.30,
+      peso_cti: 0.20,
+      descripcion: 'Prioriza promesa de revelación y debate de ideas. La profundidad retiene.'
+    },
+    'LinkedIn': {
+      angulo_dominante: 'Autoridad + Creencia Equivocada',
+      peso_intensidad: 0.20,
+      peso_universalidad: 0.20,
+      peso_debate: 0.35,
+      peso_cti: 0.25,
+      descripcion: 'Prioriza desafío a creencias del sector. La opinión contraria genera engagement.'
+    }
+  };
+
+  const platConfig = PLATFORM_AGGRESSION[platform] || PLATFORM_AGGRESSION['TikTok'];
+
+  const promptTCA = `
+Eres el Sistema TCA Imperio V2 — Teoría Circular de Alcance con Tensión Cultural.
+Tu misión: posicionar el tema en el punto de máximo alcance masivo sincronizado
+culturalmente, con el ángulo más agresivo compatible con la plataforma.
+
+TEMA ORIGINAL: "${temaOriginal}"
+PLATAFORMA: ${platform}
+OBJETIVO: ${objective}
+ÁNGULO DOMINANTE DE PLATAFORMA: ${platConfig.angulo_dominante}
+DESCRIPCIÓN DE PLATAFORMA: ${platConfig.descripcion}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MAPA DE 4 NIVELES TCA:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+N1 = Micronicho Técnico — solo expertos (PROHIBIDO para alcance masivo)
+N2 = Temática Principal — profesionales del sector ← ZONA VÁLIDA
+N3 = Sector Masivo — personas con el problema ← ZONA VÁLIDA
+N4 = Mainstream Irrelevante — audiencia sin potencial (PROHIBIDO)
+Posicionar en: Intersección exacta N2–N3.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SISTEMA 1 — CULTURAL TENSION INDEX (CTI) 0-100:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Mide si el tema está culturalmente sincronizado con el momento actual.
+Los videos que llegan a 5M no solo son masivos — son masivos Y culturalmente activos.
+
+Evalúa y puntúa cada señal (0-25 por señal, máximo 100):
+
+CTI Señal 1 — Momentum cultural activo (+25):
+¿El tema conecta con una conversación social que está ocurriendo AHORA?
+(crisis económica, cambio de paradigma laboral, revolución IA, polarización política, etc.)
+
+CTI Señal 2 — Tensión latente del sector (+25):
+¿Hay una creencia establecida en el nicho que está siendo cuestionada?
+(ej: "el trabajo tradicional ya no funciona", "las redes sociales están cambiando el negocio")
+
+CTI Señal 3 — Herida colectiva reciente (+25):
+¿El tema toca una frustración o pérdida que muchas personas experimentaron recientemente?
+(inflación, despidos masivos, promesas incumplidas de gurus, estafas, etc.)
+
+CTI Señal 4 — Ventana de oportunidad urgente (+25):
+¿Hay una razón implícita para consumir este contenido AHORA y no en 6 meses?
+(cambio de algoritmo, nueva ley, tendencia que está creciendo, amenaza inminente)
+
+CTI < 40 → tema atemporalmente bueno pero sin explosividad cultural
+CTI 40-70 → tema sincronizado con el momento
+CTI > 70 → tema en intersección perfecta con tensión cultural activa → EXPLOSIVO
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SISTEMA 2 — ANGLE AMPLIFIER (4 ÁNGULOS DE MÁXIMA AGRESIÓN):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+El ángulo multiplica el alcance. Un tema neutro no escala aunque esté bien posicionado.
+Para ${platform} el ángulo dominante es: ${platConfig.angulo_dominante}
+
+Genera los 4 ángulos posibles y selecciona el más potente para la plataforma:
+
+ÁNGULO 1 — AMENAZA DIRECTA:
+"Si sigues haciendo X, perderás Y" / "Esto está destruyendo tu Z"
+Activa instinto de supervivencia. El más potente en TikTok.
+
+ÁNGULO 2 — ERROR MASIVO (tú también lo cometes):
+"El error que el 90% comete sin saberlo" / "Lo que nadie te dijo sobre X"
+Activa ego y curiosidad simultáneamente.
+
+ÁNGULO 3 — CREENCIA EQUIVOCADA (reencuadre):
+"Todos creen que X, pero la realidad es Y"
+Desafía identidad establecida. Máximo debate. Potente en LinkedIn/YouTube.
+
+ÁNGULO 4 — IDENTIDAD Y ESTATUS (aspiracional):
+"Las personas que logran X hacen esto diferente" / "Esto separa a los que triunfan de los que no"
+Activa comparación social y aspiración. Dominante en Instagram.
+
+Seleccionar el ángulo más agresivo COMPATIBLE con ${platform}.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SISTEMA 3 — MASS APPEAL SCORE V2 CON PESOS DE PLATAFORMA:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+IMPORTANTE: En viralidad real, intensidad emocional supera a universalidad.
+Un tema 70% universal + intensidad extrema supera a 100% universal + intensidad débil.
+
+Componentes del score (pesos calibrados para ${platform}):
+
+INTENSIDAD EMOCIONAL (peso: ${platConfig.peso_intensidad * 100}%) — 0-100 puntos:
+¿Qué tan fuerte es la reacción emocional que genera? (miedo, rabia, ambición, orgullo)
+Multiplicado por ${platConfig.peso_intensidad}
+
+UNIVERSALIDAD (peso: ${platConfig.peso_universalidad * 100}%) — 0-100 puntos:
++25 interés universal (dinero/salud/estatus/relaciones/mentalidad/libertad)
++25 sin requisito técnico previo
++25 problema que millones reconocen
++25 no requiere contexto de nicho
+Multiplicado por ${platConfig.peso_universalidad}
+
+POTENCIAL DE DEBATE (peso: ${platConfig.peso_debate * 100}%) — 0-100 puntos:
++25 genera opiniones divididas
++25 desafía creencia establecida
++25 tiene potencial polarizante
++25 invita a comentar/compartir para validarse
+Multiplicado por ${platConfig.peso_debate}
+
+CULTURAL TENSION INDEX (peso: ${platConfig.peso_cti * 100}%) — 0-100 puntos:
+Usar el CTI calculado arriba
+Multiplicado por ${platConfig.peso_cti}
+
+MASS_APPEAL_SCORE_V2 = (Intensidad × ${platConfig.peso_intensidad}) + (Universalidad × ${platConfig.peso_universalidad}) + (Debate × ${platConfig.peso_debate}) + (CTI × ${platConfig.peso_cti})
+
+REGLA: Si mass_appeal_score_v2 < 70 → reformular hasta superar 70.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FILTRO ANTI-300-VISTAS (reformular si detecta):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+❌ Procedimientos paso a paso técnicos
+❌ Micro-optimizaciones específicas de nicho
+❌ Jerga exclusiva que solo entiende el 5% del sector
+❌ Hook neutral sin ángulo de amenaza, error o creencia equivocada
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DOBLE CAPA NARRATIVA:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Capa Visible: debate o historia que ve la audiencia masiva
+Capa Estratégica: autoridad implícita que detecta el prospecto ideal
+
+Responde SOLO con este JSON válido. Sin markdown, sin texto extra:
+{
+  "nivel_original": "N1 | N2 | N3 | N4",
+  "sector_universal": "el interés universal que conecta con millones",
+  "cultural_tension_index": {
+    "score_total": 0,
+    "momentum_cultural": 0,
+    "tension_latente_sector": 0,
+    "herida_colectiva": 0,
+    "ventana_urgencia": 0,
+    "descripcion_tension": "qué tensión cultural específica activa este tema"
+  },
+  "angle_amplifier": {
+    "angulo_seleccionado": "AMENAZA | ERROR_MASIVO | CREENCIA_EQUIVOCADA | IDENTIDAD_ESTATUS",
+    "razon_seleccion": "por qué este ángulo es el más potente para ${platform}",
+    "formulacion_angulo": "la formulación exacta del ángulo seleccionado",
+    "angulos_alternativos": [
+      { "tipo": "AMENAZA", "formulacion": "..." },
+      { "tipo": "ERROR_MASIVO", "formulacion": "..." },
+      { "tipo": "CREENCIA_EQUIVOCADA", "formulacion": "..." },
+      { "tipo": "IDENTIDAD_ESTATUS", "formulacion": "..." }
+    ]
+  },
+  "mass_appeal_score_v2": {
+    "score_final": 0,
+    "intensidad_emocional_raw": 0,
+    "universalidad_raw": 0,
+    "debate_raw": 0,
+    "cti_raw": 0,
+    "score_ponderado_plataforma": 0,
+    "plataforma_calibrada": "${platform}"
+  },
+  "tema_expandido": "el tema reposicionado en N2-N3 con el ángulo más agresivo para ${platform}",
+  "hook_sectorial": "premisa del hook con el ángulo seleccionado, cero jerga técnica",
+  "capa_visible": "qué ve y siente la audiencia masiva",
+  "capa_estrategica": "qué autoridad implícita detecta el prospecto ideal",
+  "tipo_embudo": "TOFU | MOFU | BOFU",
+  "instruccion_doble_capa": "instrucción directa para el generador V600",
+  "aprobado": true,
+  "advertencias": [],
+  "reformulaciones_alternativas": [
+    "alternativa 1 — ángulo diferente con score mayor",
+    "alternativa 2",
+    "alternativa 3"
+  ]
+}
+`;
+
+  try {
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4o',
+      messages: [{ role: 'user', content: promptTCA }],
+      temperature: 0.4,
+      max_tokens: 1400
+    });
+
+    const raw = response.choices[0].message.content || '';
+    const jsonMatch = raw.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('TCA: JSON no encontrado en respuesta');
+
+    const tcaData = JSON.parse(jsonMatch[0]);
+    // V2 — leer score ponderado por plataforma
+    const score = tcaData.mass_appeal_score_v2?.score_final || tcaData.mass_appeal_score || 0;
+    const cti   = tcaData.cultural_tension_index?.score_total || 0;
+    const angulo = tcaData.angle_amplifier?.angulo_seleccionado || 'N/A';
+    const formulacionAngulo = tcaData.angle_amplifier?.formulacion_angulo || '';
+
+    console.log(`[TCA IMPERIO] 📊 Mass Appeal Score V2: ${score}/100 (calibrado para ${platform})`);
+    console.log(`[TCA IMPERIO] 🔥 Cultural Tension Index: ${cti}/100 — ${tcaData.cultural_tension_index?.descripcion_tension || ''}`);
+    console.log(`[TCA IMPERIO] 🎯 Ángulo seleccionado: ${angulo} — "${formulacionAngulo.substring(0, 60)}"`);
+    console.log(`[TCA IMPERIO] 📍 Nivel: ${tcaData.nivel_original} → N2-N3`);
+    console.log(`[TCA IMPERIO] 🗣️ Tema expandido: "${(tcaData.tema_expandido || '').substring(0, 80)}"`);
+
+    // Si el score es bajo, usar la mejor reformulación alternativa
+    let temaFinal = tcaData.tema_expandido || temaOriginal;
+    if (score < 70 && tcaData.reformulaciones_alternativas?.length > 0) {
+      temaFinal = tcaData.reformulaciones_alternativas[0];
+      console.log(`[TCA IMPERIO] ⚠️ Score bajo (${score}/100). Usando reformulación con mayor alcance.`);
+    }
+
+    // Construir instrucción de doble capa para inyectar al generador
+    // Construir instrucción de doble capa para inyectar al generador
+    const instruccionDobleCapa = `
+   [TCA IMPERIO V2 — DIRECTIVAS DE ALCANCE MASIVO + TENSIÓN CULTURAL]:
+
+   PLATAFORMA CALIBRADA: ${platform} (${platConfig.angulo_dominante})
+   Sector Universal: ${tcaData.sector_universal}
+   Mass Appeal Score V2: ${score}/100
+
+   CULTURAL TENSION INDEX: ${cti}/100
+   Tensión cultural activa: ${tcaData.cultural_tension_index?.descripcion_tension || 'No identificada'}
+   → Usa esta tensión cultural como contexto emocional de fondo en todo el guion.
+   → El espectador debe sentir que este contenido responde a algo que está viviendo HOY.
+
+   ÁNGULO NARRATIVO OBLIGATORIO: ${angulo}
+   Formulación exacta: ${formulacionAngulo}
+   Razón: ${tcaData.angle_amplifier?.razon_seleccion || ''}
+   → El hook DEBE usar este ángulo. No el tema neutro — el ángulo agresivo.
+   → Ángulos alternativos disponibles para micro-loops: ${tcaData.angle_amplifier?.angulos_alternativos?.map((a: any) => a.formulacion).join(' | ') || ''}
+
+  HOOK SECTORIAL CON ÁNGULO: ${tcaData.hook_sectorial}
+
+  CAPA VISIBLE (audiencia masiva debe ver): ${tcaData.capa_visible}
+  CAPA ESTRATÉGICA (prospecto ideal debe detectar): ${tcaData.capa_estrategica}
+
+  INSTRUCCIÓN DOBLE CAPA: ${tcaData.instruccion_doble_capa}
+
+  REGLAS TCA V2 ACTIVAS (no negociables para ${platform}):
+  ✓ Usar el ángulo ${angulo} desde el primer segundo del hook
+  ✓ Sincronizar con la tensión cultural: ${tcaData.cultural_tension_index?.descripcion_tension || 'momento actual'}
+  ✓ Polarizar desde el ángulo seleccionado — no desde neutralidad
+  ✓ Posicionar autoridad IMPLÍCITA — demostrar, no proclamar
+  ✓ El espectador debe sentir urgencia de ver esto AHORA, no en 6 meses
+  ✗ NO usar ángulo neutro ("cómo hacer X") — usar ángulo de ${angulo}
+  ✗ NO sonar atemporal — conectar con tensión del momento presente
+  ✗ NO vender directamente en este contenido de alcance masivo
+`; // 👈 ¡ESTA COMILLA INVERTIDA Y EL PUNTO Y COMA ERAN LOS CULPABLES!
+
+    // ==============================================================================
+    // ✅ VERIFICACIÓN — Qué ver en consola con V2 activo
+    // ==============================================================================
+    console.log('\n[TCA IMPERIO] 🌀 Iniciando análisis de posicionamiento masivo...');
+    console.log(`[TCA IMPERIO] 📊 Mass Appeal Score V2: ${score}/100 (calibrado para ${platform})`);
+    console.log(`[TCA IMPERIO] 🔥 Cultural Tension Index: ${cti}/100 — ${tcaData.cultural_tension_index?.descripcion_tension || 'Tensión detectada'}`);
+    console.log(`[TCA IMPERIO] 🎯 Ángulo seleccionado: ${angulo ? angulo.toUpperCase() : 'AMENAZA'} — "${formulacionAngulo ? formulacionAngulo.substring(0, 50) : ''}..."`);
+    console.log(`[TCA IMPERIO] 📍 Nivel: ${tcaData.nivel_original || 'N1'} → N2-N3`);
+    console.log(`[TCA IMPERIO] 🗣️ Tema expandido: "${temaFinal ? temaFinal.substring(0, 60) : ''}..."`);
+    console.log(`[TCA IMPERIO] ✅ Tema expandido al sector masivo\n`);
+
+    // 👇 RETORNO DEL OBJETO
+    return {
+      tema_expandido: temaFinal + '\n\n' + instruccionDobleCapa,
+      estrategia_tca: {
+        version: 'TCA_IMPERIO_V2',
+        nivel_posicionamiento: 'Interseccion N2-N3',
+        nivel_original: tcaData.nivel_original,
+        sector_utilizado: tcaData.sector_universal,
+        mass_appeal_score: score,
+        mass_appeal_score_v2: tcaData.mass_appeal_score_v2,
+        cultural_tension_index: tcaData.cultural_tension_index,
+        angle_amplifier: tcaData.angle_amplifier,
+        angulo_activo: angulo,
+        formulacion_angulo: formulacionAngulo,
+        plataforma_calibrada: platform,
+        angulo_dominante_plataforma: platConfig.angulo_dominante,
+        tipo_contenido_embudo: tcaData.tipo_embudo || 'TOFU',
+        hook_sectorial: tcaData.hook_sectorial,
+        capa_visible: tcaData.capa_visible,
+        capa_estrategica: tcaData.capa_estrategica,
+        equilibrio_masividad_calificacion: score >= 70,
+        tema_original: temaOriginal,
+        tema_expandido_final: temaFinal,
+        reformulaciones_disponibles: tcaData.reformulaciones_alternativas || []
+      },
+      aprobado: tcaData.aprobado !== false,
+      advertencias: tcaData.advertencias || []
+    };
+
+  } catch (err: any) {
+    console.warn('[TCA IMPERIO] ⚠️ Error en análisis. Bypass activado — V600 continúa normalmente.', err.message);
+    return {
+      tema_expandido: temaOriginal,
+      estrategia_tca: { modo: 'bypass_error', error: err.message },
+      aprobado: true,
+      advertencias: ['TCA: análisis no disponible — tema usado como fue ingresado']
+    };
+  }
+}
 async function ejecutarGeneradorGuiones(
   contexto: any,
   viralDNA: any | null,
@@ -4033,6 +6524,8 @@ async function ejecutarGeneradorGuiones(
   let mejorResultado: any = null;
   let mejorScore = 0;
   let intentoActual = 0;
+  
+  let retroalimentacionLoop = "";
 
   // ==================================================================================
   // LOOP DE OPTIMIZACIÓN
@@ -4131,6 +6624,9 @@ INSTRUCCIONES DE EMERGENCIA OBLIGATORIAS:
 
 ⚠️ NO REPITAS: misma apertura, misma estructura, mismas fórmulas del intento anterior.
 REINVENTA el ángulo narrativo desde cero.
+
+${retroalimentacionLoop}
+
 ` : '';
 
     const finalPrompt = systemPrompt + refinamientoExtra + `\n\n🛡️ PLAN ESTRATÉGICO:\n${planEstrategico}`;
@@ -4176,21 +6672,70 @@ REINVENTA el ángulo narrativo desde cero.
 
     console.log(`[MOTOR V600] 📊 Intento ${intentoActual} — viral_index: ${viralIndex}`);
 
-    // ── Guardar el mejor resultado obtenido ──
-    if (viralIndex > mejorScore) {
-      mejorScore = viralIndex;
-      mejorResultado = parsedData;
-      console.log(`[MOTOR V600] ✅ Nuevo mejor score: ${mejorScore}`);
+    // ── P4: SCANNER ANTI-CLICHÉS ACTIVO (PRIMERO — antes de guardar nada) ──
+    const scannerResult = await escanearYLimpiarCliches(parsedData, openai);
+    if (!scannerResult.limpioDesdeInicio) {
+      console.log(`[MOTOR V600] 🧹 Clichés eliminados: ${scannerResult.clichesEliminados}`);
+      parsedData = scannerResult.output; // Versión limpia garantizada
     }
 
-    // ── Verificar si superó el umbral ──
-    if (viralIndex >= MIN_VIRAL_SCORE) {
-      console.log(`[MOTOR V600] 🏆 Umbral superado en intento ${intentoActual} (${viralIndex} ≥ ${MIN_VIRAL_SCORE})`);
+    // ── P5: VERIFICACIÓN DE SCORE COHERENTE (sobre datos ya limpios) ──
+    const scoreCheck = recalcularScoreCoherente(parsedData);
+    if (scoreCheck.fue_ajustado) {
+      parsedData.score_predictivo = scoreCheck.score_verificado;
+      console.log(`[MOTOR V600] ⚖️ Score corregido por P5 — ${scoreCheck.ajustes_realizados.length} ajustes`);
+    }
+
+    // ── viralIndex VERIFICADO (post-P5, score real) ──
+    const viralIndexVerificado = Number(parsedData.score_predictivo?.viral_index) || viralIndex;
+
+    // ── Guardar el mejor resultado LIMPIO Y VERIFICADO ──
+    if (viralIndexVerificado > mejorScore) {
+      mejorScore = viralIndexVerificado;
+      mejorResultado = parsedData; // Siempre guardamos versión post-P4/P5
+      console.log(`[MOTOR V600] ✅ Nuevo mejor score verificado: ${mejorScore}`);
+    }
+
+    // ── VALIDACIÓN PROGRAMÁTICA V600 ──
+    const validacion = validarOutputGenerador(parsedData);
+
+    if (validacion.aprobado) {
+      console.log(`[MOTOR V600] ✅ Intento ${intentoActual} APROBADO — Calidad: ${validacion.score_total}/100`);
+      parsedData._validacion_calidad = validacion;
+      mejorResultado = parsedData;
+      mejorScore = viralIndexVerificado; // Score real, no inflado
       break;
     }
 
-    console.log(`[MOTOR V600] 🔁 Score insuficiente (${viralIndex} < ${MIN_VIRAL_SCORE}) — reintentando...`);
-  }
+    console.log(`[MOTOR V600] ❌ Intento ${intentoActual} RECHAZADO — Calidad: ${validacion.score_total}/100`);
+    console.log(`[MOTOR V600] 🔄 Motivo: ${validacion.fallos.slice(0, 2).join(' | ')}`);
+
+    // Guardar como mejor disponible aunque no aprobó (ya está limpio por P4/P5)
+    if (viralIndexVerificado > mejorScore) {
+      mejorScore = viralIndexVerificado;
+      mejorResultado = { ...parsedData, _validacion_calidad: validacion };
+    }
+    
+    // En último intento aceptar lo mejor disponible
+    if (intentoActual === MAX_RETRIES) {
+      console.log(`[MOTOR V600] ⚠️ MAX_RETRIES alcanzado. Usando mejor versión disponible.`);
+      if (mejorResultado) {
+        (mejorResultado as any)._advertencia_calidad = `Fallos pendientes: ${validacion.fallos.join('; ')}`;
+      }
+      break;
+    }
+
+    // Pasar fallos al siguiente intento (se inyecta en refinamientoExtra que ya existe)
+    retroalimentacionLoop = `
+⚠️ VALIDADOR AUTOMÁTICO RECHAZÓ EL INTENTO ANTERIOR.
+FALLOS DETECTADOS QUE DEBES CORREGIR OBLIGATORIAMENTE:
+${validacion.fallos.map(f => `- ${f}`).join('\n')}
+NO puedes entregar el guion sin resolver estos puntos.
+`;
+
+    console.log(`[MOTOR V600] 🔁 Reintentando con correcciones específicas...`);
+
+  } // ← CIERRE DEL WHILE (faltaba esta llave)
 
   // ── PASO 4: Usar el mejor resultado obtenido ──
   if (!mejorResultado) {
@@ -4199,9 +6744,11 @@ REINVENTA el ángulo narrativo desde cero.
 
   console.log(`[MOTOR V600] 🎯 Resultado final — viral_index: ${mejorScore} | Intentos: ${intentoActual}`);
 
-  const normalizedData = {
+   const normalizedData = {
     ...mejorResultado,
     guion_completo: mejorResultado.guion_completo || mejorResultado.guion_tecnico_completo || mejorResultado.guion_completo_adaptado,
+    _anti_saturation_report: mejorResultado._limpieza_cliches || { cliches_detectados: [], guion_fue_reescrito: false },
+    _score_verification_report: mejorResultado.score_predictivo?._scores_verificados || null,
     guion_tecnico_completo: mejorResultado.guion_tecnico_completo || mejorResultado.guion_completo,
     plan_visual_director: mejorResultado.plan_visual_director || mejorResultado.plan_visual,
     analisis_estrategico: {
@@ -4218,7 +6765,8 @@ REINVENTA el ángulo narrativo desde cero.
     const validation = ExpertAuthoritySystem.applyFilter(
       (contexto as any).expertProfile,
       'guion',
-      normalizedData
+      normalizedData,
+      settings?.platform || 'TikTok'
     );
     (normalizedData as any).expert_validation = validation;
   }
@@ -4378,14 +6926,7 @@ async function ejecutarJuezViralV500(
     console.log(`[JUEZ V500] 🎯 Clasificación: ${result.veredicto_final?.clasificacion || 'N/A'}`);
 
     // 4. [Guardado manejado por el servidor principal - no duplicar aquí]
-//    // El save lo hace el serve() después del switch, no duplicar aquí.
-
-        platform: plataforma,
-        cost_credits: settings.estimatedCost || 2,
-        tokens_used: tokens,
-        created_at: new Date().toISOString()
-      });
-    }
+    // El save lo hace el serve() después del switch.
 
     return { data: result, tokens };
 
@@ -5187,6 +7728,16 @@ async function getUserContext(
       
       // 👇 ESTA ES LA CLAVE PARA QUE NO DE ERROR
       (contexto as any).expertProfile = expert;
+
+      // OLIMPO: Validar completitud del perfil y adjuntar resultado al contexto
+      const profileValidation = ExpertAuthoritySystem.validateProfile(expert);
+      (contexto as any).expertProfileValidation = profileValidation;
+      if (!profileValidation.isOlimpo) {
+        console.warn(`[CONTEXTO] ⚠️ Perfil OLIMPO incompleto — Score: ${profileValidation.score}/100`);
+        console.warn(`[CONTEXTO] 📋 Campos faltantes: ${profileValidation.missingFields.join(', ')}`);
+      } else {
+        console.log(`[CONTEXTO] ✅ Perfil OLIMPO completo — Score: ${profileValidation.score}/100`);
+      }
     }
   }
   
@@ -5338,18 +7889,23 @@ serve(async (req) => {
     
     // Merge: primero el objeto settings anidado, luego los campos sueltos del body
 let settings: any = {
-    ...(body.settings || {}),   // ← captura intensity, closing_objective, creative_lens, internal_mode, hook_style
+    ...(body.settings || {}),
 };
 
-// Luego los campos sueltos del body (override si existen)
-if (body.quantity)  settings.quantity  = body.quantity;
-if (body.duration)  settings.duration  = body.duration;
-if (body.durationId) settings.durationId = body.durationId;
-if (body.structure) settings.structure = body.structure;
-if (body.awareness) settings.awareness = body.awareness;
-if (body.objective) settings.objective = body.objective;
-if (body.situation) settings.situation = body.situation;
-if (body.platform)  settings.platform  = body.platform;
+if (body.quantity)        settings.quantity        = body.quantity;
+if (body.duration)        settings.duration        = body.duration;
+if (body.durationId)      settings.durationId      = body.durationId;
+if (body.structure)       settings.structure       = body.structure;
+if (body.awareness)       settings.awareness       = body.awareness;
+if (body.objective)       settings.objective       = body.objective;
+if (body.situation)       settings.situation       = body.situation;
+if (body.platform)        settings.platform        = body.platform;
+if (body.timing_context)  settings.timing_context  = body.timing_context;
+if (body.creative_lens)   settings.creative_lens   = body.creative_lens;
+if (body.internal_mode)   settings.internal_mode   = body.internal_mode;
+if (body.hook_style)      settings.hook_style      = body.hook_style;
+if (body.intensity)       settings.intensity       = body.intensity;
+if (body.closing_objective) settings.closing_objective = body.closing_objective;
 
     console.log(`[TITAN V105] 🚀 MODE: ${selectedMode} | USER: ${userId}`);
 
@@ -5491,8 +8047,9 @@ if (body.platform)  settings.platform  = body.platform;
             videoDurationSecs = videoData.duration || 0;
 
             if (videoData.duration > 0) {
-              actualWhisperMinutes = Math.ceil(videoData.duration / 60);
-              whisperMinutes       = actualWhisperMinutes;
+            copyWhisperMinutes = Math.ceil(videoData.duration / 60);
+            whisperMinutes = copyWhisperMinutes;
+            console.log(`[COPY EXPERT] 🎤 Whisper usado: ${whisperMinutes} minutos`);
             }
 
             console.log('[AUTOPSIA] ✅ Contenido obtenido:', {
@@ -5646,69 +8203,41 @@ if (body.platform)  settings.platform  = body.platform;
         }
 
         // ── Autopsia del contenido principal (o contenido combinado) ──
-        console.log('[RECREATE] 🔬 Ejecutando autopsia del ADN viral...');
-        const autopsiaRes = await ejecutarAutopsiaViral(
-          contentToAnalyze,
-          platName,
-          openai
-        );
-        const adnViral = autopsiaRes.data;
+        // ✅ PEGAR ESTO (Poder Total):
+        
+        // 🚀 EJECUCIÓN DEL MOTOR PRO (15 Motores + Loop de Calidad)
+        // Analiza el contenido acumulado de todas las fuentes
+        // Inyectar duración al contexto para que el executor adapte umbrales
+        userContext._videoDurationSecs = videoDurationSecs;
 
-        // ── Construir patrones híbridos (solo multi-URL) ──
-        let multiUrlPatterns = null;
-        if (multiAnalysis.length > 1) {
-          console.log('[RECREATE] 🧬 Construyendo arquitectura híbrida multi-URL...');
-          multiUrlPatterns = {
-            total_urls:       urlCount,
-            hook_dominante:   multiAnalysis[0]?.adn_extraido?.formula_gancho || 'Afirmación disruptiva',
-            promesa_dominante: multiAnalysis
-              .map((a: any) => a.adn_extraido?.idea_ganadora)
-              .filter(Boolean)[0] || 'Transformación rápida',
-            cierre_dominante: 'CTA emocional',
-            ritmo_promedio:   platName === 'TikTok' ? 'Frenético 2-3s' : 'Medio 4-5s',
-          };
-        }
-
-        // ── Clonar al nicho del usuario ──
-        console.log(`[RECREATE] 🪞 Clonando al nicho: "${targetTopic}"...`);
-
-        const contextoRecreate = {
-          ...userContext,
-          tema_especifico: targetTopic || userContext.nicho
-        };
-
-        const guionRes = await ejecutarGeneradorGuiones(
-          contextoRecreate,
-          adnViral,
+        const motorRes = await ejecutarIngenieriaInversaPro(
+          contentToAnalyze, 
+          userContext,
           openai,
-          {
-            ...settings,
-            platform:         platName,
-            multiUrlPatterns, // patrones híbridos para el prompt Omega
-          }
+          platName 
         );
 
+        // 📦 ESTRUCTURACIÓN PARA FRONTEND (DOMINANCIA)
         result = {
-          autopsia:       adnViral,
-          guion_generado: guionRes.data,
-          modo: urlCount > 1
-            ? 'ingenieria_inversa_hibrida'
-            : 'ingenieria_inversa_exitosa',
-          multi_url_analysis: multiAnalysis.length > 1 ? multiAnalysis : undefined,
+          guion_generado: motorRes.data, // JSON PRO Completo
+          autopsia: motorRes.data,       // Duplicado para compatibilidad visual
+          modo: urlCount > 1 ? 'ingenieria_inversa_pro_hibrida' : 'ingenieria_inversa_pro',
+          
+          // Mantenemos toda la metadata de las fuentes originales
           metadata_video: {
-            source:           videoSource,
-            platform:         platName,
-            description:      videoDescription,
-            whisper_used:     actualWhisperMinutes > 0,
-            whisper_minutes:  actualWhisperMinutes,
+            source: videoSource,
+            platform: platName,
+            description: videoDescription,
+            whisper_used: actualWhisperMinutes > 0,
+            whisper_minutes: actualWhisperMinutes,
             duration_seconds: videoDurationSecs,
-            urls_analizadas:  urlCount,
-            original_url:     rawUrls[0] || null,
-            uploaded_file:    body.uploadedFileName || null,
+            urls_analizadas: urlCount,
+            original_url: rawUrls[0] || null,
+            uploaded_file: body.uploadedFileName || null,
           }
         };
 
-        tokensUsed = autopsiaRes.tokens + guionRes.tokens;
+        tokensUsed = motorRes.tokens;
 
         // Pasar duración al sistema de costos
         settings._videoDurationSecs = videoDurationSecs;
@@ -5717,75 +8246,192 @@ if (body.platform)  settings.platform  = body.platform;
       }
 
       case 'generar_guion':
-      case 'generador_guiones': {
-        console.log('[MODE] ✨ Generar Guion con Motor V600 (Texto + Visión)');
+case 'generador_guiones': {
+  console.log('[MODE] ✨ Generar Guion con Motor V600 (Texto + Visión + Pre-Análisis)');
 
-        // 1. Detección de Input (Imagen vs Texto)
-        let temaUsuario = "";
+  let temaUsuario = "";
+  let modoGeneracion: 'idea' | 'texto' | 'imagen' = 'idea';
+  let preAnalisis: any = null;
 
-        if (body.image) {
-            // 👁️ A) RUTA VISUAL (OJO BIÓNICO)
-            console.log('[MOTOR V600] 📸 Imagen detectada. Activando análisis visual...');
-            try {
-                // Convertimos la imagen en un concepto textual potente usando GPT-4o Vision
-                // Nota: Asegúrate de haber pegado la función 'analizarImagenEstrategica' antes del serve
-                const conceptoVisual = await analizarImagenEstrategica(body.image, openai);
-                
-                // Si el usuario escribió algo también (ej: "Hazlo divertido"), lo combinamos
-                const contextoAdicional = body.text || body.userInput || processedContext || "";
-                
-                // Fusión de Contextos
-                temaUsuario = `[ANÁLISIS DE IMAGEN]: ${conceptoVisual}\n\n[INSTRUCCIÓN ADICIONAL USUARIO]: ${contextoAdicional}`;
-                
-                console.log('[MOTOR V600] 🧬 Fusión Visual completada.');
-            } catch (imgError: any) {
-                console.error('[ERROR VISION]', imgError);
-                throw new Error("Error analizando la imagen. Asegúrate de que sea un formato válido (JPG/PNG).");
-            }
-        } else {
-            // 📝 B) RUTA TEXTO (CLÁSICA)
-            temaUsuario = body.text || body.userInput || processedContext || settings.topic || userContext.nicho || "Tema General";
-        }
-        
-        console.log(`[MOTOR V600] 🎯 Tema Final a Procesar: "${temaUsuario.substring(0, 100)}..."`);
+  // ── RUTA A: IMAGEN ──
+  if (body.image) {
+    console.log('[MOTOR V600] 📸 Imagen detectada. Activando análisis visual...');
+    modoGeneracion = 'imagen';
+    
+    try {
+      const conceptoVisual = await analizarImagenEstrategica(body.image, openai);
+      const contextoAdicional = body.text || body.userInput || processedContext || "";
+      temaUsuario = `[ANÁLISIS DE IMAGEN]: ${conceptoVisual}\n\n[INSTRUCCIÓN ADICIONAL USUARIO]: ${contextoAdicional}`;
+      
+      // Pre-análisis del concepto visual extraído
+      preAnalisis = await preAnalizarInput(conceptoVisual, 'imagen', openai);
+      console.log('[MOTOR V600] 🧬 Fusión Visual + Pre-análisis completados.');
+    } catch (imgError: any) {
+      console.error('[ERROR VISION]', imgError);
+      throw new Error("Error analizando la imagen. Asegúrate de que sea JPG/PNG válido.");
+    }
 
-        // 2. Validación
-        if (!temaUsuario || temaUsuario === "Tema General") {
-             // Validación de seguridad final
-             if (!body.image && (!processedContext || processedContext.length < 3)) {
-                 throw new Error("⚠️ Debes ingresar un tema o subir una imagen para generar el guion.");
-             }
-        }
+  // ── RUTA B: TEXTO LARGO (>150 chars = texto pegado) ──
+  } else if (
+    (body.text || body.userInput || processedContext) &&
+    (body.text || body.userInput || processedContext || "").length > 150
+  ) {
+    const inputTexto = body.text || body.userInput || processedContext || "";
+    console.log('[MOTOR V600] 📝 Texto largo detectado. Ejecutando análisis completo P1+P6...');
+    modoGeneracion = 'texto';
 
-        // 3. Enriquecer Contexto (Inyectamos el resultado visual/textual aquí)
-        const contextoEnriquecido = {
-            ...userContext,
-            tema_especifico: temaUsuario 
-        };
-        
-        // 4. Ejecutar Motor V600 (Tu lógica de optimización y bucles)
-        // Al pasarle 'temaUsuario' ya procesado, el motor aplica toda la potencia viral
-        // independientemente de si vino de una foto o de un texto.
-        const res = await ejecutarGeneradorGuiones(
-            contextoEnriquecido, 
-            null, // null = No es ingeniería inversa, es creación desde cero
-            openai, 
-            settings 
-        );
-        
-        result = res.data;
-        tokensUsed = res.tokens;
-        
-        console.log('[MOTOR V600] ✅ Guion generado exitosamente');
-        console.log(`[MOTOR V600] 📊 Metadata:`, result.metadata_guion);
-        
-        // 5. Validar integridad de respuesta
-        if (!result.guion_completo && !result.guion_tecnico_completo) {
-            console.warn('[MOTOR V600] ⚠️ Guion incompleto detectado');
-        }
-        
-        break;
-      }
+    // P1: Detectar conflicto, insight, partes planas
+    preAnalisis = await preAnalizarInput(inputTexto, 'texto', openai);
+
+    // P6: Detectar si el texto ya tiene estructura narrativa propia
+    const estructuraImplicita = await analizarEstructuraImplicita(inputTexto, openai);
+
+    console.log(`[MOTOR V600] 🏗️ Estructura implícita: ${estructuraImplicita.tipo_estructura} → ${estructuraImplicita.instruccion}`);
+
+    // Construir instrucción para el generador según estructura detectada
+    let instruccionEstructura = '';
+
+    if (estructuraImplicita.instruccion === 'preservar_y_elevar') {
+      instruccionEstructura = `
+[INSTRUCCIÓN P6 — PRESERVAR Y ELEVAR]:
+El texto original tiene estructura narrativa sólida (${estructuraImplicita.tipo_estructura}).
+NO la destruyas. ELEVA su tensión, lenguaje y potencia emocional.
+- Hook original a preservar: "${estructuraImplicita.hook_existente}"
+- Cierre original a preservar: "${estructuraImplicita.cierre_existente}"
+- Elementos fuertes a mantener: ${estructuraImplicita.elementos_fuertes.join(' | ')}
+- Elementos débiles a reemplazar: ${estructuraImplicita.elementos_debiles.join(' | ')}
+MISIÓN: Misma arquitectura, 3x más potencia narrativa.
+`;
+    } else if (estructuraImplicita.instruccion === 'extraer_y_reconstruir') {
+      instruccionEstructura = `
+[INSTRUCCIÓN P6 — EXTRAER Y RECONSTRUIR]:
+El texto tiene elementos valiosos pero estructura débil.
+EXTRAE estos elementos fuertes: ${estructuraImplicita.elementos_fuertes.join(' | ')}
+DESCARTA o transforma estos elementos débiles: ${estructuraImplicita.elementos_debiles.join(' | ')}
+RECONSTRUYE con la arquitectura de 6 bloques obligatoria.
+MISIÓN: Rescatar lo mejor, reconstruir el resto.
+`;
+    } else {
+      instruccionEstructura = `
+[INSTRUCCIÓN P6 — REESTRUCTURAR COMPLETO]:
+El texto no tiene estructura narrativa aprovechable.
+Úsalo SOLO como fuente de datos, contexto y tema.
+Construye la arquitectura completa desde cero con los bloques obligatorios.
+MISIÓN: El texto es materia prima, no estructura.
+`;
+    }
+
+    // Combinar P1 + P6 en el tema para el generador
+    temaUsuario = `
+[TEXTO ORIGINAL DEL USUARIO]:
+${inputTexto.substring(0, 1500)}
+
+[ADN NARRATIVO DETECTADO — P1]:
+- Conflicto Central: ${preAnalisis.conflicto_central}
+- Insight Explotable: ${preAnalisis.insight_explotable}
+- Transformación: ${preAnalisis.transformacion_implicita}
+- Emoción Dominante: ${preAnalisis.emocion_dominante}
+- Tensión Base: ${preAnalisis.tension_detectada}/100
+- Partes Débiles a Elevar: ${preAnalisis.partes_planas.join(' | ') || 'Ninguna detectada'}
+
+[INSTRUCCIONES DEL PRE-ANÁLISIS — P1]:
+${preAnalisis.instrucciones_para_generador}
+
+${instruccionEstructura}
+    `.trim();
+
+    console.log(`[MOTOR V600] 🧬 Análisis P1+P6 completado | Tensión: ${preAnalisis.tension_detectada}/100 | Estructura: ${estructuraImplicita.instruccion}`);
+
+    // Agregar al preAnalisis para el output final
+    preAnalisis._estructura_implicita = {
+      tipo: estructuraImplicita.tipo_estructura,
+      instruccion: estructuraImplicita.instruccion,
+      elementos_fuertes: estructuraImplicita.elementos_fuertes,
+      elementos_debiles: estructuraImplicita.elementos_debiles,
+      razon: estructuraImplicita.razon
+    };
+
+  // ── RUTA C: IDEA CORTA ──
+  } else {
+    temaUsuario = body.text || body.userInput || processedContext || settings.topic || userContext.nicho || "Tema General";
+    modoGeneracion = 'idea';
+    
+    if (!temaUsuario || temaUsuario === "Tema General") {
+      throw new Error("⚠️ Debes ingresar un tema, texto o imagen para generar el guion.");
+    }
+    
+    console.log(`[MOTOR V600] 💡 Modo idea: "${temaUsuario.substring(0, 80)}"`);
+  }
+
+  // ══════════════════════════════════════════════════════════════════
+  // 🌀 CAPA 0 — SISTEMA TCA IMPERIO (ANTES DEL MOTOR V600)
+  // Expande el tema al punto de máximo alcance masivo estratégico.
+  // NO modifica P1, P2, P3, P4, P5, P6 ni el loop de optimización.
+  // ══════════════════════════════════════════════════════════════════
+  let estrategiaTCA: any = null;
+
+  try {
+    console.log('[TCA IMPERIO] 🌀 Ejecutando Sistema de Alcance Masivo...');
+    const tcaResult = await ejecutarSistemaTCA(temaUsuario, settings, openai);
+
+    estrategiaTCA = tcaResult.estrategia_tca;
+
+    // Solo reemplazar el tema si TCA lo expandió exitosamente
+    if (tcaResult.aprobado && tcaResult.tema_expandido && tcaResult.tema_expandido !== temaUsuario) {
+      temaUsuario = tcaResult.tema_expandido;
+      console.log(`[TCA IMPERIO] ✅ Tema expandido al sector masivo`);
+      console.log(`[TCA IMPERIO] 📊 Mass Appeal Score: ${estrategiaTCA?.mass_appeal_score || 0}/100`);
+      console.log(`[TCA IMPERIO] 🎯 Nivel: ${estrategiaTCA?.nivel_original} → Intersección N2-N3`);
+    } else {
+      console.log('[TCA IMPERIO] ✅ Tema ya en posición óptima — sin expansión necesaria');
+    }
+
+    if (tcaResult.advertencias?.length > 0) {
+      console.warn('[TCA IMPERIO] ⚠️ Advertencias TCA:', tcaResult.advertencias.join(' | '));
+    }
+
+  } catch (tcaError: any) {
+    // Falla silenciosa — el V600 continúa sin interrupción
+    console.warn('[TCA IMPERIO] ⚠️ Bypass total — Motor V600 continúa sin modificación.', tcaError.message);
+  }
+  // ══════════════════════════════════════════════════════════════════
+  // FIN CAPA 0 TCA — Motor V600 activándose a continuación
+  // ══════════════════════════════════════════════════════════════════
+
+  // ── CONTEXTO ENRIQUECIDO CON PRE-ANÁLISIS ──
+  const contextoEnriquecido = {
+    ...userContext,
+    tema_especifico: temaUsuario,
+    modo_generacion: modoGeneracion,
+    pre_analisis: preAnalisis,
+    estrategia_tca: estrategiaTCA  // ← TCA inyectado en el contexto del motor
+  };
+  
+  // ── EJECUTAR MOTOR V600 ──
+  const res = await ejecutarGeneradorGuiones(
+    contextoEnriquecido, 
+    null,
+    openai, 
+    settings
+  );
+  
+  result = res.data;
+  tokensUsed = res.tokens;
+  
+  // ── AGREGAR modo_generacion AL OUTPUT ──
+  result.modo_generacion = modoGeneracion;
+  if (preAnalisis) {
+    result.pre_analisis_input = {
+      tipo: modoGeneracion,
+      conflicto_detectado: preAnalisis.conflicto_central,
+      tension_base: preAnalisis.tension_detectada,
+      partes_elevadas: preAnalisis.partes_planas
+    };
+  }
+  
+  console.log(`[MOTOR V600] ✅ Guion generado | Modo: ${modoGeneracion} | Score: ${result.score_predictivo?.viral_index || 'N/A'}`);
+  break;
+}
       case 'juez_viral': {
   console.log('🚀 [ROUTER] Activando Juez Viral V500 OMEGA...');
   
