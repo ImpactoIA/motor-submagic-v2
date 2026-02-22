@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TCAFeedbackWidget } from './TCAFeedbackWidget';
+import { TCAFeedbackWidget } from '../components/TCAFeedbackWidget';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
