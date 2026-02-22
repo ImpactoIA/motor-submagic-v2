@@ -333,7 +333,7 @@ export interface IngenieriaInversaProOutput {
     adaptacion_sin_micronicho: boolean;
     adn_estructural_conservado: boolean;
     score_validacion: number;
-  };;
+  };
 
   // Motor 15 Output — Blueprint para Generador + Juez
   blueprint_replicable: BlueprintReplicable;
