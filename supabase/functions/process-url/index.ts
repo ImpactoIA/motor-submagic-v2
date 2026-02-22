@@ -68,6 +68,7 @@ interface ContextoUsuario {
   diferenciadores?: string[];
   knowledge_base_content?: string;
   tema_especifico?: string;
+  expertProfile?: any;
 }
 
 interface JuezViralV500Result {
