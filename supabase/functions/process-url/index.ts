@@ -4083,9 +4083,9 @@ ${(contexto as any).expertProfile && !(() => {
     const cfg = nc[redSocial.toLowerCase()];
     return cfg && Object.values(cfg).some((v: any) => v !== 'auto');
   } catch { return false; }
-})() ? ExpertAuthoritySystem.getNetworkDirectives(
+})() ? ExpertAuthoritySystem.getNetworkOverride(
   (contexto as any).expertProfile,
-  redSocial.toLowerCase() as any
+  redSocial.toLowerCase()
 ) : ''}
 
 ${contexto.knowledge_base_content ? `
@@ -7992,11 +7992,11 @@ async function getUserContext(
       (contexto as any).expertProfile = expert;
 
       // OLIMPO: Validar completitud del perfil y adjuntar resultado al contexto
-      const profileValidation = ExpertAuthoritySystem.validateProfile(expert);
+      const profileValidation = ExpertAuthoritySystem.validateProfileCompleteness(expert);
       (contexto as any).expertProfileValidation = profileValidation;
       if (!profileValidation.isOlimpo) {
         console.warn(`[CONTEXTO] ⚠️ Perfil OLIMPO incompleto — Score: ${profileValidation.score}/100`);
-        console.warn(`[CONTEXTO] 📋 Campos faltantes: ${profileValidation.missingFields.join(', ')}`);
+        console.warn(`[CONTEXTO] 📋 Campos faltantes: ${profileValidation.missing.join(', ')}`);
       } else {
         console.log(`[CONTEXTO] ✅ Perfil OLIMPO completo — Score: ${profileValidation.score}/100`);
       }
