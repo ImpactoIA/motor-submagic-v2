@@ -531,7 +531,7 @@ export interface IngenieriaInversaProOutput {
     adaptacion_sin_micronicho: boolean;
     adn_estructural_conservado: boolean;
     score_validacion: number;
-  };
+  
 
   // Extras
   recomendaciones_estrategicas: string[];
