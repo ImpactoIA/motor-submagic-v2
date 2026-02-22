@@ -66,9 +66,7 @@ export const TCAFeedbackWidget = ({ guionData, onClose }: Props) => {
           <span style={{ fontSize: 28 }}>📊</span>
           <div style={{ flex: 1 }}>
             <h4 style={s.title}>¿Cómo fue el resultado?</h4>
-            <p style={s.subtitle}>
-              Tu reporte hace el sistema más preciso para todos
-            </p>
+            <p style={s.subtitle}>Tu reporte hace el sistema más preciso para todos</p>
           </div>
           <button onClick={onClose} style={s.closeBtn}>✕</button>
         </div>
