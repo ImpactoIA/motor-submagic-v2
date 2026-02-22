@@ -479,6 +479,13 @@ export const ScriptGenerator = () => {
                 fullText += `\n\nContexto: ${location.state.hook}`;
             }
             if (fullText) setTopic(fullText);
+
+            // Si viene de Ideas Rápidas con TCA pre-expandido
+            // marcar el settings para que CAPA 0 no reexpanda
+            if (location.state.tca_preexpandido) {
+                console.log('[SCRIPT GENERATOR] ⚡ Tema pre-expandido por TCA Imperio — bypass de reexpansión');
+            }
+
             window.history.replaceState({}, document.title);
         }
         

@@ -106,18 +106,39 @@ interface IdeaItem {
     id: number;
     titulo: string;
     concepto: string;
-    
+    idea_expandida_tca?: string;
+
+    // TCA Imperio
+    tca?: {
+        nivel_tca?: string;
+        sector_utilizado?: string;
+        interseccion_detectada?: string;
+        mass_appeal_score?: number;
+        breakdown_score?: {
+            interes_universal?: number;
+            tension_activada?: number;
+            sin_requisito_tecnico?: number;
+            potencial_debate?: number;
+            senal_afinidad?: number;
+        };
+        potencial_millonario?: boolean;
+        nivel_polarizacion?: number;
+        razonamiento_estrategico?: string;
+    };
+
     // Estrategia
+    formato_ganador?: string;
+    tensiones_activadas?: string[];
     objetivo_principal: string;
     objetivo_secundario?: string;
     contexto_temporal: string;
     estructura_sugerida: string;
-    
+
     // Psicología
     disparador_principal: string;
     emocion_objetivo: string;
     sesgo_cognitivo?: string;
-    
+
     // Ejecución
     gancho_sugerido: string;
     potencial_viral: number;
@@ -125,13 +146,13 @@ interface IdeaItem {
     formato_visual: string;
     angulo: string;
     cta_sugerido: string;
-    
+
     // Metadata
     plataforma_ideal: string;
     duracion_recomendada: string;
     dificultad_produccion: string;
     keywords: string[];
-    
+
     // Timing
     mejor_momento?: string;
     urgencia_publicacion?: 'baja' | 'media' | 'alta';
@@ -141,9 +162,20 @@ interface ResponseData {
     ideas: IdeaItem[];
     analisis_estrategico: {
         objetivo_dominante: string;
+        lente_aplicado?: string;
+        sector_detectado?: string;
+        nivel_tca_original?: string;
+        expansion_realizada?: string;
         razonamiento: string;
         advertencias: string[];
         oportunidades: string[];
+    };
+    mejor_idea_recomendada?: {
+        idea_id: number;
+        razon: string;
+        por_que_ahora: string;
+        plan_rapido: string;
+        conexion_con_generador?: string;
     };
     recomendacion_top: {
         idea_id: number;
@@ -151,6 +183,7 @@ interface ResponseData {
         plan_rapido: string;
         por_que_ahora: string;
     };
+    estrategia_embudo?: string;
     insights_estrategicos: {
         tendencia_detectada?: string;
         brecha_mercado?: string;
@@ -305,15 +338,18 @@ export const QuickIdeas = () => {
     };
 
     // --- ENVIAR AL GENERADOR DE GUIONES ---
-    const handleGoToEditor = (idea: IdeaItem) => {
+   const handleGoToEditor = (idea: IdeaItem) => {
         navigate('/dashboard/script-generator', {
             state: {
-                topic: idea.titulo,
+                // Usar idea_expandida_tca si existe — V600 no reexpande TCA
+                topic: idea.idea_expandida_tca || idea.titulo,
                 hook: idea.gancho_sugerido || idea.concepto,
                 platform: selectedPlatform.label,
                 objective: idea.objetivo_principal,
                 structure: idea.estructura_sugerida,
-                fromIdeas: true
+                fromIdeas: true,
+                tca_preexpandido: !!idea.idea_expandida_tca,
+                mass_appeal_score: idea.tca?.mass_appeal_score || 0
             }
         });
     };
@@ -641,6 +677,29 @@ export const QuickIdeas = () => {
                             <p className="text-sm text-white font-bold">{responseData.analisis_estrategico.objetivo_dominante}</p>
                         </div>
 
+                        {/* TCA — Expansión realizada */}
+                        {responseData.analisis_estrategico.sector_detectado && (
+                            <div className="bg-gradient-to-r from-yellow-900/20 to-orange-900/10 border border-yellow-500/30 rounded-xl p-4 space-y-2">
+                                <p className="text-[10px] font-black text-yellow-500 uppercase tracking-widest">
+                                    🌍 Expansión TCA Aplicada
+                                </p>
+                                <div className="flex items-center gap-3">
+                                    <span className="text-xs text-gray-500">
+                                        Nivel original: <span className="text-red-400 font-bold">{responseData.analisis_estrategico.nivel_tca_original}</span>
+                                    </span>
+                                    <span className="text-yellow-500">→</span>
+                                    <span className="text-xs text-gray-500">
+                                        Sector: <span className="text-yellow-400 font-bold">{responseData.analisis_estrategico.sector_detectado}</span>
+                                    </span>
+                                </div>
+                                {responseData.analisis_estrategico.expansion_realizada && (
+                                    <p className="text-xs text-yellow-200/70 italic leading-relaxed">
+                                        "{responseData.analisis_estrategico.expansion_realizada}"
+                                    </p>
+                                )}
+                            </div>
+                        )}
+
                         <div className="bg-black/30 rounded-xl p-4 border border-indigo-500/20">
                             <p className="text-[10px] font-black text-gray-500 uppercase mb-2">Razonamiento</p>
                             <p className="text-xs text-gray-300 leading-relaxed">{responseData.analisis_estrategico.razonamiento}</p>
@@ -830,6 +889,71 @@ export const QuickIdeas = () => {
                                         )}
                                     </div>
 
+                                    {/* TCA IMPERIO — Score de Alcance */}
+                                    {idea.tca && (
+                                        <div className="bg-gradient-to-r from-yellow-900/20 to-orange-900/10 border border-yellow-500/30 rounded-xl p-3 space-y-2">
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-[9px] font-black text-yellow-500 uppercase tracking-widest">
+                                                    🌍 Alcance Imperio
+                                                </span>
+                                                {idea.tca.potencial_millonario && (
+                                                    <span className="text-[9px] font-black bg-yellow-500 text-black px-2 py-0.5 rounded-full">
+                                                        🚀 +1M POTENCIAL
+                                                    </span>
+                                                )}
+                                            </div>
+
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-[10px] text-gray-400">Mass Appeal Score</span>
+                                                <span className={`text-sm font-black ${
+                                                    (idea.tca.mass_appeal_score || 0) >= 85 ? 'text-green-400' :
+                                                    (idea.tca.mass_appeal_score || 0) >= 70 ? 'text-yellow-400' :
+                                                    'text-red-400'
+                                                }`}>
+                                                    {idea.tca.mass_appeal_score}/100
+                                                </span>
+                                            </div>
+
+                                            <div className="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                                                <div
+                                                    className={`h-full rounded-full ${
+                                                        (idea.tca.mass_appeal_score || 0) >= 85 ? 'bg-green-500' :
+                                                        (idea.tca.mass_appeal_score || 0) >= 70 ? 'bg-yellow-500' :
+                                                        'bg-red-500'
+                                                    }`}
+                                                    style={{ width: `${idea.tca.mass_appeal_score || 0}%` }}
+                                                />
+                                            </div>
+
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-[9px] text-gray-500">
+                                                    {idea.tca.nivel_tca} · {idea.tca.sector_utilizado}
+                                                </span>
+                                                {idea.tca.nivel_polarizacion && (
+                                                    <span className="text-[9px] text-orange-400 font-bold">
+                                                        ⚡ Polarización: {idea.tca.nivel_polarizacion}/100
+                                                    </span>
+                                                )}
+                                            </div>
+
+                                            {idea.tca.interseccion_detectada && (
+                                                <p className="text-[9px] text-yellow-200/70 italic leading-relaxed">
+                                                    "{idea.tca.interseccion_detectada}"
+                                                </p>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {/* Formato Ganador */}
+                                    {idea.formato_ganador && (
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-[9px] font-black text-gray-600 uppercase">Formato:</span>
+                                            <span className="text-[9px] font-bold text-indigo-400 bg-indigo-900/20 px-2 py-0.5 rounded-full border border-indigo-500/20">
+                                                {idea.formato_ganador.replace(/_/g, ' ')}
+                                            </span>
+                                        </div>
+                                    )}
+
                                     {/* Score Viral + Emoción + Estructura */}
                                     <div className="space-y-3">
                                         {/* Score Viral */}
@@ -939,7 +1063,8 @@ export const QuickIdeas = () => {
                                         onClick={() => handleGoToEditor(idea)}
                                         className="flex-1 py-3 bg-indigo-600/10 text-indigo-400 border border-indigo-500/20 rounded-xl hover:bg-indigo-600 hover:text-white text-xs font-black flex justify-center items-center gap-2 transition-all shadow-sm uppercase tracking-wider group/btn"
                                     >
-                                        Crear Guion <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform"/>
+                                        {idea.idea_expandida_tca ? '⚡ Crear Guion TCA' : 'Crear Guion'}
+                                        <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform"/>
                                     </button>
                                 </div>
                             </div>

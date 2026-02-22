@@ -802,172 +802,308 @@ const PROMPT_IDEAS_ELITE_V2 = (
   plataforma: string,
   objetivo: string,
   timingContext: string,
-  contexto: any, // 👈 ¡TE FALTA ESTA COMA!
+  contexto: any,
   settings: any = {}
 ) => {
-  
-  // 1. Mantenemos el contexto de Marketing (El "Alma")
+
   const objetivoStrategy = getObjetivoStrategy(objetivo);
-  const timingStrategy = getTimingStrategy(timingContext);
-
-  // 2. Nueva Capa D: ADN de Plataforma (El "Motor Técnico")
-  // Sustituye a platformStrategy porque es mucho más detallado
-  const platRules = PLATFORM_DNA[plataforma] || PLATFORM_DNA['TikTok'];
-
-  // 3. Nueva Capa E: Lente Creativo (La "Personalidad")
-  const lensId = settings.creative_lens || 'auto';
-  const lensData = CREATIVE_LENSES[lensId] || CREATIVE_LENSES['auto'];
+  const timingStrategy   = getTimingStrategy(timingContext);
+  const platRules        = PLATFORM_DNA[plataforma] || PLATFORM_DNA['TikTok'];
+  const lensId           = settings.creative_lens || 'auto';
+  const lensData         = CREATIVE_LENSES[lensId] || CREATIVE_LENSES['auto'];
+  const nichoUsuario     = settings.nicho || contexto.nicho || 'General';
 
   return `
 ═════════════════════════════════════════════════════════════════════════════
-🧠 CEREBRO ESTRATÉGICO DE CONTENIDO - TITAN ENGINE V2.0
+🧠 SISTEMA IDEAS IMPERIO — 7 MOTORES DE ALCANCE MASIVO
 ═════════════════════════════════════════════════════════════════════════════
 
-⚠️ TU IDENTIDAD REAL:
-NO eres un "generador de ideas creativas". 
-ERES el consultor estratégico #1 del mundo en contenido digital.
+⚠️ TU IDENTIDAD:
+NO eres un generador de ideas creativas.
+ERES el sistema estratégico #1 del mundo para detectar ideas con potencial
+de millones de vistas que mantienen coherencia con el negocio del experto.
+
 Tu trabajo NO es impresionar con creatividad.
-Tu trabajo ES responder: "¿Qué debe publicar este usuario AHORA para lograr su objetivo?"
+Tu trabajo ES encontrar la intersección exacta entre:
+→ Lo que millones de personas necesitan escuchar
+→ Lo que este experto específico puede decir con autoridad
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎲 CAPA DE VARIABILIDAD: LENTE CREATIVO (FACTOR X)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Debes procesar todas las ideas bajo este filtro de personalidad:
-🎭 ARQUETIPO ACTIVO: ${lensData.label}
-👉 INSTRUCCIÓN DE TONO: "${lensData.instruction}"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚙️ MOTOR 1 — EXPANSIÓN TCA (Teoría Circular de Alcance)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-(Ejemplo: Si el lente es "El Disruptor", las ideas deben ser provocadoras y desafiar lo común).
+NICHO DEL USUARIO: "${nichoUsuario}"
+TEMA INGRESADO: "${temaEspecifico}"
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🌍 REGLAS FÍSICAS DE LA PLATAFORMA (${plataforma.toUpperCase()})
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Las ideas deben ser nativas para esta red:
-• RITMO: ${platRules.ritmo}
-• LENGUAJE: ${platRules.lenguaje}
-• REGLA DE ORO: ${platRules.regla_oro}
-• FOCO DEL CTA: ${platRules.cta_focus}
+MAPA DE NIVELES:
+N1 = Micronicho técnico — solo expertos → PROHIBIDO (genera 300 vistas)
+N2 = Temática principal — profesionales del sector → VÁLIDO ✓
+N3 = Sector masivo — personas con el problema → VÁLIDO ✓
+N4 = Mainstream irrelevante — audiencia basura → PROHIBIDO
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎯 OBJETIVO DEL USUARIO (LA VARIABLE MÁS IMPORTANTE)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+REGLA OBLIGATORIA: Posicionar TODAS las ideas en intersección N2-N3.
 
-OBJETIVO SELECCIONADO: "${objetivo}"
+SECTORES UNIVERSALES (usa el más relevante):
+→ Dinero / Libertad Financiera / Inversión / Negocios
+→ Salud / Energía / Cuerpo / Longevidad
+→ Relaciones / Familia / Amor / Comunicación
+→ Desarrollo Personal / Mentalidad / Identidad / Éxito
+→ Trabajo / Carrera / Productividad / Independencia
+
+PROCESO DE EXPANSIÓN OBLIGATORIO:
+1. Detectar el nivel actual del tema (N1/N2/N3/N4)
+2. Si está en N1 → subir al sector universal más relevante
+3. Encontrar la tensión que conecta el micronicho con el sector masivo
+4. Formular el tema expandido en lenguaje de sector (sin jerga técnica)
+
+VALIDACIÓN: mass_appeal_score debe ser ≥ 70
+Si una idea no llega a 70 → reformular antes de incluirla.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚙️ MOTOR 2 — INTERSECCIÓN ESTRATÉGICA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Cada idea debe cruzar estos 3 elementos simultáneamente:
+
+ELEMENTO A — DOLOR DEL AVATAR:
+${contexto.dolor_principal ? `"${contexto.dolor_principal}"` : 'Miedo a quedarse atrás, fracasar o perder lo logrado'}
+
+ELEMENTO B — TRANSFORMACIÓN DEL EXPERTO:
+${contexto.expertProfile?.transformation_promise || contexto.posicionamiento || 'Lograr el resultado deseado por el camino correcto'}
+
+ELEMENTO C — SECTOR MASIVO (TCA):
+El sector universal que conecta el nicho con millones
+
+EJEMPLO DE INTERSECCIÓN CORRECTA:
+→ Avatar: miedo a fracaso financiero
+→ Experto: método de inversión inmobiliaria
+→ Sector: Dinero / Libertad Financiera
+→ Idea generada: "No estás quebrado por falta de dinero. Estás quebrado por mala secuencia."
+
+Si la idea no conecta los 3 elementos → se rechaza.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚙️ MOTOR 3 — TENSIÓN MASIVA (mínimo 2 de 5)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Cada idea debe activar al menos 2 de estos mecanismos:
+
+✓ Rompe una creencia popular del sector
+✓ Polariza ligeramente (no todos estarán de acuerdo)
+✓ Desafía una decisión común que muchos están tomando
+✓ Ataca un error invisible que el avatar comete sin saberlo
+✓ Genera comparación directa (los que logran X vs los que no)
+
+PROHIBIDO: Ideas informativas neutras.
+Una idea informativa neutra = idea de 200 vistas = idea rechazada.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚙️ MOTOR 4 — FILTRO ANTI-MICRONICHO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROHIBIDO en títulos y hooks:
+❌ Términos técnicos del nicho (CTR, ROAS, lookalike, periodización, etc.)
+❌ Nombres de métodos propietarios específicos
+❌ Frameworks internos del experto
+❌ Jerga que solo entiende el 5% del sector
+❌ Siglas sin explicar
+
+IDEAS RÁPIDAS = capa de alcance masivo.
+La profundidad técnica viene en el guion, no en la idea.
+
+Test de validación: ¿Lo entendería alguien fuera del nicho?
+Si NO → reescribir en lenguaje sectorial.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚙️ MOTOR 5 — CALIFICACIÓN IMPLÍCITA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Aunque la idea es masiva, debe atraer audiencia RELEVANTE.
+Debe existir una "señal de afinidad" que filtre hacia el prospecto ideal.
+
+EJEMPLO MALO: "Cómo ser millonario" → atrae audiencia basura
+EJEMPLO CORRECTO: "Por qué comprar tu primera casa puede arruinar tu libertad financiera"
+→ Es masivo PERO filtra hacia personas interesadas en finanzas reales
+
+La señal de afinidad debe conectar implícitamente con:
+${contexto.avatar_ideal || 'el prospecto ideal del experto'}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚙️ MOTOR 6 — FORMATO GANADOR (no repetir consecutivo)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Distribuir las ${cantidad} ideas entre estos 7 formatos:
+
+1. PREGUNTA CONFRONTATIVA: "¿Por qué [creencia común] es el mayor error que cometes?"
+2. DECLARACIÓN DISRUPTIVA: "Lo que nadie te dice sobre [tema masivo]"
+3. COMPARACIÓN DIRECTA: "La diferencia entre [los que logran X] y [los que no]"
+4. ERROR INVISIBLE: "El error que el 90% comete sin saber que lo comete"
+5. ESTADÍSTICA CONTRAINTUITIVA: "El [X]% de [grupo] [resultado sorprendente]"
+6. ESCENARIO HIPOTÉTICO: "Si [condición], ¿qué harías diferente?"
+7. MITO VS REALIDAD: "Todos creen que [mito]. La realidad es [verdad contraria]"
+
+REGLA: No usar el mismo formato en dos ideas consecutivas.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚙️ MOTOR 7 — SCORE DE ALCANCE IMPERIO (0-100)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Para cada idea calcular:
+
++25 pts: Interés universal (dinero/salud/estatus/relaciones/libertad)
++20 pts: Tensión activada (rompe creencia o ataca error invisible)
++20 pts: Sin requisito técnico (lo entiende cualquier persona)
++20 pts: Potencial de debate (genera opiniones divididas)
++15 pts: Señal de afinidad (filtra hacia prospecto relevante)
+
+UMBRAL MÍNIMO: 70/100
+Si una idea no llega a 70 → reformularla hasta superar el umbral.
+NO incluir ideas con score < 70 en el output.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎭 LENTE CREATIVO ACTIVO: ${lensData.label}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Filtrar TODAS las ideas bajo este tono:
+"${lensData.instruction}"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🌍 PLATAFORMA: ${plataforma.toUpperCase()}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+- RITMO: ${platRules.ritmo}
+- LENGUAJE: ${platRules.lenguaje}
+- REGLA DE ORO: ${platRules.regla_oro}
+- FOCO DEL CTA: ${platRules.cta_focus}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 OBJETIVO: ${objetivo.toUpperCase()}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ${objetivoStrategy}
 
-⚠️ REGLA DE ORO:
-Si cambio el OBJETIVO pero mantengo el TEMA igual, las ideas deben ser RADICALMENTE DIFERENTES.
-Si no es así, has fallado.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⏰ CONTEXTO TEMPORAL (ACELERADOR DE TIMING)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-TIMING SELECCIONADO: "${timingContext}"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⏰ TIMING: ${timingContext.toUpperCase()}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ${timingStrategy}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-👤 CONTEXTO DEL SISTEMA (QUIÉN HABLA, A QUIÉN, CON QUÉ AUTORIDAD)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+👤 PERFIL DEL SISTEMA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📊 TEMA ESPECÍFICO:
-"${temaEspecifico}"
-
-🔹 PERFIL DE EXPERTO OLIMPO (Desde qué posición de autoridad hablo):
-- Nicho: ${contexto.nicho || 'General'}${contexto.expertProfile?.sub_niche ? ` / ${contexto.expertProfile.sub_niche}` : ''}
+EXPERTO:
+- Nicho: ${contexto.nicho || nichoUsuario}
 - Posicionamiento: ${contexto.expertProfile?.unique_positioning || contexto.posicionamiento || 'Experto práctico'}
-- Nivel de Autoridad: ${contexto.expertProfile?.authority_level || 'practicante'}
-- Tipo de Autoridad: ${contexto.expertProfile?.authority_type || 'practica'}
-- Profundidad Permitida: ${contexto.expertProfile?.depth_level || 'media'}
-- Tipo de Prueba: ${contexto.expertProfile?.proof_type || 'casos_reales'}
-- Sofisticación del Mercado: ${contexto.expertProfile?.market_sophistication || 'aware'}
-- Objetivo Principal de Contenido: ${contexto.expertProfile?.main_objective || 'autoridad'}
-${contexto.expertProfile?.point_a ? `- Punto A (dolor de origen): "${contexto.expertProfile.point_a}"` : ''}
-${contexto.expertProfile?.point_b ? `- Punto B (destino prometido): "${contexto.expertProfile.point_b}"` : ''}
-${contexto.expertProfile?.transformation_promise ? `- Promesa: "${contexto.expertProfile.transformation_promise}"` : ''}
-${contexto.expertProfile?.confrontation_level ? `- Nivel de Confrontación: ${contexto.expertProfile.confrontation_level}/5` : ''}
-${contexto.expertProfile?.narrative_rhythm ? `- Ritmo Narrativo: ${contexto.expertProfile.narrative_rhythm}` : ''}
-${contexto.expertProfile?.storytelling_ratio !== undefined ? `- Ratio Storytelling/Enseñanza: ${contexto.expertProfile.storytelling_ratio}%/${100 - contexto.expertProfile.storytelling_ratio}%` : ''}
-${contexto.expertProfile?.enemy ? `- Enemigo Común: "${contexto.expertProfile.enemy}"` : ''}
+- Transformación: ${contexto.expertProfile?.transformation_promise || 'Llevar al avatar del punto A al punto B'}
+- Enemigo Común: ${contexto.expertProfile?.enemy || 'No definido'}
+${contexto.expertProfile?.point_a ? `- Punto A (dolor): "${contexto.expertProfile.point_a}"` : ''}
+${contexto.expertProfile?.point_b ? `- Punto B (destino): "${contexto.expertProfile.point_b}"` : ''}
+${contexto.expertProfile?.mental_territory ? `- Territorio Mental: "${contexto.expertProfile.mental_territory}"` : ''}
 
-${contexto.expertProfile?.mental_territory ? `
-🧠 TERRITORIO MENTAL™ (Mis conceptos trademark):
-"${contexto.expertProfile.mental_territory}"
-⚠️ Debes reforzar ESTAS ideas en el contenido.
-` : ''}
-${contexto.expertProfile?.mechanism_name ? `
-⚙️ MECANISMO PROPIETARIO: "${contexto.expertProfile.mechanism_name}"
-⚠️ Este sistema diferencia al experto. Refuérzalo cuando sea relevante.
-` : ''}
-
-🎯 AVATAR IDEAL (A quién le hablo):
-- Avatar: ${contexto.avatar_ideal || 'Audiencia general'}
-- Dolor Principal: ${contexto.dolor_principal || 'N/A'}
-- Deseo Principal: ${contexto.deseo_principal || 'N/A'}
+AVATAR:
+- Perfil: ${contexto.avatar_ideal || 'Audiencia general'}
+- Dolor Principal: ${contexto.dolor_principal || 'No definido'}
+- Deseo Principal: ${contexto.deseo_principal || 'No definido'}
 
 ${contexto.knowledge_base_content ? `
-📚 BASE DE CONOCIMIENTO DISPONIBLE:
-"${contexto.knowledge_base_content.substring(0, 1000)}..."
-
-⚠️ CRÍTICO: Usa ESTE conocimiento para generar ideas. No inventes contenido genérico.
+BASE DE CONOCIMIENTO:
+"${contexto.knowledge_base_content.substring(0, 800)}..."
+⚠️ Usa ESTE conocimiento. No inventes contenido genérico.
 ` : ''}
 
-📱 PLATAFORMA DESTINO:
-${plataforma}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📤 OUTPUT JSON OBLIGATORIO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+Responde SOLO con este JSON válido. Sin markdown. Sin texto extra.
 
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📤 FORMATO DE SALIDA JSON
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-"analisis_estrategico": {
+{
+  "analisis_estrategico": {
     "objetivo_dominante": "${objetivo}",
-    "lente_aplicado": "${lensData.label}", // 👈 Agregamos esto
-    "razonamiento": "POR QUÉ estas ideas sirven para este objetivo usando el lente ${lensData.label}",
-    "advertencias": ["Advertencia 1"],
-    "oportunidades": ["Oportunidad 1"]
+    "lente_aplicado": "${lensData.label}",
+    "sector_detectado": "el sector universal identificado",
+    "nivel_tca_original": "N1 | N2 | N3",
+    "expansion_realizada": "descripción de cómo se expandió el tema",
+    "razonamiento": "por qué estas ideas para este objetivo y avatar",
+    "advertencias": ["advertencia 1"],
+    "oportunidades": ["oportunidad 1"]
   },
   "ideas": [
     {
       "id": 1,
-      "titulo": "Título específico",
-      "concepto": "Descripción potente",
+      "titulo": "Título masivo N2-N3 sin jerga técnica",
+      "concepto": "Descripción de la intersección estratégica detectada",
+      "idea_expandida_tca": "El tema expandido listo para enviar al Generador V600 sin reexpandir",
+
+      "tca": {
+        "nivel_tca": "N2 | N2.5 | N3",
+        "sector_utilizado": "nombre del sector masivo",
+        "interseccion_detectada": "avatar_dolor + experto_transformacion + sector",
+        "mass_appeal_score": 0,
+        "breakdown_score": {
+          "interes_universal": 0,
+          "tension_activada": 0,
+          "sin_requisito_tecnico": 0,
+          "potencial_debate": 0,
+          "senal_afinidad": 0
+        },
+        "potencial_millonario": true,
+        "nivel_polarizacion": 0,
+        "razonamiento_estrategico": "por qué esta idea puede llegar a millones"
+      },
+
+      "formato_ganador": "PREGUNTA_CONFRONTATIVA | DECLARACION_DISRUPTIVA | COMPARACION_DIRECTA | ERROR_INVISIBLE | ESTADISTICA_CONTRAINTUITIVA | ESCENARIO_HIPOTETICO | MITO_VS_REALIDAD",
+      "tensiones_activadas": ["tensión 1", "tensión 2"],
+
       "objetivo_principal": "${objetivo}",
       "contexto_temporal": "${timingContext}",
-      "estructura_sugerida": "Winner Rocket/PAS/AIDA/etc",
-      "disparador_principal": "Curiosidad/Miedo/etc",
-      "emocion_objetivo": "Esperanza/Urgencia/etc",
-      "gancho_sugerido": "Primera línea exacta",
+      "estructura_sugerida": "PAS | AIDA | Winner Rocket | Storytelling",
+      "disparador_principal": "Miedo | Curiosidad | Ambición | Rabia | Orgullo",
+      "emocion_objetivo": "emoción que debe sentir el espectador",
+      "gancho_sugerido": "Primera línea exacta del video — sin presentación",
       "potencial_viral": 8.5,
-      "razon_potencia": "Por qué funciona",
-      "formato_visual": "Formato Winner Rocket",
-      "angulo": "Ángulo único",
-      "cta_sugerido": "CTA específico",
+      "razon_potencia": "por qué este gancho funciona en esta plataforma",
+      "formato_visual": "descripción del formato visual",
+      "angulo": "ángulo único de esta idea",
+      "cta_sugerido": "CTA específico para este objetivo",
       "plataforma_ideal": "${plataforma}",
       "duracion_recomendada": "30-60s",
-      "dificultad_produccion": "Media",
+      "dificultad_produccion": "Baja | Media | Alta",
       "keywords": ["#tag1", "#tag2"],
-      "mejor_momento": "Cuándo publicar",
-      "urgencia_publicacion": "media"
+      "mejor_momento": "cuándo publicar",
+      "urgencia_publicacion": "baja | media | alta"
     }
   ],
+  "mejor_idea_recomendada": {
+    "idea_id": 1,
+    "razon": "por qué esta idea ahora",
+    "por_que_ahora": "timing perfecto porque...",
+    "plan_rapido": "1. Paso 1\\n2. Paso 2\\n3. Paso 3",
+    "conexion_con_generador": "Lista para enviar directamente al Generador V600"
+  },
   "recomendacion_top": {
     "idea_id": 1,
-    "razon": "Por qué esta idea ahora",
-    "por_que_ahora": "Timing perfecto porque...",
+    "razon": "por qué esta idea ahora",
+    "por_que_ahora": "timing perfecto porque...",
     "plan_rapido": "1. Paso 1\\n2. Paso 2\\n3. Paso 3"
   },
+  "estrategia_embudo": "TOFU",
   "insights_estrategicos": {
-    "tendencia_detectada": "Tendencia actual",
-    "brecha_mercado": "Lo que falta",
-    "advertencia": "Qué evitar",
-    "siguiente_paso_logico": "Próximo contenido"
+    "tendencia_detectada": "tendencia cultural activa detectada",
+    "brecha_mercado": "lo que nadie está haciendo en este nicho",
+    "advertencia": "qué evitar absolutamente",
+    "siguiente_paso_logico": "próximo contenido natural después de estas ideas"
   }
 }
 
-Genera EXACTAMENTE ${cantidad} ideas estratégicas para "${objetivo}".
+REGLAS FINALES ANTES DE RESPONDER:
+✓ Genera EXACTAMENTE ${cantidad} ideas
+✓ Todas con mass_appeal_score ≥ 70
+✓ Ninguna con jerga técnica en el título
+✓ Cada una con formato_ganador diferente al anterior
+✓ Cada idea_expandida_tca lista para el Generador V600
+✓ JSON válido, sin markdown, sin texto extra
 `;
 };
 
@@ -4238,6 +4374,37 @@ TIMING DE LANZAMIENTO (Producto/Servicio/Evento propio):
 → Secuencia: Problema → Solución parcial → Presentación de la solución completa.
 → Táctica: El contenido de hoy planta la semilla para la venta de mañana.
 → Señal: No hagas venta directa. Genera deseo y anticipación primero.`,
+
+    'tendencia': `
+TIMING TENDENCIA ACTUAL (Ahora o nunca):
+→ Capitaliza una conversación que YA está activa en la cultura pop o el nicho.
+→ URGENCIA: Este contenido tiene ventana de 48-72 horas máximo.
+→ Táctica: Conecta el trending con el nicho del usuario de forma inesperada.
+→ El hook debe mencionar o implicar la tendencia para activar el algoritmo ahora.
+→ Señal: Sin referencias a la tendencia en el hook = perder la ventana.`,
+
+    'reaccion': `
+TIMING REACCIÓN RÁPIDA (Respuesta a evento reciente):
+→ Algo acaba de pasar en el sector o en el mundo que afecta al avatar.
+→ URGENCIA EXTREMA: Ventana de 24 horas antes de que todos hablen de lo mismo.
+→ Táctica: Ser el primero en dar el ángulo correcto al evento.
+→ El formato ideal: "Lo que nadie está diciendo sobre [evento reciente]".
+→ Señal: Posicionarse como el experto que interpreta los eventos del sector.`,
+
+    'momentum': `
+TIMING MOMENTUM PERSONAL (Capitalizar crecimiento propio):
+→ El creador está en un momento de crecimiento y debe aprovecharlo.
+→ La audiencia nueva necesita contenido que explique quién eres y por qué seguirte.
+→ Táctica: Contenido que convierta visitantes ocasionales en seguidores leales.
+→ Formatos ideales: origen + transformación, errores del pasado, detrás de cámaras.
+→ Señal: Alta autenticidad. La audiencia nueva conecta con historias reales.`,
+
+    'estacional': `
+TIMING ESTACIONAL (Evento o temporada específica):
+→ Contenido diseñado para un momento predecible del año.
+→ Ventaja: Alta intención de búsqueda y consumo en ese período.
+→ Táctica: Publicar 1-2 semanas ANTES del pico para capturar el ascenso.
+→ Señal: El hook debe incluir la referencia temporal como gancho de relevancia.`,
   };
 
   return strategies[timing?.toLowerCase()] || strategies['evergreen'];
@@ -4504,13 +4671,27 @@ async function ejecutarIdeasRapidas(
         },
         { role: 'user', content: prompt }
       ],
-      temperature: 0.8, // Creatividad alta pero controlada
-      max_tokens: 3500
+      temperature: 0.8,
+      max_tokens: 5000
     });
 
-    // 4. Parsear respuesta
+     // 4. Parsear respuesta
     const rawContent = completion.choices[0].message.content;
     const parsedData = JSON.parse(rawContent || '{"ideas":[]}');
+
+    // 5. Filtro de seguridad — eliminar ideas con score < 70
+    if (Array.isArray(parsedData.ideas)) {
+      const antes = parsedData.ideas.length;
+      parsedData.ideas = parsedData.ideas.filter((idea: any) => {
+        const score = idea.tca?.mass_appeal_score || idea.potencial_viral * 10 || 0;
+        return score >= 70;
+      });
+      const eliminadas = antes - parsedData.ideas.length;
+      if (eliminadas > 0) {
+        console.warn(`[IDEAS IMPERIO] ⚠️ ${eliminadas} idea(s) eliminada(s) por score < 70`);
+      }
+      console.log(`[IDEAS IMPERIO] ✅ ${parsedData.ideas.length} ideas aprobadas con score ≥ 70`);
+    }
 
     return {
       data: parsedData,
@@ -7824,9 +8005,13 @@ async function getUserContext(
   if (results[1]?.status === 'fulfilled') {
     const avatar = results[1].value?.data;
     if (avatar) {
-      contexto.avatar_ideal = avatar.name || contexto.avatar_ideal;
-      contexto.dolor_principal = avatar.dolor || contexto.dolor_principal;
-      contexto.deseo_principal = avatar.cielo || contexto.deseo_principal;
+      contexto.avatar_ideal        = avatar.name || contexto.avatar_ideal;
+      contexto.dolor_principal     = avatar.dolor || avatar.pain_points || contexto.dolor_principal;
+      contexto.deseo_principal     = avatar.cielo || avatar.desires || contexto.deseo_principal;
+      // Campos extendidos para Ideas Rápidas
+      (contexto as any).avatar_situacion_actual = avatar.current_situation || null;
+      (contexto as any).avatar_objetivo_primario = avatar.primary_goal || null;
+      (contexto as any).avatar_pain_points = avatar.pain_points || null;
     }
   }
 
@@ -8076,13 +8261,19 @@ if (body.closing_objective) settings.closing_objective = body.closing_objective;
 
         // 3. Ejecución con paso de parámetros ESTRATÉGICOS
         // IMPORTANTE: Pasamos 'settings' al final. Ahí van 'objective' y 'timing'.
+        // Enriquecer userContext con nicho manual si el usuario lo escribió
+        if (settings?.nicho && settings.nicho !== 'General') {
+          (userContext as any).nicho = settings.nicho;
+          console.log(`[IDEAS IMPERIO] 🎯 Nicho manual activo: "${settings.nicho}"`);
+        }
+
         const res = await ejecutarIdeasRapidas(
           topic, 
           quantity, 
           platform, 
-          userContext, // El contexto enriquecido (Avatar + Experto + KB)
-          openai,      // Cliente OpenAI
-          settings     // ✅ AQUÍ VIAJA LA ESTRATEGIA (Objetivo + Timing)
+          userContext,
+          openai,
+          settings
         );
         
         result = res.data;
@@ -8450,6 +8641,11 @@ ${instruccionEstructura}
   // ══════════════════════════════════════════════════════════════════
   let estrategiaTCA: any = null;
 
+  // Si el tema ya viene pre-expandido desde Ideas Rápidas — no reexpandir
+  if (settings?.tca_preexpandido) {
+    console.log('[TCA IMPERIO] ⚡ Tema pre-expandido por Ideas Rápidas — CAPA 0 en bypass');
+  } else {
+
   try {
     console.log('[TCA IMPERIO] 🌀 Ejecutando Sistema de Alcance Masivo...');
     const tcaResult = await ejecutarSistemaTCA(temaUsuario, settings, openai);
@@ -8475,9 +8671,11 @@ ${instruccionEstructura}
     }
 
   } catch (tcaError: any) {
-    // Falla silenciosa — el V600 continúa sin interrupción
     console.warn('[TCA IMPERIO] ⚠️ Bypass total — Motor V600 continúa sin modificación.', tcaError.message);
   }
+
+  } // cierre del if (!settings?.tca_preexpandido)
+
   // ══════════════════════════════════════════════════════════════════
   // FIN CAPA 0 TCA — Motor V600 activándose a continuación
   // ══════════════════════════════════════════════════════════════════
