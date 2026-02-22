@@ -260,7 +260,7 @@ interface JuezViralV500Result {
 // ============================================================
 
 // ─── MOTOR 1: Descomposición Estructural ───────────────────
-export interface BloqueProfundo {
+ interface BloqueProfundo {
   tipo: "hook" | "setup" | "escalada" | "giro" | "climax" | "resolucion" | "cierre_estrategico";
   inicio_segundos: number;
   fin_segundos: number;
@@ -270,7 +270,7 @@ export interface BloqueProfundo {
   intensidad: number; // 0-100
 }
 
-export interface AdnEstructura {
+ interface AdnEstructura {
   bloques: BloqueProfundo[];
   tipo_apertura: string;
   tipo_cierre: string;
@@ -281,14 +281,14 @@ export interface AdnEstructura {
 }
 
 // ─── MOTOR 2: Curva Emocional ───────────────────────────────
-export interface PicoEmocional {
+ interface PicoEmocional {
   segundo: number;
   emocion: string;
   intensidad: number; // 0-100
   detonante: string;
 }
 
-export interface CurvaEmocional {
+ interface CurvaEmocional {
   emocion_dominante: string;
   emocion_secundaria: string;
   emocion_final: string;
@@ -304,7 +304,7 @@ export interface CurvaEmocional {
 }
 
 // ─── MOTOR 3: Micro-Loops y Tensión ────────────────────────
-export interface MicroLoop {
+ interface MicroLoop {
   tipo: "promesa_abierta" | "cliffhanger" | "pregunta_pendiente" | "anticipacion" | "gancho_diferido";
   descripcion: string;
   segundo_apertura: number;
@@ -312,7 +312,7 @@ export interface MicroLoop {
   intensidad: number; // 0-100
 }
 
-export interface MicroLoops {
+ interface MicroLoops {
   loops: MicroLoop[];
   total_loops: number;
   intervalo_promedio_segundos: number;
@@ -322,7 +322,7 @@ export interface MicroLoops {
 }
 
 // ─── MOTOR 4: Polarización ──────────────────────────────────
-export interface Polarizacion {
+ interface Polarizacion {
   nivel_confrontacion: number; // 0-100
   ruptura_creencia_detectada: string;
   enemigo_implicito: string | null;
@@ -333,7 +333,7 @@ export interface Polarizacion {
 }
 
 // ─── MOTOR 5: Identidad Verbal ──────────────────────────────
-export interface IdentidadVerbal {
+ interface IdentidadVerbal {
   longitud_promedio_frases: number; // palabras
   ritmo_sintactico: "staccato" | "fluido" | "mixto" | "explosivo";
   proporcion_frases_cortas_pct: number;
@@ -347,7 +347,7 @@ export interface IdentidadVerbal {
 }
 
 // ─── MOTOR 6: Status y Posicionamiento ─────────────────────
-export interface StatusYPosicionamiento {
+ interface StatusYPosicionamiento {
   tipo_autoridad: "mentor" | "rebelde" | "experto_tecnico" | "disruptor" | "insider" | "testigo" | "transformado";
   experiencia_proyectada: "implicita" | "explicita" | "mixta";
   rol_narrativo: string;
@@ -358,7 +358,7 @@ export interface StatusYPosicionamiento {
 }
 
 // ─── MOTOR 7: Densidad de Valor ────────────────────────────
-export interface DensidadValor {
+ interface DensidadValor {
   valor_por_minuto: number; // 0-100
   porcentaje_contenido_abierto: number; // % de contenido que genera más preguntas
   porcentaje_contenido_cerrado: number; // % de contenido que entrega respuestas
@@ -369,7 +369,7 @@ export interface DensidadValor {
 }
 
 // ─── MOTOR 8: Manipulación de Atención ─────────────────────
-export interface ManipulacionAtencion {
+ interface ManipulacionAtencion {
   cambios_ritmo: Array<{ segundo: number; tipo: string; descripcion: string }>;
   interrupciones_patron: number; // conteo
   reencuadres_mentales: string[];
@@ -380,7 +380,7 @@ export interface ManipulacionAtencion {
 }
 
 // ─── MOTOR 9: Activadores de Guardado ──────────────────────
-export interface ActivadorGuardado {
+ interface ActivadorGuardado {
   tipo: "frase_memorable" | "reencuadre" | "dato_contraintuitivo" | "formula_repetible" | "revelacion";
   contenido: string;
   segundo_aproximado: number;
@@ -388,7 +388,7 @@ export interface ActivadorGuardado {
 }
 
 // ─── MOTOR 10: Adaptabilidad al Nicho ──────────────────────
-export interface AdaptabilidadNicho {
+ interface AdaptabilidadNicho {
   contexto_usuario: string;
   sofisticacion_audiencia_target: "basica" | "intermedia" | "avanzada" | "experta";
   nivel_conciencia_mercado: number; // 0-100
@@ -398,7 +398,7 @@ export interface AdaptabilidadNicho {
 }
 
 // ─── MOTOR 11: Anti-Saturación ─────────────────────────────
-export interface ElementoCliché {
+ interface ElementoCliché {
   tipo: "frase_cliche" | "hook_generico" | "formula_repetida" | "plantilla_obvia";
   contenido: string;
   nivel_saturacion: number; // 0-100
@@ -406,7 +406,7 @@ export interface ElementoCliché {
 }
 
 // ─── MOTOR 12: Ritmo Narrativo ──────────────────────────────
-export interface RitmoNarrativo {
+ interface RitmoNarrativo {
   velocidad_progresion: "lenta" | "media" | "rapida" | "variable";
   intervalo_promedio_entre_estimulos_seg: number;
   variacion_intensidad: number; // 0-100 (qué tan variable es)
@@ -416,7 +416,7 @@ export interface RitmoNarrativo {
 }
 
 // ─── MOTOR 13: Score Viral Estructural ──────────────────────
-export interface ScoreViralEstructural {
+ interface ScoreViralEstructural {
   retencion_estructural: number; // 0-100
   intensidad_emocional: number; // 0-100
   polarizacion: number; // 0-100
@@ -431,7 +431,7 @@ export interface ScoreViralEstructural {
 // El guion_adaptado_al_nicho es string directo en el output principal
 
 // ─── MOTOR 15: Blueprint para Conexión Directa ──────────────
-export interface BlueprintReplicable {
+ interface BlueprintReplicable {
   nombre_patron: string;
   formula_base: string;
   pasos_estructurales: string[];
@@ -458,9 +458,9 @@ export interface BlueprintReplicable {
 }
 
 // ─── MOTOR 16: Análisis TCA ─────────────────────────────────
-export type NivelTCA = "N0" | "N1" | "N2" | "N3" | "N4";
+ type NivelTCA = "N0" | "N1" | "N2" | "N3" | "N4";
 
-export interface AnalisisTCA {
+ interface AnalisisTCA {
   nivel_tca_detectado: NivelTCA;
   sector_detectado: string;
   tipo_alcance: string;
@@ -476,7 +476,7 @@ export interface AnalisisTCA {
   esta_muy_mainstream: boolean;
 }
 
-export interface MapaAdaptacionTCA {
+ interface MapaAdaptacionTCA {
   nivel_tca_recomendado: string;
   sector_recomendado: string;
   nuevo_hook_sectorial: string;
@@ -490,7 +490,7 @@ export interface MapaAdaptacionTCA {
 }
 
 // ─── OUTPUT COMPLETO ────────────────────────────────────────
-export interface IngenieriaInversaProOutput {
+interface IngenieriaInversaProOutput {
   // Metadata
   url_analizada: string;
   nicho_origen: string;
@@ -532,7 +532,7 @@ export interface IngenieriaInversaProOutput {
     adaptacion_sin_micronicho: boolean;
     adn_estructural_conservado: boolean;
     score_validacion: number;
-  
+};
 
   // Extras
   recomendaciones_estrategicas: string[];
@@ -543,7 +543,7 @@ export interface IngenieriaInversaProOutput {
   score_final_obtenido: number;
 }
 // ─── PARÁMETROS DE ENTRADA ──────────────────────────────────
-export interface IngenieriaInversaProParams {
+ interface IngenieriaInversaProParams {
   transcripcion: string;
   url: string;
   nicho_origen: string;       // nicho del video analizado
