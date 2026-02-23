@@ -463,7 +463,7 @@ export const AvatarProfile: React.FC = () => {
           { v: 'consciente_producto', l: '4️⃣ Conoce tu Producto', d: 'Te conoce pero no ha comprado' },
           { v: 'listo_decidir', l: '5️⃣ Listo para Decidir', d: 'Solo necesita el empujón final' },
         ].map(opt => (
-          <button key={opt.v} onClick={() => setFormData(prev => ({...prev, awareness_level: opt.v as any})}
+          <button key={opt.v} onClick={() => setFormData(prev => ({...prev, awareness_level: opt.v as any}))}
             className={`w-full p-3 rounded-lg border text-left transition-all ${formData.awareness_level === opt.v ? 'border-yellow-500 bg-yellow-500/20' : 'border-gray-700 bg-gray-900/50 hover:border-gray-600'}`}>
             <p className="text-white font-bold text-xs">{opt.l}</p>
             <p className="text-gray-400 text-[10px]">{opt.d}</p>
