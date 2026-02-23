@@ -81,23 +81,36 @@ export const AvatarProfile: React.FC = () => {
       venta_agresiva: false,
       comparaciones_directas: false,
       contenido_negativo: false
-    }
+    },
+    // CAPA OLIMPO — AUDIENCIA PROFUNDA
+    awareness_level: '' as string,
+    change_resistance: 'media' as string,
+    audience_temperature: 'tibio' as string,
+    internal_tone: '' as string,
+    timeline_expectation: '' as string,
+    social_pain: '' as string,
+    transformation_point_a: '' as string,
+    internal_obstacle: '' as string,
+    external_obstacle: '' as string,
+    emotional_friction: '' as string,
   });
 
-  useEffect(() => { if (user) fetchAvatars(); }, [user]);
+  useEffect(() => { if (user?.id) fetchAvatars(); }, [user?.id]);
 
-  const fetchAvatars = async () => {
+  const fetchAvatars = async (forceSelect = false) => {
     try {
       const { data } = await supabase.from('avatars').select('*').eq('user_id', user?.id).order('created_at', { ascending: false });
       if (data) {
         setAvatarsList(data);
-        const active = data.find((a: any) => a.is_active);
-        if (active) selectAvatar(active);
-        else if (data.length > 0) selectAvatar(data[0]);
+        const yaHaySeleccionado = selectedAvatarId !== null;
+        if (!yaHaySeleccionado || forceSelect) {
+          const active = data.find((a: any) => a.is_active);
+          if (active) selectAvatar(active);
+          else if (data.length > 0) selectAvatar(data[0]);
+        }
       }
     } catch (e) { console.error('Error fetching avatars:', e); }
   };
-
   const selectAvatar = (avatar: any) => {
     setSelectedAvatarId(avatar.id);
     setFormData({
@@ -135,7 +148,17 @@ export const AvatarProfile: React.FC = () => {
       status_trigger: avatar.status_trigger || '',
       belonging_trigger: avatar.belonging_trigger || '',
       loss_fear_trigger: avatar.loss_fear_trigger || '',
-      prohibitions: avatar.prohibitions || { lenguaje_vulgar: false, promesas_exageradas: false, polemica_barata: false, clickbait_engañoso: false, venta_agresiva: false, comparaciones_directas: false, contenido_negativo: false }
+      prohibitions: avatar.prohibitions || { lenguaje_vulgar: false, promesas_exageradas: false, polemica_barata: false, clickbait_engañoso: false, venta_agresiva: false, comparaciones_directas: false, contenido_negativo: false },
+      awareness_level: avatar.awareness_level || '',
+      change_resistance: avatar.change_resistance || 'media',
+      audience_temperature: avatar.audience_temperature || 'tibio',
+      internal_tone: avatar.internal_tone || '',
+      timeline_expectation: avatar.timeline_expectation || '',
+      social_pain: avatar.social_pain || '',
+      transformation_point_a: avatar.transformation_point_a || '',
+      internal_obstacle: avatar.internal_obstacle || '',
+      external_obstacle: avatar.external_obstacle || '',
+      emotional_friction: avatar.emotional_friction || '',
     });
   };
 
@@ -161,7 +184,7 @@ export const AvatarProfile: React.FC = () => {
         await supabase.from('profiles').update({ active_avatar_id: result.data.id }).eq('id', user?.id);
       }
       if (refreshProfile) refreshProfile();
-      await fetchAvatars();
+      await fetchAvatars(true);
       alert('✅ Avatar guardado exitosamente');
     } catch (e: any) { alert(`Error: ${e.message}`); }
     finally { setLoading(false); }
@@ -195,7 +218,7 @@ export const AvatarProfile: React.FC = () => {
     if (!selectedAvatarId || !confirm('¿Eliminar este avatar?')) return;
     try {
       await supabase.from('avatars').delete().eq('id', selectedAvatarId);
-      handleNewAvatar(); await fetchAvatars();
+      handleNewAvatar(); await fetchAvatars(true);
       if (refreshProfile) refreshProfile();
     } catch (e) { console.error('Error deleting avatar:', e); }
   };
