@@ -323,12 +323,12 @@ export const AvatarProfile: React.FC = () => {
                   <div className="space-y-4 pl-3 border-l border-indigo-900/40">
                     <div>
                       <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Nombre del Avatar *</label>
-                      <input type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="input-avatar" placeholder="Ej: El Mentor Digital, Coach Premium..." />
+                      <input type="text" value={formData.name} onChange={e => setFormData(prev => ({...prev, name: e.target.value})}) className="input-avatar" placeholder="Ej: El Mentor Digital, Coach Premium..." />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Tipo de Persona</label>
-                        <select value={formData.person_type} onChange={e => setFormData({...formData, person_type: e.target.value as any})} className="input-avatar">
+                        <select value={formData.person_type} onChange={e => setFormData(prev => ({...prev, person_type: e.target.value as any})} className="input-avatar">
                           <option value="creador_contenido">Creador de Contenido</option>
                           <option value="emprendedor">Emprendedor</option>
                           <option value="marca_personal">Marca Personal</option>
@@ -338,7 +338,7 @@ export const AvatarProfile: React.FC = () => {
                       </div>
                       <div>
                         <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Nivel de Experiencia</label>
-                        <select value={formData.experience_level} onChange={e => setFormData({...formData, experience_level: e.target.value as any})} className="input-avatar">
+                        <select value={formData.experience_level} onChange={e => setFormData(prev => ({...prev, experience_level: e.target.value as any})} className="input-avatar">
                           <option value="principiante">Principiante</option>
                           <option value="intermedio">Intermedio</option>
                           <option value="avanzado">Avanzado</option>
@@ -347,16 +347,16 @@ export const AvatarProfile: React.FC = () => {
                       </div>
                       <div>
                         <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">País / Cultura</label>
-                        <input type="text" value={formData.country_culture} onChange={e => setFormData({...formData, country_culture: e.target.value})} className="input-avatar" placeholder="Ej: México, España, Latam..." />
+                        <input type="text" value={formData.country_culture} onChange={e => setFormData(prev => ({...prev, country_culture: e.target.value})}) className="input-avatar" placeholder="Ej: México, España, Latam..." />
                       </div>
                       <div>
                         <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Industria / Nicho</label>
-                        <input type="text" value={formData.industry} onChange={e => setFormData({...formData, industry: e.target.value})} className="input-avatar" placeholder="Ej: Marketing Digital, Fitness..." />
+                        <input type="text" value={formData.industry} onChange={e => setFormData(prev => ({...prev, industry: e.target.value})}) className="input-avatar" placeholder="Ej: Marketing Digital, Fitness..." />
                       </div>
                     </div>
                     <div className={`p-4 rounded-xl border transition-colors ${formData.is_active ? 'bg-green-900/10 border-green-500/30' : 'bg-gray-900 border-gray-800'}`}>
                       <label className="flex items-center gap-3 cursor-pointer">
-                        <input type="checkbox" checked={formData.is_active} onChange={e => setFormData({...formData, is_active: e.target.checked})} className="w-5 h-5 accent-green-500" />
+                        <input type="checkbox" checked={formData.is_active} onChange={e => setFormData(prev => ({...prev, is_active: e.target.checked})}) className="w-5 h-5 accent-green-500" />
                         <div className="flex-1">
                           <span className="text-white font-bold text-sm block">Avatar Activo</span>
                           <span className="text-gray-400 text-xs">Controla TODAS las funciones de Titan</span>
@@ -379,7 +379,7 @@ export const AvatarProfile: React.FC = () => {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="bg-purple-900/10 p-4 rounded-xl border border-purple-500/20">
                         <label className="text-[10px] font-black text-purple-400 uppercase mb-2 block"><Target size={11} className="inline mr-1" />Objetivo Activo *</label>
-                        <select value={formData.primary_goal} onChange={e => setFormData({...formData, primary_goal: e.target.value as any})} className="input-avatar">
+                        <select value={formData.primary_goal} onChange={e => setFormData(prev => ({...prev, primary_goal: e.target.value as any})} className="input-avatar">
                           <option value="autoridad">Autoridad</option>
                           <option value="viralidad">Viralidad</option>
                           <option value="venta">Venta</option>
@@ -389,7 +389,7 @@ export const AvatarProfile: React.FC = () => {
                       </div>
                       <div>
                         <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Nivel de Riesgo</label>
-                        <select value={formData.risk_level} onChange={e => setFormData({...formData, risk_level: e.target.value as any})} className="input-avatar">
+                        <select value={formData.risk_level} onChange={e => setFormData(prev => ({...prev, risk_level: e.target.value as any})} className="input-avatar">
                           <option value="conservador">Conservador</option>
                           <option value="balanceado">Balanceado</option>
                           <option value="agresivo">Agresivo</option>
@@ -407,7 +407,7 @@ export const AvatarProfile: React.FC = () => {
                           { value: 'experto_tecnico', label: 'Experto Técnico', ex: 'Ferriss, Naval' },
                           { value: 'creativo_viral', label: 'Creativo Viral', ex: 'MrBeast, Casey N.' }
                         ].map(m => (
-                          <button key={m.value} onClick={() => setFormData({...formData, success_model: m.value as any})}
+                          <button key={m.value} onClick={() => setFormData(prev => ({...prev, success_model: m.value as any})}
                             className={`p-3 rounded-lg border-2 text-left transition-all ${formData.success_model === m.value ? 'border-indigo-500 bg-indigo-500/20' : 'border-gray-700 bg-gray-900/50 hover:border-gray-600'}`}>
                             <p className="text-white font-bold text-xs mb-1">{m.label}</p>
                             <p className="text-gray-400 text-[10px]">{m.ex}</p>
@@ -440,7 +440,7 @@ export const AvatarProfile: React.FC = () => {
           { v: 'consciente_producto', l: '4️⃣ Conoce tu Producto', d: 'Te conoce pero no ha comprado' },
           { v: 'listo_decidir', l: '5️⃣ Listo para Decidir', d: 'Solo necesita el empujón final' },
         ].map(opt => (
-          <button key={opt.v} onClick={() => setFormData({...formData, awareness_level: opt.v as any})}
+          <button key={opt.v} onClick={() => setFormData(prev => ({...prev, awareness_level: opt.v as any})}
             className={`w-full p-3 rounded-lg border text-left transition-all ${formData.awareness_level === opt.v ? 'border-yellow-500 bg-yellow-500/20' : 'border-gray-700 bg-gray-900/50 hover:border-gray-600'}`}>
             <p className="text-white font-bold text-xs">{opt.l}</p>
             <p className="text-gray-400 text-[10px]">{opt.d}</p>
@@ -452,7 +452,7 @@ export const AvatarProfile: React.FC = () => {
     <div className="grid grid-cols-2 gap-4">
       <div>
         <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Resistencia al Cambio</label>
-        <select value={formData.change_resistance || 'media'} onChange={e => setFormData({...formData, change_resistance: e.target.value as any})} className="input-avatar">
+        <select value={formData.change_resistance || 'media'} onChange={e => setFormData(prev => ({...prev, change_resistance: e.target.value as any})} className="input-avatar">
           <option value="baja">Baja — Listo para actuar</option>
           <option value="media">Media — Necesita evidencia</option>
           <option value="alta">Alta — Escéptico, resistente</option>
@@ -460,7 +460,7 @@ export const AvatarProfile: React.FC = () => {
       </div>
       <div>
         <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Temperatura de Audiencia</label>
-        <select value={formData.audience_temperature || 'tibio'} onChange={e => setFormData({...formData, audience_temperature: e.target.value as any})} className="input-avatar">
+        <select value={formData.audience_temperature || 'tibio'} onChange={e => setFormData(prev => ({...prev, audience_temperature: e.target.value as any})} className="input-avatar">
           <option value="frio">❄️ Fría — No te conoce</option>
           <option value="tibio">🌤 Tibia — Te conoce algo</option>
           <option value="caliente">🔥 Caliente — Lista para comprar</option>
@@ -468,7 +468,7 @@ export const AvatarProfile: React.FC = () => {
       </div>
       <div>
         <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Tono Interno del Avatar</label>
-        <select value={formData.internal_tone || ''} onChange={e => setFormData({...formData, internal_tone: e.target.value as any})} className="input-avatar">
+        <select value={formData.internal_tone || ''} onChange={e => setFormData(prev => ({...prev, internal_tone: e.target.value as any})} className="input-avatar">
           <option value="">Sin definir</option>
           <option value="victima">Víctima — Se siente atrapado</option>
           <option value="ambicioso">Ambicioso — Quiere más</option>
@@ -479,7 +479,7 @@ export const AvatarProfile: React.FC = () => {
       </div>
       <div>
         <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Horizonte Temporal</label>
-        <select value={formData.timeline_expectation || ''} onChange={e => setFormData({...formData, timeline_expectation: e.target.value})} className="input-avatar">
+        <select value={formData.timeline_expectation || ''} onChange={e => setFormData(prev => ({...prev, timeline_expectation: e.target.value})} className="input-avatar">
           <option value="">Sin definir</option>
           <option value="inmediato">Inmediato (ya mismo)</option>
           <option value="30_dias">30 días</option>
@@ -492,7 +492,7 @@ export const AvatarProfile: React.FC = () => {
 
     <div>
       <label className="text-[10px] font-black text-red-300 uppercase mb-2 block">Dolor Social (¿qué teme que otros piensen?)</label>
-      <textarea value={formData.social_pain || ''} onChange={e => setFormData({...formData, social_pain: e.target.value})} className="textarea-avatar h-16" placeholder="Ej: Teme que sus amigos lo vean como un fracasado..." />
+      <textarea value={formData.social_pain || ''} onChange={e => setFormData(prev => ({...prev, social_pain: e.target.value})}) className="textarea-avatar h-16" placeholder="Ej: Teme que sus amigos lo vean como un fracasado..." />
     </div>
     
     {/* Mapa de Transformación */}
@@ -501,19 +501,19 @@ export const AvatarProfile: React.FC = () => {
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className="text-[10px] text-gray-500 uppercase mb-1 block">Punto A — Estado actual exacto</label>
-          <textarea value={formData.transformation_point_a || ''} onChange={e => setFormData({...formData, transformation_point_a: e.target.value})} className="textarea-avatar h-16" placeholder="Ej: Publica sin estrategia, 200 seguidores, sin ventas..." />
+          <textarea value={formData.transformation_point_a || ''} onChange={e => setFormData(prev => ({...prev, transformation_point_a: e.target.value})}) className="textarea-avatar h-16" placeholder="Ej: Publica sin estrategia, 200 seguidores, sin ventas..." />
         </div>
         <div>
           <label className="text-[10px] text-gray-500 uppercase mb-1 block">Obstáculo Interno</label>
-          <textarea value={formData.internal_obstacle || ''} onChange={e => setFormData({...formData, internal_obstacle: e.target.value})} className="textarea-avatar h-16" placeholder="Ej: Cree que no es lo suficientemente bueno..." />
+          <textarea value={formData.internal_obstacle || ''} onChange={e => setFormData(prev => ({...prev, internal_obstacle: e.target.value})}) className="textarea-avatar h-16" placeholder="Ej: Cree que no es lo suficientemente bueno..." />
         </div>
         <div>
           <label className="text-[10px] text-gray-500 uppercase mb-1 block">Obstáculo Externo</label>
-          <textarea value={formData.external_obstacle || ''} onChange={e => setFormData({...formData, external_obstacle: e.target.value})} className="textarea-avatar h-16" placeholder="Ej: No tiene presupuesto para ads, falta tiempo..." />
+          <textarea value={formData.external_obstacle || ''} onChange={e => setFormData(prev => ({...prev, external_obstacle: e.target.value})}) className="textarea-avatar h-16" placeholder="Ej: No tiene presupuesto para ads, falta tiempo..." />
         </div>
         <div>
           <label className="text-[10px] text-gray-500 uppercase mb-1 block">Fricción Emocional</label>
-          <textarea value={formData.emotional_friction || ''} onChange={e => setFormData({...formData, emotional_friction: e.target.value})} className="textarea-avatar h-16" placeholder="Ej: Miedo al rechazo al publicar, parálisis por análisis..." />
+          <textarea value={formData.emotional_friction || ''} onChange={e => setFormData(prev => ({...prev, emotional_friction: e.target.value})}) className="textarea-avatar h-16" placeholder="Ej: Miedo al rechazo al publicar, parálisis por análisis..." />
         </div>
       </div>
     </div>
@@ -532,24 +532,24 @@ export const AvatarProfile: React.FC = () => {
                   <div className="space-y-4 pl-3 border-l border-red-900/40">
                     <div>
                       <label className="text-[10px] font-black text-red-400 uppercase mb-2 block"><Zap size={11} className="inline mr-1" />Dolor Principal (en sus palabras)</label>
-                      <textarea value={formData.central_pain} onChange={e => setFormData({...formData, central_pain: e.target.value})} className="textarea-avatar h-20" placeholder="Ej: Publico todos los días pero nadie me presta atención..." />
+                      <textarea value={formData.central_pain} onChange={e => setFormData(prev => ({...prev, central_pain: e.target.value})}) className="textarea-avatar h-20" placeholder="Ej: Publico todos los días pero nadie me presta atención..." />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="text-[10px] font-black text-orange-400 uppercase mb-2 block">Frustraciones Actuales</label>
-                        <textarea value={formData.frustrations} onChange={e => setFormData({...formData, frustrations: e.target.value})} className="textarea-avatar h-20" placeholder="Ej: Invierto tiempo sin ver resultados..." />
+                        <textarea value={formData.frustrations} onChange={e => setFormData(prev => ({...prev, frustrations: e.target.value})}) className="textarea-avatar h-20" placeholder="Ej: Invierto tiempo sin ver resultados..." />
                       </div>
                       <div>
                         <label className="text-[10px] font-black text-orange-400 uppercase mb-2 block">Obstáculos Recurrentes</label>
-                        <textarea value={formData.recurring_obstacles} onChange={e => setFormData({...formData, recurring_obstacles: e.target.value})} className="textarea-avatar h-20" placeholder="Ej: No sé qué publicar, falta consistencia..." />
+                        <textarea value={formData.recurring_obstacles} onChange={e => setFormData(prev => ({...prev, recurring_obstacles: e.target.value})}) className="textarea-avatar h-20" placeholder="Ej: No sé qué publicar, falta consistencia..." />
                       </div>
                       <div>
                         <label className="text-[10px] font-black text-red-300 uppercase mb-2 block">Miedos No Expresados</label>
-                        <textarea value={formData.hidden_fears} onChange={e => setFormData({...formData, hidden_fears: e.target.value})} className="textarea-avatar h-20" placeholder="Ej: Miedo a ser ignorado, al rechazo..." />
+                        <textarea value={formData.hidden_fears} onChange={e => setFormData(prev => ({...prev, hidden_fears: e.target.value})}) className="textarea-avatar h-20" placeholder="Ej: Miedo a ser ignorado, al rechazo..." />
                       </div>
                       <div>
                         <label className="text-[10px] font-black text-red-300 uppercase mb-2 block">Sensación de Estancamiento</label>
-                        <textarea value={formData.stagnation_feeling} onChange={e => setFormData({...formData, stagnation_feeling: e.target.value})} className="textarea-avatar h-20" placeholder="Ej: Hago lo mismo siempre y no avanzo..." />
+                        <textarea value={formData.stagnation_feeling} onChange={e => setFormData(prev => ({...prev, stagnation_feeling: e.target.value})}) className="textarea-avatar h-20" placeholder="Ej: Hago lo mismo siempre y no avanzo..." />
                       </div>
                     </div>
                   </div>
@@ -566,12 +566,12 @@ export const AvatarProfile: React.FC = () => {
                   <div className="space-y-4 pl-3 border-l border-cyan-900/40">
                     <div>
                       <label className="text-[10px] font-black text-cyan-400 uppercase mb-2 block"><Heart size={11} className="inline mr-1" />Deseo Que No Dice en Voz Alta</label>
-                      <textarea value={formData.hidden_desire} onChange={e => setFormData({...formData, hidden_desire: e.target.value})} className="textarea-avatar h-20" placeholder="Ej: Quiere reconocimiento y ser la referencia #1..." />
+                      <textarea value={formData.hidden_desire} onChange={e => setFormData(prev => ({...prev, hidden_desire: e.target.value})}) className="textarea-avatar h-20" placeholder="Ej: Quiere reconocimiento y ser la referencia #1..." />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="bg-yellow-900/10 p-4 rounded-xl border border-yellow-500/20">
                         <label className="text-[10px] font-black text-yellow-400 uppercase mb-2 block"><Flame size={11} className="inline mr-1" />Emoción Dominante</label>
-                        <select value={formData.dominant_emotion} onChange={e => setFormData({...formData, dominant_emotion: e.target.value as any})} className="input-avatar">
+                        <select value={formData.dominant_emotion} onChange={e => setFormData(prev => ({...prev, dominant_emotion: e.target.value as any})} className="input-avatar">
                           <option value="curiosidad">Curiosidad</option>
                           <option value="deseo">Deseo</option>
                           <option value="miedo">Miedo</option>
@@ -581,12 +581,12 @@ export const AvatarProfile: React.FC = () => {
                       </div>
                       <div>
                         <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Aspiración de Estatus</label>
-                        <textarea value={formData.status_aspiration} onChange={e => setFormData({...formData, status_aspiration: e.target.value})} className="textarea-avatar h-20" placeholder="Ej: Ser invitado a podcasts, hablar en eventos..." />
+                        <textarea value={formData.status_aspiration} onChange={e => setFormData(prev => ({...prev, status_aspiration: e.target.value})}) className="textarea-avatar h-20" placeholder="Ej: Ser invitado a podcasts, hablar en eventos..." />
                       </div>
                     </div>
                     <div>
                       <label className="text-[10px] font-black text-cyan-300 uppercase mb-2 block">Resultado Soñado Específico</label>
-                      <textarea value={formData.dream_outcome} onChange={e => setFormData({...formData, dream_outcome: e.target.value})} className="textarea-avatar h-20" placeholder="Ej: 100k seguidores y 5 clientes premium al mes..." />
+                      <textarea value={formData.dream_outcome} onChange={e => setFormData(prev => ({...prev, dream_outcome: e.target.value})}) className="textarea-avatar h-20" placeholder="Ej: 100k seguidores y 5 clientes premium al mes..." />
                     </div>
                   </div>
                 </div>
@@ -611,7 +611,7 @@ export const AvatarProfile: React.FC = () => {
                     <div className="grid grid-cols-3 gap-4">
                       <div>
                         <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Estilo Comunicativo</label>
-                        <select value={formData.communication_style} onChange={e => setFormData({...formData, communication_style: e.target.value as any})} className="input-avatar">
+                        <select value={formData.communication_style} onChange={e => setFormData(prev => ({...prev, communication_style: e.target.value as any})} className="input-avatar">
                           <option value="directo">Directo</option>
                           <option value="analitico">Analítico</option>
                           <option value="inspirador">Inspirador</option>
@@ -621,7 +621,7 @@ export const AvatarProfile: React.FC = () => {
                       </div>
                       <div>
                         <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Nivel de Formalidad</label>
-                        <select value={formData.formality_level} onChange={e => setFormData({...formData, formality_level: e.target.value as any})} className="input-avatar">
+                        <select value={formData.formality_level} onChange={e => setFormData(prev => ({...prev, formality_level: e.target.value as any})} className="input-avatar">
                           <option value="coloquial">Coloquial</option>
                           <option value="semiformial">Semiformal</option>
                           <option value="formal">Formal</option>
@@ -630,7 +630,7 @@ export const AvatarProfile: React.FC = () => {
                       </div>
                       <div>
                         <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Ritmo Mental</label>
-                        <select value={formData.mental_rhythm} onChange={e => setFormData({...formData, mental_rhythm: e.target.value as any})} className="input-avatar">
+                        <select value={formData.mental_rhythm} onChange={e => setFormData(prev => ({...prev, mental_rhythm: e.target.value as any})} className="input-avatar">
                           <option value="rapido">Rápido / Frenético</option>
                           <option value="moderado">Moderado</option>
                           <option value="reflexivo">Reflexivo</option>
@@ -639,24 +639,24 @@ export const AvatarProfile: React.FC = () => {
                     </div>
                     <div>
                       <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Jerga / Expresiones del Nicho</label>
-                      <textarea value={formData.slang_or_expressions} onChange={e => setFormData({...formData, slang_or_expressions: e.target.value})} className="textarea-avatar h-20" placeholder="Ej: funnel, engagement, postear, escalar, ROI..." />
+                      <textarea value={formData.slang_or_expressions} onChange={e => setFormData(prev => ({...prev, slang_or_expressions: e.target.value})}) className="textarea-avatar h-20" placeholder="Ej: funnel, engagement, postear, escalar, ROI..." />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="text-[10px] font-black text-green-400 uppercase mb-2 block">Vocabulario Característico (Sí usa)</label>
-                        <textarea value={formData.signature_vocabulary.join(', ')} onChange={e => setFormData({...formData, signature_vocabulary: e.target.value.split(',').map((w:string)=>w.trim()).filter(Boolean)})} className="textarea-avatar h-20" placeholder="Ej: momentum, leverage, ecosistema..." />
+                        <textarea value={formData.signature_vocabulary.join(', ')} onChange={e => setFormData(prev => ({...prev, signature_vocabulary: e.target.value.split(',').map((w:string)=>w.trim()).filter(Boolean)})} className="textarea-avatar h-20" placeholder="Ej: momentum, leverage, ecosistema..." />
                         <p className="text-xs text-gray-500 mt-1">Separa por comas</p>
                       </div>
                       <div>
                         <label className="text-[10px] font-black text-red-400 uppercase mb-2 block">Vocabulario Prohibido (NUNCA usa)</label>
-                        <textarea value={formData.banned_vocabulary.join(', ')} onChange={e => setFormData({...formData, banned_vocabulary: e.target.value.split(',').map((w:string)=>w.trim()).filter(Boolean)})} className="textarea-avatar h-20" placeholder="Ej: gratis, secreto, hack, explosivo..." />
+                        <textarea value={formData.banned_vocabulary.join(', ')} onChange={e => setFormData(prev => ({...prev, banned_vocabulary: e.target.value.split(',').map((w:string)=>w.trim()).filter(Boolean)})} className="textarea-avatar h-20" placeholder="Ej: gratis, secreto, hack, explosivo..." />
                         <p className="text-xs text-gray-500 mt-1">Separa por comas</p>
                       </div>
                     </div>
                     <div className="grid grid-cols-3 gap-4">
                       <div>
                         <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Estructura Narrativa</label>
-                        <select value={formData.narrative_structure} onChange={e => setFormData({...formData, narrative_structure: e.target.value})} className="input-avatar">
+                        <select value={formData.narrative_structure} onChange={e => setFormData(prev => ({...prev, narrative_structure: e.target.value})} className="input-avatar">
                           <option value="problema_solucion">Problema → Solución</option>
                           <option value="hero_journey">Hero's Journey</option>
                           <option value="antes_despues">Antes → Después</option>
@@ -666,7 +666,7 @@ export const AvatarProfile: React.FC = () => {
                       </div>
                       <div>
                         <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Longitud Preferida</label>
-                        <select value={formData.preferred_length} onChange={e => setFormData({...formData, preferred_length: e.target.value as any})} className="input-avatar">
+                        <select value={formData.preferred_length} onChange={e => setFormData(prev => ({...prev, preferred_length: e.target.value as any})} className="input-avatar">
                           <option value="micro">Micro (&lt;30s)</option>
                           <option value="corto">Corto (30-60s)</option>
                           <option value="medio">Medio (1-3 min)</option>
@@ -675,7 +675,7 @@ export const AvatarProfile: React.FC = () => {
                       </div>
                       <div>
                         <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Estilo de CTA</label>
-                        <select value={formData.preferred_cta_style} onChange={e => setFormData({...formData, preferred_cta_style: e.target.value as any})} className="input-avatar">
+                        <select value={formData.preferred_cta_style} onChange={e => setFormData(prev => ({...prev, preferred_cta_style: e.target.value as any})} className="input-avatar">
                           <option value="directo">Directo</option>
                           <option value="suave">Suave</option>
                           <option value="urgencia">Urgencia</option>
@@ -686,7 +686,7 @@ export const AvatarProfile: React.FC = () => {
                     </div>
                     <div className="bg-green-900/10 p-4 rounded-xl border border-green-500/20">
                       <label className="text-[10px] font-black text-green-400 uppercase mb-2 block"><Zap size={11} className="inline mr-1" />Tipo de Contenido Prioritario</label>
-                      <select value={formData.content_priority} onChange={e => setFormData({...formData, content_priority: e.target.value as any})} className="input-avatar">
+                      <select value={formData.content_priority} onChange={e => setFormData(prev => ({...prev, content_priority: e.target.value as any})} className="input-avatar">
                         <option value="educativo">Educativo</option>
                         <option value="opinion">Opinión</option>
                         <option value="storytelling">Storytelling</option>
@@ -708,7 +708,7 @@ export const AvatarProfile: React.FC = () => {
                   <div className="space-y-4 pl-3 border-l border-orange-900/40">
                     <div>
                       <label className="text-[10px] font-black text-orange-400 uppercase mb-2 block"><AlertTriangle size={11} className="inline mr-1" />Objeción Principal</label>
-                      <textarea value={formData.common_objections} onChange={e => setFormData({...formData, common_objections: e.target.value})} className="textarea-avatar h-20" placeholder="Ej: Ya lo intenté antes y no funcionó..." />
+                      <textarea value={formData.common_objections} onChange={e => setFormData(prev => ({...prev, common_objections: e.target.value})}) className="textarea-avatar h-20" placeholder="Ej: Ya lo intenté antes y no funcionó..." />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       {[
@@ -719,7 +719,7 @@ export const AvatarProfile: React.FC = () => {
                       ].map(obj => (
                         <div key={obj.key}>
                           <label className="text-[10px] font-black text-orange-300 uppercase mb-2 block">{obj.label}</label>
-                          <input type="text" value={(formData as any)[obj.key]} onChange={e => setFormData({...formData, [obj.key]: e.target.value})} className="input-avatar" placeholder={`Ej: ${obj.placeholder}`} />
+                          <input type="text" value={(formData as any)[obj.key]} onChange={e => setFormData(prev => ({...prev, [obj.key]: e.target.value})}) className="input-avatar" placeholder={`Ej: ${obj.placeholder}`} />
                         </div>
                       ))}
                     </div>
@@ -737,7 +737,7 @@ export const AvatarProfile: React.FC = () => {
                   <div className="space-y-4 pl-3 border-l border-yellow-900/40">
                     <div>
                       <label className="text-[10px] font-black text-yellow-400 uppercase mb-2 block"><Flame size={11} className="inline mr-1" />Trigger Principal</label>
-                      <textarea value={formData.emotional_triggers} onChange={e => setFormData({...formData, emotional_triggers: e.target.value})} className="textarea-avatar h-20" placeholder="Ej: Ver a alguien con menos experiencia ganar más que él..." />
+                      <textarea value={formData.emotional_triggers} onChange={e => setFormData(prev => ({...prev, emotional_triggers: e.target.value})}) className="textarea-avatar h-20" placeholder="Ej: Ver a alguien con menos experiencia ganar más que él..." />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       {[
@@ -751,7 +751,7 @@ export const AvatarProfile: React.FC = () => {
                         return (
                           <div key={trig.key} className={`p-4 rounded-xl border ${bgMap[trig.color]}`}>
                             <label className={`text-[10px] font-black ${labelMap[trig.color]} uppercase mb-2 block`}>{trig.label}</label>
-                            <input type="text" value={(formData as any)[trig.key]} onChange={e => setFormData({...formData, [trig.key]: e.target.value})} className="input-avatar" placeholder={`Ej: ${trig.placeholder}`} />
+                            <input type="text" value={(formData as any)[trig.key]} onChange={e => setFormData(prev => ({...prev, [trig.key]: e.target.value}))} className="input-avatar" placeholder={`Ej: ${trig.placeholder}`} />
                           </div>
                         );
                       })}
@@ -775,7 +775,7 @@ export const AvatarProfile: React.FC = () => {
                         { key: 'contenido_negativo', label: 'Contenido excesivamente negativo' }
                       ].map(p => (
                         <label key={p.key} className="flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-red-900/10">
-                          <input type="checkbox" checked={formData.prohibitions[p.key as keyof typeof formData.prohibitions]} onChange={e => setFormData({...formData, prohibitions: {...formData.prohibitions, [p.key]: e.target.checked}})} className="w-4 h-4" />
+                          <input type="checkbox" checked={formData.prohibitions[p.key as keyof typeof formData.prohibitions]} onChange={e => setFormData(prev => ({...prev, prohibitions: {...prev.prohibitions, [p.key]: e.target.checked}}))} className="w-4 h-4" />
                           <span className="text-sm text-gray-300">{p.label}</span>
                         </label>
                       ))}
