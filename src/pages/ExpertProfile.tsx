@@ -370,8 +370,8 @@ export const ExpertProfile = () => {
 
     // ── Effects ─────────────────────────────────────────────────────────────────
     useEffect(() => {
-        if (user) { fetchExperts(); fetchContextData(); }
-    }, [user]);
+    if (user?.id) { fetchExperts(); fetchContextData(); }
+}, [user?.id]);
 
     // ── Data fetchers ────────────────────────────────────────────────────────────
     const fetchExperts = async (forceSelect = false) => {
