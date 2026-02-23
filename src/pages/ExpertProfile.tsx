@@ -523,6 +523,7 @@ export const ExpertProfile = () => {
             await supabase.from('profiles').update({ active_expert_id: result.data.id }).eq('id', user?.id);
             if (refreshProfile) refreshProfile();
             await fetchExperts(true);
+            alert('✅ Perfil de experto guardado exitosamente');
         } catch (e: any) { alert(`Error: ${e.message}`); }
         finally { setLoading(false); }
     };
