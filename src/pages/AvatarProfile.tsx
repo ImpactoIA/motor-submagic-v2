@@ -940,4 +940,3 @@ export const AvatarProfile: React.FC = () => {
   );
 };
 
-export default AvatarProfile;
