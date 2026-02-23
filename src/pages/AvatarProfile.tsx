@@ -346,7 +346,7 @@ export const AvatarProfile: React.FC = () => {
                   <div className="space-y-4 pl-3 border-l border-indigo-900/40">
                     <div>
                       <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block">Nombre del Avatar *</label>
-                      <input type="text" value={formData.name} onChange={e => setFormData(prev => ({...prev, name: e.target.value})}) className="input-avatar" placeholder="Ej: El Mentor Digital, Coach Premium..." />
+                      <input type="text" value={formData.name} onChange={e => setFormData(prev => ({...prev, name: e.target.value}))} className="input-avatar" placeholder="Ej: El Mentor Digital, Coach Premium..." />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
