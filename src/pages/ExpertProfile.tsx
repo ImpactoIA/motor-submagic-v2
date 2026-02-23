@@ -374,16 +374,21 @@ export const ExpertProfile = () => {
     }, [user]);
 
     // ── Data fetchers ────────────────────────────────────────────────────────────
-    const fetchExperts = async () => {
+    const fetchExperts = async (forceSelect = false) => {
         try {
             const { data } = await supabase.from('expert_profiles').select('*').eq('user_id', user?.id);
             if (data) {
                 setExpertsList(data);
-                if (userProfile?.active_expert_id) {
-                    const active = data.find(e => e.id === userProfile.active_expert_id);
-                    if (active) selectExpert(active);
-                } else if (data.length > 0) {
-                    selectExpert(data[0]);
+                // Solo seleccionar automáticamente si NO hay un experto ya seleccionado
+                // o si se fuerza (ej: después de guardar)
+                const yaHaySeleccionado = selectedExpertId !== null;
+                if (!yaHaySeleccionado || forceSelect) {
+                    if (userProfile?.active_expert_id) {
+                        const active = data.find(e => e.id === userProfile.active_expert_id);
+                        if (active) selectExpert(active);
+                    } else if (data.length > 0) {
+                        selectExpert(data[0]);
+                    }
                 }
             }
         } catch (e) { console.error(e); }
@@ -517,8 +522,7 @@ export const ExpertProfile = () => {
 
             await supabase.from('profiles').update({ active_expert_id: result.data.id }).eq('id', user?.id);
             if (refreshProfile) refreshProfile();
-            await fetchExperts();
-            selectExpert(result.data);
+            await fetchExperts(true);
         } catch (e: any) { alert(`Error: ${e.message}`); }
         finally { setLoading(false); }
     };
