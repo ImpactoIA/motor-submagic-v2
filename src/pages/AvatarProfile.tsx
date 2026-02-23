@@ -430,7 +430,7 @@ export const AvatarProfile: React.FC = () => {
                           { value: 'experto_tecnico', label: 'Experto Técnico', ex: 'Ferriss, Naval' },
                           { value: 'creativo_viral', label: 'Creativo Viral', ex: 'MrBeast, Casey N.' }
                         ].map(m => (
-                          <button key={m.value} onClick={() => setFormData(prev => ({...prev, success_model: m.value as any})}
+                          <button key={m.value} onClick={() => setFormData(prev => ({...prev, success_model: m.value as any}))}
                             className={`p-3 rounded-lg border-2 text-left transition-all ${formData.success_model === m.value ? 'border-indigo-500 bg-indigo-500/20' : 'border-gray-700 bg-gray-900/50 hover:border-gray-600'}`}>
                             <p className="text-white font-bold text-xs mb-1">{m.label}</p>
                             <p className="text-gray-400 text-[10px]">{m.ex}</p>
