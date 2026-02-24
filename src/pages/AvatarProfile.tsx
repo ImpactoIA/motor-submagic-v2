@@ -1526,10 +1526,10 @@ export const AvatarProfile: React.FC = () => {
         }
         .textarea-avatar { resize: none; line-height: 1.6; }
         ::placeholder { color: rgba(156, 163, 175, 0.5); }
-      `}</style>
-      @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
       @keyframes slideUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
-    </div>
+      `}</style>
+      </div>
   );
 };
 
