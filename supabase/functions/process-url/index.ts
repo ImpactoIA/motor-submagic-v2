@@ -8729,6 +8729,7 @@ ${instruccionEstructura}
   // NO modifica P1, P2, P3, P4, P5, P6 ni el loop de optimización.
   // ══════════════════════════════════════════════════════════════════
   let estrategiaTCA: any = null;
+  const temaParaTCA = temaUsuario; // guardar tema original antes de expansión TCA
 
   // Si el tema ya viene pre-expandido desde Ideas Rápidas — no reexpandir
   if (settings?.tca_preexpandido) {
