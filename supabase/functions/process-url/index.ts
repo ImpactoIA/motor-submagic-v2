@@ -8277,6 +8277,7 @@ if (body.closing_objective) settings.closing_objective = body.closing_objective;
     let avatarDirectives = "";
 
     if (!skipMiddleware) {
+      try {
         console.log('[MIDDLEWARE] 🕵️ Verificando Avatar...');
         const avatarMw = new AvatarMiddleware(supabase);
         const validation = await avatarMw.validateAndGetAvatar(userId);
@@ -8318,6 +8319,10 @@ if (body.closing_objective) settings.closing_objective = body.closing_objective;
         
         // También inyectamos en userContext para funciones complejas
         (userContext as any).knowledge_base_content = ((userContext as any).knowledge_base_content || "") + `\n\n[PERSONALIDAD AVATAR]: ${avatarDirectives}`;
+      } catch (middlewareError: any) {
+        console.error('[MIDDLEWARE] ❌ Error en middleware de avatar:', middlewareError.message);
+        // Continuar sin avatar si el middleware falla
+      }
     }
     
     // ==================================================================================
