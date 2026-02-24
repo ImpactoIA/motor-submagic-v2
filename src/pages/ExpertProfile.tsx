@@ -15,165 +15,344 @@ import {
 // ════════════════════════════════════════════════════════════════════════════════
 
 const ExpertAuditReportV2 = ({ data }: { data: any }) => {
+  const [tab, setTab] = React.useState<'score'|'mercado'|'diferenciacion'|'perfil'>('score');
   if (!data || !data.auditoria_calidad) {
     return (
-        <div className="bg-yellow-900/10 p-4 rounded-xl border border-yellow-500/20 text-yellow-200 text-xs">
-            <p className="font-bold mb-1">Resultado recibido</p>
-            <pre className="text-[10px] opacity-70 whitespace-pre-wrap">{JSON.stringify(data, null, 2)}</pre>
-        </div>
+      <div style={{background:'rgba(234,179,8,0.05)', padding:'16px', borderRadius:'12px', border:'1px solid rgba(234,179,8,0.2)', color:'rgba(253,224,71,0.8)', fontSize:'11px'}}>
+        <p style={{fontWeight:900, marginBottom:'6px'}}>Resultado recibido</p>
+        <pre style={{fontSize:'9px', opacity:0.6, whiteSpace:'pre-wrap', overflow:'auto'}}>{JSON.stringify(data,null,2)}</pre>
+      </div>
     );
   }
 
-  const { auditoria_calidad, analisis_campo_por_campo, perfil_experto_optimizado, analisis_mercado, analisis_competencia, diagnostico_posicionamiento, sistema_diferenciacion, score_estrategico, plan_accion_90_dias, siguiente_paso } = data;
+  const { auditoria_calidad:aq, analisis_campo_por_campo, perfil_experto_optimizado:pf, analisis_mercado:am, analisis_competencia:ac, diagnostico_posicionamiento:dp, sistema_diferenciacion:sd, score_estrategico:se, plan_accion_90_dias:plan, siguiente_paso } = data;
+  const score = aq.score_global || 0;
+  const scoreColor = score>=90?'#a78bfa':score>=75?'#22d3ee':score>=60?'#4ade80':score>=40?'#facc15':'#f87171';
+  const scoreBg = score>=90?'rgba(139,92,246,0.12)':score>=75?'rgba(6,182,212,0.1)':score>=60?'rgba(34,197,94,0.1)':score>=40?'rgba(234,179,8,0.1)':'rgba(239,68,68,0.1)';
+  const scoreBorder = score>=90?'rgba(139,92,246,0.4)':score>=75?'rgba(6,182,212,0.3)':score>=60?'rgba(34,197,94,0.3)':score>=40?'rgba(234,179,8,0.3)':'rgba(239,68,68,0.3)';
 
-  const getStatusColor = (status: string) => {
-    if (status?.includes('Magnética') || status?.includes('Único') || status?.includes('🟢'))
-        return 'text-green-400 border-green-500/30 bg-green-500/10';
-    if (status?.includes('Común') || status?.includes('🟡'))
-        return 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10';
-    if (status?.includes('Débil') || status?.includes('🔴'))
-        return 'text-orange-400 border-orange-500/30 bg-orange-500/10';
-    return 'text-red-400 border-red-500/30 bg-red-500/10';
-  };
-
-  const getScoreColor = (score: number) => {
-    if (score >= 96) return 'text-purple-400';
-    if (score >= 86) return 'text-cyan-400';
-    if (score >= 71) return 'text-green-400';
-    if (score >= 51) return 'text-yellow-400';
-    if (score >= 31) return 'text-orange-400';
-    return 'text-red-500';
-  };
+  const tabs = [
+    { id:'score',        icon:'🎯', label:'Score'    },
+    { id:'mercado',      icon:'📊', label:'Mercado'  },
+    { id:'diferenciacion',icon:'⚡', label:'Diferenc' },
+    { id:'perfil',       icon:'👤', label:'Perfil'   },
+  ];
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div className="bg-gradient-to-r from-gray-900 via-indigo-950/20 to-black border border-gray-800 rounded-2xl p-6 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 blur-3xl"></div>
-        <div className="relative z-10">
-          <div className="flex justify-between items-start mb-4">
-            <div>
-              <h3 className="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1 flex items-center gap-2">
-                <Award size={12}/> NIVEL DE AUTORIDAD
-              </h3>
-              <div className="flex items-baseline gap-2 mb-2">
-                <span className={`text-5xl font-black ${getScoreColor(auditoria_calidad.score_global)}`}>
-                  {auditoria_calidad.score_global}
-                </span>
-                <span className="text-gray-600 text-xl font-bold">/100</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Crown size={16} className={getScoreColor(auditoria_calidad.score_global)}/>
-                <p className="text-white font-black text-sm tracking-wide">{auditoria_calidad.nivel_autoridad}</p>
-              </div>
+    <div style={{display:'flex', flexDirection:'column', gap:'0', animation:'fadeUp 0.5s cubic-bezier(0.16,1,0.3,1)'}}>
+
+      {/* SCORE HEADER */}
+      <div style={{
+        background:`linear-gradient(135deg, ${scoreBg} 0%, rgba(0,0,0,0.6) 100%)`,
+        border:`1px solid ${scoreBorder}`,
+        borderRadius:'16px', padding:'16px', marginBottom:'12px',
+        position:'relative', overflow:'hidden'
+      }}>
+        <div style={{position:'absolute', top:'-20px', right:'-20px', width:'100px', height:'100px', borderRadius:'50%', background:`radial-gradient(circle, ${scoreColor}10, transparent)`, filter:'blur(20px)'}}/>
+        <div style={{display:'flex', justifyContent:'space-between', alignItems:'flex-start', position:'relative'}}>
+          <div>
+            <div style={{fontSize:'9px', fontWeight:900, color:'rgba(255,255,255,0.3)', letterSpacing:'3px', textTransform:'uppercase', marginBottom:'6px', display:'flex', alignItems:'center', gap:'6px'}}>
+              <span>🏆</span> NIVEL DE AUTORIDAD
             </div>
-            <div className="bg-white/5 p-4 rounded-xl max-w-[200px] backdrop-blur-sm border border-white/10">
-              <div className="flex items-center gap-1 mb-2 text-indigo-400">
-                <ShieldAlert size={14} />
-                <span className="text-[10px] font-black uppercase tracking-wider">Titan Strategy</span>
-              </div>
-              <p className="text-xs text-gray-300 italic leading-relaxed">"{auditoria_calidad.veredicto_brutal}"</p>
+            <div style={{display:'flex', alignItems:'baseline', gap:'6px', marginBottom:'6px'}}>
+              <span style={{fontSize:'48px', fontWeight:900, color:scoreColor, lineHeight:1}}>{score}</span>
+              <span style={{fontSize:'16px', color:'rgba(255,255,255,0.2)', fontWeight:700}}>/100</span>
             </div>
+            <div style={{fontSize:'14px', fontWeight:900, color:'white'}}>{aq.nivel_autoridad}</div>
           </div>
-          {auditoria_calidad.desglose_puntos && (
-            <div className="grid grid-cols-5 gap-2 mb-4">
-              {[
-                { label: 'Historia', key: 'historia', max: 25, color: 'text-cyan-400' },
-                { label: 'Mecanismo', key: 'mecanismo', max: 30, color: 'text-purple-400' },
-                { label: 'Proof', key: 'proof', max: 20, color: 'text-green-400' },
-                { label: 'Enemigo', key: 'enemigo', max: 15, color: 'text-red-400' },
-                { label: 'Promesa', key: 'promesa', max: 10, color: 'text-yellow-400' },
-              ].map(item => (
-                <div key={item.key} className="bg-black/40 p-2.5 rounded-lg border border-gray-800">
-                  <span className="text-[9px] text-gray-500 uppercase block mb-1">{item.label}</span>
-                  <div className="flex items-baseline gap-1">
-                    <span className={`text-lg font-black ${item.color}`}>{auditoria_calidad.desglose_puntos[item.key]}</span>
-                    <span className="text-[10px] text-gray-600">/{item.max}</span>
+          <div style={{
+            background:'rgba(255,255,255,0.04)', padding:'14px', borderRadius:'14px',
+            maxWidth:'180px', border:'1px solid rgba(255,255,255,0.08)',
+            backdropFilter:'blur(10px)'
+          }}>
+            <div style={{fontSize:'8px', color:'rgba(99,102,241,0.8)', fontWeight:900, textTransform:'uppercase', letterSpacing:'2px', marginBottom:'6px', display:'flex', alignItems:'center', gap:'4px'}}>
+              <span>⚡</span> Titan Strategy
+            </div>
+            <p style={{fontSize:'10px', color:'rgba(255,255,255,0.7)', fontStyle:'italic', lineHeight:1.5}}>"{aq.veredicto_brutal}"</p>
+          </div>
+        </div>
+
+        {/* Desglose en barra */}
+        {aq.desglose_puntos && (
+          <div style={{display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:'6px', marginTop:'12px'}}>
+            {[
+              { label:'Historia', key:'historia', max:25, color:'#22d3ee' },
+              { label:'Mecanismo', key:'mecanismo', max:30, color:'#a78bfa' },
+              { label:'Proof', key:'proof', max:20, color:'#4ade80' },
+              { label:'Enemigo', key:'enemigo', max:15, color:'#f87171' },
+              { label:'Promesa', key:'promesa', max:10, color:'#facc15' },
+            ].map(item=>(
+              <div key={item.key} style={{
+                background:'rgba(0,0,0,0.5)', borderRadius:'10px', padding:'8px',
+                border:'1px solid rgba(255,255,255,0.05)',
+                display:'flex', flexDirection:'column', alignItems:'center'
+              }}>
+                <span style={{fontSize:'8px', color:'rgba(255,255,255,0.3)', textTransform:'uppercase', marginBottom:'4px', fontWeight:700}}>{item.label}</span>
+                <div style={{display:'flex', alignItems:'baseline', gap:'2px'}}>
+                  <span style={{fontSize:'16px', fontWeight:900, color:item.color}}>{aq.desglose_puntos[item.key]||0}</span>
+                  <span style={{fontSize:'8px', color:'rgba(255,255,255,0.2)'}}>/{item.max}</span>
+                </div>
+                {/* mini barra */}
+                <div style={{width:'100%', height:'3px', background:'rgba(255,255,255,0.06)', borderRadius:'2px', marginTop:'4px'}}>
+                  <div style={{height:'100%', borderRadius:'2px', background:item.color, width:`${((aq.desglose_puntos[item.key]||0)/item.max)*100}%`, transition:'width 1s ease'}}/>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Penalizaciones */}
+        {(aq.penalizaciones_aplicadas||[]).length > 0 && (
+          <div style={{marginTop:'10px', background:'rgba(239,68,68,0.07)', border:'1px solid rgba(239,68,68,0.2)', borderRadius:'10px', padding:'10px'}}>
+            <div style={{fontSize:'8px', color:'#f87171', fontWeight:900, textTransform:'uppercase', letterSpacing:'2px', marginBottom:'6px'}}>⚠️ Penalizaciones</div>
+            {aq.penalizaciones_aplicadas.map((p:string,i:number)=>(
+              <div key={i} style={{fontSize:'10px', color:'rgba(252,165,165,0.8)', display:'flex', alignItems:'flex-start', gap:'6px', marginBottom:'3px'}}>
+                <span style={{color:'#ef4444', flexShrink:0, marginTop:'1px'}}>✕</span><span>{p}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* TABS */}
+      <div style={{display:'flex', background:'rgba(0,0,0,0.4)', borderRadius:'12px', padding:'3px', marginBottom:'10px', border:'1px solid rgba(255,255,255,0.05)'}}>
+        {tabs.map(t=>(
+          <button key={t.id} onClick={()=>setTab(t.id as any)} style={{
+            flex:1, padding:'8px 4px', borderRadius:'10px',
+            fontSize:'9px', fontWeight:900, letterSpacing:'1px', textTransform:'uppercase',
+            cursor:'pointer', border:'none',
+            background: tab===t.id ? 'rgba(99,102,241,0.25)' : 'transparent',
+            color: tab===t.id ? 'white' : 'rgba(255,255,255,0.3)',
+            transition:'all 0.2s',
+            display:'flex', flexDirection:'column', alignItems:'center', gap:'2px'
+          }}>
+            <span style={{fontSize:'12px'}}>{t.icon}</span>
+            <span>{t.label}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* CONTENIDO TABS */}
+
+      {/* SCORE TAB */}
+      {tab==='score' && (
+        <div style={{display:'flex', flexDirection:'column', gap:'10px', animation:'fadeUp 0.3s ease'}}>
+          {/* Score Estratégico */}
+          {se && (
+            <div style={{background:'rgba(255,255,255,0.02)', border:'1px solid rgba(255,255,255,0.06)', borderRadius:'14px', padding:'14px'}}>
+              <div style={{fontSize:'9px', fontWeight:900, color:'rgba(255,255,255,0.3)', letterSpacing:'3px', textTransform:'uppercase', marginBottom:'10px', display:'flex', alignItems:'center', gap:'6px'}}>📈 Score Estratégico</div>
+              <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'8px', marginBottom:'10px'}}>
+                {[
+                  { key:'claridad_posicionamiento', label:'Claridad', color:'#22d3ee' },
+                  { key:'diferenciacion', label:'Diferenciación', color:'#a78bfa' },
+                  { key:'autoridad_percibida', label:'Autoridad', color:'#4ade80' },
+                  { key:'ventaja_competitiva', label:'Ventaja', color:'#facc15' },
+                  { key:'coherencia_estrategica', label:'Coherencia', color:'#818cf8' },
+                  { key:'nivel_dominancia', label:'Dominancia', color:'#f87171' },
+                ].map(item=>(
+                  <div key={item.key} style={{
+                    background:'rgba(0,0,0,0.4)', borderRadius:'10px', padding:'10px 12px',
+                    border:'1px solid rgba(255,255,255,0.04)',
+                    display:'flex', justifyContent:'space-between', alignItems:'center'
+                  }}>
+                    <div>
+                      <span style={{fontSize:'8px', color:'rgba(255,255,255,0.3)', textTransform:'uppercase', display:'block', marginBottom:'3px'}}>{item.label}</span>
+                      <div style={{width:'60px', height:'3px', background:'rgba(255,255,255,0.06)', borderRadius:'2px'}}>
+                        <div style={{height:'100%', borderRadius:'2px', background:item.color, width:`${se[item.key]||0}%`}}/>
+                      </div>
+                    </div>
+                    <span style={{fontSize:'16px', fontWeight:900, color:se[item.key]>=70?item.color:'#f87171'}}>{se[item.key]||0}</span>
+                  </div>
+                ))}
+              </div>
+              {(se.mejoras_urgentes||[]).length > 0 && (
+                <div style={{background:'rgba(239,68,68,0.06)', border:'1px solid rgba(239,68,68,0.2)', borderRadius:'10px', padding:'10px'}}>
+                  <div style={{fontSize:'8px', color:'#f87171', fontWeight:900, textTransform:'uppercase', letterSpacing:'2px', marginBottom:'8px'}}>⚡ Mejoras Urgentes</div>
+                  {se.mejoras_urgentes.map((m:any,i:number)=>(
+                    <p key={i} style={{fontSize:'10px', color:'rgba(255,255,255,0.6)', marginBottom:'5px'}}>
+                      <span style={{color:'#f87171', fontWeight:900}}>{m.dimension}: </span>{m.accion_concreta}
+                    </p>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Auditoría táctica */}
+          {(analisis_campo_por_campo||[]).length > 0 && (
+            <div style={{display:'flex', flexDirection:'column', gap:'8px'}}>
+              <div style={{fontSize:'9px', fontWeight:900, color:'rgba(255,255,255,0.3)', letterSpacing:'3px', textTransform:'uppercase'}}>🔍 Auditoría Táctica</div>
+              {analisis_campo_por_campo.map((item:any,idx:number)=>(
+                <div key={idx} style={{
+                  background:'rgba(10,10,12,0.8)', border:'1px solid rgba(255,255,255,0.05)',
+                  borderRadius:'12px', padding:'12px',
+                  transition:'border-color 0.2s'
+                }}
+                onMouseEnter={e=>(e.currentTarget.style.borderColor='rgba(99,102,241,0.3)')}
+                onMouseLeave={e=>(e.currentTarget.style.borderColor='rgba(255,255,255,0.05)')}>
+                  <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'8px'}}>
+                    <span style={{fontSize:'11px', fontWeight:800, color:'white'}}>{item.campo}</span>
+                    <div style={{display:'flex', alignItems:'center', gap:'6px'}}>
+                      {item.score_numerico!==undefined && <span style={{fontSize:'10px', fontWeight:900, color:'rgba(255,255,255,0.4)'}}>{item.score_numerico}/10</span>}
+                      <span style={{
+                        fontSize:'8px', fontWeight:900, padding:'2px 8px', borderRadius:'20px',
+                        background: item.calificacion?.includes('🟢')?'rgba(74,222,128,0.1)':item.calificacion?.includes('🟡')?'rgba(250,204,21,0.1)':'rgba(248,113,113,0.1)',
+                        color: item.calificacion?.includes('🟢')?'#4ade80':item.calificacion?.includes('🟡')?'#facc15':'#f87171',
+                        border:`1px solid ${item.calificacion?.includes('🟢')?'rgba(74,222,128,0.3)':item.calificacion?.includes('🟡')?'rgba(250,204,21,0.3)':'rgba(248,113,113,0.3)'}`,
+                        textTransform:'uppercase', letterSpacing:'1px'
+                      }}>{item.calificacion?.replace(/🔴|🟡|🟢/g,'').trim()}</span>
+                    </div>
+                  </div>
+                  {item.lo_que_escribio && (
+                    <div style={{borderLeft:'2px solid rgba(239,68,68,0.3)', paddingLeft:'8px', marginBottom:'6px'}}>
+                      <span style={{fontSize:'8px', color:'#f87171', fontWeight:900, textTransform:'uppercase', display:'block', marginBottom:'2px'}}>Lo que escribiste</span>
+                      <p style={{fontSize:'10px', color:'rgba(255,255,255,0.4)', fontStyle:'italic'}}>"{item.lo_que_escribio}"</p>
+                    </div>
+                  )}
+                  <div style={{borderLeft:'2px solid rgba(251,146,60,0.4)', paddingLeft:'8px', background:'rgba(251,146,60,0.03)', padding:'6px 8px', marginBottom:'6px', borderRadius:'0 6px 6px 0'}}>
+                    <span style={{fontSize:'8px', color:'#fb923c', fontWeight:900, textTransform:'uppercase', display:'block', marginBottom:'2px'}}>Debilidad</span>
+                    <p style={{fontSize:'10px', color:'rgba(253,186,116,0.8)', lineHeight:1.5}}>{item.critica}</p>
+                  </div>
+                  <div style={{borderLeft:'2px solid rgba(74,222,128,0.5)', paddingLeft:'8px', background:'rgba(74,222,128,0.03)', padding:'6px 8px', borderRadius:'0 6px 6px 0'}}>
+                    <span style={{fontSize:'8px', color:'#4ade80', fontWeight:900, textTransform:'uppercase', display:'block', marginBottom:'2px'}}>✨ Estrategia High-Ticket</span>
+                    <p style={{fontSize:'10px', color:'rgba(255,255,255,0.85)', fontWeight:500, lineHeight:1.5}}>"{item.correccion_maestra}"</p>
                   </div>
                 </div>
               ))}
             </div>
           )}
-          {auditoria_calidad.penalizaciones_aplicadas?.length > 0 && (
-            <div className="bg-red-900/10 border border-red-500/20 rounded-lg p-3">
-              <h4 className="text-red-400 text-[10px] font-black uppercase mb-2">⚠️ Penalizaciones</h4>
-              <ul className="space-y-1">
-                {auditoria_calidad.penalizaciones_aplicadas.map((pen: string, i: number) => (
-                  <li key={i} className="text-xs text-red-300 flex items-start gap-2">
-                    <XCircle size={12} className="shrink-0 mt-0.5"/><span>{pen}</span>
-                  </li>
-                ))}
-              </ul>
+
+          {/* Siguiente Paso */}
+          {siguiente_paso && (
+            <div style={{
+              background:'linear-gradient(135deg, rgba(234,179,8,0.08), rgba(249,115,22,0.05))',
+              border:'1px solid rgba(234,179,8,0.25)', borderRadius:'14px', padding:'14px', textAlign:'center'
+            }}>
+              <div style={{fontSize:'9px', fontWeight:900, color:'#facc15', letterSpacing:'3px', textTransform:'uppercase', marginBottom:'8px', display:'flex', alignItems:'center', justifyContent:'center', gap:'6px'}}>
+                → Tu Siguiente Paso HOY
+              </div>
+              <p style={{fontSize:'12px', color:'white', fontWeight:600, lineHeight:1.6}}>{siguiente_paso}</p>
             </div>
           )}
         </div>
-      </div>
+      )}
 
-      <div className="space-y-3">
-        <h4 className="text-[10px] font-bold text-gray-400 uppercase flex items-center gap-2 tracking-widest pl-1">
-          <Activity size={12}/> Auditoría Táctica
-        </h4>
-        {analisis_campo_por_campo?.map((item: any, idx: number) => (
-          <div key={idx} className="bg-[#0a0a0a] border border-gray-800 rounded-xl p-4 hover:border-indigo-500/30 transition-colors">
-            <div className="flex justify-between items-center mb-3">
-              <h5 className="font-bold text-white text-xs">{item.campo}</h5>
-              <div className="flex items-center gap-2">
-                {item.score_numerico !== undefined && <span className="text-xs font-black text-gray-400">{item.score_numerico}/10</span>}
-                <span className={`text-[9px] font-black uppercase px-1.5 py-0.5 rounded border ${getStatusColor(item.calificacion)}`}>
-                  {item.calificacion?.split(' ')[1] || item.calificacion}
-                </span>
+      {/* MERCADO TAB */}
+      {tab==='mercado' && (
+        <div style={{display:'flex', flexDirection:'column', gap:'10px', animation:'fadeUp 0.3s ease'}}>
+          {am && (
+            <div style={{background:'rgba(99,102,241,0.06)', border:'1px solid rgba(99,102,241,0.2)', borderRadius:'14px', padding:'14px'}}>
+              <div style={{fontSize:'9px', fontWeight:900, color:'#818cf8', letterSpacing:'3px', textTransform:'uppercase', marginBottom:'12px', display:'flex', alignItems:'center', gap:'6px'}}>📊 Análisis de Mercado</div>
+              <div style={{display:'flex', alignItems:'center', gap:'8px', marginBottom:'12px'}}>
+                <span style={{fontSize:'9px', color:'rgba(255,255,255,0.4)', textTransform:'uppercase', fontWeight:700}}>Saturación:</span>
+                <span style={{
+                  fontSize:'10px', fontWeight:900, padding:'2px 10px', borderRadius:'20px',
+                  background: am.nivel_saturacion==='crítico'?'rgba(239,68,68,0.15)':am.nivel_saturacion==='alto'?'rgba(249,115,22,0.15)':'rgba(250,204,21,0.15)',
+                  color: am.nivel_saturacion==='crítico'?'#f87171':am.nivel_saturacion==='alto'?'#fb923c':'#facc15',
+                  border:`1px solid ${am.nivel_saturacion==='crítico'?'rgba(239,68,68,0.3)':am.nivel_saturacion==='alto'?'rgba(249,115,22,0.3)':'rgba(250,204,21,0.3)'}`,
+                  textTransform:'uppercase', letterSpacing:'2px'
+                }}>{am.nivel_saturacion?.toUpperCase()}</span>
               </div>
-            </div>
-            <div className="space-y-3">
-              {item.lo_que_escribio && (
-                <div className="relative pl-3 border-l-2 border-red-500/20">
-                  <span className="text-[9px] text-red-400 font-bold block mb-0.5 uppercase">Lo que escribiste</span>
-                  <p className="text-gray-400 text-[10px] italic">"{item.lo_que_escribio}"</p>
+              {(am.vacios_estrategicos||[]).length > 0 && (
+                <div style={{marginBottom:'10px'}}>
+                  <div style={{fontSize:'8px', color:'#4ade80', fontWeight:900, textTransform:'uppercase', marginBottom:'6px'}}>✅ Vacíos Estratégicos</div>
+                  {am.vacios_estrategicos.map((v:string,i:number)=>(
+                    <p key={i} style={{fontSize:'10px', color:'rgba(255,255,255,0.6)', display:'flex', alignItems:'flex-start', gap:'6px', marginBottom:'4px'}}>
+                      <span style={{color:'#22c55e', flexShrink:0}}>✓</span>{v}
+                    </p>
+                  ))}
                 </div>
               )}
-              <div className="relative pl-3 border-l-2 border-orange-500/20 bg-orange-900/5 py-1 rounded-r-lg">
-                <span className="text-[9px] text-orange-400 font-bold block mb-0.5 uppercase">Debilidad Detectada</span>
-                <p className="text-[10px] text-orange-300 flex items-start gap-1 leading-relaxed">
-                  <XCircle size={10} className="shrink-0 mt-0.5"/> {item.critica}
-                </p>
-              </div>
-              <div className="relative pl-3 border-l-2 border-green-500/40 bg-green-500/5 py-2 px-1 rounded-r-lg">
-                <span className="text-[9px] text-green-400 font-bold block mb-1 uppercase">✨ Estrategia High-Ticket</span>
-                <p className="text-gray-200 text-[10px] font-medium leading-relaxed">"{item.correccion_maestra}"</p>
-              </div>
+              {(am.mensajes_saturados||[]).length > 0 && (
+                <div>
+                  <div style={{fontSize:'8px', color:'#f87171', fontWeight:900, textTransform:'uppercase', marginBottom:'6px'}}>🚫 Mensajes Saturados (Evitar)</div>
+                  {am.mensajes_saturados.map((m:string,i:number)=>(
+                    <p key={i} style={{fontSize:'10px', color:'rgba(255,255,255,0.4)', display:'flex', alignItems:'flex-start', gap:'6px', marginBottom:'4px'}}>
+                      <span style={{color:'#ef4444', flexShrink:0}}>✕</span>{m}
+                    </p>
+                  ))}
+                </div>
+              )}
             </div>
-          </div>
-        ))}
-      </div>
+          )}
 
-      {/* SCORE ESTRATÉGICO */}
-      {score_estrategico && (
-        <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-5 space-y-3">
-          <h4 className="text-[10px] font-bold text-gray-400 uppercase flex items-center gap-2 tracking-widest">
-            <BarChart2 size={12}/> Score Estratégico
-          </h4>
-          <div className="grid grid-cols-2 gap-2">
-            {[
-              { key: 'claridad_posicionamiento', label: 'Claridad', color: 'text-cyan-400' },
-              { key: 'diferenciacion', label: 'Diferenciación', color: 'text-purple-400' },
-              { key: 'autoridad_percibida', label: 'Autoridad', color: 'text-green-400' },
-              { key: 'ventaja_competitiva', label: 'Ventaja', color: 'text-yellow-400' },
-              { key: 'coherencia_estrategica', label: 'Coherencia', color: 'text-indigo-400' },
-              { key: 'nivel_dominancia', label: 'Dominancia', color: 'text-red-400' },
-            ].map(item => (
-              <div key={item.key} className="bg-black/40 p-2.5 rounded-lg border border-gray-800 flex justify-between items-center">
-                <span className="text-[9px] text-gray-500 uppercase">{item.label}</span>
-                <span className={`text-sm font-black ${score_estrategico[item.key] >= 70 ? item.color : 'text-red-400'}`}>
-                  {score_estrategico[item.key]}/100
-                </span>
-              </div>
-            ))}
-          </div>
-          {score_estrategico.mejoras_urgentes?.length > 0 && (
-            <div className="bg-red-900/10 border border-red-500/20 rounded-lg p-3 space-y-2">
-              <span className="text-[9px] text-red-400 font-black uppercase">⚡ Mejoras Urgentes</span>
-              {score_estrategico.mejoras_urgentes.map((m: any, i: number) => (
-                <div key={i} className="text-[10px] text-gray-300">
-                  <span className="text-red-400 font-bold">{m.dimension}: </span>{m.accion_concreta}
+          {dp && (
+            <div style={{background:'rgba(6,182,212,0.06)', border:'1px solid rgba(6,182,212,0.2)', borderRadius:'14px', padding:'14px'}}>
+              <div style={{fontSize:'9px', fontWeight:900, color:'#22d3ee', letterSpacing:'3px', textTransform:'uppercase', marginBottom:'12px'}}>🔍 Diagnóstico de Posicionamiento</div>
+              {dp.posicionamiento_actual && (
+                <div style={{marginBottom:'10px', padding:'10px', background:'rgba(0,0,0,0.4)', borderRadius:'10px', border:'1px solid rgba(255,255,255,0.04)'}}>
+                  <div style={{fontSize:'8px', color:'rgba(255,255,255,0.3)', textTransform:'uppercase', fontWeight:900, marginBottom:'4px'}}>Posicionamiento Actual</div>
+                  <p style={{fontSize:'11px', color:'rgba(255,255,255,0.7)'}}>{dp.posicionamiento_actual}</p>
+                </div>
+              )}
+              {dp.posicionamiento_ideal && (
+                <div style={{padding:'10px', background:'rgba(6,182,212,0.05)', borderRadius:'10px', border:'1px solid rgba(6,182,212,0.15)'}}>
+                  <div style={{fontSize:'8px', color:'#22d3ee', textTransform:'uppercase', fontWeight:900, marginBottom:'4px'}}>✨ Posicionamiento Ideal</div>
+                  <p style={{fontSize:'11px', color:'rgba(255,255,255,0.85)', fontWeight:600}}>{dp.posicionamiento_ideal}</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {ac && (
+            <div style={{background:'rgba(168,85,247,0.05)', border:'1px solid rgba(168,85,247,0.2)', borderRadius:'14px', padding:'14px'}}>
+              <div style={{fontSize:'9px', fontWeight:900, color:'#c084fc', letterSpacing:'3px', textTransform:'uppercase', marginBottom:'12px'}}>🔬 Análisis de Competencia</div>
+              {(ac.errores_comunes_competencia||[]).length > 0 && (
+                <div style={{marginBottom:'10px'}}>
+                  <div style={{fontSize:'8px', color:'#f87171', fontWeight:900, textTransform:'uppercase', marginBottom:'6px'}}>Errores Comunes (Oportunidades)</div>
+                  {ac.errores_comunes_competencia.map((e:string,i:number)=>(
+                    <p key={i} style={{fontSize:'10px', color:'rgba(255,255,255,0.6)', display:'flex', gap:'6px', marginBottom:'4px', alignItems:'flex-start'}}>
+                      <span style={{color:'#a78bfa', flexShrink:0}}>•</span>{e}
+                    </p>
+                  ))}
+                </div>
+              )}
+              {ac.oportunidad_no_explotada && (
+                <div style={{padding:'10px', background:'rgba(168,85,247,0.06)', borderRadius:'10px', border:'1px solid rgba(168,85,247,0.2)'}}>
+                  <div style={{fontSize:'8px', color:'#c084fc', fontWeight:900, textTransform:'uppercase', marginBottom:'4px'}}>🎯 Oportunidad No Explotada</div>
+                  <p style={{fontSize:'11px', color:'rgba(255,255,255,0.85)', fontWeight:600, lineHeight:1.5}}>{ac.oportunidad_no_explotada}</p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* DIFERENCIACIÓN TAB */}
+      {tab==='diferenciacion' && (
+        <div style={{display:'flex', flexDirection:'column', gap:'10px', animation:'fadeUp 0.3s ease'}}>
+          {sd && (
+            <div style={{background:'rgba(168,85,247,0.05)', border:'1px solid rgba(168,85,247,0.2)', borderRadius:'14px', padding:'14px'}}>
+              <div style={{fontSize:'9px', fontWeight:900, color:'#c084fc', letterSpacing:'3px', textTransform:'uppercase', marginBottom:'14px'}}>⚡ Sistema de Diferenciación</div>
+              {[
+                { key:'angulo_unico_ataque',        label:'⚡ Ángulo Único de Ataque',  color:'#facc15' },
+                { key:'promesa_optimizada',          label:'🎯 Promesa Optimizada',       color:'#4ade80' },
+                { key:'enemigo_estrategico_optimo',  label:'🔥 Enemigo Estratégico',      color:'#f87171' },
+                { key:'postura_distintiva',          label:'🏛️ Postura Distintiva',       color:'#22d3ee' },
+              ].map(item=> sd[item.key] && (
+                <div key={item.key} style={{marginBottom:'10px', background:'rgba(0,0,0,0.4)', padding:'12px', borderRadius:'12px', border:'1px solid rgba(255,255,255,0.05)'}}>
+                  <span style={{fontSize:'9px', fontWeight:900, color:item.color, textTransform:'uppercase', letterSpacing:'2px', display:'block', marginBottom:'6px'}}>{item.label}</span>
+                  <p style={{fontSize:'11px', color:'rgba(255,255,255,0.8)', lineHeight:1.5}}>{sd[item.key]}</p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {plan && (
+            <div style={{background:'rgba(234,179,8,0.05)', border:'1px solid rgba(234,179,8,0.2)', borderRadius:'14px', padding:'14px'}}>
+              <div style={{fontSize:'9px', fontWeight:900, color:'#fbbf24', letterSpacing:'3px', textTransform:'uppercase', marginBottom:'14px'}}>🗓 Plan de Acción 90 Días</div>
+              {[
+                { key:'dias_1_30', label:'Días 1–30', color:'#f87171' },
+                { key:'dias_31_60', label:'Días 31–60', color:'#facc15' },
+                { key:'dias_61_90', label:'Días 61–90', color:'#4ade80' },
+              ].map(p => plan[p.key]?.length > 0 && (
+                <div key={p.key} style={{marginBottom:'10px'}}>
+                  <div style={{fontSize:'9px', fontWeight:900, color:p.color, textTransform:'uppercase', marginBottom:'6px'}}>{p.label}</div>
+                  {plan[p.key].map((a:string,i:number)=>(
+                    <p key={i} style={{fontSize:'10px', color:'rgba(255,255,255,0.6)', display:'flex', gap:'6px', marginBottom:'4px', alignItems:'flex-start'}}>
+                      <span style={{color:p.color, flexShrink:0}}>→</span>{a}
+                    </p>
+                  ))}
                 </div>
               ))}
             </div>
@@ -181,87 +360,30 @@ const ExpertAuditReportV2 = ({ data }: { data: any }) => {
         </div>
       )}
 
-      {/* ANÁLISIS DE MERCADO */}
-      {analisis_mercado && (
-        <div className="bg-indigo-900/10 border border-indigo-500/20 rounded-2xl p-5 space-y-3">
-          <h4 className="text-[10px] font-bold text-indigo-400 uppercase flex items-center gap-2 tracking-widest">
-            <TrendingUp size={12}/> Análisis de Mercado
-          </h4>
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-[9px] text-gray-500 uppercase">Saturación:</span>
-            <span className={`text-[10px] font-black px-2 py-0.5 rounded ${analisis_mercado.nivel_saturacion === 'crítico' ? 'bg-red-500/20 text-red-400' : analisis_mercado.nivel_saturacion === 'alto' ? 'bg-orange-500/20 text-orange-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
-              {analisis_mercado.nivel_saturacion?.toUpperCase()}
-            </span>
-          </div>
-          {analisis_mercado.vacios_estrategicos?.length > 0 && (
-            <div>
-              <span className="text-[9px] text-green-400 font-black uppercase block mb-1">✅ Vacíos Estratégicos Disponibles</span>
-              {analisis_mercado.vacios_estrategicos.map((v: string, i: number) => (
-                <p key={i} className="text-[10px] text-gray-300 flex items-start gap-1 mb-1"><CheckCircle2 size={10} className="text-green-500 shrink-0 mt-0.5"/>{v}</p>
-              ))}
+      {/* PERFIL TAB */}
+      {tab==='perfil' && pf && (
+        <div style={{display:'flex', flexDirection:'column', gap:'10px', animation:'fadeUp 0.3s ease'}}>
+          <div style={{background:'rgba(99,102,241,0.06)', border:'1px solid rgba(99,102,241,0.2)', borderRadius:'14px', padding:'14px'}}>
+            <div style={{fontSize:'9px', fontWeight:900, color:'#818cf8', letterSpacing:'3px', textTransform:'uppercase', marginBottom:'14px', display:'flex', alignItems:'center', gap:'6px'}}>
+              👑 Marca Personal Optimizada
             </div>
-          )}
-          {analisis_mercado.mensajes_saturados?.length > 0 && (
-            <div>
-              <span className="text-[9px] text-red-400 font-black uppercase block mb-1">🚫 Mensajes Saturados (Evitar)</span>
-              {analisis_mercado.mensajes_saturados.map((m: string, i: number) => (
-                <p key={i} className="text-[10px] text-gray-400 flex items-start gap-1 mb-1"><XCircle size={10} className="text-red-500 shrink-0 mt-0.5"/>{m}</p>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* DIFERENCIACIÓN ESTRATÉGICA */}
-      {sistema_diferenciacion && (
-        <div className="bg-purple-900/10 border border-purple-500/20 rounded-2xl p-5 space-y-3">
-          <h4 className="text-[10px] font-bold text-purple-400 uppercase flex items-center gap-2 tracking-widest">
-            <Crosshair size={12}/> Sistema de Diferenciación
-          </h4>
-          {[
-            { key: 'angulo_unico_ataque', label: '⚡ Ángulo Único de Ataque', color: 'text-yellow-300' },
-            { key: 'promesa_optimizada', label: '🎯 Promesa Optimizada', color: 'text-green-300' },
-            { key: 'enemigo_estrategico_optimo', label: '🔥 Enemigo Estratégico', color: 'text-red-300' },
-            { key: 'postura_distintiva', label: '🏛️ Postura Distintiva', color: 'text-cyan-300' },
-          ].map(item => sistema_diferenciacion[item.key] && (
-            <div key={item.key} className="bg-black/40 p-3 rounded-lg border border-white/5">
-              <span className={`text-[9px] font-black uppercase block mb-1 ${item.color}`}>{item.label}</span>
-              <p className="text-gray-200 text-[10px] leading-relaxed">{sistema_diferenciacion[item.key]}</p>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {perfil_experto_optimizado && (
-        <div className="bg-indigo-900/10 border border-indigo-500/20 rounded-2xl p-5">
-          <h4 className="text-center text-xs font-black text-indigo-300 uppercase tracking-widest mb-4 flex items-center justify-center gap-2">
-            <Crown size={14}/> MARCA PERSONAL OPTIMIZADA
-          </h4>
-          <div className="space-y-3">
-            {perfil_experto_optimizado?.elevator_pitch && (
-              <div className="bg-black/40 p-3 rounded-lg border border-white/5">
-                <span className="block text-[9px] text-gray-500 uppercase font-bold mb-1">Elevator Pitch (15seg)</span>
-                <p className="text-white text-xs font-bold leading-relaxed">{perfil_experto_optimizado.elevator_pitch}</p>
+            {pf.elevator_pitch && (
+              <div style={{background:'rgba(0,0,0,0.5)', padding:'12px', borderRadius:'12px', marginBottom:'10px', border:'1px solid rgba(255,255,255,0.05)'}}>
+                <div style={{fontSize:'8px', color:'rgba(255,255,255,0.3)', textTransform:'uppercase', fontWeight:900, marginBottom:'6px'}}>⚡ Elevator Pitch (15 seg)</div>
+                <p style={{fontSize:'12px', color:'white', fontWeight:700, lineHeight:1.6}}>{pf.elevator_pitch}</p>
               </div>
             )}
-            {perfil_experto_optimizado?.bio_magnetica && (
-              <div className="bg-black/40 p-3 rounded-lg border border-white/5">
-                <span className="block text-[9px] text-gray-500 uppercase font-bold mb-1">Bio Magnética</span>
-                <p className="text-gray-300 text-[10px] leading-relaxed whitespace-pre-line">{perfil_experto_optimizado.bio_magnetica}</p>
+            {pf.bio_magnetica && (
+              <div style={{background:'rgba(0,0,0,0.5)', padding:'12px', borderRadius:'12px', border:'1px solid rgba(255,255,255,0.05)'}}>
+                <div style={{fontSize:'8px', color:'rgba(255,255,255,0.3)', textTransform:'uppercase', fontWeight:900, marginBottom:'6px'}}>📝 Bio Magnética</div>
+                <p style={{fontSize:'11px', color:'rgba(255,255,255,0.7)', lineHeight:1.6, whiteSpace:'pre-line'}}>{pf.bio_magnetica}</p>
               </div>
             )}
           </div>
         </div>
       )}
 
-      {siguiente_paso && (
-        <div className="bg-gradient-to-r from-yellow-900/10 to-orange-900/10 border border-yellow-500/20 rounded-xl p-5 text-center">
-          <h4 className="text-yellow-400 text-xs font-black uppercase mb-3 flex items-center justify-center gap-2">
-            <ArrowRight size={14}/> Tu Siguiente Paso HOY
-          </h4>
-          <p className="text-sm text-white font-medium leading-relaxed">{siguiente_paso}</p>
-        </div>
-      )}
+      <style>{`@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}`}</style>
     </div>
   );
 };
@@ -1453,9 +1575,27 @@ Responde con JSON: { "titulos_virales": [], "frameworks_ensenanza": [], "hooks_p
 
                         <div className="space-y-3">
                             {aiMode === 'xray' && (
-                                <button onClick={handleXRayAuthority} disabled={isProcessing || !formData.niche} className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-black uppercase flex justify-center items-center gap-2 transition-all disabled:opacity-50 shadow-lg shadow-indigo-900/20">
-                                    {isProcessing ? <RefreshCw size={14} className="animate-spin"/> : <Eye size={14}/>}
-                                    {isProcessing ? 'ESCANEANDO...' : `X-RAY AUTHORITY (${COSTO_XRAY} CR)`}
+                                <button
+                                  onClick={handleXRayAuthority}
+                                  disabled={isProcessing || !formData.niche}
+                                  style={{
+                                    width:'100%', padding:'14px',
+                                    background: isProcessing ? 'rgba(99,102,241,0.15)' : 'linear-gradient(135deg,#4f46e5,#7c3aed)',
+                                    border:'1px solid rgba(99,102,241,0.4)',
+                                    borderRadius:'14px', color:'white',
+                                    fontSize:'11px', fontWeight:900, cursor: isProcessing||!formData.niche ? 'not-allowed' : 'pointer',
+                                    letterSpacing:'2px', textTransform:'uppercase',
+                                    display:'flex', alignItems:'center', justifyContent:'center', gap:'8px',
+                                    opacity: !formData.niche ? 0.4 : 1,
+                                    boxShadow: isProcessing ? 'none' : '0 8px 24px rgba(79,70,229,0.3)',
+                                    transition:'all 0.3s'
+                                  }}
+                                  onMouseEnter={e=>{if(!isProcessing&&formData.niche){e.currentTarget.style.boxShadow='0 12px 32px rgba(79,70,229,0.5)';e.currentTarget.style.transform='translateY(-1px)'}}}
+                                  onMouseLeave={e=>{e.currentTarget.style.boxShadow='0 8px 24px rgba(79,70,229,0.3)';e.currentTarget.style.transform='translateY(0)'}}>
+                                  {isProcessing
+                                    ? <><RefreshCw size={14} style={{animation:'spin 1s linear infinite'}}/> ESCANEANDO AUTORIDAD...</>
+                                    : <><Eye size={14}/> X-RAY AUTHORITY ({COSTO_XRAY} CR)</>
+                                  }
                                 </button>
                             )}
                             {aiMode === 'amplify' && (

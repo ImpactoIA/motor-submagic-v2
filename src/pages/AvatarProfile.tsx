@@ -4,11 +4,557 @@ import { useAuth } from '../context/AuthContext';
 import { 
   Save, Plus, Trash2, Shield, Target, Brain, Zap, 
   AlertTriangle, TrendingUp, Crown, MessageSquare,
-  Award, Flame, Heart, Lock, Unlock, Globe, Users
+  Award, Flame, Heart, Lock, Unlock, Globe, Users,
+  X, Link, Activity, BarChart2, Crosshair, ArrowRight,
+  CheckCircle2, XCircle, ShieldAlert, Sparkles, Eye,
+  RefreshCw
 } from 'lucide-react';
 
 import { AvatarWidget } from '../components/AvatarWidget';
 import { MentorStrategic, ContextualSuggestions } from '../components/AvatarComponents';
+
+// ═══════════════════════════════════════════════════════════════
+// 🧠 TITAN INTELLIGENCE REPORT — REPORTE VISUAL PROFESIONAL V3
+// ═══════════════════════════════════════════════════════════════
+
+const AvatarIntelligenceReport = ({ data, onClose }: { data: any; onClose: () => void }) => {
+  const [tab, setTab] = React.useState<'score'|'psicologia'|'lenguaje'|'estrategia'|'perfil'>('score');
+  if (!data) return null;
+
+  const im   = data.inteligencia_mercado      || {};
+  const rec  = data.recomendacion_estrategica || {};
+  const aq   = data.auditoria_calidad         || {};
+  const pf   = data.perfil_final_optimizado   || {};
+  const score = aq.score_global || 0;
+
+  const scoreColor = score >= 90 ? '#a78bfa' : score >= 75 ? '#22d3ee' : score >= 60 ? '#4ade80' : score >= 40 ? '#facc15' : '#f87171';
+  const scoreBorder = score >= 90 ? 'rgba(167,139,250,0.3)' : score >= 75 ? 'rgba(34,211,238,0.3)' : score >= 60 ? 'rgba(74,222,128,0.3)' : score >= 40 ? 'rgba(250,204,21,0.3)' : 'rgba(248,113,113,0.3)';
+  const scoreGlow = score >= 90 ? '0 0 40px rgba(139,92,246,0.25)' : score >= 75 ? '0 0 40px rgba(6,182,212,0.2)' : score >= 60 ? '0 0 40px rgba(34,197,94,0.15)' : '0 0 40px rgba(245,158,11,0.15)';
+
+  const tabs = [
+    { id: 'score',     icon: '🎯', label: 'Score'     },
+    { id: 'psicologia',icon: '🧠', label: 'Psicología' },
+    { id: 'lenguaje',  icon: '💬', label: 'Lenguaje'  },
+    { id: 'estrategia',icon: '⚡', label: 'Estrategia' },
+    { id: 'perfil',    icon: '👤', label: 'Perfil'     },
+  ];
+
+  return (
+    <div style={{
+      position:'fixed', inset:0, zIndex:9999,
+      background:'rgba(0,0,0,0.94)',
+      backdropFilter:'blur(20px)',
+      display:'flex', alignItems:'center', justifyContent:'center', padding:'16px'
+    }}>
+      <div style={{
+        width:'100%', maxWidth:'760px',
+        maxHeight:'92vh',
+        display:'flex', flexDirection:'column',
+        background:'#080808',
+        border:`1px solid ${scoreBorder}`,
+        borderRadius:'24px',
+        overflow:'hidden',
+        boxShadow: scoreGlow,
+        animation:'slideUp 0.4s cubic-bezier(0.16,1,0.3,1)'
+      }}>
+
+        {/* ── HEADER ── */}
+        <div style={{
+          background:`linear-gradient(135deg, rgba(${score>=75?'6,182,212':'139,92,246'},0.08) 0%, #0a0a0a 60%)`,
+          borderBottom:'1px solid rgba(255,255,255,0.06)',
+          padding:'24px'
+        }}>
+          <div style={{display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'20px'}}>
+            <div style={{display:'flex', alignItems:'flex-start', gap:'20px'}}>
+              {/* Score Circle */}
+              <div style={{
+                width:'80px', height:'80px', borderRadius:'50%',
+                border:`3px solid ${scoreBorder}`,
+                background:'rgba(0,0,0,0.6)',
+                display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+                boxShadow: scoreGlow, flexShrink:0
+              }}>
+                <span style={{fontSize:'26px', fontWeight:900, color:scoreColor, lineHeight:1}}>{score}</span>
+                <span style={{fontSize:'9px', color:'rgba(255,255,255,0.3)', fontWeight:700}}>/100</span>
+              </div>
+              <div>
+                <div style={{display:'flex', alignItems:'center', gap:'8px', marginBottom:'6px'}}>
+                  <span style={{fontSize:'9px', fontWeight:900, color:'rgba(255,255,255,0.3)', letterSpacing:'3px', textTransform:'uppercase'}}>TITAN INTELLIGENCE V2</span>
+                  <span style={{fontSize:'9px', fontWeight:900, padding:'2px 8px', borderRadius:'20px', background:'rgba(99,102,241,0.15)', color:'#818cf8', border:'1px solid rgba(99,102,241,0.3)', letterSpacing:'1px'}}>MARKET ENGINE</span>
+                </div>
+                <div style={{fontSize:'20px', fontWeight:900, color:scoreColor, marginBottom:'4px'}}>{aq.nivel_actual}</div>
+                <div style={{fontSize:'12px', color:'rgba(255,255,255,0.5)', fontStyle:'italic', maxWidth:'340px'}}>"{aq.veredicto_brutal}"</div>
+              </div>
+            </div>
+            <button onClick={onClose} style={{
+              background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.1)',
+              borderRadius:'10px', padding:'8px', cursor:'pointer', color:'rgba(255,255,255,0.4)',
+              display:'flex', alignItems:'center', justifyContent:'center',
+              transition:'all 0.2s'
+            }}
+            onMouseEnter={e=>(e.currentTarget.style.color='white')}
+            onMouseLeave={e=>(e.currentTarget.style.color='rgba(255,255,255,0.4)')}>
+              <X size={16}/>
+            </button>
+          </div>
+
+          {/* KPIs rápidos */}
+          <div style={{display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'8px'}}>
+            {[
+              { label:'EMOCIÓN',      value: im.emocion_dominante,              sub:`${im.emocion_dominante_porcentaje||0}%`,  accent:'#f97316' },
+              { label:'ESCEPTICISMO', value: im.nivel_escepticismo,             sub:'Del mercado', accent: im.nivel_escepticismo==='Alto'?'#f87171': im.nivel_escepticismo==='Medio'?'#facc15':'#4ade80' },
+              { label:'SATURACIÓN',   value: im.saturacion_del_mercado,         sub:'Del nicho',   accent: im.saturacion_del_mercado==='Crítico'?'#ef4444':im.saturacion_del_mercado==='Alto'?'#f97316':'#facc15' },
+              { label:'HOOK IDEAL',   value: rec.tipo_hook_sugerido,            sub:`Nivel ${rec.nivel_intensidad_sugerido||'—'}`, accent:'#a78bfa' },
+            ].map((kpi,i)=>(
+              <div key={i} style={{
+                background:'rgba(0,0,0,0.5)', borderRadius:'12px',
+                border:'1px solid rgba(255,255,255,0.05)',
+                padding:'10px 12px'
+              }}>
+                <div style={{fontSize:'8px', color:'rgba(255,255,255,0.3)', fontWeight:900, letterSpacing:'2px', textTransform:'uppercase', marginBottom:'4px'}}>{kpi.label}</div>
+                <div style={{fontSize:'11px', fontWeight:900, color:kpi.accent, marginBottom:'2px'}}>{kpi.value || '—'}</div>
+                <div style={{fontSize:'9px', color:'rgba(255,255,255,0.25)'}}>{kpi.sub}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── TABS ── */}
+        <div style={{display:'flex', borderBottom:'1px solid rgba(255,255,255,0.06)', background:'rgba(0,0,0,0.4)'}}>
+          {tabs.map(t=>(
+            <button key={t.id} onClick={()=>setTab(t.id as any)} style={{
+              flex:1, padding:'12px 4px',
+              fontSize:'10px', fontWeight:900, letterSpacing:'1px', textTransform:'uppercase',
+              cursor:'pointer', border:'none',
+              background: tab===t.id ? 'rgba(99,102,241,0.08)' : 'transparent',
+              color: tab===t.id ? 'white' : 'rgba(255,255,255,0.3)',
+              borderBottom: tab===t.id ? '2px solid #6366f1' : '2px solid transparent',
+              transition:'all 0.2s',
+              display:'flex', flexDirection:'column', alignItems:'center', gap:'3px'
+            }}>
+              <span style={{fontSize:'14px'}}>{t.icon}</span>
+              <span>{t.label}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* ── CONTENIDO ── */}
+        <div style={{flex:1, overflowY:'auto', padding:'20px', display:'flex', flexDirection:'column', gap:'12px'}}>
+
+          {/* TAB: SCORE */}
+          {tab==='score' && (
+            <>
+              {/* Desglose */}
+              {aq.desglose_puntos && (
+                <div style={{background:'rgba(255,255,255,0.02)', border:'1px solid rgba(255,255,255,0.06)', borderRadius:'16px', padding:'16px'}}>
+                  <div style={{fontSize:'9px', fontWeight:900, color:'rgba(255,255,255,0.3)', letterSpacing:'3px', textTransform:'uppercase', marginBottom:'12px', display:'flex', alignItems:'center', gap:'8px'}}>
+                    📊 Desglose del Score
+                  </div>
+                  <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'8px'}}>
+                    {Object.entries(aq.desglose_puntos).map(([k,v]:any)=>(
+                      <div key={k} style={{display:'flex', justifyContent:'space-between', alignItems:'center', background:'rgba(0,0,0,0.4)', borderRadius:'10px', padding:'10px 12px', border:'1px solid rgba(255,255,255,0.04)'}}>
+                        <span style={{fontSize:'10px', color:'rgba(255,255,255,0.4)', textTransform:'capitalize'}}>{k.replace(/_/g,' ')}</span>
+                        <span style={{fontSize:'14px', fontWeight:900, color: v>=70?'#4ade80':v>=40?'#facc15':'#f87171'}}>{v}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {/* Penalizaciones */}
+              {(aq.penalizaciones_aplicadas||[]).length > 0 && (
+                <div style={{background:'rgba(239,68,68,0.05)', border:'1px solid rgba(239,68,68,0.2)', borderRadius:'16px', padding:'16px'}}>
+                  <div style={{fontSize:'9px', fontWeight:900, color:'#f87171', letterSpacing:'3px', textTransform:'uppercase', marginBottom:'10px'}}>⚠️ Penalizaciones Detectadas</div>
+                  {aq.penalizaciones_aplicadas.map((p:string,i:number)=>(
+                    <div key={i} style={{display:'flex', alignItems:'flex-start', gap:'8px', marginBottom:'6px', fontSize:'11px', color:'rgba(252,165,165,0.8)'}}>
+                      <span style={{color:'#ef4444', marginTop:'1px', flexShrink:0}}>✕</span><span>{p}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {/* Análisis campo por campo */}
+              {(data.analisis_campo_por_campo||[]).length > 0 && (
+                <div style={{display:'flex', flexDirection:'column', gap:'8px'}}>
+                  <div style={{fontSize:'9px', fontWeight:900, color:'rgba(255,255,255,0.3)', letterSpacing:'3px', textTransform:'uppercase'}}>🔍 Auditoría Táctica</div>
+                  {data.analisis_campo_por_campo.map((item:any, idx:number)=>(
+                    <div key={idx} style={{background:'rgba(10,10,12,0.8)', border:'1px solid rgba(255,255,255,0.06)', borderRadius:'14px', padding:'14px', transition:'border-color 0.2s'}}
+                    onMouseEnter={e=>(e.currentTarget.style.borderColor='rgba(99,102,241,0.3)')}
+                    onMouseLeave={e=>(e.currentTarget.style.borderColor='rgba(255,255,255,0.06)')}>
+                      <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'10px'}}>
+                        <span style={{fontSize:'11px', fontWeight:800, color:'white'}}>{item.campo}</span>
+                        <span style={{
+                          fontSize:'8px', fontWeight:900, padding:'2px 8px', borderRadius:'20px',
+                          background: item.calificacion?.includes('🟢')?'rgba(74,222,128,0.1)': item.calificacion?.includes('🟡')?'rgba(250,204,21,0.1)':'rgba(248,113,113,0.1)',
+                          color: item.calificacion?.includes('🟢')?'#4ade80': item.calificacion?.includes('🟡')?'#facc15':'#f87171',
+                          border: `1px solid ${item.calificacion?.includes('🟢')?'rgba(74,222,128,0.3)': item.calificacion?.includes('🟡')?'rgba(250,204,21,0.3)':'rgba(248,113,113,0.3)'}`,
+                          textTransform:'uppercase', letterSpacing:'1px'
+                        }}>{item.calificacion?.replace(/🔴|🟡|🟢/g,'').trim()}</span>
+                      </div>
+                      {item.lo_que_escribio_usuario && (
+                        <div style={{borderLeft:'2px solid rgba(239,68,68,0.3)', paddingLeft:'10px', marginBottom:'8px'}}>
+                          <div style={{fontSize:'8px', color:'#f87171', fontWeight:900, textTransform:'uppercase', marginBottom:'3px'}}>Lo que escribiste</div>
+                          <p style={{fontSize:'10px', color:'rgba(255,255,255,0.4)', fontStyle:'italic'}}>"{item.lo_que_escribio_usuario}"</p>
+                        </div>
+                      )}
+                      <div style={{borderLeft:'2px solid rgba(251,146,60,0.4)', paddingLeft:'10px', background:'rgba(251,146,60,0.03)', borderRadius:'0 6px 6px 0', padding:'8px 10px', marginBottom:'8px'}}>
+                        <div style={{fontSize:'8px', color:'#fb923c', fontWeight:900, textTransform:'uppercase', marginBottom:'3px'}}>Debilidad Detectada</div>
+                        <p style={{fontSize:'10px', color:'rgba(253,186,116,0.8)', lineHeight:1.5}}>{item.critica}</p>
+                      </div>
+                      <div style={{borderLeft:'2px solid rgba(74,222,128,0.5)', paddingLeft:'10px', background:'rgba(74,222,128,0.03)', borderRadius:'0 6px 6px 0', padding:'8px 10px'}}>
+                        <div style={{fontSize:'8px', color:'#4ade80', fontWeight:900, textTransform:'uppercase', marginBottom:'3px'}}>✨ Corrección Maestra</div>
+                        <p style={{fontSize:'10px', color:'rgba(255,255,255,0.85)', lineHeight:1.6, fontWeight:500}}>"{item.correccion_maestra}"</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {/* Siguiente paso */}
+              {data.siguiente_paso && (
+                <div style={{background:'linear-gradient(135deg, rgba(234,179,8,0.08), rgba(249,115,22,0.05))', border:'1px solid rgba(234,179,8,0.2)', borderRadius:'16px', padding:'16px', textAlign:'center'}}>
+                  <div style={{fontSize:'9px', fontWeight:900, color:'#facc15', letterSpacing:'3px', textTransform:'uppercase', marginBottom:'8px', display:'flex', alignItems:'center', justifyContent:'center', gap:'6px'}}>
+                    <span>→</span> Tu Siguiente Paso HOY
+                  </div>
+                  <p style={{fontSize:'13px', color:'white', fontWeight:600, lineHeight:1.6}}>{data.siguiente_paso}</p>
+                </div>
+              )}
+            </>
+          )}
+
+          {/* TAB: PSICOLOGÍA */}
+          {tab==='psicologia' && (
+            <>
+              {/* Mapa emocional */}
+              <div style={{background:'rgba(249,115,22,0.05)', border:'1px solid rgba(249,115,22,0.2)', borderRadius:'16px', padding:'16px'}}>
+                <div style={{fontSize:'9px', fontWeight:900, color:'#f97316', letterSpacing:'3px', textTransform:'uppercase', marginBottom:'14px'}}>🔥 Mapa de Intensidad Emocional</div>
+                <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'10px', marginBottom:'12px'}}>
+                  <div style={{background:'rgba(0,0,0,0.4)', borderRadius:'12px', padding:'12px', border:'1px solid rgba(249,115,22,0.2)'}}>
+                    <div style={{fontSize:'8px', color:'rgba(255,255,255,0.4)', textTransform:'uppercase', marginBottom:'4px'}}>Emoción Dominante</div>
+                    <div style={{fontSize:'18px', fontWeight:900, color:'#fb923c'}}>{im.emocion_dominante}</div>
+                    <div style={{fontSize:'11px', color:'rgba(255,255,255,0.4)'}}>{im.emocion_dominante_porcentaje}% intensidad</div>
+                  </div>
+                  <div style={{background:'rgba(0,0,0,0.4)', borderRadius:'12px', padding:'12px', border:'1px solid rgba(168,85,247,0.2)'}}>
+                    <div style={{fontSize:'8px', color:'rgba(255,255,255,0.4)', textTransform:'uppercase', marginBottom:'4px'}}>Emoción Secundaria</div>
+                    <div style={{fontSize:'18px', fontWeight:900, color:'#c084fc'}}>{im.emocion_secundaria}</div>
+                    <div style={{fontSize:'11px', color:'rgba(255,255,255,0.4)'}}>{im.emocion_secundaria_porcentaje}% intensidad</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Objeciones */}
+              {(im.objeciones_detectadas||[]).length > 0 && (
+                <div style={{background:'rgba(239,68,68,0.04)', border:'1px solid rgba(239,68,68,0.2)', borderRadius:'16px', padding:'16px'}}>
+                  <div style={{fontSize:'9px', fontWeight:900, color:'#f87171', letterSpacing:'3px', textTransform:'uppercase', marginBottom:'12px'}}>🚧 Objeciones Reales del Mercado</div>
+                  <div style={{display:'flex', flexDirection:'column', gap:'8px'}}>
+                    {im.objeciones_detectadas.map((o:any,i:number)=>(
+                      <div key={i} style={{display:'flex', alignItems:'center', justifyContent:'space-between', background:'rgba(0,0,0,0.4)', borderRadius:'10px', padding:'10px 14px', border:'1px solid rgba(255,255,255,0.04)'}}>
+                        <div style={{display:'flex', alignItems:'center', gap:'10px', flex:1}}>
+                          <span style={{fontSize:'14px', fontWeight:900, color:'rgba(255,255,255,0.2)', minWidth:'20px'}}>{i+1}</span>
+                          <p style={{fontSize:'11px', color:'rgba(255,255,255,0.7)', fontStyle:'italic'}}>"{o.frase_real}"</p>
+                        </div>
+                        <span style={{
+                          fontSize:'8px', fontWeight:900, padding:'2px 8px', borderRadius:'20px', marginLeft:'10px', flexShrink:0,
+                          background: o.intensidad==='Alta'?'rgba(239,68,68,0.15)':o.intensidad==='Media'?'rgba(250,204,21,0.15)':'rgba(74,222,128,0.15)',
+                          color: o.intensidad==='Alta'?'#f87171':o.intensidad==='Media'?'#facc15':'#4ade80',
+                          border: `1px solid ${o.intensidad==='Alta'?'rgba(239,68,68,0.3)':o.intensidad==='Media'?'rgba(250,204,21,0.3)':'rgba(74,222,128,0.3)'}`,
+                          textTransform:'uppercase'
+                        }}>{o.intensidad}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Deseos */}
+              {(im.deseos_detectados||[]).length > 0 && (
+                <div style={{background:'rgba(34,197,94,0.04)', border:'1px solid rgba(34,197,94,0.2)', borderRadius:'16px', padding:'16px'}}>
+                  <div style={{fontSize:'9px', fontWeight:900, color:'#4ade80', letterSpacing:'3px', textTransform:'uppercase', marginBottom:'12px'}}>💎 Deseos Detectados</div>
+                  {im.deseos_detectados.map((d:any,i:number)=>(
+                    <div key={i} style={{marginBottom:'10px', padding:'10px 12px', background:'rgba(0,0,0,0.4)', borderRadius:'10px', border:'1px solid rgba(255,255,255,0.04)'}}>
+                      <div style={{display:'flex', alignItems:'center', gap:'8px', marginBottom:'4px'}}>
+                        <span style={{fontSize:'8px', fontWeight:900, padding:'1px 6px', borderRadius:'20px', background:'rgba(34,197,94,0.1)', color:'#4ade80', border:'1px solid rgba(34,197,94,0.3)', textTransform:'uppercase'}}>{d.tipo?.replace(/_/g,' ')}</span>
+                      </div>
+                      <p style={{fontSize:'10px', color:'rgba(255,255,255,0.6)', marginBottom:'4px'}}>{d.descripcion}</p>
+                      <p style={{fontSize:'10px', color:'rgba(134,239,172,0.7)', fontStyle:'italic'}}>"{d.frase_real}"</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Miedos */}
+              {(im.miedos_detectados||[]).length > 0 && (
+                <div style={{background:'rgba(139,92,246,0.04)', border:'1px solid rgba(139,92,246,0.2)', borderRadius:'16px', padding:'16px'}}>
+                  <div style={{fontSize:'9px', fontWeight:900, color:'#a78bfa', letterSpacing:'3px', textTransform:'uppercase', marginBottom:'12px'}}>😨 Miedos Invisibles</div>
+                  {im.miedos_detectados.map((m:any,i:number)=>(
+                    <div key={i} style={{marginBottom:'10px', padding:'10px 12px', background:'rgba(0,0,0,0.4)', borderRadius:'10px', border:'1px solid rgba(255,255,255,0.04)'}}>
+                      <p style={{fontSize:'11px', fontWeight:700, color:'#c4b5fd', marginBottom:'3px'}}>{m.tipo}</p>
+                      <p style={{fontSize:'10px', color:'rgba(255,255,255,0.5)', marginBottom:'4px'}}>{m.descripcion}</p>
+                      <p style={{fontSize:'10px', color:'rgba(196,181,253,0.6)', fontStyle:'italic'}}>"{m.frase_real}"</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Creencias limitantes */}
+              {(im.creencias_limitantes||[]).length > 0 && (
+                <div style={{background:'rgba(251,146,60,0.04)', border:'1px solid rgba(251,146,60,0.2)', borderRadius:'16px', padding:'16px'}}>
+                  <div style={{fontSize:'9px', fontWeight:900, color:'#fb923c', letterSpacing:'3px', textTransform:'uppercase', marginBottom:'12px'}}>🔒 Creencias Limitantes</div>
+                  {im.creencias_limitantes.map((c:any,i:number)=>(
+                    <div key={i} style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'8px', padding:'8px 12px', background:'rgba(0,0,0,0.4)', borderRadius:'8px', border:'1px solid rgba(255,255,255,0.04)'}}>
+                      <p style={{fontSize:'11px', color:'rgba(255,255,255,0.7)', fontStyle:'italic', flex:1}}>"{c.creencia}"</p>
+                      <span style={{
+                        fontSize:'8px', fontWeight:900, padding:'1px 6px', borderRadius:'20px', marginLeft:'10px', flexShrink:0,
+                        background: c.frecuencia==='Alta'?'rgba(239,68,68,0.1)':c.frecuencia==='Media'?'rgba(250,204,21,0.1)':'rgba(74,222,128,0.1)',
+                        color: c.frecuencia==='Alta'?'#f87171':c.frecuencia==='Media'?'#facc15':'#4ade80',
+                        border:`1px solid ${c.frecuencia==='Alta'?'rgba(239,68,68,0.3)':c.frecuencia==='Media'?'rgba(250,204,21,0.3)':'rgba(74,222,128,0.3)'}`,
+                        textTransform:'uppercase'
+                      }}>{c.frecuencia}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+
+          {/* TAB: LENGUAJE */}
+          {tab==='lenguaje' && (
+            <>
+              {(im.lenguaje_literal_clave||[]).length > 0 && (
+                <div style={{background:'rgba(6,182,212,0.05)', border:'1px solid rgba(6,182,212,0.25)', borderRadius:'16px', padding:'16px'}}>
+                  <div style={{fontSize:'9px', fontWeight:900, color:'#22d3ee', letterSpacing:'3px', textTransform:'uppercase', marginBottom:'14px'}}>
+                    💬 Lenguaje Literal del Mercado
+                    <span style={{display:'block', fontSize:'8px', color:'rgba(255,255,255,0.3)', fontWeight:400, marginTop:'2px', textTransform:'none', letterSpacing:'0'}}>Frases exactas como las dice tu audiencia. Úsalas en hooks y CTAs.</span>
+                  </div>
+                  <div style={{display:'flex', flexDirection:'column', gap:'8px'}}>
+                    {im.lenguaje_literal_clave.map((f:string,i:number)=>(
+                      <div key={i} style={{
+                        background:'rgba(0,0,0,0.5)', borderRadius:'12px', padding:'12px 16px',
+                        border:'1px solid rgba(6,182,212,0.15)',
+                        display:'flex', alignItems:'center', gap:'12px'
+                      }}>
+                        <span style={{fontSize:'10px', fontWeight:900, color:'rgba(6,182,212,0.4)', minWidth:'16px'}}>#{i+1}</span>
+                        <p style={{fontSize:'12px', color:'rgba(255,255,255,0.85)', fontStyle:'italic', lineHeight:1.5}}>"{f}"</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {/* Comparación antes/después */}
+              {data.comparacion_antes_despues && (
+                <div style={{background:'rgba(255,255,255,0.02)', border:'1px solid rgba(255,255,255,0.06)', borderRadius:'16px', padding:'16px'}}>
+                  <div style={{fontSize:'9px', fontWeight:900, color:'rgba(255,255,255,0.3)', letterSpacing:'3px', textTransform:'uppercase', marginBottom:'14px'}}>📊 Antes vs Después</div>
+                  <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'10px'}}>
+                    <div style={{padding:'12px', background:'rgba(239,68,68,0.05)', borderRadius:'10px', border:'1px solid rgba(239,68,68,0.2)'}}>
+                      <div style={{fontSize:'8px', color:'#f87171', fontWeight:900, textTransform:'uppercase', marginBottom:'6px'}}>❌ Antes (Débil)</div>
+                      <p style={{fontSize:'11px', color:'rgba(255,255,255,0.5)', fontStyle:'italic'}}>"{data.comparacion_antes_despues.headline_antes}"</p>
+                    </div>
+                    <div style={{padding:'12px', background:'rgba(74,222,128,0.05)', borderRadius:'10px', border:'1px solid rgba(74,222,128,0.2)'}}>
+                      <div style={{fontSize:'8px', color:'#4ade80', fontWeight:900, textTransform:'uppercase', marginBottom:'6px'}}>✅ Ahora (Poderoso)</div>
+                      <p style={{fontSize:'11px', color:'rgba(255,255,255,0.85)', fontStyle:'italic', fontWeight:600}}>"{data.comparacion_antes_despues.headline_despues}"</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+
+          {/* TAB: ESTRATEGIA */}
+          {tab==='estrategia' && (
+            <>
+              <div style={{background:'rgba(139,92,246,0.05)', border:'1px solid rgba(139,92,246,0.25)', borderRadius:'16px', padding:'16px'}}>
+                <div style={{fontSize:'9px', fontWeight:900, color:'#a78bfa', letterSpacing:'3px', textTransform:'uppercase', marginBottom:'16px'}}>⚡ Traducción Estratégica para Motores</div>
+                <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'10px'}}>
+                  {[
+                    { label:'Tipo de Hook', value:rec.tipo_hook_sugerido, color:'#f97316' },
+                    { label:'Intensidad', value:rec.nivel_intensidad_sugerido, color:'#22d3ee' },
+                    { label:'Polarización', value:`Nivel ${rec.nivel_polarizacion_sugerido}/5`, color:'#f87171' },
+                    { label:'Tipo de Cierre', value:rec.tipo_cierre_recomendado, color:'#4ade80' },
+                  ].map((r,i)=>(
+                    <div key={i} style={{background:'rgba(0,0,0,0.5)', borderRadius:'12px', padding:'12px', border:'1px solid rgba(255,255,255,0.05)'}}>
+                      <div style={{fontSize:'8px', color:'rgba(255,255,255,0.3)', textTransform:'uppercase', fontWeight:900, marginBottom:'6px'}}>{r.label}</div>
+                      <div style={{fontSize:'13px', fontWeight:900, color:r.color}}>{r.value || '—'}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {rec.enfoque_diferenciacion && (
+                <div style={{background:'rgba(34,197,94,0.04)', border:'1px solid rgba(34,197,94,0.2)', borderRadius:'16px', padding:'16px'}}>
+                  <div style={{fontSize:'9px', fontWeight:900, color:'#4ade80', letterSpacing:'3px', textTransform:'uppercase', marginBottom:'8px'}}>🎯 Ángulo de Diferenciación</div>
+                  <p style={{fontSize:'13px', color:'white', fontWeight:600, lineHeight:1.6}}>{rec.enfoque_diferenciacion}</p>
+                </div>
+              )}
+
+              {(rec.activadores_prioritarios||[]).length > 0 && (
+                <div style={{background:'rgba(255,255,255,0.02)', border:'1px solid rgba(255,255,255,0.06)', borderRadius:'16px', padding:'16px'}}>
+                  <div style={{fontSize:'9px', fontWeight:900, color:'rgba(255,255,255,0.3)', letterSpacing:'3px', textTransform:'uppercase', marginBottom:'12px'}}>🔥 Activadores Emocionales Prioritarios</div>
+                  <div style={{display:'flex', flexWrap:'wrap', gap:'8px'}}>
+                    {rec.activadores_prioritarios.map((a:string,i:number)=>(
+                      <span key={i} style={{
+                        padding:'6px 14px', borderRadius:'20px',
+                        background:'rgba(99,102,241,0.1)', color:'#a5b4fc',
+                        border:'1px solid rgba(99,102,241,0.3)',
+                        fontSize:'11px', fontWeight:700
+                      }}>{a}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+
+          {/* TAB: PERFIL */}
+          {tab==='perfil' && Object.keys(pf).length > 0 && (
+            <div style={{background:'rgba(99,102,241,0.05)', border:'1px solid rgba(99,102,241,0.2)', borderRadius:'16px', padding:'16px'}}>
+              <div style={{fontSize:'9px', fontWeight:900, color:'#818cf8', letterSpacing:'3px', textTransform:'uppercase', marginBottom:'16px', display:'flex', alignItems:'center', gap:'8px'}}>
+                👤 Perfil Final Optimizado
+              </div>
+              {pf.insight_psicologico && (
+                <div style={{background:'rgba(0,0,0,0.4)', borderRadius:'12px', padding:'14px', marginBottom:'10px', border:'1px solid rgba(99,102,241,0.15)'}}>
+                  <div style={{fontSize:'8px', color:'#818cf8', textTransform:'uppercase', fontWeight:900, marginBottom:'6px'}}>🧠 Insight Psicológico Profundo</div>
+                  <p style={{fontSize:'12px', color:'rgba(255,255,255,0.8)', lineHeight:1.6, fontStyle:'italic'}}>{pf.insight_psicologico}</p>
+                </div>
+              )}
+              <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'8px'}}>
+                {[
+                  ['Nivel', pf.experience_level],
+                  ['Objetivo', pf.primary_goal],
+                  ['Estilo', pf.communication_style],
+                  ['Riesgo', pf.risk_level],
+                  ['Prioridad', pf.content_priority],
+                  ['Modelo', pf.success_model],
+                  ['Narrativa', pf.narrative_structure],
+                  ['Longitud', pf.preferred_length],
+                ].filter(([,v])=>v).map(([k,v],i)=>(
+                  <div key={i} style={{background:'rgba(0,0,0,0.4)', borderRadius:'10px', padding:'10px 12px', border:'1px solid rgba(255,255,255,0.04)'}}>
+                    <div style={{fontSize:'8px', color:'rgba(255,255,255,0.3)', textTransform:'uppercase', fontWeight:900, marginBottom:'3px'}}>{k}</div>
+                    <div style={{fontSize:'11px', fontWeight:700, color:'white', textTransform:'capitalize'}}>{String(v).replace(/_/g,' ')}</div>
+                  </div>
+                ))}
+              </div>
+              {(pf.objeciones_ocultas||[]).length > 0 && (
+                <div style={{marginTop:'10px', background:'rgba(0,0,0,0.4)', borderRadius:'12px', padding:'12px', border:'1px solid rgba(139,92,246,0.15)'}}>
+                  <div style={{fontSize:'8px', color:'#a78bfa', textTransform:'uppercase', fontWeight:900, marginBottom:'8px'}}>Objeciones Ocultas</div>
+                  {pf.objeciones_ocultas.map((o:string,i:number)=>(
+                    <p key={i} style={{fontSize:'10px', color:'rgba(255,255,255,0.5)', marginBottom:'4px', display:'flex', alignItems:'flex-start', gap:'6px'}}>
+                      <span style={{color:'#7c3aed', flexShrink:0}}>•</span>{o}
+                    </p>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+        </div>
+
+        {/* ── FOOTER ── */}
+        <div style={{borderTop:'1px solid rgba(255,255,255,0.06)', padding:'12px 20px', display:'flex', justifyContent:'space-between', alignItems:'center', background:'rgba(0,0,0,0.4)'}}>
+          <span style={{fontSize:'9px', color:'rgba(255,255,255,0.2)', fontWeight:700, letterSpacing:'2px', textTransform:'uppercase'}}>TITAN INTELLIGENCE V2 • MOTOR DE MERCADO</span>
+          <button onClick={onClose} style={{
+            padding:'8px 20px', borderRadius:'10px',
+            background:'rgba(99,102,241,0.15)', border:'1px solid rgba(99,102,241,0.3)',
+            color:'#a5b4fc', fontSize:'11px', fontWeight:900, cursor:'pointer',
+            textTransform:'uppercase', letterSpacing:'1px',
+            transition:'all 0.2s'
+          }}
+          onMouseEnter={e=>{e.currentTarget.style.background='#6366f1';e.currentTarget.style.color='white'}}
+          onMouseLeave={e=>{e.currentTarget.style.background='rgba(99,102,241,0.15)';e.currentTarget.style.color='#a5b4fc'}}>
+            Cerrar
+          </button>
+        </div>
+
+      </div>
+      <style>{`@keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}`}</style>
+    </div>
+  );
+};
+
+// ═══════════════════════════════════════════════════════════════
+// 🔗 MODAL DE URLS — PARA ANÁLISIS CON APIFY
+// ═══════════════════════════════════════════════════════════════
+
+const AvatarUrlModal = ({ onConfirm, onSkip, loading }: { onConfirm:(urls:string[])=>void; onSkip:()=>void; loading:boolean }) => {
+  const [urls, setUrls] = React.useState(['','','']);
+  const validUrls = urls.filter(u=>u.trim().startsWith('http'));
+  return (
+    <div style={{
+      position:'fixed', inset:0, zIndex:9998,
+      background:'rgba(0,0,0,0.92)', backdropFilter:'blur(20px)',
+      display:'flex', alignItems:'center', justifyContent:'center', padding:'16px'
+    }}>
+      <div style={{
+        width:'100%', maxWidth:'520px',
+        background:'#0a0a0a', border:'1px solid rgba(99,102,241,0.3)',
+        borderRadius:'24px', padding:'32px',
+        boxShadow:'0 0 60px rgba(99,102,241,0.15)',
+        animation:'slideUp 0.3s cubic-bezier(0.16,1,0.3,1)'
+      }}>
+        <div style={{textAlign:'center', marginBottom:'28px'}}>
+          <div style={{
+            width:'56px', height:'56px', borderRadius:'16px',
+            background:'rgba(99,102,241,0.1)', border:'1px solid rgba(99,102,241,0.3)',
+            display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 16px',
+            fontSize:'24px'
+          }}>🔗</div>
+          <h2 style={{fontSize:'18px', fontWeight:900, color:'white', marginBottom:'6px'}}>Potencia el Análisis</h2>
+          <p style={{fontSize:'12px', color:'rgba(255,255,255,0.4)', lineHeight:1.6}}>
+            Pega URLs de videos de YouTube de competidores para extraer comentarios reales del mercado con Apify.<br/>
+            <span style={{color:'rgba(99,102,241,0.7)'}}>Sin URLs: análisis solo del perfil. Con URLs: inteligencia real del mercado.</span>
+          </p>
+        </div>
+
+        <div style={{display:'flex', flexDirection:'column', gap:'10px', marginBottom:'24px'}}>
+          {urls.map((url,i)=>(
+            <div key={i} style={{display:'flex', alignItems:'center', gap:'10px'}}>
+              <span style={{fontSize:'10px', color:'rgba(255,255,255,0.2)', fontWeight:900, minWidth:'20px'}}>#{i+1}</span>
+              <input
+                type="url"
+                value={url}
+                onChange={e=>{const n=[...urls]; n[i]=e.target.value; setUrls(n);}}
+                placeholder="https://youtube.com/watch?v=..."
+                style={{
+                  flex:1, background:'rgba(255,255,255,0.03)',
+                  border:`1px solid ${url.startsWith('http')?'rgba(99,102,241,0.4)':'rgba(255,255,255,0.08)'}`,
+                  borderRadius:'12px', padding:'10px 14px',
+                  color:'white', fontSize:'11px', outline:'none',
+                  transition:'border-color 0.2s'
+                }}
+              />
+              {url.startsWith('http') && <span style={{color:'#4ade80', fontSize:'14px'}}>✓</span>}
+            </div>
+          ))}
+        </div>
+
+        <div style={{display:'flex', gap:'10px'}}>
+          <button onClick={onSkip} disabled={loading} style={{
+            flex:1, padding:'12px', borderRadius:'12px',
+            background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.08)',
+            color:'rgba(255,255,255,0.5)', fontSize:'11px', fontWeight:900,
+            cursor:'pointer', textTransform:'uppercase', letterSpacing:'1px',
+            transition:'all 0.2s'
+          }}>
+            Solo perfil
+          </button>
+          <button onClick={()=>onConfirm(validUrls)} disabled={loading} style={{
+            flex:2, padding:'12px', borderRadius:'12px',
+            background: validUrls.length>0 ? 'linear-gradient(135deg,#6366f1,#8b5cf6)' : 'rgba(99,102,241,0.2)',
+            border:`1px solid ${validUrls.length>0?'transparent':'rgba(99,102,241,0.3)'}`,
+            color: validUrls.length>0 ? 'white' : 'rgba(255,255,255,0.4)',
+            fontSize:'11px', fontWeight:900, cursor:'pointer',
+            textTransform:'uppercase', letterSpacing:'1px',
+            display:'flex', alignItems:'center', justifyContent:'center', gap:'8px',
+            transition:'all 0.2s'
+          }}>
+            {loading ? (
+              <><span style={{display:'inline-block', animation:'spin 1s linear infinite'}}>⟳</span> Analizando...</>
+            ) : (
+              <>{validUrls.length>0 ? `🔗 Analizar con ${validUrls.length} URL${validUrls.length>1?'s':''}` : '🧠 Analizar sin URLs'}</>
+            )}
+          </button>
+        </div>
+      </div>
+      <style>{`@keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}} @keyframes spin{to{transform:rotate(360deg)}}`}</style>
+    </div>
+  );
+};
 
 // ============================================================
 // 🧠 ADN COGNITIVO — 7 CAPAS OLIMPO ABSOLUTO
@@ -23,6 +569,9 @@ export const AvatarProfile: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'core' | 'advanced' | 'evolution'>('core');
   const [nicheInput, setNicheInput] = useState('');
   const [showGenerator, setShowGenerator] = useState(false);
+  const [auditResult, setAuditResult] = useState<any>(null);
+  const [showUrlModal, setShowUrlModal] = useState(false);
+  const [auditLoading, setAuditLoading] = useState(false);
   const [generating, setGenerating] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -190,9 +739,10 @@ export const AvatarProfile: React.FC = () => {
     finally { setLoading(false); }
   };
 
-  const handleAudit = async () => {
-    if (!formData.name) return alert('⚠️ Ponle nombre antes de auditar.');
-    setLoading(true);
+  const ejecutarAuditoria = async (competitorUrls: string[] = []) => {
+    setShowUrlModal(false);
+    setAuditLoading(true);
+    setAuditResult(null);
     try {
       const avatarPayload = {
         capa1_identidad: { name: formData.name, person_type: formData.person_type, experience_level: formData.experience_level, country_culture: formData.country_culture, industry: formData.industry },
@@ -206,41 +756,18 @@ export const AvatarProfile: React.FC = () => {
         olimpo: { awareness_level: formData.awareness_level, change_resistance: formData.change_resistance, audience_temperature: formData.audience_temperature, internal_tone: formData.internal_tone, timeline_expectation: formData.timeline_expectation, social_pain: formData.social_pain, transformation_point_a: formData.transformation_point_a, internal_obstacle: formData.internal_obstacle, external_obstacle: formData.external_obstacle, emotional_friction: formData.emotional_friction }
       };
       const { data, error } = await supabase.functions.invoke('process-url', {
-        body: { selectedMode: 'audit_avatar', transcript: JSON.stringify(avatarPayload), estimatedCost: 2 }
+        body: { selectedMode: 'audit_avatar', transcript: JSON.stringify(avatarPayload), estimatedCost: 2, competitorUrls }
       });
       if (error) throw error;
       const res = data.generatedData || data.result || data;
-
-      if (res && typeof res === 'object' && res.inteligencia_mercado) {
-        const im = res.inteligencia_mercado;
-        const rec = res.recomendacion_estrategica;
-        const score = res.auditoria_calidad?.score_global || 0;
-        const reporte = [
-          `🧠 TITAN INTELLIGENCE V2 — Score: ${score}/100`,
-          `📊 "${res.auditoria_calidad?.veredicto_brutal}"`,
-          ``,
-          `🔥 EMOCIÓN DOMINANTE: ${im.emocion_dominante} (${im.emocion_dominante_porcentaje}%)`,
-          `😰 ESCEPTICISMO: ${im.nivel_escepticismo} | SATURACIÓN: ${im.saturacion_del_mercado}`,
-          ``,
-          `💬 LENGUAJE LITERAL DEL MERCADO:`,
-          ...(im.lenguaje_literal_clave || []).map((f: string) => `  • "${f}"`),
-          ``,
-          `🚧 OBJECIONES PRINCIPALES:`,
-          ...(im.objeciones_detectadas || []).slice(0, 3).map((o: any) => `  • "${o.frase_real}" [${o.intensidad}]`),
-          ``,
-          `🎯 RECOMENDACIÓN ESTRATÉGICA:`,
-          `  Hook: ${rec?.tipo_hook_sugerido}`,
-          `  Intensidad: ${rec?.nivel_intensidad_sugerido}`,
-          `  Diferenciación: ${rec?.enfoque_diferenciacion}`,
-          ``,
-          `✅ SIGUIENTE PASO: ${res.siguiente_paso}`
-        ].join('\n');
-        alert(reporte);
-      } else {
-        alert(`🛡️ ANÁLISIS TITAN:\n\n${typeof res === 'string' ? res : JSON.stringify(res, null, 2)}`);
-      }
+      setAuditResult(res);
     } catch (e: any) { console.error(e); alert("Error de conexión. Revisa que tu Edge Function esté activa."); }
-    finally { setLoading(false); }
+    finally { setAuditLoading(false); }
+  };
+
+  const handleAudit = () => {
+    if (!formData.name) return alert('⚠️ Ponle nombre antes de auditar.');
+    setShowUrlModal(true);
   };
 
   const handleDelete = async () => {
@@ -896,9 +1423,28 @@ export const AvatarProfile: React.FC = () => {
               )}
             </div>
             <div className="flex items-center gap-3">
-              <button onClick={handleAudit} disabled={loading} className="px-6 py-3 bg-indigo-500/10 border border-indigo-500/50 text-indigo-400 font-bold rounded-xl hover:bg-indigo-500 hover:text-white transition-all flex items-center gap-2">
-                {loading ? <TrendingUp size={18} className="animate-spin" /> : <Shield size={18} />} AUDITAR CON IA
+              <button
+                onClick={handleAudit}
+                disabled={auditLoading}
+                style={{
+                  display:'flex', alignItems:'center', gap:'8px',
+                  padding:'12px 20px', borderRadius:'14px',
+                  background: auditLoading ? 'rgba(99,102,241,0.1)' : 'linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.15))',
+                  border:'1px solid rgba(99,102,241,0.4)',
+                  color: auditLoading ? 'rgba(165,180,252,0.5)' : '#a5b4fc',
+                  fontSize:'11px', fontWeight:900, cursor: auditLoading ? 'not-allowed' : 'pointer',
+                  letterSpacing:'1px', textTransform:'uppercase',
+                  transition:'all 0.3s', position:'relative', overflow:'hidden'
+                }}
+                onMouseEnter={e=>{if(!auditLoading){e.currentTarget.style.background='linear-gradient(135deg,#6366f1,#8b5cf6)';e.currentTarget.style.color='white';e.currentTarget.style.boxShadow='0 0 20px rgba(99,102,241,0.4)'}}}
+                onMouseLeave={e=>{if(!auditLoading){e.currentTarget.style.background='linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.15))';e.currentTarget.style.color='#a5b4fc';e.currentTarget.style.boxShadow='none'}}}
+              >
+                {auditLoading
+                  ? <><span style={{display:'inline-block',animation:'spin 1s linear infinite'}}>⟳</span> ANALIZANDO...</>
+                  : <><Brain size={16}/> TITAN INTELLIGENCE</>
+                }
               </button>
+
               <button onClick={handleSave} disabled={loading} className="px-8 py-3 bg-white text-black font-black rounded-xl hover:bg-gray-200 transition-all flex items-center gap-2 shadow-lg">
                 {loading ? <TrendingUp size={18} className="animate-spin" /> : <Save size={18} />} GUARDAR AVATAR
               </button>
@@ -938,6 +1484,23 @@ export const AvatarProfile: React.FC = () => {
 
       </div>
 
+      {/* MODAL URL */}
+      {showUrlModal && (
+        <AvatarUrlModal
+          loading={auditLoading}
+          onConfirm={(urls) => ejecutarAuditoria(urls)}
+          onSkip={() => ejecutarAuditoria([])}
+        />
+      )}
+
+      {/* REPORTE VISUAL */}
+      {auditResult && (
+        <AvatarIntelligenceReport
+          data={auditResult}
+          onClose={() => setAuditResult(null)}
+        />
+      )}
+
       <style>{`
         .input-avatar, .textarea-avatar {
           width: 100%;
@@ -964,7 +1527,8 @@ export const AvatarProfile: React.FC = () => {
         .textarea-avatar { resize: none; line-height: 1.6; }
         ::placeholder { color: rgba(156, 163, 175, 0.5); }
       `}</style>
-
+      @keyframes spin { to { transform: rotate(360deg); } }
+      @keyframes slideUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
     </div>
   );
 };
