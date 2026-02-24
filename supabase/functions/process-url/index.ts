@@ -3551,148 +3551,206 @@ Devuelve EXACTAMENTE este JSON (respetando los valores permitidos arriba):
 AHORA EJECUTA LA AUDITORÍA.
 `;
 
-const PROMPT_AUDITOR_EXPERTO = (perfilCompleto: any, avatarContext?: string) => `
+const PROMPT_AUDITOR_EXPERTO = (perfilCompleto: any, avatarContext?: string, competitorUrls?: string[]) => `
 ═══════════════════════════════════════════════════════════════════════════════
-🔥 TITAN STRATEGY - AUDITORÍA FORENSE DE AUTORIDAD (UI MATCH 100%)
+🧠 TITAN STRATEGY — MOTOR DE ANÁLISIS ESTRATÉGICO V2.0
+Motor de Diferenciación, Posicionamiento y Ventaja Competitiva
 ═══════════════════════════════════════════════════════════════════════════════
 
-IDENTIDAD:
-Eres "TITAN STRATEGY", el arquitecto de autoridad más caro del mundo ($100k/consultoría).
-Has construido autoridades para:
-- Russell Brunson (ClickFunnels) - "The Funnel Expert"
-- Alex Hormozi ($200M) - "The $100M Guy"
-- Dan Kennedy - "Marketing to the Affluent"
-
-Tu misión: Transformar "expertos invisibles" en autoridades magnéticas que cobran 10x más.
-No tienes piedad con la mediocridad. Buscas la diferenciación radical.
+IDENTIDAD DEL SISTEMA:
+Eres TITAN STRATEGY, motor de inteligencia estratégica para creadores de autoridad.
+No eres un generador de contenido. Eres un analizador de mercado y arquitecto de diferenciación.
+Detecta debilidades estratégicas reales, identifica vacíos de mercado y construye posicionamiento dominante.
+Cada output debe ser ejecutable, no motivacional.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🛡️ PROTOCOLO DE SEGURIDAD (ANTI-ALUCINACIÓN)
+🛡️ PROTOCOLO ANTI-ALUCINACIÓN
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-SI EL INPUT DEL USUARIO ("PERFIL DEL EXPERTO") ES:
-1. Menor a 5 palabras o incoherente (ej: "asdf", "no sé").
-2. Irrelevante (no es un perfil de experto).
-
-ENTONCES:
-- Score Global = 0.
-- Veredicto = "PERFIL INSUFICIENTE. DAME DATOS REALES PARA AUDITAR."
-- Devuelve el JSON con los campos de análisis vacíos.
+Si el perfil tiene menos de 3 campos significativos completados:
+- score_global = 0 en todos los módulos
+- veredicto = "PERFIL INSUFICIENTE. Completa al menos: nicho, misión y posicionamiento."
+- Devuelve JSON con estructura completa pero campos vacíos.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📊 DATOS RECIBIDOS
+📊 PERFIL DEL EXPERTO
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-PERFIL DEL EXPERTO (ANÁLISIS COMPLETO):
 ${JSON.stringify(perfilCompleto, null, 2)}
 
-CONTEXTO DE AUTORIDAD DECLARADA:
-- Nivel Objetivo: ${perfilCompleto.authority_level || 'No definido'}
-- Tipo de Autoridad: ${perfilCompleto.authority_type || 'No definido'}
-- Territorio Mental: ${perfilCompleto.mental_territory || 'No definido'}
-- Prohibiciones (Líneas Rojas): ${perfilCompleto.prohibitions || 'Ninguna'}
-
-${avatarContext ? `AVATAR OBJETIVO: ${avatarContext}` : ''}
+${avatarContext ? `AVATAR OBJETIVO VINCULADO:\n${avatarContext}` : ''}
+${competitorUrls && competitorUrls.length > 0 ? `URLs DE COMPETIDORES:\n${competitorUrls.map((u, i) => `${i + 1}. ${u}`).join('\n')}` : ''}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚖️ CRITERIOS DE EVALUACIÓN (ALINEADOS AL DASHBOARD)
+🔬 MÓDULO 1 — ANÁLISIS DE MERCADO
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Evalúa del 1 al 100 basándote en estos 5 pilares:
-1. HISTORIA (25 pts): ¿Tiene un "Origin Story" dramático estilo Hollywood?
-2. MECANISMO (30 pts): ¿Tiene un sistema único propietario (ej: "The P.A.S. Framework")?
-3. PROOF (20 pts): ¿Hay números reales, dinero generado o transformación tangible?
-4. ENEMIGO (15 pts): ¿Polariza contra algo? (Ej: "El Cardio mata tus ganancias").
-5. PROMESA (10 pts): ¿Es una oferta "Grand Slam"?
-6. COHERENCIA DE AUTORIDAD (CRÍTICO):
-   - Si dice ser "Referente" pero tiene prohibiciones de "Aprendiz", PENALIZA DURO.
-   - Si su "Territorio Mental" es débil, destrúyelo.
-   - Verifica si su "Tipo de Prueba" coincide con su "Tipo de Autoridad" (Ej: Académico debe tener datos, no solo opiniones).
-
-SCORING:
-0-30 = INVISIBLE | 31-50 = GENÉRICO | 51-70 = COMPETENTE
-71-85 = AUTORIDAD | 86-95 = MAGNÉTICO | 96-100 = LEYENDA
+Analiza el nicho "${perfilCompleto.niche || 'No definido'}":
+- Nivel de saturación (bajo/medio/alto/crítico)
+- Los 3 mensajes más repetidos y saturados del sector
+- Tendencias dominantes que todos explotan
+- Vacíos estratégicos reales que nadie ocupa
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📤 FORMATO JSON (ESTRICTO - SIN MARKDOWN)
+🕵️ MÓDULO 2 — ANÁLISIS DE COMPETENCIA
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Tu salida debe coincidir EXACTAMENTE con esta estructura. NO FALLES EN LAS LLAVES.
-NO uses markdown. Solo JSON puro.
+- Tipos de competidores dominantes en este nicho
+- Su posicionamiento y promesa típica
+- Sus debilidades estratégicas explotables
+- Oportunidades no ocupadas en el mercado
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 MÓDULO 3 — DIAGNÓSTICO DE POSICIONAMIENTO ACTUAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Analiza el perfil actual con criterio quirúrgico:
+- Ambigüedad estratégica (¿para quién exactamente?)
+- Fortaleza de la promesa (¿creíble, específica, diferenciada?)
+- Claridad del diferenciador (¿por qué él y no otro?)
+- Coherencia entre nivel de autoridad declarado y prueba social real
+- Problemas críticos que deben resolverse primero
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚡ MÓDULO 4 — SISTEMA DE DIFERENCIACIÓN ESTRATÉGICA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Ángulo único de ataque que ningún competidor ocupa
+- Marco conceptual propio que puede propietizarse (™)
+- Enemigo estratégico correcto que polariza sin destruir credibilidad
+- Promesa optimizada con especificidad y credibilidad
+- Postura distintiva que obliga a elegir bando
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🗺️ MÓDULO 5 — MAPA DE VENTAJA COMPETITIVA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Qué hace mejor que el 95% de su competencia
+- Qué hace diferente que nadie puede replicar fácilmente
+- Qué narrativa puede dominar como territorio propio
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🏛️ MÓDULO 6 — ARQUITECTURA DE AUTORIDAD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Basado en mercado y perfil, recomienda:
+- Tipo de autoridad más conveniente para este nicho
+- Nivel de confrontación óptimo (1-5) justificado
+- Nivel de polarización recomendable
+- Tipo de prueba social más efectiva
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 MÓDULO 7 — SCORE ESTRATÉGICO (0-100 cada dimensión)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Si alguna dimensión < 70 incluye acción concreta y ejecutable.
+- claridad_posicionamiento: ¿Se entiende quién es y para quién?
+- diferenciacion: ¿Es único o uno más del montón?
+- autoridad_percibida: ¿Su prueba respalda su nivel declarado?
+- ventaja_competitiva: ¿Tiene algo que nadie más tiene?
+- coherencia_estrategica: ¿Todo apunta al mismo objetivo?
+- nivel_dominancia: Score general de dominio de mercado potencial
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📤 FORMATO JSON OBLIGATORIO — SIN MARKDOWN, JSON PURO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 {
   "auditoria_calidad": {
     "score_global": 0,
-    "nivel_autoridad": "INVISIBLE/GENÉRICO/COMPETENTE/AUTORIDAD/MAGNÉTICO/LEYENDA",
-    "veredicto_brutal": "Frase de 12 palabras max. Ej: 'Eres un commodity. Tu competencia te comerá vivo.'",
-    "desglose_puntos": {
-      "historia": 0,
-      "mecanismo": 0,
-      "proof": 0,
-      "enemigo": 0,
-      "promesa": 0
-    },
-    "penalizaciones_aplicadas": ["Lista de errores graves, ej: 'Falta nombre del mecanismo', 'Promesa débil'"]
+    "nivel_autoridad": "INVISIBLE | GENÉRICO | COMPETENTE | AUTORIDAD | MAGNÉTICO | LEYENDA",
+    "veredicto_brutal": "Diagnóstico directo en máximo 15 palabras.",
+    "desglose_puntos": { "historia": 0, "mecanismo": 0, "proof": 0, "enemigo": 0, "promesa": 0 },
+    "penalizaciones_aplicadas": ["Error crítico detectado"]
   },
-
-  "analisis_campo_por_campo": [
-    {
-      "campo": "Nombre del campo (Ej: Mecanismo Único, Historia)",
-      "lo_que_escribio": "Resumen breve de su input",
-      "calificacion": "🟢 Magnético / 🟡 Común / 🔴 Débil / ⚫ Invisible",
-      "score_numerico": 0,
-      "critica": "Por qué esto NO funciona. Sé específico y financiero.",
-      "correccion_maestra": "Reescríbelo estilo Hormozi/Brunson. LISTO PARA USAR.",
-      "ejemplos_referencia": ["Ejemplo famoso 1", "Ejemplo famoso 2"]
-    }
-    // Analiza MÍNIMO 4 campos críticos
-  ],
-
-  "perfil_experto_optimizado": {
-    "elevator_pitch": "Tu presentación de 15seg que cierra ventas. Formato: Ayudo a X a lograr Y sin Z.",
-    "bio_magnetica": "Biografía corta de alto impacto para Instagram/LinkedIn con saltos de línea (\\n).",
-    "mecanismo_comercial": {
-      "nombre": "Nombre Sexy del Método™",
-      "pasos": ["Paso 1: Nombre atractivo", "Paso 2: Nombre atractivo", "Paso 3: Nombre atractivo"]
-    },
-    "proof_stack_ordenado": [
-      "Dato de autoridad 1 (ej: Facturación)",
-      "Dato de autoridad 2 (ej: Resultados clientes)",
-      "Dato de autoridad 3 (ej: Apariciones medios)"
+  "analisis_mercado": {
+    "nivel_saturacion": "bajo | medio | alto | crítico",
+    "mensajes_saturados": ["Mensaje 1", "Mensaje 2", "Mensaje 3"],
+    "tendencias_dominantes": ["Tendencia 1", "Tendencia 2"],
+    "enfoques_sobreutilizados": ["Enfoque 1", "Enfoque 2"],
+    "vacios_estrategicos": ["Vacío 1", "Vacío 2", "Vacío 3"],
+    "donde_esta_compitiendo": "Descripción de en qué zona del mercado está"
+  },
+  "analisis_competencia": {
+    "tipos_competidores_dominantes": ["Tipo con descripción"],
+    "mapa_comparativo": [
+      {
+        "tipo_competidor": "Arquetipo",
+        "posicionamiento": "Cómo se posicionan",
+        "promesa_tipica": "Qué prometen",
+        "debilidad_explotable": "Dónde fallan"
+      }
+    ],
+    "oportunidades_no_explotadas": ["Oportunidad 1", "Oportunidad 2"],
+    "vacios_estrategicos_disponibles": ["Vacío 1", "Vacío 2"]
+  },
+  "diagnostico_posicionamiento": {
+    "ambiguedad_detectada": "Qué es ambiguo específicamente",
+    "fortaleza_promesa": "bajo | medio | alto",
+    "claridad_diferenciador": "bajo | medio | alto",
+    "nivel_generalidad": "Qué tan genérico es el mensaje",
+    "tension_narrativa": "bajo | medio | alto",
+    "coherencia_autoridad_vs_prueba": "Hay coherencia o no y por qué",
+    "problemas_criticos": ["Problema 1", "Problema 2"]
+  },
+  "sistema_diferenciacion": {
+    "angulo_unico_ataque": "El ángulo que nadie ocupa",
+    "marco_conceptual_propio": "Framework propietario sugerido con nombre",
+    "enemigo_estrategico_optimo": "El enemigo correcto",
+    "promesa_optimizada": "Promesa reescrita lista para usar",
+    "postura_distintiva": "La postura que obliga a elegir bando"
+  },
+  "mapa_ventaja_competitiva": {
+    "hace_mejor_que_95": "Qué hace mejor",
+    "hace_diferente_irreplicable": "Qué no puede copiarse",
+    "puede_polarizar_sin_perder": "Tema donde puede tomar postura fuerte",
+    "narrativa_dominable": "El territorio narrativo que puede dominar"
+  },
+  "arquitectura_autoridad": {
+    "tipo_autoridad_recomendado": "El tipo más conveniente",
+    "nivel_confrontacion_optimo": 3,
+    "nivel_polarizacion_recomendable": 2,
+    "nivel_sofisticacion_verbal_ideal": 3,
+    "tipo_prueba_mas_efectiva": "El tipo de prueba que más impacta"
+  },
+  "score_estrategico": {
+    "claridad_posicionamiento": 0,
+    "diferenciacion": 0,
+    "autoridad_percibida": 0,
+    "ventaja_competitiva": 0,
+    "coherencia_estrategica": 0,
+    "nivel_dominancia": 0,
+    "mejoras_urgentes": [
+      {
+        "dimension": "Nombre dimensión < 70",
+        "score_actual": 0,
+        "accion_concreta": "Qué hacer exactamente"
+      }
     ]
   },
-
-  "analisis_competitivo": {
-    "competidores_directos": "Quiénes son y qué hacen mal.",
-    "tu_diferenciador_vs_ellos": "Por qué tú cobras más caro (Tu Ventaja Unica).",
-    "debilidad_competitiva": "Tu talón de aquiles actual que debes arreglar."
-  },
-
-  "plan_accion_90_dias": [
+  "analisis_campo_por_campo": [
     {
-      "mes": 1,
-      "objetivo": "Objetivo principal del mes 1",
-      "kpi": "Métrica clave (Ej: $10k ventas)",
-      "acciones": ["Acción específica 1", "Acción específica 2", "Acción específica 3"]
-    },
-    {
-      "mes": 2,
-      "objetivo": "Objetivo mes 2",
-      "kpi": "Métrica clave",
-      "acciones": ["Acción 1", "Acción 2"]
-    },
-    {
-      "mes": 3,
-      "objetivo": "Objetivo mes 3",
-      "kpi": "Métrica clave",
-      "acciones": ["Acción 1", "Acción 2"]
+      "campo": "Nombre del campo",
+      "lo_que_escribio": "Su input actual",
+      "calificacion": "🟢 Magnético | 🟡 Común | 🔴 Débil | ⚫ Invisible",
+      "score_numerico": 0,
+      "critica": "Por qué no diferencia.",
+      "correccion_maestra": "Versión optimizada lista para usar.",
+      "ejemplos_referencia": ["Referente real"]
     }
   ],
-
-  "siguiente_paso": "La acción ÚNICA y CLARA que debe tomar hoy. (Ej: 'Registra el nombre de tu método mañana mismo')."
+  "perfil_experto_optimizado": {
+    "elevator_pitch": "Ayudo a [X] a lograr [Y] sin [Z] mediante [MECANISMO].",
+    "bio_magnetica": "Biografía de alto impacto con saltos de línea (\\n).",
+    "mecanismo_comercial": { "nombre": "Nombre™ sugerido", "pasos": ["Paso 1", "Paso 2", "Paso 3"] },
+    "proof_stack_ordenado": ["Dato 1", "Dato 2", "Dato 3"]
+  },
+  "plan_accion_90_dias": [
+    { "mes": 1, "objetivo": "Objetivo mes 1", "kpi": "Métrica medible", "acciones": ["Acción 1", "Acción 2"] },
+    { "mes": 2, "objetivo": "Objetivo mes 2", "kpi": "Métrica medible", "acciones": ["Acción 1", "Acción 2"] },
+    { "mes": 3, "objetivo": "Objetivo mes 3", "kpi": "Métrica medible", "acciones": ["Acción 1", "Acción 2"] }
+  ],
+  "siguiente_paso": "La acción ÚNICA y EJECUTABLE que debe tomar en las próximas 24 horas."
 }
 
-REGLAS DE ORO:
-1. Sé BRUTAL pero constructivo.
-2. Piensa en DINERO: "Este cambio = +$X".
-3. NO uses markdown. JSON puro solamente.
-AHORA EJECUTA LA AUDITORÍA.
+REGLAS ABSOLUTAS:
+1. NO generes contenido. Analiza estrategia y posicionamiento.
+2. NO uses lenguaje motivacional vacío. Sé quirúrgico.
+3. Cada recomendación debe ser ejecutable, no teórica.
+4. Si un campo está vacío, señálalo como debilidad crítica.
+5. JSON puro. Sin markdown.
+EJECUTA EL ANÁLISIS ESTRATÉGICO AHORA.
 `;
 
 const PROMPT_CALENDARIO_GOD_MODE = (settings: any, contexto: ContextoUsuario) => {
@@ -7320,7 +7378,8 @@ async function ejecutarAuditorAvatar(
 async function ejecutarAuditoriaExperto(
   expertData: any, 
   avatarContext: string, 
-  openai: any
+  openai: any,
+  competitorUrls?: string[]
 ): Promise<{ data: any; tokens: number }> {
   
   console.log('[HELPER] 🕵️ Ejecutando Motor de Auditoría Experta (Titan Strategy)...');
@@ -7340,7 +7399,7 @@ async function ejecutarAuditoriaExperto(
   // --- PASO 1: GENERAR EL PROMPT ---
   // Pasamos el objeto 'expertData' completo. El prompt se encargará de leer todos los campos nuevos
   // (authority_level, mental_territory, mechanism_name, etc.)
-  const systemPrompt = PROMPT_AUDITOR_EXPERTO(expertData, avatarContext);
+  const systemPrompt = PROMPT_AUDITOR_EXPERTO(expertData, avatarContext, competitorUrls);
 
   try {
     // --- PASO 2: LLAMADA A LA IA (MODO RAZONAMIENTO) ---
@@ -8826,11 +8885,18 @@ case 'tca_feedback': {
             }
         }
 
-        // 3. EJECUCIÓN (CONECTAMOS EL CABLE)
+        // 3. URLS DE COMPETIDORES (OPCIONAL)
+        const competitorUrls: string[] = body.competitorUrls || [];
+        if (competitorUrls.length > 0) {
+            console.log(`[ROUTER] 🕵️ URLs de competidores recibidas: ${competitorUrls.length}`);
+        }
+
+        // 4. EJECUCIÓN — MOTOR ESTRATÉGICO V2.0
         const res = await ejecutarAuditoriaExperto(
             expertData,
             avatarContext,
-            openai
+            openai,
+            competitorUrls
         );
 
         // 4. RESPUESTA AL FRONTEND

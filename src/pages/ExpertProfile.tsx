@@ -24,7 +24,7 @@ const ExpertAuditReportV2 = ({ data }: { data: any }) => {
     );
   }
 
-  const { auditoria_calidad, analisis_campo_por_campo, perfil_experto_optimizado, analisis_competitivo, plan_accion_90_dias, siguiente_paso } = data;
+  const { auditoria_calidad, analisis_campo_por_campo, perfil_experto_optimizado, analisis_mercado, analisis_competencia, diagnostico_posicionamiento, sistema_diferenciacion, score_estrategico, plan_accion_90_dias, siguiente_paso } = data;
 
   const getStatusColor = (status: string) => {
     if (status?.includes('Magnética') || status?.includes('Único') || status?.includes('🟢'))
@@ -144,6 +144,93 @@ const ExpertAuditReportV2 = ({ data }: { data: any }) => {
           </div>
         ))}
       </div>
+
+      {/* SCORE ESTRATÉGICO */}
+      {score_estrategico && (
+        <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-5 space-y-3">
+          <h4 className="text-[10px] font-bold text-gray-400 uppercase flex items-center gap-2 tracking-widest">
+            <BarChart2 size={12}/> Score Estratégico
+          </h4>
+          <div className="grid grid-cols-2 gap-2">
+            {[
+              { key: 'claridad_posicionamiento', label: 'Claridad', color: 'text-cyan-400' },
+              { key: 'diferenciacion', label: 'Diferenciación', color: 'text-purple-400' },
+              { key: 'autoridad_percibida', label: 'Autoridad', color: 'text-green-400' },
+              { key: 'ventaja_competitiva', label: 'Ventaja', color: 'text-yellow-400' },
+              { key: 'coherencia_estrategica', label: 'Coherencia', color: 'text-indigo-400' },
+              { key: 'nivel_dominancia', label: 'Dominancia', color: 'text-red-400' },
+            ].map(item => (
+              <div key={item.key} className="bg-black/40 p-2.5 rounded-lg border border-gray-800 flex justify-between items-center">
+                <span className="text-[9px] text-gray-500 uppercase">{item.label}</span>
+                <span className={`text-sm font-black ${score_estrategico[item.key] >= 70 ? item.color : 'text-red-400'}`}>
+                  {score_estrategico[item.key]}/100
+                </span>
+              </div>
+            ))}
+          </div>
+          {score_estrategico.mejoras_urgentes?.length > 0 && (
+            <div className="bg-red-900/10 border border-red-500/20 rounded-lg p-3 space-y-2">
+              <span className="text-[9px] text-red-400 font-black uppercase">⚡ Mejoras Urgentes</span>
+              {score_estrategico.mejoras_urgentes.map((m: any, i: number) => (
+                <div key={i} className="text-[10px] text-gray-300">
+                  <span className="text-red-400 font-bold">{m.dimension}: </span>{m.accion_concreta}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ANÁLISIS DE MERCADO */}
+      {analisis_mercado && (
+        <div className="bg-indigo-900/10 border border-indigo-500/20 rounded-2xl p-5 space-y-3">
+          <h4 className="text-[10px] font-bold text-indigo-400 uppercase flex items-center gap-2 tracking-widest">
+            <TrendingUp size={12}/> Análisis de Mercado
+          </h4>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-[9px] text-gray-500 uppercase">Saturación:</span>
+            <span className={`text-[10px] font-black px-2 py-0.5 rounded ${analisis_mercado.nivel_saturacion === 'crítico' ? 'bg-red-500/20 text-red-400' : analisis_mercado.nivel_saturacion === 'alto' ? 'bg-orange-500/20 text-orange-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
+              {analisis_mercado.nivel_saturacion?.toUpperCase()}
+            </span>
+          </div>
+          {analisis_mercado.vacios_estrategicos?.length > 0 && (
+            <div>
+              <span className="text-[9px] text-green-400 font-black uppercase block mb-1">✅ Vacíos Estratégicos Disponibles</span>
+              {analisis_mercado.vacios_estrategicos.map((v: string, i: number) => (
+                <p key={i} className="text-[10px] text-gray-300 flex items-start gap-1 mb-1"><CheckCircle2 size={10} className="text-green-500 shrink-0 mt-0.5"/>{v}</p>
+              ))}
+            </div>
+          )}
+          {analisis_mercado.mensajes_saturados?.length > 0 && (
+            <div>
+              <span className="text-[9px] text-red-400 font-black uppercase block mb-1">🚫 Mensajes Saturados (Evitar)</span>
+              {analisis_mercado.mensajes_saturados.map((m: string, i: number) => (
+                <p key={i} className="text-[10px] text-gray-400 flex items-start gap-1 mb-1"><XCircle size={10} className="text-red-500 shrink-0 mt-0.5"/>{m}</p>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* DIFERENCIACIÓN ESTRATÉGICA */}
+      {sistema_diferenciacion && (
+        <div className="bg-purple-900/10 border border-purple-500/20 rounded-2xl p-5 space-y-3">
+          <h4 className="text-[10px] font-bold text-purple-400 uppercase flex items-center gap-2 tracking-widest">
+            <Crosshair size={12}/> Sistema de Diferenciación
+          </h4>
+          {[
+            { key: 'angulo_unico_ataque', label: '⚡ Ángulo Único de Ataque', color: 'text-yellow-300' },
+            { key: 'promesa_optimizada', label: '🎯 Promesa Optimizada', color: 'text-green-300' },
+            { key: 'enemigo_estrategico_optimo', label: '🔥 Enemigo Estratégico', color: 'text-red-300' },
+            { key: 'postura_distintiva', label: '🏛️ Postura Distintiva', color: 'text-cyan-300' },
+          ].map(item => sistema_diferenciacion[item.key] && (
+            <div key={item.key} className="bg-black/40 p-3 rounded-lg border border-white/5">
+              <span className={`text-[9px] font-black uppercase block mb-1 ${item.color}`}>{item.label}</span>
+              <p className="text-gray-200 text-[10px] leading-relaxed">{sistema_diferenciacion[item.key]}</p>
+            </div>
+          ))}
+        </div>
+      )}
 
       {perfil_experto_optimizado && (
         <div className="bg-indigo-900/10 border border-indigo-500/20 rounded-2xl p-5">
