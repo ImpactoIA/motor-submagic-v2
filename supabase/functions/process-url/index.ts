@@ -3804,15 +3804,6 @@ FORMATO JSON — responde SOLO con este JSON, sin markdown:
 // ✅ Compatible con inputs: Texto / Video Transcrito / URL
 // ==================================================================================
 
-interface ContextoUsuario {
-  nicho: string;
-  avatar_ideal: string;
-  dolor_principal: string;
-  deseo_principal: string;
-  expertProfile?: any;
-  knowledge_base_content?: string;
-}
-
 interface CopyExpertSettings {
   red_social: string;        // TikTok, Instagram, YouTube, LinkedIn, Facebook, X
   formato: string;            // Video, Post, Carrusel, Hilo
