@@ -3331,129 +3331,158 @@ INTERPRETA, CONECTA Y DECIDE CON PRECISIÓN QUIRÚRGICA.
 `;
 };
 
-// ==================================================================================
-// 🔥 PROMPT AUDITOR AVATAR V3.0 - SINCRONIZADO CON FRONTEND REAL
-// ==================================================================================
-
-const PROMPT_AUDITOR_AVATAR = (infoCliente: string, nicho: string): string => `
+const PROMPT_AUDITOR_AVATAR = (infoCliente: string, nicho: string, comentariosExtraidos?: string): string => `
 ═══════════════════════════════════════════════════════════════════════════════
-🔥 TITAN AUDIT - CONSULTORÍA FORENSE DE AVATARES (MODO: DESPIADADO)
+🧠 TITAN INTELLIGENCE — MOTOR DE INTELIGENCIA DE MERCADO V2.0
+Extracción Psicológica Profunda + Lenguaje Literal + Traducción Estratégica
 ═══════════════════════════════════════════════════════════════════════════════
 
-IDENTIDAD: Eres "TITAN AUDITOR". Tu misión es SALVAR al usuario de perder millones.
-Analiza: "${infoCliente}". Nicho: "${nicho}".
-
-⚠️ REGLA DE ORO (COMPATIBILIDAD DB + FRONTEND):
-Debes clasificar al avatar usando EXACTAMENTE los siguientes valores permitidos (EN ESPAÑOL):
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📋 VALORES PERMITIDOS (CRÍTICO - COPIAR EXACTO)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-experience_level (OBLIGATORIO):
-  - 'principiante'
-  - 'intermedio'  
-  - 'avanzado'
-  - 'experto'
-
-primary_goal (OBLIGATORIO - SOLO 1):
-  - 'viralidad'
-  - 'autoridad'
-  - 'venta'
-  - 'comunidad'
-  - 'posicionamiento'
-
-communication_style (OBLIGATORIO):
-  - 'directo'
-  - 'analitico'
-  - 'inspirador'
-  - 'provocador'
-  - 'didactico'
-
-risk_level (OBLIGATORIO):
-  - 'conservador'
-  - 'balanceado'
-  - 'agresivo'
-
-content_priority (OBLIGATORIO):
-  - 'educativo'
-  - 'opinion'
-  - 'storytelling'
-  - 'venta_encubierta'
-  - 'viral_corto'
-
-dominant_emotion (OBLIGATORIO):
-  - 'curiosidad'
-  - 'deseo'
-  - 'miedo'
-  - 'aspiracion'
-  - 'autoridad'
-
-success_model (OBLIGATORIO):
-  - 'educador_serio'
-  - 'empresario_premium'
-  - 'influencer_agresivo'
-  - 'mentor_disruptivo'
-  - 'experto_tecnico'
-  - 'creativo_viral'
-
-narrative_structure (OPCIONAL):
-  - 'problema_solucion'
-  - 'hero_journey'
-  - 'antes_despues'
-  - 'enemigo_comun'
-  - 'revelacion_secreta'
-
-preferred_length (OPCIONAL):
-  - 'micro'
-  - 'corto'
-  - 'medio'
-  - 'largo'
-
-preferred_cta_style (OPCIONAL):
-  - 'directo'
-  - 'suave'
-  - 'urgencia'
-  - 'curiosidad'
-  - 'exclusividad'
+IDENTIDAD DEL SISTEMA:
+Eres TITAN INTELLIGENCE, motor de análisis psicológico de mercado.
+No describes avatares bonitos. Extraes patrones reales, mides intensidad emocional
+e identificas el lenguaje literal del mercado para alimentar motores de contenido.
+Cada output es accionable, no decorativo.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📤 FORMATO DE SALIDA (JSON ESTRICTO - SIN MARKDOWN)
+🛡️ PROTOCOLO ANTI-ALUCINACIÓN
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Si el perfil tiene menos de 3 campos significativos:
+- score_global = 0
+- veredicto = "PERFIL INSUFICIENTE. Dame datos reales."
+- JSON completo con campos vacíos.
 
-Devuelve EXACTAMENTE este JSON (respetando los valores permitidos arriba):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 DATOS DEL AVATAR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+NICHO: "${nicho}"
+PERFIL COMPLETO: ${infoCliente}
+
+${comentariosExtraidos ? `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💬 COMENTARIOS REALES DEL MERCADO (EXTRAÍDOS DE YOUTUBE/COMPETIDORES)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+INSTRUCCIÓN CRÍTICA: Estos son comentarios REALES del mercado objetivo.
+Úsalos para extraer lenguaje literal, objeciones reales y patrones emocionales.
+${comentariosExtraidos}` : ''}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔬 CAPA 1 — OBJECIONES REALES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Detecta objeciones reales del mercado. Agrupa por frecuencia e intensidad.
+Incluye frases textuales como las dice el mercado. Específico al nicho.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔬 CAPA 2 — DESEOS DOMINANTES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Clasifica en 3 tipos:
+- Deseo práctico (lo que dice querer)
+- Deseo aspiracional (lo que realmente quiere lograr)
+- Deseo emocional oculto (lo que nunca dice en voz alta)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔬 CAPA 3 — MIEDOS INVISIBLES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Identifica: miedo a perder dinero/tiempo, fracasar públicamente,
+juicio social, ser engañado. Específico al nicho.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔬 CAPA 4 — CREENCIAS LIMITANTES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Frases textuales exactas como las diría el mercado. No análisis abstracto.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔥 CAPA 5 — MAPA DE INTENSIDAD EMOCIONAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Calcula emoción dominante con porcentaje, segunda emoción,
+nivel de escepticismo (Bajo/Medio/Alto) y saturación del mercado.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔥 CAPA 6 — LENGUAJE LITERAL DEL MERCADO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CRÍTICO. Frases reales como las dice el mercado.
+Alimentan hooks, micro loops, cierres y reencuadres.
+Deben sonar como comentarios reales, no como copy publicitario.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 CAPA 7 — TRADUCCIÓN ESTRATÉGICA PARA MOTORES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Convierte el análisis en configuración accionable:
+- Tipo de hook más efectivo
+- Nivel de intensidad emocional sugerido
+- Nivel de polarización recomendado
+- Tipo de cierre más efectivo
+- Enfoque de diferenciación más poderoso
+- Activadores emocionales prioritarios
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 VALORES PERMITIDOS PARA CAMPOS DE PERFIL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+experience_level: 'principiante' | 'intermedio' | 'avanzado' | 'experto'
+primary_goal: 'viralidad' | 'autoridad' | 'venta' | 'comunidad' | 'posicionamiento'
+communication_style: 'directo' | 'analitico' | 'inspirador' | 'provocador' | 'didactico'
+risk_level: 'conservador' | 'balanceado' | 'agresivo'
+content_priority: 'educativo' | 'opinion' | 'storytelling' | 'venta_encubierta' | 'viral_corto'
+dominant_emotion: 'curiosidad' | 'deseo' | 'miedo' | 'aspiracion' | 'autoridad'
+success_model: 'educador_serio' | 'empresario_premium' | 'influencer_agresivo' | 'mentor_disruptivo' | 'experto_tecnico' | 'creativo_viral'
+narrative_structure: 'problema_solucion' | 'hero_journey' | 'antes_despues' | 'enemigo_comun' | 'revelacion_secreta'
+preferred_length: 'micro' | 'corto' | 'medio' | 'largo'
+preferred_cta_style: 'directo' | 'suave' | 'urgencia' | 'curiosidad' | 'exclusividad'
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📤 FORMATO JSON OBLIGATORIO — SIN MARKDOWN, JSON PURO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 {
   "auditoria_calidad": {
     "score_global": 0,
-    "veredicto_brutal": "Frase corta y dura (máximo 15 palabras).",
+    "veredicto_brutal": "Diagnóstico directo máximo 15 palabras.",
     "nivel_actual": "DESASTROSO | AMATEUR | PROFESIONAL | AVANZADO | ELITE | GRANDMASTER",
-    "desglose_puntos": { 
-      "especificidad": 0, 
-      "dolor": 0, 
-      "coherencia": 0, 
-      "actionable": 0 
-    },
-    "penalizaciones_aplicadas": [
-      "Lista de errores detectados"
+    "desglose_puntos": { "especificidad": 0, "dolor": 0, "coherencia": 0, "actionable": 0 },
+    "penalizaciones_aplicadas": ["Error detectado"]
+  },
+  "inteligencia_mercado": {
+    "objeciones_detectadas": [
+      { "frase_real": "Frase textual del mercado", "frecuencia": 0, "intensidad": "Alta | Media | Baja" }
+    ],
+    "deseos_detectados": [
+      { "tipo": "practico | aspiracional | emocional_oculto", "descripcion": "Descripción", "frase_real": "Como lo diría el mercado" }
+    ],
+    "miedos_detectados": [
+      { "tipo": "Nombre del miedo", "descripcion": "Descripción", "frase_real": "Como lo diría el mercado" }
+    ],
+    "creencias_limitantes": [
+      { "creencia": "Frase textual como la dice el mercado", "frecuencia": "Alta | Media | Baja" }
+    ],
+    "emocion_dominante": "Nombre emoción",
+    "emocion_dominante_porcentaje": 0,
+    "emocion_secundaria": "Nombre emoción",
+    "emocion_secundaria_porcentaje": 0,
+    "nivel_escepticismo": "Bajo | Medio | Alto",
+    "saturacion_del_mercado": "Bajo | Medio | Alto | Crítico",
+    "lenguaje_literal_clave": [
+      "Frase real 1", "Frase real 2", "Frase real 3", "Frase real 4", "Frase real 5"
     ]
   },
-  
+  "recomendacion_estrategica": {
+    "tipo_hook_sugerido": "Dolor | Curiosidad | Contrarianism | Transformación | Miedo",
+    "nivel_intensidad_sugerido": "Bajo | Medio | Alto | Máximo",
+    "nivel_polarizacion_sugerido": "1 | 2 | 3 | 4 | 5",
+    "tipo_cierre_recomendado": "CTA directo | Pregunta reflexiva | Urgencia | Autoridad",
+    "enfoque_diferenciacion": "El ángulo único que este mercado no ha visto",
+    "activadores_prioritarios": ["Activador 1", "Activador 2", "Activador 3"]
+  },
   "analisis_campo_por_campo": [
     {
-      "campo": "Ejemplo: Nivel de Experiencia",
-      "lo_que_escribio_usuario": "Texto exacto del usuario",
+      "campo": "Nombre del campo",
+      "lo_que_escribio_usuario": "Input actual",
       "calificacion": "🔴 Crítico | 🟡 Mejorable | 🟢 Correcto",
-      "critica": "Por qué este campo es débil o fuerte",
-      "correccion_maestra": "Versión optimizada del campo"
+      "critica": "Por qué está débil o fuerte",
+      "correccion_maestra": "Versión optimizada"
     }
   ],
-  
   "perfil_final_optimizado": {
-    "name": "Nombre Comercial del Avatar (Ej: 'El Mentor Digital')",
-    "identidad": "Descripción de quién es realmente este avatar",
+    "name": "Nombre Comercial del Avatar",
+    "identidad": "Quién es realmente este avatar",
     "is_active": true,
-    
     "experience_level": "principiante | intermedio | avanzado | experto",
     "primary_goal": "viralidad | autoridad | venta | comunidad | posicionamiento",
     "communication_style": "directo | analitico | inspirador | provocador | didactico",
@@ -3461,94 +3490,33 @@ Devuelve EXACTAMENTE este JSON (respetando los valores permitidos arriba):
     "content_priority": "educativo | opinion | storytelling | venta_encubierta | viral_corto",
     "dominant_emotion": "curiosidad | deseo | miedo | aspiracion | autoridad",
     "success_model": "educador_serio | empresario_premium | influencer_agresivo | mentor_disruptivo | experto_tecnico | creativo_viral",
-    
     "prohibitions": {
-      "lenguaje_vulgar": false,
-      "promesas_exageradas": false,
-      "polemica_barata": false,
-      "clickbait_engañoso": false,
-      "venta_agresiva": false,
-      "comparaciones_directas": false,
-      "contenido_negativo": false
+      "lenguaje_vulgar": false, "promesas_exageradas": false, "polemica_barata": false,
+      "clickbait_engañoso": false, "venta_agresiva": false, "comparaciones_directas": false, "contenido_negativo": false
     },
-    
-    "signature_vocabulary": [
-      "Palabra clave 1 que este avatar usa",
-      "Palabra clave 2",
-      "Palabra clave 3"
-    ],
-    
-    "banned_vocabulary": [
-      "Palabra prohibida 1",
-      "Palabra prohibida 2"
-    ],
-    
-    "narrative_structure": "problema_solucion | hero_journey | antes_despues | enemigo_comun | revelacion_secreta",
-    "preferred_length": "micro | corto | medio | largo",
-    "preferred_cta_style": "directo | suave | urgencia | curiosidad | exclusividad",
-    
-    "secondary_goals": [
-      "Objetivo secundario 1 (opcional)",
-      "Objetivo secundario 2 (opcional)"
-    ],
-    
-    "insight_psicologico": "Análisis profundo de la mentalidad de este avatar (2-3 frases)",
-    "objeciones_ocultas": [
-      "Objeción interna 1",
-      "Objeción interna 2"
-    ]
+    "signature_vocabulary": ["Palabra clave 1", "Palabra clave 2"],
+    "banned_vocabulary": ["Palabra prohibida 1"],
+    "narrative_structure": "problema_solucion",
+    "preferred_length": "medio",
+    "preferred_cta_style": "directo",
+    "secondary_goals": [],
+    "insight_psicologico": "Análisis profundo de la mentalidad (2-3 frases)",
+    "objeciones_ocultas": ["Objeción interna 1", "Objeción interna 2"]
   },
-  
-  "recomendaciones_accionables": [
-    { 
-      "area": "Nombre del área a mejorar", 
-      "problema": "Qué está mal", 
-      "solucion": "Cómo arreglarlo", 
-      "prioridad": "ALTA | MEDIA | BAJA" 
-    }
-  ],
-  
   "comparacion_antes_despues": {
     "headline_antes": "Cómo sonaba el avatar antes (débil)",
     "headline_despues": "Cómo debe sonar ahora (poderoso)"
   },
-  
-  "siguiente_paso": "La acción específica que el usuario debe tomar HOY"
+  "siguiente_paso": "La acción ÚNICA y ESPECÍFICA que debe tomar hoy."
 }
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚠️ REGLAS CRÍTICAS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-1. **USA SOLO LOS VALORES PERMITIDOS ARRIBA (en español)**
-2. **NO INVENTES VALORES NUEVOS**
-3. **SI EL INPUT ES VACÍO O INCOHERENTE:**
-   - score_global = 0
-   - veredicto_brutal = "PERFIL INSUFICIENTE. DAME DATOS REALES."
-   - Deja los demás campos con valores por defecto
-
-4. **SÉ BRUTAL PERO CONSTRUCTIVO**
-5. **CADA CRÍTICA DEBE TENER SU CORRECCIÓN**
-6. **NO USES MARKDOWN EN EL JSON** (JSON puro solamente)
-
-7. **ESTRUCTURA DE PROHIBITIONS:**
-   Debe ser un objeto con exactamente estas 7 claves booleanas:
-   {
-     "lenguaje_vulgar": false,
-     "promesas_exageradas": false,
-     "polemica_barata": false,
-     "clickbait_engañoso": false,
-     "venta_agresiva": false,
-     "comparaciones_directas": false,
-     "contenido_negativo": false
-   }
-
-8. **CAMPOS OPCIONALES:**
-   - signature_vocabulary y banned_vocabulary pueden ser arrays vacíos []
-   - narrative_structure, preferred_length, preferred_cta_style pueden usar valores por defecto
-   - secondary_goals puede ser array vacío []
-
-AHORA EJECUTA LA AUDITORÍA.
+REGLAS ABSOLUTAS:
+1. USA SOLO LOS VALORES PERMITIDOS para campos de perfil.
+2. El lenguaje_literal_clave debe sonar como comentarios reales, no como copy.
+3. Si hay comentarios reales, extrae frases literales de ellos.
+4. JSON puro. Sin markdown.
+5. Si input vacío: score_global = 0.
+EJECUTA EL ANÁLISIS AHORA.
 `;
 
 const PROMPT_AUDITOR_EXPERTO = (perfilCompleto: any, avatarContext?: string, competitorUrls?: string[]) => `
@@ -7291,14 +7259,15 @@ async function ejecutarJuezViralV500(
 async function ejecutarAuditorAvatar(
   infoCliente: string,
   nicho: string,
-  openai: any
+  openai: any,
+  comentariosExtraidos?: string
 ): Promise<{ data: any; tokens: number }> {
   
   console.log('[CEREBRO] 👤 Ejecutando Auditor de Avatar...');
   
   // 1. Generar el Prompt Maestro usando la info detallada
   // Esto conecta con el const PROMPT_AUDITOR_AVATAR que definiste arriba
-  const promptSistema = PROMPT_AUDITOR_AVATAR(infoCliente, nicho);
+  const promptSistema = PROMPT_AUDITOR_AVATAR(infoCliente, nicho, comentariosExtraidos);
 
   try {
     // 2. Llamada a OpenAI (Configuración de Alta Precisión)
@@ -7578,6 +7547,66 @@ async function ejecutarCalendario(
     data: finalData,
     tokens: completion.usage?.total_tokens || 0
   };
+}
+
+// ==================================================================================
+// 🧠 SCRAPER DE COMENTARIOS — INTELIGENCIA DE MERCADO AVATAR V2
+// ==================================================================================
+
+async function scrapeYouTubeComments(url: string): Promise<{
+  comments: { text: string; likes: number }[];
+  videoTitle: string;
+  description: string;
+}> {
+  const apifyToken = Deno.env.get('APIFY_API_TOKEN');
+
+  if (!apifyToken) {
+    console.warn('[COMMENTS] ⚠️ APIFY_API_TOKEN no configurado');
+    return { comments: [], videoTitle: '', description: '' };
+  }
+
+  try {
+    console.log('[COMMENTS] 💬 Scraping comentarios YouTube:', url);
+    const client = new ApifyClient({ token: apifyToken });
+
+    const run = await client.actor('bernardo/youtube-scraper').call({
+      startUrls: [{ url }],
+      maxResults: 1,
+      maxComments: 100,
+      subtitlesLanguage: 'es',
+    });
+
+    const { items } = await client.dataset(run.defaultDatasetId).listItems();
+
+    if (!items || items.length === 0) {
+      console.warn('[COMMENTS] ⚠️ Sin resultados de Apify');
+      return { comments: [], videoTitle: '', description: '' };
+    }
+
+    const video = items[0];
+    const rawComments: any[] = video.comments || [];
+
+    const comments = rawComments
+      .filter((c: any) => c.text && c.text.trim().length > 10)
+      .map((c: any) => ({
+        text: c.text?.trim() || '',
+        likes: c.likes || 0
+      }))
+      .sort((a: any, b: any) => b.likes - a.likes)
+      .slice(0, 80);
+
+    console.log(`[COMMENTS] ✅ ${comments.length} comentarios útiles extraídos`);
+
+    return {
+      comments,
+      videoTitle: video.title || '',
+      description: video.description || ''
+    };
+
+  } catch (error: any) {
+    console.error('[COMMENTS] ❌ Error Apify:', error.message);
+    return { comments: [], videoTitle: '', description: '' };
+  }
 }
 
 // ==================================================================================
@@ -9025,15 +9054,48 @@ ${Object.entries(avatarData.prohibitions || {})
   }
 
   // ==================================================================================
+  // PASO 3.5: SCRAPING DE COMENTARIOS CON APIFY (OPCIONAL)
+  // ==================================================================================
+
+  let comentariosExtraidos = '';
+
+  const urlsCompetidores: string[] = body.competitorUrls || [];
+  if (urlsCompetidores.length > 0) {
+    console.log(`[AUDIT] 🕵️ Scraping comentarios de ${urlsCompetidores.length} URL(s)...`);
+    const todosLosComentarios: string[] = [];
+
+    for (const url of urlsCompetidores.slice(0, 3)) {
+      try {
+        const scraped = await scrapeYouTubeComments(url);
+        if (scraped.comments.length > 0) {
+          const frases = scraped.comments
+            .slice(0, 30)
+            .map((c: any) => `- "${c.text}" (👍 ${c.likes})`)
+            .join('\n');
+          todosLosComentarios.push(`VIDEO: ${scraped.videoTitle || url}\n${frases}`);
+        }
+      } catch (e) {
+        console.warn(`[AUDIT] ⚠️ Error scraping ${url}:`, e);
+      }
+    }
+
+    if (todosLosComentarios.length > 0) {
+      comentariosExtraidos = todosLosComentarios.join('\n\n');
+      console.log(`[AUDIT] ✅ Comentarios extraídos correctamente`);
+    }
+  }
+
+  // ==================================================================================
   // PASO 4: EJECUTAR AUDITORÍA
   // ==================================================================================
-  
-  console.log('[AUDIT] 🚀 Ejecutando Titan Auditor...');
-  
+
+  console.log('[AUDIT] 🚀 Ejecutando Titan Intelligence V2...');
+
   const res = await ejecutarAuditorAvatar(
-    infoParaPrompt, 
-    nichoOperativo, 
-    openai
+    infoParaPrompt,
+    nichoOperativo,
+    openai,
+    comentariosExtraidos
   );
   
   result = res.data;

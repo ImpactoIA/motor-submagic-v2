@@ -202,14 +202,43 @@ export const AvatarProfile: React.FC = () => {
         capa5_lenguaje: { communication_style: formData.communication_style, formality_level: formData.formality_level, mental_rhythm: formData.mental_rhythm, signature_vocabulary: formData.signature_vocabulary, banned_vocabulary: formData.banned_vocabulary, slang_or_expressions: formData.slang_or_expressions, preferred_length: formData.preferred_length, preferred_cta_style: formData.preferred_cta_style, narrative_structure: formData.narrative_structure },
         capa6_objeciones: { common_objections: formData.common_objections, time_objection: formData.time_objection, credibility_objection: formData.credibility_objection, competition_objection: formData.competition_objection, self_doubt: formData.self_doubt },
         capa7_triggers: { emotional_triggers: formData.emotional_triggers, urgency_trigger: formData.urgency_trigger, status_trigger: formData.status_trigger, belonging_trigger: formData.belonging_trigger, loss_fear_trigger: formData.loss_fear_trigger },
-        config: { content_priority: formData.content_priority, prohibitions: formData.prohibitions }
+        config: { content_priority: formData.content_priority, prohibitions: formData.prohibitions },
+        olimpo: { awareness_level: formData.awareness_level, change_resistance: formData.change_resistance, audience_temperature: formData.audience_temperature, internal_tone: formData.internal_tone, timeline_expectation: formData.timeline_expectation, social_pain: formData.social_pain, transformation_point_a: formData.transformation_point_a, internal_obstacle: formData.internal_obstacle, external_obstacle: formData.external_obstacle, emotional_friction: formData.emotional_friction }
       };
       const { data, error } = await supabase.functions.invoke('process-url', {
         body: { selectedMode: 'audit_avatar', transcript: JSON.stringify(avatarPayload), estimatedCost: 2 }
       });
       if (error) throw error;
-      const res = data.generatedData || data.result || "Análisis completado.";
-      alert(`🛡️ VEREDICTO TITAN:\n\n${typeof res === 'string' ? res : JSON.stringify(res, null, 2)}`);
+      const res = data.generatedData || data.result || data;
+
+      if (res && typeof res === 'object' && res.inteligencia_mercado) {
+        const im = res.inteligencia_mercado;
+        const rec = res.recomendacion_estrategica;
+        const score = res.auditoria_calidad?.score_global || 0;
+        const reporte = [
+          `🧠 TITAN INTELLIGENCE V2 — Score: ${score}/100`,
+          `📊 "${res.auditoria_calidad?.veredicto_brutal}"`,
+          ``,
+          `🔥 EMOCIÓN DOMINANTE: ${im.emocion_dominante} (${im.emocion_dominante_porcentaje}%)`,
+          `😰 ESCEPTICISMO: ${im.nivel_escepticismo} | SATURACIÓN: ${im.saturacion_del_mercado}`,
+          ``,
+          `💬 LENGUAJE LITERAL DEL MERCADO:`,
+          ...(im.lenguaje_literal_clave || []).map((f: string) => `  • "${f}"`),
+          ``,
+          `🚧 OBJECIONES PRINCIPALES:`,
+          ...(im.objeciones_detectadas || []).slice(0, 3).map((o: any) => `  • "${o.frase_real}" [${o.intensidad}]`),
+          ``,
+          `🎯 RECOMENDACIÓN ESTRATÉGICA:`,
+          `  Hook: ${rec?.tipo_hook_sugerido}`,
+          `  Intensidad: ${rec?.nivel_intensidad_sugerido}`,
+          `  Diferenciación: ${rec?.enfoque_diferenciacion}`,
+          ``,
+          `✅ SIGUIENTE PASO: ${res.siguiente_paso}`
+        ].join('\n');
+        alert(reporte);
+      } else {
+        alert(`🛡️ ANÁLISIS TITAN:\n\n${typeof res === 'string' ? res : JSON.stringify(res, null, 2)}`);
+      }
     } catch (e: any) { console.error(e); alert("Error de conexión. Revisa que tu Edge Function esté activa."); }
     finally { setLoading(false); }
   };
