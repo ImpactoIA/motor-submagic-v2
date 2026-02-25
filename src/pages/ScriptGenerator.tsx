@@ -1513,9 +1513,7 @@ export const ScriptGenerator = () => {
                                 </div>
                             )}
 
-                            )}
-
-                            {/* 🖼️ MINIATURA DOMINANTE */}
+                         {/* 🖼️ MINIATURA DOMINANTE */}
                             {result.miniatura_dominante && (
                                 <div className="mb-6 rounded-2xl overflow-hidden border border-yellow-500/30"
                                     style={{ background: 'linear-gradient(135deg, rgba(20,15,0,0.95) 0%, rgba(30,20,0,0.95) 100%)' }}>
