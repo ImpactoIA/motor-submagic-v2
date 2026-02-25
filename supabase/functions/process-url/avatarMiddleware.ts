@@ -242,9 +242,7 @@ export class AvatarMiddleware {
         if (!avatar.hidden_desire && !avatar.dream_outcome) {
             missing_fields.push('⚠️ Sin deseo definido — la resolución no tendrá impacto');
         }
-        if (!avatar.awareness_level) {
-            missing_fields.push('⚠️ Sin nivel de conciencia — el contenido puede estar desalineado');
-        }
+        // awareness_level es opcional - no bloquea
 
         return {
             valid: missing_fields.length === 0,

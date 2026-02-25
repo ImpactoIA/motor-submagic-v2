@@ -85,18 +85,26 @@ interface ScriptResult {
     decision?: string;
     razon?: string;
   };
-  metadata_guion?: {
-    tema_tratado?: string;
-    plataforma?: string;
-    arquitectura?: string;
-    objetivo_viral?: string;
-    percepcion_creador?: string;
-    tono_voz?: string;
-    ritmo?: string;
-    nivel_intensidad?: string;
-    objetivo_cierre?: string;
-    estructura_usada?: string;
+teleprompter_script?: string;
+  plan_produccion_visual?: Array<{
+    tiempo: string;
+    tipo_plano: string;
+    descripcion_visual: string;
+    movimiento_camara: string;
+    b_roll_sugerido: string;
+    efecto_retencion: string;
+    texto_en_pantalla: string;
+    musica_recomendada: string;
+    efecto_sonido: string;
+  }>;
+  dominio_narrativo?: {
+    marco_impuesto?: string;
+    enemigo_identificado?: string;
+    creencia_atacada?: string;
+    nuevo_frame_propuesto?: string;
+    postura_dominante?: string;
   };
+  metadata_guion?: {
   estrategia_tca?: {
     nivel_posicionamiento?: string;
     sector_utilizado?: string;
@@ -1332,14 +1340,14 @@ export const ScriptGenerator = () => {
                                                 : 'UMBRAL DE DOMINANCIA NO ALCANZADO'}
                                         </p>
                                         <p style={{ margin: 0, fontSize: '11px', color: '#6b7280', marginTop: '2px' }}>
-                                            viral_index: <strong style={{ color: '#fff' }}>{result.score_predictivo.viral_index}</strong> / mínimo requerido: 75
+                                            viral_index: <strong style={{ color: '#fff' }}>{result.score_predictivo.viral_index}</strong> / mínimo requerido: 85
                                         </p>
                                     </div>
                                     <div className="text-right">
                                         <span style={{ 
                                             fontSize: '28px', 
                                             fontWeight: 900, 
-                                            color: result.score_predictivo.viral_index >= 75 ? '#22c55e' : '#ef4444' 
+                                            color: result.score_predictivo.viral_index >= 85 ? '#22c55e' : '#ef4444' 
                                         }}>
                                             {result.score_predictivo.viral_index}
                                         </span>
@@ -1439,6 +1447,47 @@ export const ScriptGenerator = () => {
                                 </div>
                             )}
 
+                            {/* 🧠 DOMINIO NARRATIVO */}
+                            {result.dominio_narrativo && (
+                                <div className="mb-6 bg-indigo-950/30 border border-indigo-500/20 rounded-2xl p-5">
+                                    <h3 className="text-sm font-black text-indigo-400 mb-4 uppercase tracking-widest flex items-center gap-2">
+                                        🏛️ Arquitectura Estratégica del Guion
+                                    </h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        {result.dominio_narrativo.marco_impuesto && (
+                                            <div className="bg-black/40 rounded-xl p-3 border border-indigo-500/10">
+                                                <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest block mb-1">🖼️ Marco Impuesto</span>
+                                                <p className="text-sm text-gray-200">{result.dominio_narrativo.marco_impuesto}</p>
+                                            </div>
+                                        )}
+                                        {result.dominio_narrativo.enemigo_identificado && (
+                                            <div className="bg-black/40 rounded-xl p-3 border border-red-500/10">
+                                                <span className="text-[10px] font-black text-red-400 uppercase tracking-widest block mb-1">⚔️ Enemigo Identificado</span>
+                                                <p className="text-sm text-gray-200">{result.dominio_narrativo.enemigo_identificado}</p>
+                                            </div>
+                                        )}
+                                        {result.dominio_narrativo.creencia_atacada && (
+                                            <div className="bg-black/40 rounded-xl p-3 border border-orange-500/10">
+                                                <span className="text-[10px] font-black text-orange-400 uppercase tracking-widest block mb-1">💥 Creencia Atacada</span>
+                                                <p className="text-sm text-gray-200">{result.dominio_narrativo.creencia_atacada}</p>
+                                            </div>
+                                        )}
+                                        {result.dominio_narrativo.nuevo_frame_propuesto && (
+                                            <div className="bg-black/40 rounded-xl p-3 border border-green-500/10">
+                                                <span className="text-[10px] font-black text-green-400 uppercase tracking-widest block mb-1">✨ Nuevo Frame Propuesto</span>
+                                                <p className="text-sm text-gray-200">{result.dominio_narrativo.nuevo_frame_propuesto}</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                    {result.dominio_narrativo.postura_dominante && (
+                                        <div className="mt-3 bg-black/40 rounded-xl p-3 border border-purple-500/20">
+                                            <span className="text-[10px] font-black text-purple-400 uppercase tracking-widest block mb-1">🎯 Postura Dominante</span>
+                                            <p className="text-sm text-gray-200">{result.dominio_narrativo.postura_dominante}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
                             {/* Ganchos Alternativos */}
                             {result.ganchos_opcionales && result.ganchos_opcionales.length > 0 && (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
@@ -1475,7 +1524,7 @@ export const ScriptGenerator = () => {
                                     <AlignLeft size={14}/> Modo Teleprompter
                                 </label>
                                 <div className="bg-black/60 p-8 rounded-2xl border border-gray-800 text-gray-200 text-lg leading-relaxed font-medium whitespace-pre-wrap shadow-inner max-h-[600px] overflow-y-auto font-mono selection:bg-pink-500 selection:text-white">
-                                    {result.guion_completo}
+                                    {result.teleprompter_script || result.guion_completo}
                                 </div>
                             </div>
 
@@ -1626,36 +1675,53 @@ export const ScriptGenerator = () => {
     </div>
 )}
                             {/* PLAN VISUAL */}
-                            {result.plan_visual && result.plan_visual.length > 0 && (
+                            {(result.plan_produccion_visual || result.plan_visual) && (result.plan_produccion_visual || result.plan_visual)!.length > 0 && (
                                 <div className="border-t border-gray-800 pt-6 mt-6">
                                     <label className="text-xs font-black text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
-                                        <Video size={14}/> Plan de Rodaje
+                                        <Video size={14}/> Plan de Producción Visual
                                     </label>
                                     <div className="space-y-3">
-                                        {result.plan_visual.map((scene, idx) => (
+                                        {(result.plan_produccion_visual || result.plan_visual)!.map((scene: any, idx: number) => (
                                             <div 
                                                 key={idx} 
-                                                className="flex gap-4 p-4 bg-gray-900/30 rounded-xl border border-gray-800/50 items-center hover:bg-gray-900 transition-colors"
+                                                className="flex gap-4 p-4 bg-gray-900/30 rounded-xl border border-gray-800/50 hover:bg-gray-900 transition-colors"
                                             >
-                                                <span className="text-xs font-black text-gray-500 w-16 text-right font-mono">
+                                                <span className="text-xs font-black text-gray-500 w-16 text-right font-mono shrink-0">
                                                     {scene.tiempo}
                                                 </span>
-                                                <div className="flex-1">
-                                                    <p className="text-sm text-white font-medium mb-1">
-                                                        {scene.accion_en_pantalla}
+                                                <div className="flex-1 space-y-1">
+                                                    <p className="text-sm text-white font-medium">
+                                                        {scene.descripcion_visual || scene.accion_en_pantalla}
                                                     </p>
                                                     <div className="flex gap-3 flex-wrap">
-                                                        <span className="text-[10px] text-indigo-400 uppercase tracking-wide">
-                                                            🎥 {scene.instruccion_produccion}
-                                                        </span>
-                                                        {scene.audio && (
-                                                            <span className="text-[10px] text-pink-400 uppercase tracking-wide">
-                                                                🎵 {scene.audio}
+                                                        {(scene.tipo_plano || scene.instruccion_produccion) && (
+                                                            <span className="text-[10px] text-indigo-400 uppercase tracking-wide">
+                                                                🎥 {scene.tipo_plano || scene.instruccion_produccion}
                                                             </span>
                                                         )}
-                                                        {scene.texto_pantalla && (
+                                                        {scene.movimiento_camara && (
+                                                            <span className="text-[10px] text-cyan-400 uppercase tracking-wide">
+                                                                📷 {scene.movimiento_camara}
+                                                            </span>
+                                                        )}
+                                                        {scene.b_roll_sugerido && (
+                                                            <span className="text-[10px] text-green-400 uppercase tracking-wide">
+                                                                🎬 {scene.b_roll_sugerido}
+                                                            </span>
+                                                        )}
+                                                        {scene.efecto_retencion && (
+                                                            <span className="text-[10px] text-orange-400 uppercase tracking-wide">
+                                                                ⚡ {scene.efecto_retencion}
+                                                            </span>
+                                                        )}
+                                                        {(scene.musica_recomendada || scene.audio) && (
+                                                            <span className="text-[10px] text-pink-400 uppercase tracking-wide">
+                                                                🎵 {scene.musica_recomendada || scene.audio}
+                                                            </span>
+                                                        )}
+                                                        {(scene.texto_en_pantalla || scene.texto_pantalla) && (
                                                             <span className="text-[10px] text-yellow-400 uppercase tracking-wide">
-                                                                📝 {scene.texto_pantalla}
+                                                                📝 {scene.texto_en_pantalla || scene.texto_pantalla}
                                                             </span>
                                                         )}
                                                     </div>
@@ -1665,7 +1731,6 @@ export const ScriptGenerator = () => {
                                     </div>
                                 </div>
                             )}
-
                         </div>
                     ) : (
                         <div className="h-full border-2 border-dashed border-gray-800 rounded-3xl flex flex-col items-center justify-center text-center p-12 bg-gray-900/20 min-h-[600px]">

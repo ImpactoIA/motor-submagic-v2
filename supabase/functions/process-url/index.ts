@@ -2089,30 +2089,54 @@ Cuando un usuario genere un guion, el backend debe mostrar en logs:
 ${expertDirectives}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🏛️ MOTOR 0 — POSTURA DOMINANTE COHERENTE CON IDENTIDAD DEL EXPERTO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ANTES de cualquier otra instrucción, define la POSTURA DOMINANTE del guion:
+
+Lee del perfil experto:
+- Tipo de autoridad → define el NIVEL de confrontación permitido
+- Nivel de polarización → define QUÉ tan divisivo puede ser el guion
+- Nivel de agresividad → define la INTENSIDAD del ataque narrativo
+- Posicionamiento estratégico → define DESDE QUÉ ÁNGULO domina
+
+REGLAS DE POSTURA DOMINANTE:
+→ Si autoridad = "Científica/Académica": Dominio basado en evidencia + desmontar mito con datos
+→ Si autoridad = "Disruptiva/Challenger": Ataque frontal a narrativa dominante del sector
+→ Si autoridad = "Mentor/Coach": Confrontación pero con contención emocional, no agresión
+→ Si autoridad = "Empresarial/Premium": Dominio por resultados y prueba social, no polarización
+→ Si autoridad = "Creativa/Viral": Dominio por originalidad radical y humor estratégico
+
+⚠️ REGLA: La disrupción NO es random. Es disrupción estratégica alineada con la identidad del experto.
+Si el guion disuena con el posicionamiento del experto → RECHAZA y reescribe con la postura correcta.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🌀 VALIDACIÓN TCA — DOMINIO EN CAPA MASIVA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Antes de escribir el guion, valida internamente:
+□ ¿El hook está en N2–N3 (sector masivo)? Si está en micronicho técnico → PENALIZAR y reescribir
+□ ¿El conflicto conecta con Dinero / Salud / Relaciones / Desarrollo Personal? Si no → expandir
+□ ¿El insight conecta de vuelta con el nicho específico del experto? Si no → ajustar
+
+Sectores masivos válidos (N2-N3): Dinero, Tiempo, Libertad, Reconocimiento, Salud, Relaciones, Crecimiento
+Micronicho técnico (N1) PROHIBIDO en hook: jerga técnica específica, acrónimos del sector, términos de experto
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚡ MOTOR DE ENEMIGO NARRATIVO CLARO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Todo guion poderoso tiene 4 elementos. Valida que existan:
+□ PROBLEMA: ¿Qué está fallando en la vida del avatar?
+□ RESPONSABLE (Enemigo): ¿Quién o qué tiene la culpa? (sistema, narrativa dominante, industria, creencia falsa)
+□ MARCO INCORRECTO: ¿Qué le han dicho que es mentira?
+□ ALTERNATIVA SUPERIOR: ¿Cuál es la visión correcta que el experto propone?
+
+Si falta el enemigo claro → reescribir Bloque 1 y Bloque 2 con enemigo explícito.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ⚔️ SISTEMA DE DIFERENCIACIÓN COMPETITIVA (EJECUCIÓN PREVIA OBLIGATORIA)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-ANTES de escribir una sola palabra del guion, ejecuta internamente estos 3 pasos:
-
-PASO 1 — DEFINE QUÉ DIRÍA EL CREADOR PROMEDIO:
-   Pregúntate: "Si 100 creadores de ${nicho} hablasen sobre '${temaEspecifico}',
-   ¿qué dirían? ¿Cuál es el enfoque típico, el consejo cliché, la narrativa común?"
-
-PASO 2 — IDENTIFICA EL PATRÓN COMÚN:
-   • Enfoque típico del nicho que todos usan
-   • Consejo cliché que el avatar ya escuchó mil veces
-   • Narrativa y estructura que todos repiten
-
-PASO 3 — OBLÍGATE A LO OPUESTO:
-   • Cambia el ángulo narrativo radicalmente
-   • Introduce un frame distinto al consenso del nicho
-   • El guion NO puede sonar como "la versión promedio mejorada"
-   • Debe sonar como una POSTURA DISTINTA con autoridad propia
-
-⚠️ REGLA: Si al leer el guion terminado piensas "esto lo podría decir cualquiera
-sobre ${temaEspecifico}" → RECHAZA y reescribe con diferenciación real.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🌍 MOTOR 1 — ARQUITECTURA ESTRUCTURAL OBLIGATORIA
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -2370,7 +2394,7 @@ impact_score = (disrupcion×0.25 + memorabilidad×0.25 + polarizacion×0.20 + co
 
 viral_index = (retention×0.30 + share×0.20 + save×0.15 + authority×0.15 + impact_score×0.20)
 
-⚠️ Si cualquier métrica cualitativa < 70 → Reescribe el bloque correspondiente antes de continuar.
+⚠️ Si cualquier métrica cualitativa < 75 → Reescribe el bloque correspondiente antes de continuar.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🔴 UMBRAL DE DOMINANCIA OBLIGATORIO
@@ -2378,21 +2402,26 @@ viral_index = (retention×0.30 + share×0.20 + save×0.15 + authority×0.15 + im
 
 REGLA INNEGOCIABLE ANTES DE ENTREGAR:
 
-Si viral_index < 75 → REESCRIBE el guion completo desde el bloque 1.
+Si viral_index < 85 → REESCRIBE el guion completo desde el bloque 1.
 
-NO son ajustes pequeños. NO es edición superficial.
-Es regeneración completa con mayor:
-  • Disrupción en el hook (elige variante de ejecución diferente)
-  • Intensidad emocional (sube un nivel el tono)
-  • Polarización estratégica (toma postura más definida)
-  • Diferenciación narrativa (aleja más del creador promedio)
+Además, métricas mínimas obligatorias:
+  • nivel_de_disrupcion ≥ 75 → Si no: reescribir Hook con mayor confrontación
+  • nivel_de_control_de_frame ≥ 75 → Si no: reescribir Bloque 2 con enemigo más claro
+  • nivel_de_diferenciacion_competitiva ≥ 75 → Si no: reescribir desde ángulo opuesto al nicho
+
+PENALIZACIÓN AUTOMÁTICA POR NEUTRALIDAD:
+  → Hook informativo sin fricción → -20 en disrupcion
+  → Frases diplomáticas o "por otro lado" → -15 en control_de_frame
+  → Conclusión abierta sin posicionamiento → -20 en diferenciacion
+  → Cierre sin CTA de identidad → -10 en authority_score
+  → Tono neutral detectado → regenerar guion completo
 
 PROTOCOLO:
   → Intento 1: Calcula viral_index con las fórmulas del Motor 10
-  → Si < 75: Reescribe guion completo con mayor disrupción
+  → Si viral_index < 85 o cualquier métrica clave < 75: Reescribe guion completo con mayor disrupción
   → Intento 2: Recalcula viral_index
-  → Si < 75: Eleva automáticamente intensidad un nivel superior a "${intensityLevel}"
-  → Solo puedes entregar el JSON si viral_index ≥ 75
+  → Si < 85: Eleva automáticamente intensidad un nivel superior a "${intensityLevel}"
+  → Solo puedes entregar el JSON si viral_index ≥ 85 Y disrupcion ≥ 75 Y control_frame ≥ 75 Y diferenciacion ≥ 75
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🧠 EVALUACIÓN DE IMPACTO ESTRATÉGICO REAL
@@ -2474,9 +2503,13 @@ Responde SOLO con este JSON válido. Sin markdown, sin texto extra, sin explicac
     }
   ],
   "curva_emocional": {
-    "inicio": "Estado emocional del avatar al empezar",
+    "estado_emocional_inicial": "Emoción de entrada del avatar (Frustración / Confusión / Resignación)",
+    "estado_emocional_medio": "Emoción en el punto de mayor tensión (Culpa / Shock / Indignación)",
+    "estado_emocional_final": "Emoción de salida del avatar (Esperanza / Poder / Claridad)",
+    "cambio_real_validado": true,
     "pico_1": "Estado emocional en el punto de mayor tensión",
     "pico_2": "Estado emocional tras el insight",
+    "inicio": "Estado emocional del avatar al empezar",
     "cierre": "Estado emocional al terminar el guion"
   },
   "activadores_psicologicos": [
@@ -2525,7 +2558,83 @@ Responde SOLO con este JSON válido. Sin markdown, sin texto extra, sin explicac
       "nivel_de_diferenciacion_competitiva": 0
     },
     "umbral_dominancia_superado": true,
-    "razonamiento": "Explicación de cómo se calculó cada score y qué ajustes se hicieron para superar viral_index ≥ 75"
+    "razonamiento": "Explicación de cómo se calculó cada score y qué ajustes se hicieron para superar viral_index ≥ 85, disrupcion ≥ 75, control_frame ≥ 75 y diferenciacion ≥ 75"
+  },
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🖼️ MOTOR FDM-X 2.0 — FRASE DOMINANTE DE MINIATURA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Genera la frase de miniatura DESPUÉS de tener el guion completo.
+La frase debe conectar con el hook, el TCA y la intensidad.
+
+THUMBNAIL DNA POR PLATAFORMA:
+
+TikTok → 2-4 palabras | Alta confrontación | Ataque directo | Sin explicación
+  Patrones: "Te mintieron" / "Hazlo al revés" / "Estás perdiendo dinero" / "Esto te arruina"
+  NUNCA: frases largas, conceptos abstractos, educativas
+
+YouTube → 3-6 palabras | Gap informativo | Promesa implícita | Conecta con título
+  Patrones: "La verdad incómoda" / "Nadie te dijo esto" / "El error invisible" / "Por eso no creces"
+  NUNCA: spoiler del contenido, repite el título
+
+Instagram Reels → Aspiracional o tribal | Compartible | Elegante pero disruptiva
+  Patrones: "No es para todos" / "Los que entienden esto" / "Mentalidad diferente" / "Disciplina real"
+  NUNCA: agresividad excesiva, jerga técnica
+
+Facebook → Postura clara | Provoca comentario | No agresiva
+  Patrones: "Esto está mal" / "Nos enseñaron mal" / "Nadie habla de esto" / "Esto no funciona"
+  NUNCA: polarización extrema, lenguaje divisivo
+
+FILTRO OBLIGATORIO antes de entregar:
+✔ Activa sector TCA (Dinero/Salud/Relaciones/Desarrollo)
+✔ Rompe expectativa del nicho
+✔ Genera tensión cognitiva
+✔ Compatible con intensidad del experto: ${intensityConfig.label}
+✔ No es genérica ni educativa ni cliché
+✔ No suena a IA
+✔ No repite el título
+✔ Cumple ADN de ${platLabel}
+Si falla uno → regenerar frase.
+
+Si ctr_score < 75 → regenerar frase con mayor disrupción.
+
+  "teleprompter_script": "SOLO texto hablado. Sin corchetes. Sin indicaciones técnicas. Sin emojis. Solo pausas con ... o línea en blanco. Texto natural para teleprompter.",
+  "plan_produccion_visual": [
+    {
+      "tiempo": "0-3s",
+      "tipo_plano": "Primer plano / Plano medio / B-roll / Corte rápido",
+      "descripcion_visual": "Descripción visual de la escena conectada con emoción del bloque",
+      "movimiento_camara": "Zoom in agresivo / Estable / Travelling / Handheld",
+      "b_roll_sugerido": "B-roll estratégico conectado con sector TCA e intensidad narrativa",
+      "efecto_retencion": "Whoosh / Golpe sonoro / Silencio estratégico / Subida musical",
+      "texto_en_pantalla": "Texto visual de impacto (solo aquí, NO en teleprompter)",
+      "musica_recomendada": "Estilo + energía 1-10 + tempo + emoción dominante",
+      "efecto_sonido": "Efecto de sonido específico para este momento"
+    }
+  ],
+  "miniatura_dominante": {
+    "frase_principal": "FRASE CORTA para miniatura optimizada para ${platLabel}. Máx 4 palabras TikTok/Reels, 6 palabras YouTube. Alta tensión cognitiva. NO es el título. NO explica. INTERRUMPE.",
+    "variantes_ab": [
+      "Variante más agresiva/confrontacional",
+      "Variante más aspiracional/tribal"
+    ],
+    "plataforma_optimizada": "${platLabel}",
+    "sector_tca_activado": "Sector masivo activado: Dinero / Salud / Relaciones / Desarrollo",
+    "mecanismo_psicologico": "Gap informativo / Ataque de creencia / Contradicción / Identidad tribal",
+    "ctr_score": 0,
+    "nivel_disrupcion": 0,
+    "nivel_gap_curiosidad": 0,
+    "nivel_polarizacion": 0,
+    "compatibilidad_algoritmica": 0,
+    "coherencia_con_hook": true,
+    "razon_estrategica": "Explicación de por qué esta frase detiene el scroll en ${platLabel} y conecta con el hook"
+  },
+  "dominio_narrativo": {
+    "marco_impuesto": "El frame mental que el guion instala en el espectador",
+    "enemigo_identificado": "El antagonista explícito o implícito del guion (sistema, creencia, narrativa)",
+    "creencia_atacada": "La creencia falsa o limitante que el guion destruye",
+    "nuevo_frame_propuesto": "La visión alternativa superior que el experto propone",
+    "postura_dominante": "La postura estratégica alineada con el perfil del experto"
   },
   "auto_validacion": {
     "arquitectura_completa": true,
@@ -2545,8 +2654,12 @@ Responde SOLO con este JSON válido. Sin markdown, sin texto extra, sin explicac
     "control_de_frame_logrado": true,
     "supera_contenido_promedio": true,
     "cumple_umbral_dominancia": true,
+    "teleprompter_limpio": true,
+    "plan_visual_completo": true,
+    "musica_alineada": true,
+    "broll_conectado_tca": true,
     "decision": "APROBAR",
-    "razon": "Explicación completa de por qué este guion supera el umbral de dominancia (viral_index ≥ 75), respeta el ADN de ${platLabel}, nivel ${intensityConfig.label}, y objetivo ${closingConfig.label}"
+    "razon": "Explicación completa de por qué este guion supera el umbral de dominancia (viral_index ≥ 85), respeta el ADN de ${platLabel}, nivel ${intensityConfig.label}, y objetivo ${closingConfig.label}"
   }
 }
 `;
@@ -5665,7 +5778,7 @@ async function ejecutarAutopsiaViral(
   };
 }
 
-const MIN_VIRAL_SCORE = 75;
+const MIN_VIRAL_SCORE = 85;
 const MAX_RETRIES = 3;
 
 // ==================================================================================
