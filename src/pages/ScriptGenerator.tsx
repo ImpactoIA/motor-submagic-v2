@@ -97,6 +97,20 @@ teleprompter_script?: string;
     musica_recomendada: string;
     efecto_sonido: string;
   }>;
+  miniatura_dominante?: {
+    frase_principal: string;
+    variantes_ab: string[];
+    plataforma_optimizada: string;
+    sector_tca_activado: string;
+    mecanismo_psicologico: string;
+    ctr_score: number;
+    nivel_disrupcion: number;
+    nivel_gap_curiosidad: number;
+    nivel_polarizacion: number;
+    compatibilidad_algoritmica: number;
+    coherencia_con_hook: boolean;
+    razon_estrategica: string;
+  };
   dominio_narrativo?: {
     marco_impuesto?: string;
     enemigo_identificado?: string;
@@ -105,6 +119,17 @@ teleprompter_script?: string;
     postura_dominante?: string;
   };
   metadata_guion?: {
+    tema_tratado?: string;
+    plataforma?: string;
+    arquitectura?: string;
+    objetivo_viral?: string;
+    percepcion_creador?: string;
+    tono_voz?: string;
+    ritmo?: string;
+    nivel_intensidad?: string;
+    objetivo_cierre?: string;
+    estructura_usada?: string;
+  };
   estrategia_tca?: {
     nivel_posicionamiento?: string;
     sector_utilizado?: string;
@@ -1485,6 +1510,84 @@ export const ScriptGenerator = () => {
                                             <p className="text-sm text-gray-200">{result.dominio_narrativo.postura_dominante}</p>
                                         </div>
                                     )}
+                                </div>
+                            )}
+
+                            )}
+
+                            {/* 🖼️ MINIATURA DOMINANTE */}
+                            {result.miniatura_dominante && (
+                                <div className="mb-6 rounded-2xl overflow-hidden border border-yellow-500/30"
+                                    style={{ background: 'linear-gradient(135deg, rgba(20,15,0,0.95) 0%, rgba(30,20,0,0.95) 100%)' }}>
+                                    {/* Header */}
+                                    <div className="px-5 py-3 border-b border-yellow-500/20 flex items-center justify-between">
+                                        <span className="text-xs font-black text-yellow-400 uppercase tracking-widest flex items-center gap-2">
+                                            🖼️ Frase para Miniatura
+                                        </span>
+                                        <span className="text-[10px] font-bold text-yellow-600 bg-yellow-500/10 px-2 py-0.5 rounded-full">
+                                            {result.miniatura_dominante.plataforma_optimizada}
+                                        </span>
+                                    </div>
+                                    <div className="p-5 space-y-4">
+                                        {/* Frase Principal */}
+                                        <div className="text-center py-4 px-6 bg-black/60 rounded-xl border border-yellow-400/20">
+                                            <p className="text-[10px] font-black text-yellow-600 uppercase tracking-widest mb-2">Frase Principal</p>
+                                            <p className="text-2xl font-black text-white leading-tight tracking-tight">
+                                                "{result.miniatura_dominante.frase_principal}"
+                                            </p>
+                                        </div>
+                                        {/* Variantes A/B */}
+                                        {result.miniatura_dominante.variantes_ab && result.miniatura_dominante.variantes_ab.length > 0 && (
+                                            <div className="grid grid-cols-2 gap-3">
+                                                {result.miniatura_dominante.variantes_ab.map((v: string, i: number) => (
+                                                    <div key={i} className="bg-black/40 rounded-xl p-3 border border-yellow-500/10 text-center">
+                                                        <span className="text-[9px] font-black text-yellow-600 uppercase block mb-1">
+                                                            {i === 0 ? '⚡ Más Agresiva' : '✨ Más Aspiracional'}
+                                                        </span>
+                                                        <p className="text-sm font-black text-gray-200">"{v}"</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                        {/* Scores CTR */}
+                                        <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+                                            {[
+                                                { label: 'CTR Score', value: result.miniatura_dominante.ctr_score, color: '#facc15' },
+                                                { label: 'Disrupción', value: result.miniatura_dominante.nivel_disrupcion, color: '#f87171' },
+                                                { label: 'Gap Curiosidad', value: result.miniatura_dominante.nivel_gap_curiosidad, color: '#60a5fa' },
+                                                { label: 'Polarización', value: result.miniatura_dominante.nivel_polarizacion, color: '#f472b6' },
+                                                { label: 'Algoritmo', value: result.miniatura_dominante.compatibilidad_algoritmica, color: '#34d399' },
+                                            ].map(({ label, value, color }) => (
+                                                <div key={label} className="bg-black/40 rounded-xl p-2 text-center border border-white/5">
+                                                    <p className="text-[9px] text-gray-500 uppercase tracking-wide mb-1">{label}</p>
+                                                    <p className="text-lg font-black" style={{ color }}>{value}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        {/* Meta info */}
+                                        <div className="flex flex-wrap gap-2">
+                                            {result.miniatura_dominante.sector_tca_activado && (
+                                                <span className="text-[10px] bg-yellow-500/10 text-yellow-400 px-2 py-1 rounded-full font-bold">
+                                                    🎯 {result.miniatura_dominante.sector_tca_activado}
+                                                </span>
+                                            )}
+                                            {result.miniatura_dominante.mecanismo_psicologico && (
+                                                <span className="text-[10px] bg-purple-500/10 text-purple-400 px-2 py-1 rounded-full font-bold">
+                                                    🧠 {result.miniatura_dominante.mecanismo_psicologico}
+                                                </span>
+                                            )}
+                                            {result.miniatura_dominante.coherencia_con_hook && (
+                                                <span className="text-[10px] bg-green-500/10 text-green-400 px-2 py-1 rounded-full font-bold">
+                                                    ✅ Coherente con Hook
+                                                </span>
+                                            )}
+                                        </div>
+                                        {result.miniatura_dominante.razon_estrategica && (
+                                            <p className="text-xs text-gray-500 italic border-t border-yellow-500/10 pt-3">
+                                                💭 {result.miniatura_dominante.razon_estrategica}
+                                            </p>
+                                        )}
+                                    </div>
                                 </div>
                             )}
 
