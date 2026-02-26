@@ -5180,9 +5180,41 @@ async function ejecutarIdeasRapidas(
       max_tokens: 5000
     });
 
-     // 4. Parsear respuesta
-    const rawContent = completion.choices[0].message.content;
-    const parsedData = JSON.parse(rawContent || '{"ideas":[]}');
+     // 4. Parsear respuesta con limpieza robusta
+    const rawContent = completion.choices[0].message.content || '{"ideas":[]}';
+    
+    let parsedData: any = { ideas: [] };
+    try {
+      // Intento 1: parseo directo
+      parsedData = JSON.parse(rawContent);
+    } catch (e1) {
+      console.warn('[IDEAS IMPERIO] ⚠️ JSON directo falló, aplicando limpieza...');
+      try {
+        // Intento 2: limpiar y reintentar
+        const cleaned = rawContent
+          .replace(/```json\n?/g, '')
+          .replace(/```\n?/g, '')
+          .replace(/,\s*}/g, '}')
+          .replace(/,\s*]/g, ']')
+          .replace(/[\u0000-\u001F\u007F-\u009F]/g, ' ')
+          .trim();
+        parsedData = JSON.parse(cleaned);
+        console.log('[IDEAS IMPERIO] ✅ JSON limpiado exitosamente');
+      } catch (e2) {
+        console.error('[IDEAS IMPERIO] ❌ JSON irrecuperable, extrayendo con regex...');
+        // Intento 3: extraer el objeto JSON con regex
+        const match = rawContent.match(/\{[\s\S]*\}/);
+        if (match) {
+          try {
+            parsedData = JSON.parse(match[0]);
+            console.log('[IDEAS IMPERIO] ✅ JSON extraído con regex');
+          } catch (e3) {
+            console.error('[IDEAS IMPERIO] ❌ Fallo total en parseo:', e3);
+            parsedData = { ideas: [], error: 'Error procesando respuesta. Intenta de nuevo.' };
+          }
+        }
+      }
+    }
 
     // 5. Filtro de seguridad — eliminar ideas con score < 70
     if (Array.isArray(parsedData.ideas)) {
