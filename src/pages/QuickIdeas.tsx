@@ -250,9 +250,10 @@ export const QuickIdeas = () => {
     const [savingId, setSavingId] = useState<number | null>(null);
     const [multiProgress, setMultiProgress] = useState<{current: number; total: number} | null>(null);
 
-    // 🔥 CÁLCULO DE COSTO EXACTO
-    const currentCost = amount === 10 ? 7 : 3;
-
+    // 🔥 CÁLCULO DE COSTO — Multiplataforma tiene precio mayor
+    const currentCost = isMultiplatform
+        ? (amount === 15 ? 25 : amount === 10 ? 18 : 10)  // Multi: 3=10cr, 10=18cr, 15=25cr
+        : (amount === 10 ? 7 : 3);                          // Individual: 3/5=3cr, 10=7cr
     // --- CARGAR DATOS ---
     useEffect(() => {
         if (!user) return;
@@ -586,9 +587,19 @@ export const QuickIdeas = () => {
                             onChange={(e) => setAmount(Number(e.target.value))}
                             className="w-full bg-gray-900 border border-gray-700 rounded-2xl p-4 text-white outline-none min-w-[180px] cursor-pointer font-bold focus:border-indigo-500 transition-all"
                         >
-                            <option value={3}>3 Ideas (3 Créditos)</option>
-                            <option value={5}>5 Ideas (3 Créditos)</option>
-                            <option value={10}>10 Ideas (7 Créditos)</option>
+                            {isMultiplatform ? (
+                                <>
+                                    <option value={3}>3 Ideas × 5 plataformas (10 Créditos)</option>
+                                    <option value={10}>10 Ideas × 5 plataformas (18 Créditos)</option>
+                                    <option value={15}>15 Ideas × 5 plataformas (25 Créditos)</option>
+                                </>
+                            ) : (
+                                <>
+                                    <option value={3}>3 Ideas (3 Créditos)</option>
+                                    <option value={5}>5 Ideas (3 Créditos)</option>
+                                    <option value={10}>10 Ideas (7 Créditos)</option>
+                                </>
+                            )}
                         </select>
                     </div>
                 </div>
