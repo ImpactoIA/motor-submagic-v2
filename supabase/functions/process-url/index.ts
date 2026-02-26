@@ -5166,18 +5166,22 @@ async function ejecutarIdeasRapidas(
 
   // 3. Llamar a OpenAI
   try {
+    const isMultiplatformMode = settings?.multiplatform === true;
+    
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o', // Modelo inteligente necesario para estrategia
-      response_format: { type: 'json_object' }, // Forzar JSON
+      model: 'gpt-4o',
+      response_format: { type: 'json_object' },
       messages: [
         { 
           role: 'system', 
-          content: 'Eres el Consultor Estratégico de Contenido Digital #1. Tu salida es SIEMPRE en formato JSON válido.' 
+          content: isMultiplatformMode
+            ? 'Eres el Sistema de Dominación Multiplataforma #1. Tu salida es SIEMPRE un JSON válido y COMPLETO. NUNCA truncues el JSON. NUNCA cortes a mitad de una propiedad. Si necesitas reducir contenido, acorta los textos pero SIEMPRE cierra correctamente todos los objetos y arrays del JSON.'
+            : 'Eres el Consultor Estratégico de Contenido Digital #1. Tu salida es SIEMPRE en formato JSON válido.'
         },
         { role: 'user', content: prompt }
       ],
-      temperature: 0.8,
-      max_tokens: 5000
+      temperature: isMultiplatformMode ? 0.75 : 0.8,
+      max_tokens: isMultiplatformMode ? 12000 : 5000
     });
 
      // 4. Parsear respuesta con limpieza robusta
@@ -5249,7 +5253,287 @@ async function ejecutarIdeasRapidas(
   }
 }
 
+// ==================================================================================
+// 🌐 EJECUTAR UNA SOLA IDEA MULTIPLATAFORMA — Arquitectura anti-truncado
+// ==================================================================================
+async function ejecutarUnaIdeaMultiplatforma(
+  topic: string,
+  ideaIndex: number,
+  totalIdeas: number,
+  objective: string,
+  timing: string,
+  contexto: any,
+  openai: any,
+  settings: any = {}
+): Promise<{ idea: any; tokens: number }> {
 
+  const lensId   = settings.creative_lens || 'auto';
+  const lensData = CREATIVE_LENSES[lensId] || CREATIVE_LENSES['auto'];
+  const nicho    = settings.nicho || contexto.nicho || 'General';
+
+  // Frames disponibles — rotar por índice para garantizar diversidad
+  const frames = [
+    'CONFRONTATIVO', 'REVELACIÓN', 'CONTRAINTUITIVO', 'FILOSÓFICO',
+    'ESTRATÉGICO', 'HISTORIA_IMPLÍCITA', 'COMPARATIVO',
+    'SISTEMA_ROTO', 'ADVERTENCIA', 'OPORTUNIDAD_INVISIBLE'
+  ];
+  const angulos = [
+    'Psicológico', 'Económico', 'Identidad', 'Estatus', 'Riesgo',
+    'Futuro', 'Sistema roto', 'Cultural', 'Moral', 'Filosófico'
+  ];
+  const frameAsignado  = frames[ideaIndex % frames.length];
+  const anguloAsignado = angulos[ideaIndex % angulos.length];
+
+  const objetivoStrategy = getObjetivoStrategy(objective);
+  const timingStrategy   = getTimingStrategy(timing);
+
+  const promptUnica = `
+═══════════════════════════════════════════════════════════════
+🌐 IDEA MULTIPLATAFORMA ${ideaIndex + 1} DE ${totalIdeas} — CONQUISTA TOTAL
+═══════════════════════════════════════════════════════════════
+
+Genera EXACTAMENTE 1 idea central poderosa con adaptaciones para 5 plataformas.
+
+FRAME OBLIGATORIO PARA ESTA IDEA: ${frameAsignado}
+ÁNGULO ESTRATÉGICO OBLIGATORIO: ${anguloAsignado}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚫 ANTI-CLICHÉS — PROHIBIDO en cualquier hook:
+❌ "Lo que nadie te dice..." ❌ "El error que cometes..."
+❌ "La verdad sobre..." ❌ "3 secretos para..."
+❌ "La revelación que cambiará..." ❌ "El mito de..."
+❌ "El 90%..." ❌ "Esto te sorprenderá..."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🧨 POSTURA OBLIGATORIA — la idea debe contener:
+□ Creencia falsa que destruye
+□ Enemigo implícito responsable
+□ Nuevo marco mental superior
+□ Solo este experto puede decir esto
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎭 LENTE CREATIVO: ${lensData.label}
+"${lensData.instruction}"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 ADN DE CADA PLATAFORMA — ESTRICTO:
+
+TikTok → hook 2-4 palabras, shock inmediato, polarización ≥ 65
+Reels  → hook aspiracional elegante, identitario, polarización ≥ 50
+YouTube → hook con gap informativo fuerte, polarización ≥ 55
+LinkedIn → tesis profesional provocadora, polarización ≥ 50
+Facebook → pregunta debatible o situación relatable, polarización ≥ 50
+
+PROHIBIDO copiar el mismo hook entre plataformas.
+Cada hook debe sonar radicalmente diferente.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+👤 PERFIL DEL SISTEMA:
+
+NICHO: "${nicho}"
+TEMA: "${topic}"
+OBJETIVO: ${objective}
+TIMING: ${timing}
+
+EXPERTO:
+- Posicionamiento: ${contexto.expertProfile?.unique_positioning || contexto.posicionamiento || 'Experto práctico'}
+- Transformación: ${contexto.expertProfile?.transformation_promise || 'Del punto A al punto B'}
+- Enemigo: ${contexto.expertProfile?.enemy || 'No definido'}
+${contexto.expertProfile?.point_a ? `- Punto A: "${contexto.expertProfile.point_a}"` : ''}
+${contexto.expertProfile?.point_b ? `- Punto B: "${contexto.expertProfile.point_b}"` : ''}
+
+AVATAR:
+- Perfil: ${contexto.avatar_ideal || 'Audiencia general'}
+- Dolor: ${contexto.dolor_principal || 'No definido'}
+- Deseo: ${contexto.deseo_principal || 'No definido'}
+
+${contexto.knowledge_base_content ? `BASE DE CONOCIMIENTO: "${contexto.knowledge_base_content.substring(0, 400)}..."` : ''}
+
+${objetivoStrategy}
+${timingStrategy}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📤 OUTPUT JSON — EXACTAMENTE ESTA ESTRUCTURA:
+
+{
+  "id": ${ideaIndex + 1},
+  "titulo": "Título central masivo N2-N3 sin jerga",
+  "concepto": "Por qué esta idea domina 5 plataformas",
+  "idea_expandida_tca": "Tema expandido listo para Generador V600",
+  "tca": {
+    "nivel_tca": "N2 | N2.5 | N3",
+    "sector_utilizado": "sector masivo",
+    "interseccion_detectada": "dolor_avatar + transformacion_experto + sector",
+    "mass_appeal_score": 0,
+    "potencial_millonario": true,
+    "nivel_polarizacion": 0,
+    "razonamiento_estrategico": "por qué llega a millones en 5 redes"
+  },
+  "frame_usado": "${frameAsignado}",
+  "angulo_estrategico": "${anguloAsignado}",
+  "postura_dominante": {
+    "creencia_atacada": "creencia falsa destruida",
+    "enemigo_implicito": "quién tiene la culpa",
+    "nuevo_marco_mental": "visión superior del experto",
+    "solo_este_experto_puede_decirlo": true
+  },
+  "riesgo_emocional_activado": "Pérdida | Estatus | Vergüenza | Urgencia | Identidad amenazada",
+  "originalidad_score": 0,
+  "diferenciacion_score": 0,
+  "formato_ganador": "PREGUNTA_CONFRONTATIVA | DECLARACION_DISRUPTIVA | COMPARACION_DIRECTA | ERROR_INVISIBLE | MITO_VS_REALIDAD",
+  "estructura_sugerida": "PAS | AIDA | Winner Rocket | Storytelling",
+  "disparador_principal": "Miedo | Curiosidad | Ambición | Rabia | Orgullo",
+  "emocion_objetivo": "emoción principal",
+  "objetivo_principal": "${objective}",
+  "contexto_temporal": "${timing}",
+  "potencial_viral": 0,
+  "razon_potencia": "por qué este concepto es poderoso",
+  "validacion_guru": {
+    "eleva_autoridad": true,
+    "posiciona_como_lider": true,
+    "rompe_consenso": true,
+    "potencial_viral_real": true,
+    "suena_diferente_al_mercado": true,
+    "funciona_en_5_plataformas": true
+  },
+  "adaptaciones": {
+    "TikTok": {
+      "hook": "2-4 palabras shock",
+      "gancho_completo": "primera línea exacta TikTok",
+      "caption_sugerido": "caption TikTok con CTA debate",
+      "miniatura_frase": "2-3 palabras overlay",
+      "emocion_objetivo": "emoción TikTok",
+      "ctr_score": 0,
+      "nivel_polarizacion": 0,
+      "retencion_score": 0,
+      "mejor_horario": "horario TikTok",
+      "duracion_ideal": "15-45s",
+      "formato_visual": "formato visual TikTok",
+      "mecanismo_retencion": "qué retiene en TikTok"
+    },
+    "Reels": {
+      "hook": "hook aspiracional elegante",
+      "gancho_completo": "primera línea exacta Reels",
+      "caption_sugerido": "caption Reels con CTA guardado",
+      "miniatura_frase": "frase elegante portada",
+      "emocion_objetivo": "emoción Reels",
+      "ctr_score": 0,
+      "nivel_polarizacion": 0,
+      "retencion_score": 0,
+      "mejor_horario": "horario Reels",
+      "duracion_ideal": "30-60s",
+      "formato_visual": "formato visual Reels",
+      "mecanismo_retencion": "qué retiene en Reels"
+    },
+    "YouTube": {
+      "hook": "gap informativo fuerte",
+      "gancho_completo": "primera línea exacta YouTube",
+      "caption_sugerido": "descripción YouTube con keywords",
+      "miniatura_frase": "4-6 palabras miniatura YouTube",
+      "emocion_objetivo": "emoción YouTube",
+      "ctr_score": 0,
+      "nivel_polarizacion": 0,
+      "retencion_score": 0,
+      "mejor_horario": "horario YouTube",
+      "duracion_ideal": "60s Short o 8-15min",
+      "formato_visual": "formato visual YouTube",
+      "mecanismo_retencion": "qué retiene en YouTube"
+    },
+    "LinkedIn": {
+      "hook": "tesis profesional provocadora",
+      "gancho_completo": "primera línea exacta LinkedIn",
+      "caption_sugerido": "caption LinkedIn con CTA repost",
+      "miniatura_frase": "frase autoridad LinkedIn",
+      "emocion_objetivo": "emoción LinkedIn",
+      "ctr_score": 0,
+      "nivel_polarizacion": 0,
+      "retencion_score": 0,
+      "mejor_horario": "martes-jueves mañana",
+      "duracion_ideal": "45-90s",
+      "formato_visual": "formato visual LinkedIn",
+      "mecanismo_retencion": "qué retiene en LinkedIn"
+    },
+    "Facebook": {
+      "hook": "pregunta debatible relatable",
+      "gancho_completo": "primera línea exacta Facebook",
+      "caption_sugerido": "caption Facebook con pregunta final",
+      "miniatura_frase": "frase conversacional Facebook",
+      "emocion_objetivo": "emoción Facebook",
+      "ctr_score": 0,
+      "nivel_polarizacion": 0,
+      "retencion_score": 0,
+      "mejor_horario": "tarde-noche",
+      "duracion_ideal": "60s-3min",
+      "formato_visual": "formato visual Facebook",
+      "mecanismo_retencion": "qué genera debate en comentarios"
+    }
+  },
+  "plan_produccion": {
+    "video_base": "descripción del video base a grabar",
+    "duracion_grabacion": "duración óptima base",
+    "subtitulos_obligatorios": true,
+    "orden_publicacion": ["plataforma 1", "plataforma 2", "plataforma 3", "plataforma 4", "plataforma 5"],
+    "razon_orden": "por qué este orden maximiza algoritmos"
+  }
+}
+
+REGLAS FINALES:
+✓ mass_appeal_score ≥ 75
+✓ originalidad_score > 75 y diferenciacion_score > 70
+✓ TikTok nivel_polarizacion ≥ 65 | resto ≥ 50
+✓ ctr_score ≥ 70 en todas las adaptaciones
+✓ Sin clichés en ningún hook
+✓ Cada hook radicalmente distinto al de otras plataformas
+✓ JSON válido y COMPLETO — nunca truncar
+`;
+
+  try {
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o',
+      response_format: { type: 'json_object' },
+      messages: [
+        {
+          role: 'system',
+          content: 'Eres el Sistema Multiplataforma #1. Generas EXACTAMENTE 1 idea con adaptaciones para 5 plataformas. JSON siempre válido y completo. Nunca truncas.'
+        },
+        { role: 'user', content: promptUnica }
+      ],
+      temperature: 0.78,
+      max_tokens: 4000
+    });
+
+    const raw = completion.choices[0].message.content || '{}';
+    let idea: any = {};
+
+    try {
+      idea = JSON.parse(raw);
+    } catch {
+      const cleaned = raw
+        .replace(/```json\n?/g, '').replace(/```\n?/g, '')
+        .replace(/,\s*}/g, '}').replace(/,\s*]/g, ']')
+        .replace(/[\u0000-\u001F\u007F-\u009F]/g, ' ').trim();
+      try {
+        idea = JSON.parse(cleaned);
+      } catch {
+        const match = raw.match(/\{[\s\S]*\}/);
+        if (match) {
+          try { idea = JSON.parse(match[0]); } catch { idea = {}; }
+        }
+      }
+    }
+
+    console.log(`[MULTI] ✅ Idea ${ideaIndex + 1}/${totalIdeas} generada | Score: ${idea.tca?.mass_appeal_score || '?'}`);
+
+    return {
+      idea,
+      tokens: completion.usage?.total_tokens || 0
+    };
+
+  } catch (error) {
+    console.error(`[MULTI] ❌ Error en idea ${ideaIndex + 1}:`, error);
+    return { idea: {}, tokens: 0 };
+  }
+}
 
 async function ejecutarIngenieriaInversaPro(
   content: string,
@@ -8872,17 +9156,66 @@ if (body.closing_objective) settings.closing_objective = body.closing_objective;
           console.log(`[IDEAS IMPERIO] 🎯 Nicho manual activo: "${settings.nicho}"`);
         }
 
-        const res = await ejecutarIdeasRapidas(
-          topic, 
-          quantity, 
-          platform, 
-          userContext,
-          openai,
-          settings
-        );
-        
-        result = res.data;
-        tokensUsed = res.tokens;
+        const isMultiplatformRequest = settings?.multiplatform === true;
+
+        if (isMultiplatformRequest) {
+          // 🌐 MODO MULTIPLATAFORMA: 1 request por idea — anti-truncado
+          console.log(`[MULTI] 🌐 Iniciando generación secuencial: ${quantity} ideas × 5 plataformas`);
+
+          const objective  = settings?.objective || 'viralidad';
+          const timing     = settings?.timing_context || 'evergreen';
+          const ideasArray: any[] = [];
+          let   totalTokens = 0;
+
+          for (let i = 0; i < quantity; i++) {
+            console.log(`[MULTI] 🔄 Generando idea ${i + 1} de ${quantity}...`);
+            const { idea, tokens } = await ejecutarUnaIdeaMultiplatforma(
+              topic, i, quantity, objective, timing,
+              userContext, openai, settings
+            );
+            if (idea && Object.keys(idea).length > 0) {
+              ideasArray.push(idea);
+            }
+            totalTokens += tokens;
+          }
+
+          // Construir analisis_estrategico consolidado
+          const analisisConsolidado = {
+            objetivo_dominante: settings?.objective || 'viralidad',
+            lente_aplicado: settings?.creative_lens || 'auto',
+            sector_detectado: ideasArray[0]?.tca?.sector_utilizado || 'Desarrollo Personal',
+            expansion_realizada: `${quantity} ideas multiplataforma generadas secuencialmente`,
+            razonamiento: `${ideasArray.length} ideas con 5 adaptaciones cada una — arquitectura anti-truncado`,
+            advertencias: ['Adapta subtítulos por plataforma antes de publicar'],
+            oportunidades: ['Publica en orden estratégico para maximizar algoritmos cruzados']
+          };
+
+          result = {
+            ideas: ideasArray,
+            analisis_estrategico: analisisConsolidado,
+            mejor_idea_recomendada: {
+              idea_id: 1,
+              razon: 'Primera idea generada con mayor fuerza narrativa',
+              plataforma_prioritaria: 'TikTok — mayor velocidad de distribución inicial',
+              plan_rapido: '1. Graba el video base\n2. Adapta captions por plataforma\n3. Publica en orden del plan_produccion'
+            },
+            insights_estrategicos: {
+              tendencia_detectada: 'Contenido multiplataforma con identidad experta',
+              brecha_mercado: 'Pocos creadores adaptan su mensaje al ADN de cada algoritmo',
+              advertencia: 'No publiques el mismo caption en todas las redes',
+              siguiente_paso_logico: 'Crear guion completo de la idea top con el Generador V600'
+            }
+          };
+          tokensUsed = totalTokens;
+
+        } else {
+          // 🎯 MODO INDIVIDUAL: flujo original intacto
+          const res = await ejecutarIdeasRapidas(
+            topic, quantity, platform, userContext, openai, settings
+          );
+          result    = res.data;
+          tokensUsed = res.tokens;
+        }
         break;
       }
 

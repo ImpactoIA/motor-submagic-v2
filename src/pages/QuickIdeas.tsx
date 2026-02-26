@@ -248,6 +248,7 @@ export const QuickIdeas = () => {
     const [responseData, setResponseData] = useState<ResponseData | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [savingId, setSavingId] = useState<number | null>(null);
+    const [multiProgress, setMultiProgress] = useState<{current: number; total: number} | null>(null);
 
     // 🔥 CÁLCULO DE COSTO EXACTO
     const currentCost = amount === 10 ? 7 : 3;
@@ -287,6 +288,9 @@ export const QuickIdeas = () => {
         setIsGenerating(true);
         setIdeas([]);
         setResponseData(null);
+        if (isMultiplatform) {
+            setMultiProgress({ current: 0, total: amount });
+        }
 
         try {
             // ✅ BODY ESTRATÉGICO MEJORADO
@@ -328,6 +332,7 @@ export const QuickIdeas = () => {
 
             setResponseData(data.generatedData);
             setIdeas(data.generatedData.ideas);
+            setMultiProgress(null);
             
             if(refreshProfile) refreshProfile();
 
@@ -336,6 +341,7 @@ export const QuickIdeas = () => {
             setError(e.message || "Error al generar ideas.");
         } finally {
             setIsGenerating(false);
+            setMultiProgress(null);
         }
     };
 
@@ -690,7 +696,22 @@ export const QuickIdeas = () => {
                         className="w-full md:w-auto px-10 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-black rounded-2xl flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-xl hover:shadow-indigo-900/20 transition-all active:scale-95 shadow-lg flex-1 group"
                     >
                         {isGenerating ? (
-                            <><RefreshCw className="animate-spin" size={20}/> Analizando Estrategia...</>
+                            isMultiplatform && multiProgress ? (
+                                <div className="flex flex-col items-center gap-1 w-full">
+                                    <div className="flex items-center gap-2">
+                                        <RefreshCw className="animate-spin" size={16}/>
+                                        <span>Generando idea {multiProgress.current + 1} de {multiProgress.total}...</span>
+                                    </div>
+                                    <div className="w-full bg-white/10 rounded-full h-1.5 mt-1">
+                                        <div 
+                                            className="bg-white rounded-full h-1.5 transition-all duration-500"
+                                            style={{ width: `${((multiProgress.current) / multiProgress.total) * 100}%` }}
+                                        />
+                                    </div>
+                                </div>
+                            ) : (
+                                <><RefreshCw className="animate-spin" size={20}/> Analizando Estrategia...</>
+                            )
                         ) : (
                             <><Brain size={20} className="group-hover:animate-pulse" /> GENERAR IDEAS ESTRATÉGICAS</>
                         )}
