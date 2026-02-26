@@ -854,6 +854,15 @@ Si aparece patrón cliché → reformular usando:
 → Declaración filosófica
 → Analogía inesperada
 
+EJEMPLOS DE REFORMULACIÓN OBLIGATORIA:
+❌ "La revelación que cambiará tu enfoque" → ✅ "Construiste una marca. Construiste una trampa."
+❌ "El mito de la independencia digital" → ✅ "Ser libre digitalmente cuesta más de lo que ganas"
+❌ "Lo que nadie te dice sobre X" → ✅ "X funciona al revés de como te lo enseñaron"
+❌ "3 secretos para..." → ✅ "La secuencia que el 95% hace en orden equivocado"
+❌ "La verdad sobre..." → ✅ Postura directa sin introducción genérica
+
+REGLA: El título debe poder estar solo sin necesitar contexto para generar reacción.
+
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🧬 MOTOR DE DIVERSIDAD OBLIGATORIA — FRAMES POR POSICIÓN
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1094,7 +1103,19 @@ UMBRALES OBLIGATORIOS:
 → Originalidad > 75 → si no: regenerar
 → Diferenciación > 70 → si no: regenerar
 
-NO incluir ideas que no superen los 3 umbrales.
+POLARIZACIÓN OBLIGATORIA POR PLATAFORMA:
+→ TikTok: nivel_polarizacion ≥ 60
+→ Reels: nivel_polarizacion ≥ 40
+→ YouTube: nivel_polarizacion ≥ 50
+→ LinkedIn: nivel_polarizacion ≥ 45
+→ Facebook: nivel_polarizacion ≥ 50
+
+⚠️ nivel_polarizacion NO puede ser 0, 1, 2, 3 o 4 en ninguna idea.
+Si el modelo calcula polarización menor a los umbrales → reformular la idea
+con postura más definida hasta superar el umbral.
+Un nivel_polarizacion bajo significa idea tibia = idea rechazada.
+
+NO incluir ideas que no superen los 4 umbrales.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🎭 LENTE CREATIVO ACTIVO: ${lensData.label}
@@ -1104,13 +1125,46 @@ Filtrar TODAS las ideas bajo este tono:
 "${lensData.instruction}"
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🌍 PLATAFORMA: ${plataforma.toUpperCase()}
+🌍 ADN DE PLATAFORMA OBLIGATORIO: ${plataforma.toUpperCase()}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 - RITMO: ${platRules.ritmo}
 - LENGUAJE: ${platRules.lenguaje}
 - REGLA DE ORO: ${platRules.regla_oro}
 - FOCO DEL CTA: ${platRules.cta_focus}
+
+⚠️ REGLA CRÍTICA DE PLATAFORMA — ADAPTACIÓN OBLIGATORIA:
+
+Si plataforma = TikTok:
+→ Ideas con shock inmediato, confrontación directa, tensión en primeras 2 palabras
+→ Títulos: máx 6 palabras, ataque frontal, sin contexto
+→ Polarización ALTA obligatoria (nivel_polarizacion ≥ 60)
+
+Si plataforma = Reels:
+→ Ideas aspiracionales o de identidad tribal, estéticamente resonantes
+→ Títulos elegantes pero disruptivos, compartibles
+→ Polarización MEDIA (nivel_polarizacion 40-70)
+
+Si plataforma = YouTube:
+→ Ideas con gap informativo fuerte, promesa de conocimiento profundo
+→ Títulos con curiosidad estructurada, conectan con miniatura
+→ Polarización MEDIA-ALTA (nivel_polarizacion 50-75)
+
+Si plataforma = LinkedIn:
+→ Ideas de insight de negocio, reencuadre profesional, lección de experiencia
+→ Títulos reflexivos con tesis fuerte, provocación intelectual
+→ Polarización INTELECTUAL (nivel_polarizacion 45-65)
+
+Si plataforma = Facebook:
+→ Ideas conversacionales que generen DEBATE en comunidad
+→ Títulos con postura clara pero accesible, invitan a opinar
+→ Polarización CONVERSACIONAL (nivel_polarizacion 50-70)
+→ PROHIBIDO: shock agresivo, jerga de internet, ritmo frenético
+→ OBLIGATORIO: tono cercano, historia relatable o pregunta que divide opiniones
+→ Ganchos deben empezar con situación cotidiana o afirmación debatible
+
+⚠️ Si las ideas no respetan el ADN de ${plataforma} → RECHAZAR y regenerar.
+Una idea de TikTok en Facebook = contenido que no funciona.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🎯 OBJETIVO: ${objetivo.toUpperCase()}
@@ -1208,7 +1262,25 @@ Responde SOLO con este JSON válido. Sin markdown. Sin texto extra.
       "dificultad_produccion": "Baja | Media | Alta",
       "keywords": ["#tag1", "#tag2"],
       "mejor_momento": "cuándo publicar",
-      "urgencia_publicacion": "baja | media | alta"
+      "urgencia_publicacion": "baja | media | alta",
+      "frame_usado": "CONFRONTATIVO | REVELACIÓN | CONTRAINTUITIVO | FILOSÓFICO | ESTRATÉGICO | HISTORIA_IMPLÍCITA | COMPARATIVO | SISTEMA_ROTO | ADVERTENCIA | OPORTUNIDAD_INVISIBLE",
+      "angulo_estrategico": "Psicológico | Económico | Identidad | Estatus | Riesgo | Futuro | Sistema roto | Cultural | Moral | Filosófico | Histórico | Poder | Comparativo | Técnico accesible | Invisible",
+      "postura_dominante": {
+        "creencia_atacada": "creencia falsa que esta idea destruye",
+        "enemigo_implicito": "quién o qué tiene la culpa",
+        "nuevo_marco_mental": "la visión superior que propone el experto",
+        "solo_este_experto_puede_decirlo": true
+      },
+      "riesgo_emocional_activado": "Pérdida | Estatus | Vergüenza | Urgencia | Oportunidad ignorada | Identidad amenazada | Conflicto invisible",
+      "originalidad_score": 0,
+      "diferenciacion_score": 0,
+      "validacion_guru": {
+        "eleva_autoridad": true,
+        "posiciona_como_lider": true,
+        "rompe_consenso": true,
+        "potencial_viral_real": true,
+        "suena_diferente_al_mercado": true
+      }
     }
   ],
   "mejor_idea_recomendada": {

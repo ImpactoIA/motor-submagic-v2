@@ -156,6 +156,26 @@ interface IdeaItem {
     // Timing
     mejor_momento?: string;
     urgencia_publicacion?: 'baja' | 'media' | 'alta';
+
+    // Dominación Global
+    frame_usado?: string;
+    angulo_estrategico?: string;
+    postura_dominante?: {
+        creencia_atacada?: string;
+        enemigo_implicito?: string;
+        nuevo_marco_mental?: string;
+        solo_este_experto_puede_decirlo?: boolean;
+    };
+    riesgo_emocional_activado?: string;
+    originalidad_score?: number;
+    diferenciacion_score?: number;
+    validacion_guru?: {
+        eleva_autoridad?: boolean;
+        posiciona_como_lider?: boolean;
+        rompe_consenso?: boolean;
+        potencial_viral_real?: boolean;
+        suena_diferente_al_mercado?: boolean;
+    };
 }
 
 interface ResponseData {
@@ -1009,6 +1029,68 @@ export const QuickIdeas = () => {
                                             </p>
                                             {idea.mejor_momento && (
                                                 <p className="text-[9px] mt-1 opacity-70">{idea.mejor_momento}</p>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {/* 🏛️ Postura Dominante */}
+                                    {idea.postura_dominante && (
+                                        <div className="bg-red-950/20 border border-red-500/20 rounded-xl p-3 space-y-2">
+                                            <p className="text-[9px] font-black text-red-400 uppercase tracking-widest">⚔️ Postura Dominante</p>
+                                            {idea.postura_dominante.creencia_atacada && (
+                                                <div>
+                                                    <span className="text-[8px] text-gray-600 uppercase">Creencia atacada:</span>
+                                                    <p className="text-[10px] text-gray-300">{idea.postura_dominante.creencia_atacada}</p>
+                                                </div>
+                                            )}
+                                            {idea.postura_dominante.nuevo_marco_mental && (
+                                                <div>
+                                                    <span className="text-[8px] text-gray-600 uppercase">Nuevo marco:</span>
+                                                    <p className="text-[10px] text-green-300">{idea.postura_dominante.nuevo_marco_mental}</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {/* 📊 Scoring Dominación */}
+                                    {(idea.originalidad_score || idea.diferenciacion_score) && (
+                                        <div className="grid grid-cols-2 gap-2">
+                                            {idea.originalidad_score && (
+                                                <div className="bg-black/40 rounded-lg p-2 text-center border border-white/5">
+                                                    <p className="text-[8px] text-gray-600 uppercase mb-1">Originalidad</p>
+                                                    <p className={`text-sm font-black ${idea.originalidad_score >= 75 ? 'text-green-400' : 'text-red-400'}`}>
+                                                        {idea.originalidad_score}
+                                                    </p>
+                                                </div>
+                                            )}
+                                            {idea.diferenciacion_score && (
+                                                <div className="bg-black/40 rounded-lg p-2 text-center border border-white/5">
+                                                    <p className="text-[8px] text-gray-600 uppercase mb-1">Diferenciación</p>
+                                                    <p className={`text-sm font-black ${idea.diferenciacion_score >= 70 ? 'text-green-400' : 'text-red-400'}`}>
+                                                        {idea.diferenciacion_score}
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {/* 🧠 Frame + Ángulo */}
+                                    {(idea.frame_usado || idea.angulo_estrategico) && (
+                                        <div className="flex flex-wrap gap-2">
+                                            {idea.frame_usado && (
+                                                <span className="text-[9px] bg-violet-500/10 text-violet-400 px-2 py-1 rounded-full border border-violet-500/20 font-bold">
+                                                    🖼️ {idea.frame_usado.replace(/_/g, ' ')}
+                                                </span>
+                                            )}
+                                            {idea.angulo_estrategico && (
+                                                <span className="text-[9px] bg-cyan-500/10 text-cyan-400 px-2 py-1 rounded-full border border-cyan-500/20 font-bold">
+                                                    🎯 {idea.angulo_estrategico}
+                                                </span>
+                                            )}
+                                            {idea.riesgo_emocional_activado && (
+                                                <span className="text-[9px] bg-orange-500/10 text-orange-400 px-2 py-1 rounded-full border border-orange-500/20 font-bold">
+                                                    ⚡ {idea.riesgo_emocional_activado}
+                                                </span>
                                             )}
                                         </div>
                                     )}
