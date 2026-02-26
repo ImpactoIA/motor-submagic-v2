@@ -5140,19 +5140,29 @@ async function ejecutarIdeasRapidas(
   // 1. Extraer variables (con defaults por seguridad)
   const objective = settings.objective || 'viralidad';
   const timing = settings.timing_context || 'evergreen';
+  const isMultiplatform = settings.multiplatform === true;
 
-  console.log(`[CEREBRO V2] 🎯 Generando Ideas | Objetivo: ${objective} | Timing: ${timing}`);
+  console.log(`[CEREBRO V2] 🎯 Generando Ideas | Modo: ${isMultiplatform ? 'MULTIPLATAFORMA' : platform} | Objetivo: ${objective} | Timing: ${timing}`);
 
-  // 2. Generar el Prompt usando la función del Bloque 1
-  const prompt = PROMPT_IDEAS_ELITE_V2(
-      topic,
-      quantity,
-      platform,
-      objective,
-      timing,
-      contexto,
-      settings   // ✅ FIX: creative_lens ahora llega al prompt
-    );
+  // 2. Generar el Prompt según el modo
+  const prompt = isMultiplatform
+    ? PROMPT_IDEAS_MULTIPLATFORMA(
+        topic,
+        quantity,
+        objective,
+        timing,
+        contexto,
+        settings
+      )
+    : PROMPT_IDEAS_ELITE_V2(
+        topic,
+        quantity,
+        platform,
+        objective,
+        timing,
+        contexto,
+        settings
+      );
 
   // 3. Llamar a OpenAI
   try {
@@ -5185,7 +5195,8 @@ async function ejecutarIdeasRapidas(
       if (eliminadas > 0) {
         console.warn(`[IDEAS IMPERIO] ⚠️ ${eliminadas} idea(s) eliminada(s) por score < 70`);
       }
-      console.log(`[IDEAS IMPERIO] ✅ ${parsedData.ideas.length} ideas aprobadas con score ≥ 70`);
+      const modo = settings.multiplatform ? 'MULTIPLATAFORMA' : platform;
+    console.log(`[IDEAS IMPERIO] ✅ ${parsedData.ideas.length} ideas aprobadas | Modo: ${modo}`);
     }
 
     return {
