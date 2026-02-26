@@ -97,10 +97,62 @@ teleprompter_script?: string;
     musica_recomendada: string;
     efecto_sonido: string;
   }>;
+  // ✅ V700: Plan audiovisual profesional
+  plan_audiovisual_profesional?: {
+    secuencia_temporal: Array<{
+      tiempo: string;
+      descripcion_visual: string;
+      emocion_objetivo: string;
+      tipo_plano: string;
+      movimiento_camara: string;
+      texto_en_pantalla: string;
+      efecto_retencion: string;
+    }>;
+    b_rolls_estrategicos: Array<{
+      momento: string;
+      que_mostrar: string;
+      por_que_refuerza: string;
+      emocion_generada: string;
+    }>;
+    ritmo_de_cortes: {
+      patron_general: string;
+      descripcion: string;
+      aceleraciones: string;
+      desaceleraciones: string;
+    };
+    musica: {
+      tipo: string;
+      bpm_aproximado: number;
+      emocion_dominante: string;
+      entrada_musica: string;
+      cambio_musical: string;
+    };
+    efectos_de_retencion: {
+      sonido_transicion: string;
+      micro_silencios: string;
+      cambios_de_plano: string;
+      micro_interrupciones: string;
+    };
+  };
   miniatura_dominante?: {
     frase_principal: string;
-    variantes_ab: string[];
-    plataforma_optimizada: string;
+    // Legado (compatibilidad)
+    variantes_ab?: string[];
+    plataforma_optimizada?: string;
+    coherencia_con_hook?: boolean;
+    razon_estrategica?: string;
+    // ✅ V700: nuevos campos
+    variante_agresiva?: string;
+    variante_aspiracional?: string;
+    justificacion_estrategica?: string;
+    emocion_dominante_activada?: string;
+    gap_curiosidad?: string;
+    compatibilidad_plataformas?: {
+      tiktok?: string;
+      reels?: string;
+      youtube?: string;
+      facebook?: string;
+    };
     sector_tca_activado: string;
     mecanismo_psicologico: string;
     ctr_score: number;
@@ -108,8 +160,6 @@ teleprompter_script?: string;
     nivel_gap_curiosidad: number;
     nivel_polarizacion: number;
     compatibilidad_algoritmica: number;
-    coherencia_con_hook: boolean;
-    razon_estrategica: string;
   };
   dominio_narrativo?: {
     marco_impuesto?: string;
@@ -371,6 +421,20 @@ const INTENSITY_MODES = [
     },
 ];
 
+// ✅ V700: Formatos narrativos
+const NARRATIVE_FORMATS = [
+    { id: 'EDUCATIVO_AUTORIDAD',   label: '📚 Educativo de Autoridad',      desc: 'Tesis provocadora → Sistema nombrado → CTA de posicionamiento' },
+    { id: 'STORYTELLING_EMOCIONAL',label: '🎭 Storytelling Emocional',       desc: 'In media res → Giro narrativo → Aprendizaje encarnado' },
+    { id: 'ANUNCIO_DIRECTO',       label: '📢 Anuncio Directo',              desc: 'Filtro de avatar → Dolor afilado → CTA único y claro' },
+    { id: 'ANUNCIO_INDIRECTO',     label: '🎣 Anuncio Indirecto',            desc: 'Valor puro → Problema implícito → CTA suave' },
+    { id: 'OPINION_POLARIZACION',  label: '⚡ Opinión / Polarización',       desc: 'Declaración divisiva → Argumento irrefutable → Posición inamovible' },
+    { id: 'CASO_ESTUDIO',          label: '📊 Caso de Estudio',              desc: 'Resultado primero → Sistema aplicado → Principio replicable' },
+    { id: 'TUTORIAL_PASO_A_PASO',  label: '🔧 Tutorial Paso a Paso',        desc: 'Promesa hiper-específica → 3 pasos con micro-aplicación' },
+    { id: 'PODCAST_REFLEXIVO',     label: '🎙️ Podcast Corto Reflexivo',     desc: 'Pregunta íntima → Exploración honesta → Cierre abierto' },
+    { id: 'MASTERCLASS_COMPRIMIDA',label: '🏛️ Masterclass Comprimida',      desc: 'Mapa de 3 conceptos → Síntesis guardable → CTA de profundización' },
+    { id: 'FRAME_DISRUPTIVO',      label: '💥 Frame Disruptivo / Shock',     desc: 'Afirmación imposible → Evidencia sólida → Reencuadre total' },
+];
+
 const MASTER_HOOKS = [
     { name: '👁️ Frame Break (Ruptura Visual)' }, 
     { name: '🔮 Objeto Mágico' }, 
@@ -452,6 +516,9 @@ export const ScriptGenerator = () => {
 ];
 
     const [closingObjective, setClosingObjective] = useState('seguidores');
+
+    // ✅ V700: Formato narrativo activo
+    const [selectedNarrativeFormat, setSelectedNarrativeFormat] = useState('EDUCATIVO_AUTORIDAD');
 
     // --- Estados Psicológicos ---
     const [mostrarFeedback, setMostrarFeedback]     = useState(false);
@@ -601,6 +668,7 @@ export const ScriptGenerator = () => {
                         hook_style: hookType,
                         hookStyle: hookType,
                         cultural_context_usuario: culturalContext || null,
+                        formato_narrativo: selectedNarrativeFormat, // ✅ V700
                     },
                     expertId: selectedExpertId || undefined,
                     avatarId: userProfile?.active_avatar_id || undefined,
@@ -758,10 +826,10 @@ export const ScriptGenerator = () => {
                 <div>
                     <h1 className="text-3xl font-black flex items-center gap-2 bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-purple-500">
                         <Flame className="text-pink-500" size={32}/> 
-                        MOTOR VIRAL V500 ÉLITE
+                        MOTOR VIRAL V700 ÉLITE
                     </h1>
                     <p className="text-gray-400 text-sm mt-1">
-                        8 Capas Virales + Adaptación por Plataforma + Auto-Juez Interno
+                        10 Formatos Narrativos + Plan Audiovisual Profesional + Miniatura Top Mundial
                     </p>
                 </div>
                 <div className="bg-gray-900 px-4 py-2 rounded-lg border border-gray-800 flex items-center gap-2">
@@ -1067,6 +1135,30 @@ export const ScriptGenerator = () => {
 
 </div>
 
+                {/* ✅ V700 — SELECTOR DE FORMATO NARRATIVO */}
+                    <div className="bg-[#0B0E14] border border-violet-500/30 rounded-2xl p-5 shadow-lg space-y-3">
+                        <label className="text-xs font-black text-violet-400 uppercase mb-1 flex items-center justify-between tracking-widest">
+                            <span className="flex items-center gap-2"><Brain size={14}/> Formato Narrativo</span>
+                            <span className="text-[9px] font-black bg-violet-500 text-white px-2 py-0.5 rounded-full tracking-widest">V700</span>
+                        </label>
+                        <div className="grid grid-cols-2 gap-2">
+                            {NARRATIVE_FORMATS.map((fmt) => (
+                                <button
+                                    key={fmt.id}
+                                    onClick={() => setSelectedNarrativeFormat(fmt.id)}
+                                    className={`p-2.5 rounded-xl border text-left transition-all flex flex-col gap-1 ${
+                                        selectedNarrativeFormat === fmt.id
+                                            ? 'bg-violet-600/20 border-violet-500 text-violet-300 shadow-lg shadow-violet-900/20'
+                                            : 'bg-gray-900/50 border-gray-800 text-gray-500 hover:bg-gray-800 hover:text-gray-300'
+                                    }`}
+                                >
+                                    <span className="text-[11px] font-black leading-tight">{fmt.label}</span>
+                                    <span className="text-[9px] opacity-70 leading-tight">{fmt.desc}</span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
                     {/* BOTÓN PRINCIPAL */}
                     <button 
                         onClick={handleGenerate} 
@@ -1124,6 +1216,12 @@ export const ScriptGenerator = () => {
                                         <span className="text-[10px] text-gray-500 uppercase tracking-widest border border-gray-800 px-2 py-0.5 rounded bg-gray-900">
                                             {result.metadata_guion?.estructura_usada || result.metadata_guion?.arquitectura || selectedStructure.label}
                                         </span>
+                                        {/* ✅ V700: Formato Narrativo Activo */}
+                                        {(result.metadata_guion as any)?.formato_narrativo_activo && (
+                                            <span className="text-[10px] font-black text-violet-400 uppercase tracking-widest bg-violet-500/10 px-2 py-0.5 rounded border border-violet-500/20">
+                                                🎭 {(result.metadata_guion as any).formato_narrativo_activo}
+                                            </span>
+                                        )}
                                     </div>
                                     <h2 className="text-xl font-black text-white leading-tight max-w-lg">
                                         {result.metadata_guion?.tema_tratado || topic}
@@ -1534,8 +1632,24 @@ export const ScriptGenerator = () => {
                                                 "{result.miniatura_dominante.frase_principal}"
                                             </p>
                                         </div>
-                                        {/* Variantes A/B */}
-                                        {result.miniatura_dominante.variantes_ab && result.miniatura_dominante.variantes_ab.length > 0 && (
+                        {/* Variantes A/B legado / V700 */}
+                                        {/* V700: variante_agresiva + variante_aspiracional */}
+                                        {(result.miniatura_dominante.variante_agresiva || result.miniatura_dominante.variante_aspiracional) ? (
+                                            <div className="grid grid-cols-2 gap-3">
+                                                {result.miniatura_dominante.variante_agresiva && (
+                                                    <div className="bg-black/40 rounded-xl p-3 border border-red-500/20 text-center">
+                                                        <span className="text-[9px] font-black text-red-400 uppercase block mb-1">⚡ Versión Agresiva</span>
+                                                        <p className="text-sm font-black text-gray-200">"{result.miniatura_dominante.variante_agresiva}"</p>
+                                                    </div>
+                                                )}
+                                                {result.miniatura_dominante.variante_aspiracional && (
+                                                    <div className="bg-black/40 rounded-xl p-3 border border-emerald-500/20 text-center">
+                                                        <span className="text-[9px] font-black text-emerald-400 uppercase block mb-1">✨ Versión Aspiracional</span>
+                                                        <p className="text-sm font-black text-gray-200">"{result.miniatura_dominante.variante_aspiracional}"</p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ) : result.miniatura_dominante.variantes_ab && result.miniatura_dominante.variantes_ab.length > 0 && (
                                             <div className="grid grid-cols-2 gap-3">
                                                 {result.miniatura_dominante.variantes_ab.map((v: string, i: number) => (
                                                     <div key={i} className="bg-black/40 rounded-xl p-3 border border-yellow-500/10 text-center">
@@ -1579,10 +1693,33 @@ export const ScriptGenerator = () => {
                                                     ✅ Coherente con Hook
                                                 </span>
                                             )}
+                                            {result.miniatura_dominante.emocion_dominante_activada && (
+                                                <span className="text-[10px] bg-pink-500/10 text-pink-400 px-2 py-1 rounded-full font-bold">
+                                                    💥 {result.miniatura_dominante.emocion_dominante_activada}
+                                                </span>
+                                            )}
                                         </div>
-                                        {result.miniatura_dominante.razon_estrategica && (
+                                        {/* ✅ V700: Gap de Curiosidad */}
+                                        {result.miniatura_dominante.gap_curiosidad && (
+                                            <div className="bg-blue-950/40 border border-blue-500/20 rounded-xl p-3">
+                                                <span className="text-[9px] font-black text-blue-400 uppercase tracking-widest block mb-1">🕳️ Gap de Curiosidad</span>
+                                                <p className="text-xs text-gray-300">{result.miniatura_dominante.gap_curiosidad}</p>
+                                            </div>
+                                        )}
+                                        {/* ✅ V700: Compatibilidad por Plataforma */}
+                                        {result.miniatura_dominante.compatibilidad_plataformas && (
+                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                                                {Object.entries(result.miniatura_dominante.compatibilidad_plataformas).map(([plat, desc]) => (
+                                                    <div key={plat} className="bg-black/40 rounded-xl p-2 border border-white/5 text-center">
+                                                        <span className="text-[9px] font-black text-gray-400 uppercase block mb-1">{plat}</span>
+                                                        <p className="text-[10px] text-gray-300 leading-tight">{desc as string}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                        {(result.miniatura_dominante.razon_estrategica || result.miniatura_dominante.justificacion_estrategica) && (
                                             <p className="text-xs text-gray-500 italic border-t border-yellow-500/10 pt-3">
-                                                💭 {result.miniatura_dominante.razon_estrategica}
+                                                💭 {result.miniatura_dominante.justificacion_estrategica || result.miniatura_dominante.razon_estrategica}
                                             </p>
                                         )}
                                     </div>
@@ -1775,8 +1912,106 @@ export const ScriptGenerator = () => {
         )}
     </div>
 )}
-                            {/* PLAN VISUAL */}
-                            {(result.plan_produccion_visual || result.plan_visual) && (result.plan_produccion_visual || result.plan_visual)!.length > 0 && (
+                            {/* ✅ V700 — PLAN AUDIOVISUAL PROFESIONAL */}
+                            {result.plan_audiovisual_profesional ? (
+                                <div className="border-t border-gray-800 pt-6 mt-6">
+                                    <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-5 flex items-center gap-2">
+                                        <Video size={14}/> Plan Audiovisual Profesional
+                                        <span className="text-[9px] font-black bg-violet-500 text-white px-2 py-0.5 rounded-full ml-1">V700</span>
+                                    </label>
+
+                                    {/* Secuencia Temporal */}
+                                    {result.plan_audiovisual_profesional.secuencia_temporal?.length > 0 && (
+                                        <div className="mb-4 space-y-2">
+                                            <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2">🎬 Secuencia Temporal</p>
+                                            {result.plan_audiovisual_profesional.secuencia_temporal.map((seg: any, idx: number) => (
+                                                <div key={idx} className="flex gap-3 p-3 bg-gray-900/30 rounded-xl border border-gray-800/50 hover:bg-gray-900 transition-colors">
+                                                    <span className="text-xs font-black text-violet-400 w-14 text-right font-mono shrink-0">{seg.tiempo}</span>
+                                                    <div className="flex-1 space-y-1">
+                                                        <p className="text-sm text-white font-medium">{seg.descripcion_visual}</p>
+                                                        <div className="flex gap-2 flex-wrap">
+                                                            {seg.tipo_plano && <span className="text-[10px] text-indigo-400 uppercase">🎥 {seg.tipo_plano}</span>}
+                                                            {seg.movimiento_camara && <span className="text-[10px] text-cyan-400 uppercase">📷 {seg.movimiento_camara}</span>}
+                                                            {seg.efecto_retencion && <span className="text-[10px] text-orange-400 uppercase">⚡ {seg.efecto_retencion}</span>}
+                                                            {seg.texto_en_pantalla && <span className="text-[10px] text-yellow-400 uppercase">📝 {seg.texto_en_pantalla}</span>}
+                                                            {seg.emocion_objetivo && <span className="text-[10px] text-pink-400 uppercase">💥 {seg.emocion_objetivo}</span>}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {/* B-Rolls Estratégicos */}
+                                    {result.plan_audiovisual_profesional.b_rolls_estrategicos?.length > 0 && (
+                                        <div className="mb-4">
+                                            <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2">🎞️ B-Rolls Estratégicos</p>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                                {result.plan_audiovisual_profesional.b_rolls_estrategicos.map((br: any, idx: number) => (
+                                                    <div key={idx} className="bg-green-950/20 border border-green-500/15 rounded-xl p-3">
+                                                        <div className="flex justify-between items-center mb-1">
+                                                            <span className="text-[9px] font-black text-green-400 uppercase">{br.momento}</span>
+                                                            <span className="text-[9px] text-pink-400 font-bold">{br.emocion_generada}</span>
+                                                        </div>
+                                                        <p className="text-xs text-gray-200 font-medium">{br.que_mostrar}</p>
+                                                        <p className="text-[10px] text-gray-500 mt-1 italic">{br.por_que_refuerza}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Ritmo + Música + Efectos en grid */}
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                        {/* Ritmo de Cortes */}
+                                        {result.plan_audiovisual_profesional.ritmo_de_cortes && (
+                                            <div className="bg-indigo-950/20 border border-indigo-500/20 rounded-xl p-3">
+                                                <p className="text-[9px] font-black text-indigo-400 uppercase tracking-widest mb-2">✂️ Ritmo de Cortes</p>
+                                                <p className="text-sm font-black text-white">{result.plan_audiovisual_profesional.ritmo_de_cortes.patron_general}</p>
+                                                <p className="text-[10px] text-gray-400 mt-1">{result.plan_audiovisual_profesional.ritmo_de_cortes.descripcion}</p>
+                                                {result.plan_audiovisual_profesional.ritmo_de_cortes.aceleraciones && (
+                                                    <p className="text-[10px] text-green-400 mt-1">↑ {result.plan_audiovisual_profesional.ritmo_de_cortes.aceleraciones}</p>
+                                                )}
+                                                {result.plan_audiovisual_profesional.ritmo_de_cortes.desaceleraciones && (
+                                                    <p className="text-[10px] text-blue-400 mt-1">↓ {result.plan_audiovisual_profesional.ritmo_de_cortes.desaceleraciones}</p>
+                                                )}
+                                            </div>
+                                        )}
+                                        {/* Música */}
+                                        {result.plan_audiovisual_profesional.musica && (
+                                            <div className="bg-pink-950/20 border border-pink-500/20 rounded-xl p-3">
+                                                <p className="text-[9px] font-black text-pink-400 uppercase tracking-widest mb-2">🎵 Música</p>
+                                                <p className="text-sm font-black text-white">{result.plan_audiovisual_profesional.musica.tipo}</p>
+                                                {result.plan_audiovisual_profesional.musica.bpm_aproximado && (
+                                                    <p className="text-[10px] text-pink-300 font-bold mt-1">{result.plan_audiovisual_profesional.musica.bpm_aproximado} BPM</p>
+                                                )}
+                                                <p className="text-[10px] text-gray-400 mt-1">{result.plan_audiovisual_profesional.musica.emocion_dominante}</p>
+                                                {result.plan_audiovisual_profesional.musica.cambio_musical && (
+                                                    <p className="text-[10px] text-yellow-400 mt-1">🔄 {result.plan_audiovisual_profesional.musica.cambio_musical}</p>
+                                                )}
+                                            </div>
+                                        )}
+                                        {/* Efectos de Retención */}
+                                        {result.plan_audiovisual_profesional.efectos_de_retencion && (
+                                            <div className="bg-orange-950/20 border border-orange-500/20 rounded-xl p-3">
+                                                <p className="text-[9px] font-black text-orange-400 uppercase tracking-widest mb-2">⚡ Retención</p>
+                                                {result.plan_audiovisual_profesional.efectos_de_retencion.sonido_transicion && (
+                                                    <p className="text-[10px] text-gray-300 mb-1">🔊 {result.plan_audiovisual_profesional.efectos_de_retencion.sonido_transicion}</p>
+                                                )}
+                                                {result.plan_audiovisual_profesional.efectos_de_retencion.micro_silencios && (
+                                                    <p className="text-[10px] text-gray-300 mb-1">🤫 {result.plan_audiovisual_profesional.efectos_de_retencion.micro_silencios}</p>
+                                                )}
+                                                {result.plan_audiovisual_profesional.efectos_de_retencion.cambios_de_plano && (
+                                                    <p className="text-[10px] text-gray-300 mb-1">🎬 {result.plan_audiovisual_profesional.efectos_de_retencion.cambios_de_plano}</p>
+                                                )}
+                                                {result.plan_audiovisual_profesional.efectos_de_retencion.micro_interrupciones && (
+                                                    <p className="text-[10px] text-gray-300">✂️ {result.plan_audiovisual_profesional.efectos_de_retencion.micro_interrupciones}</p>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            ) : (result.plan_produccion_visual || result.plan_visual) && (result.plan_produccion_visual || result.plan_visual)!.length > 0 && (
                                 <div className="border-t border-gray-800 pt-6 mt-6">
                                     <label className="text-xs font-black text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
                                         <Video size={14}/> Plan de Producción Visual

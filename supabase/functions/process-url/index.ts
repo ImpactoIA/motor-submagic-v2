@@ -2501,48 +2501,124 @@ Si falta el enemigo claro → reescribir Bloque 1 y Bloque 2 con enemigo explíc
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ⚔️ SISTEMA DE DIFERENCIACIÓN COMPETITIVA (EJECUCIÓN PREVIA OBLIGATORIA)
 
-🌍 MOTOR 1 — ARQUITECTURA ESTRUCTURAL OBLIGATORIA
+🌍 MOTOR 1 — SISTEMA MULTIFORMATO REAL V700
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-BLUEPRINT V600 — 6 BLOQUES MANDATORIOS:
+⚠️ REGLA SUPREMA: Cada formato tiene arquitectura emocional DISTINTA.
+NO existe una estructura base universal. El formato elegido DICTA la secuencia, el ritmo y el tipo de gancho.
+Si el guion puede intercambiarse con otro formato → RECHAZAR. Reescribir con ADN puro del formato.
 
-BLOQUE 1 — HOOK (0-5s): Rompe el patrón en los primeros 3 segundos o el guion muere.
-BLOQUE 2 — DESARROLLO: Construye tensión progresiva. Cada frase justifica la siguiente.
-BLOQUE 3 — ESCALADA: Eleva la intensidad emocional. El espectador no puede irse.
-BLOQUE 4 — INSIGHT: Entrega valor real diferenciador. No tips genéricos. Sistema o reencuadre único.
-BLOQUE 5 — RESOLUCIÓN: Transición de dolor a posibilidad. Antes vs Después mental.
-BLOQUE 6 — CIERRE: CTA estratégico según objetivo: ${closingConfig.label}
+ANTES de escribir: detecta el discurso promedio del nicho → identifica el cliché dominante → fuerza ángulo opuesto.
+Si el resultado suena a "El 90% comete este error..." o similar → PROHIBIDO. Reformular con postura nueva.
+
+━━━ MAPA DE FORMATOS DISPONIBLES ━━━
+
+FORMATO ACTIVO: ${settings.formato_narrativo || 'EDUCATIVO_AUTORIDAD'}
+
+────────────────────────────────────────────────────────
+📚 EDUCATIVO DE AUTORIDAD
+Arquitectura: TESIS PROVOCADORA → EVIDENCIA CONTRAINTUITIVA → SISTEMA NOMBRADO → APLICACIÓN INMEDIATA → CTA DE POSICIONAMIENTO
+Gancho: Afirmación que contradice el consenso técnico del nicho
+Emoción dominante: Disonancia cognitiva → Claridad → Poder
+Ritmo: Pausado pero denso. Cada frase entrega valor real.
+Cierre: Reposiciona al creador como referente, no como maestro
+PROHIBIDO: Tips genéricos, frases motivacionales, listas sin sistema
+
+────────────────────────────────────────────────────────
+🎭 STORYTELLING EMOCIONAL
+Arquitectura: IN MEDIA RES (escena de conflicto real) → CONTEXTO MÍNIMO → DETONANTE EMOCIONAL → GIRO NARRATIVO → APRENDIZAJE ENCARNADO → CTA IDENTITARIO
+Gancho: Empieza en el momento de máximo dolor o decisión, no antes
+Emoción dominante: Empatía → Tensión → Identificación → Resolución
+Ritmo: Ondulante. Respira entre momentos clave. Usa el silencio narrativo.
+Cierre: La historia enseña; el creador no explica, muestra
+PROHIBIDO: "Les voy a contar una historia...", moraleja explícita al final, contexto innecesario antes del conflicto
+
+────────────────────────────────────────────────────────
+📢 ANUNCIO DIRECTO
+Arquitectura: FILTRO DE AVATAR (1 frase que selecciona al comprador) → DOLOR AFILADO → SOLUCIÓN DIFERENCIADA → PRUEBA IMPLÍCITA → OFERTA CON URGENCIA → CTA ÚNICO
+Gancho: Identifica al avatar exacto en la primera frase. Sin generalidades.
+Emoción dominante: Reconocimiento → Urgencia → Deseo → Acción
+Ritmo: Acelerado en dolor y urgencia. Frena en la solución para que entre.
+Cierre: Una sola acción. Sin opciones múltiples.
+PROHIBIDO: Hablar del producto antes de hablar del dolor, CTAs múltiples, promesas vacías
+
+────────────────────────────────────────────────────────
+🎣 ANUNCIO INDIRECTO
+Arquitectura: CONTENIDO DE VALOR PURO → PROBLEMA IMPLÍCITO → CONEXIÓN ORGÁNICA CON SOLUCIÓN → CTA SUAVE DE BAJO UMBRAL
+Gancho: Valor inmediato sin pedir nada. El avatar no sabe que es un anuncio.
+Emoción dominante: Curiosidad → Aprendizaje → Confianza → Deseo natural
+Ritmo: Fluido, conversacional. Nunca presiona.
+Cierre: La venta llega como consecuencia lógica del valor entregado
+PROHIBIDO: Mencionar precios, urgencia artificial, revelar que es un anuncio demasiado pronto
+
+────────────────────────────────────────────────────────
+⚡ OPINIÓN / POLARIZACIÓN
+Arquitectura: DECLARACIÓN DIVISIVA INMEDIATA → ARGUMENTO IRREFUTABLE → ATAQUE AL ENEMIGO IMPLÍCITO → LLAMADA A LA TRIBU → CTA DE POSICIONAMIENTO
+Gancho: Afirmación que hace que la mitad quiera irse y la otra mitad quiera quedarse
+Emoción dominante: Shock → Indignación o Afinidad → Tribalismo → Identidad
+Ritmo: Staccato agresivo. Frases cortas. Sin suavizadores.
+Cierre: Posición final inamovible. El creador no cede.
+PROHIBIDO: "Por un lado... pero por otro...", conclusiones tibias, equilibrio falso
+
+────────────────────────────────────────────────────────
+📊 CASO DE ESTUDIO
+Arquitectura: RESULTADO ESPECÍFICO Y CONCRETO (sin contexto aún) → SITUACIÓN INICIAL (punto A real) → SISTEMA APLICADO → RESULTADO MEDIBLE → EXTRACCIÓN DEL PRINCIPIO REPLICABLE → CTA
+Gancho: El resultado primero. El proceso después.
+Emoción dominante: Curiosidad → Credibilidad → Esperanza → Deseo de replicar
+Ritmo: Lineal pero con aceleraciones en los resultados. Profundidad sin relleno.
+Cierre: El principio del caso se vuelve aplicable para el avatar HOY
+PROHIBIDO: Inventar números, resultados vagos, caso sin punto A y B claros
+
+────────────────────────────────────────────────────────
+🔧 TUTORIAL PASO A PASO
+Arquitectura: PROMESA DE RESULTADO ESPECÍFICO → CONTEXTO DEL PROBLEMA (por qué fallan los demás) → PASOS NUMERADOS CON MICRO-APLICACIÓN → ERROR COMÚN POR PASO → RESULTADO ACUMULADO → CTA
+Gancho: La promesa de resultado es tan específica que el avatar siente que fue escrita para él
+Emoción dominante: Esperanza → Comprensión → Capacitación → Urgencia de aplicar
+Ritmo: Progresivo. Cada paso construye sobre el anterior. Sin saltos.
+Cierre: El avatar siente que puede ejecutarlo hoy mismo
+PROHIBIDO: Pasos genéricos sin micro-aplicación, saltar el "por qué fallan los demás", cierre sin urgencia
+
+────────────────────────────────────────────────────────
+🎙️ PODCAST CORTO REFLEXIVO
+Arquitectura: PREGUNTA O TENSIÓN QUE EL AVATAR TIENE EN LA CABEZA → EXPLORACIÓN HONESTA (sin respuesta fácil) → REENCUADRE INESPERADO → NUEVA PREGUNTA QUE AMPLÍA LA PERSPECTIVA → CIERRE ABIERTO QUE GENERA REFLEXIÓN
+Gancho: La pregunta que el avatar se hace pero nunca dice en voz alta
+Emoción dominante: Reconocimiento → Incomodidad honesta → Expansión mental → Resonancia
+Ritmo: Conversacional y orgánico. Pausas reales. Sin presiones.
+Cierre: No da la respuesta definitiva. La hace pensar diferente.
+PROHIBIDO: Respuestas fáciles, tono de maestro, CTA de venta directa
+
+────────────────────────────────────────────────────────
+🏛️ MASTERCLASS COMPRIMIDA
+Arquitectura: PROMESA DE TRANSFORMACIÓN DE PERSPECTIVA → MAPA MENTAL DEL SISTEMA → CONCEPTO 1 CON EJEMPLO REAL → CONCEPTO 2 CON APLICACIÓN → CONCEPTO 3 CON RESULTADO → SÍNTESIS EN UNA FRASE MEMORABLE → CTA DE PROFUNDIZACIÓN
+Gancho: "Lo que vas a aprender en los próximos 60 segundos cambia cómo ves [X] para siempre"
+Emoción dominante: Ambición intelectual → Sorpresa por claridad → Poder → Deseo de más
+Ritmo: Denso pero estructurado. Cada bloque es una revelación. Sin relleno.
+Cierre: La síntesis final es tan potente que el avatar la guarda
+PROHIBIDO: Contenido superficial, ausencia de sistema, falta de ejemplos reales
+
+────────────────────────────────────────────────────────
+💥 FRAME DISRUPTIVO / SHOCK
+Arquitectura: AFIRMACIÓN IMPOSIBLE O CONTRAINTUITIVA (sin suavizar) → EVIDENCIA QUE LA SOSTIENE → REENCUADRE TOTAL DE LA REALIDAD → NUEVA ACCIÓN QUE ANTES PARECÍA ILÓGICA → CTA DE RUPTURA
+Gancho: Una sola frase que hace al avatar dudar de todo lo que creía sobre el tema
+Emoción dominante: Shock → Desconcierto → Reconstrucción → Poder nuevo
+Ritmo: Explosivo en el hook. Firme en la evidencia. Sin excusas ni suavizadores.
+Cierre: El avatar no puede volver a ver el tema igual
+PROHIBIDO: Shock sin evidencia, afirmaciones irresponsables, falta de reencuadre constructivo
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 INSTRUCCIÓN DE CIERRE PARA ESTE GUION:
 "${closingConfig.cta}"
 Mecánica: ${closingConfig.mecanica}
 
 VALIDACIONES OBLIGATORIAS DE ARQUITECTURA:
-✓ El Hook ataca creencia, ego, o dolor del avatar en los primeros 3 segundos
-✓ Hay tensión creciente entre bloque 2 y bloque 4
-✓ El Insight NO es un tip genérico — es un sistema, reencuadre, o dato contraintuitivo
-✓ La Resolución muestra transformación real (antes → después)
-✓ El Cierre es coherente con el objetivo: ${closingConfig.label}
+✓ La arquitectura usada es la del formato activo, NO la genérica de 6 bloques
+✓ El gancho es del tipo específico del formato — no puede usarse en otro formato
+✓ El ritmo y la progresión emocional son los del formato activo
+✓ La emoción dominante sigue la curva del formato — no una curva genérica
+✓ El cierre es coherente con el objetivo: ${closingConfig.label} Y con el tipo de formato
 
-Si cualquier validación falla → REESCRIBE ese bloque antes de continuar.
-
-VARIACIÓN CONTROLADA DE EJECUCIÓN (Anti-Repetición Obligatoria):
-
-Selecciona internamente UNA forma de ejecutar el HOOK:
-  → Opción A: Confrontación directa al ego del avatar
-  → Opción B: Confesión personal que genera identificación
-  → Opción C: Declaración estadística brutal e inesperada
-  → Opción D: Escena in media res (empieza en el conflicto, no antes)
-  → Opción E: Afirmación contraria al consenso del nicho
-
-Selecciona internamente UNA forma de ejecutar el DESARROLLO:
-  → Opción A: Historia breve que ilustra el problema
-  → Opción B: Análisis directo del error invisible
-  → Opción C: Escenario hipotético relatable
-  → Opción D: Error común amplificado con consecuencias reales
-
-⚠️ REGLA ANTI-PATRÓN: La ESTRUCTURA de bloques NO cambia. Solo cambia la FORMA de ejecución.
-Nunca repitas la misma variante de hook en dos guiones consecutivos.
+Si cualquier validación falla → REESCRIBE ese bloque con el ADN del formato activo.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📈 MOTOR 2 — PROGRESIÓN EMOCIONAL ESPECÍFICA PARA ${platLabel.toUpperCase()}
@@ -2812,6 +2888,7 @@ Responde SOLO con este JSON válido. Sin markdown, sin texto extra, sin explicac
   "metadata_guion": {
     "tema_tratado": "${temaEspecifico}",
     "plataforma": "${platLabel}",
+    "formato_narrativo_activo": "${settings.formato_narrativo || 'EDUCATIVO_AUTORIDAD'}",
     "arquitectura": "${structureId} (${modeId})",
     "objetivo_viral": "${viralObjective.tipo}",
     "percepcion_creador": "${viralObjective.percepcion_creador}",
@@ -2962,36 +3039,110 @@ Si falla uno → regenerar frase.
 
 Si ctr_score < 75 → regenerar frase con mayor disrupción.
 
-  "teleprompter_script": "SOLO texto hablado. Sin corchetes. Sin indicaciones técnicas. Sin emojis. Solo pausas con ... o línea en blanco. Texto natural para teleprompter.",
-  "plan_produccion_visual": [
-    {
-      "tiempo": "0-3s",
-      "tipo_plano": "Primer plano / Plano medio / B-roll / Corte rápido",
-      "descripcion_visual": "Descripción visual de la escena conectada con emoción del bloque",
-      "movimiento_camara": "Zoom in agresivo / Estable / Travelling / Handheld",
-      "b_roll_sugerido": "B-roll estratégico conectado con sector TCA e intensidad narrativa",
-      "efecto_retencion": "Whoosh / Golpe sonoro / Silencio estratégico / Subida musical",
-      "texto_en_pantalla": "Texto visual de impacto (solo aquí, NO en teleprompter)",
-      "musica_recomendada": "Estilo + energía 1-10 + tempo + emoción dominante",
-      "efecto_sonido": "Efecto de sonido específico para este momento"
-    }
-  ],
-  "miniatura_dominante": {
-    "frase_principal": "FRASE CORTA para miniatura optimizada para ${platLabel}. Máx 4 palabras TikTok/Reels, 6 palabras YouTube. Alta tensión cognitiva. NO es el título. NO explica. INTERRUMPE.",
-    "variantes_ab": [
-      "Variante más agresiva/confrontacional",
-      "Variante más aspiracional/tribal"
+  "teleprompter_script": "TEXTO EXCLUSIVAMENTE HABLADO. Este campo contiene SOLO lo que el creador dice en voz alta. PROHIBIDO ABSOLUTAMENTE: [Texto en pantalla], [Gráficos], [Zoom], [Música], [Corte], [B-roll], ni ninguna indicación técnica de ningún tipo. SOLO palabras habladas, fluidas, naturales, grabables sin edición. Usa saltos de línea para respirar. Usa ... para pausa corta. Usa línea en blanco para pausa larga. El creador debe poder leer este texto directamente en cámara sin ninguna interpretación adicional.",
+  "plan_audiovisual_profesional": {
+    "secuencia_temporal": [
+      {
+        "tiempo": "0-3s",
+        "descripcion_visual": "Qué ve el espectador exactamente — plano, composición, movimiento",
+        "emocion_objetivo": "Emoción específica que debe generar este momento visual",
+        "tipo_plano": "Primer plano extremo / Plano medio / Plano detalle / B-roll",
+        "movimiento_camara": "Zoom in agresivo / Estático / Handheld / Travelling lento",
+        "texto_en_pantalla": "Texto visual de impacto (SOLO aquí, NUNCA en teleprompter)",
+        "efecto_retencion": "Qué técnica retiene la atención en este segundo exacto"
+      },
+      {
+        "tiempo": "3-7s",
+        "descripcion_visual": "Continuación visual — transición o corte",
+        "emocion_objetivo": "Emoción en este segmento",
+        "tipo_plano": "Tipo de plano",
+        "movimiento_camara": "Movimiento",
+        "texto_en_pantalla": "Texto o vacío si no aplica",
+        "efecto_retencion": "Técnica de retención"
+      },
+      {
+        "tiempo": "7-15s",
+        "descripcion_visual": "Desarrollo visual del conflicto o tensión",
+        "emocion_objetivo": "Emoción en escalada",
+        "tipo_plano": "Tipo de plano",
+        "movimiento_camara": "Movimiento",
+        "texto_en_pantalla": "Texto de apoyo",
+        "efecto_retencion": "Loop visual o pregunta en pantalla"
+      },
+      {
+        "tiempo": "PUNTO DE CLÍMAX",
+        "descripcion_visual": "El momento visual de mayor impacto del video — qué sucede en pantalla",
+        "emocion_objetivo": "Emoción máxima — pico de la curva emocional",
+        "tipo_plano": "Plano elegido para el clímax",
+        "movimiento_camara": "Movimiento de cámara en el clímax",
+        "texto_en_pantalla": "Texto de mayor impacto visual del video",
+        "efecto_retencion": "Golpe sonoro / Silencio súbito / Cambio de ritmo visual"
+      },
+      {
+        "tiempo": "MOMENTO DE REVELACIÓN",
+        "descripcion_visual": "Qué ve el espectador cuando llega el insight o giro narrativo",
+        "emocion_objetivo": "Claridad / Sorpresa / Alivio / Poder — según formato",
+        "tipo_plano": "Plano de revelación",
+        "movimiento_camara": "Zoom suave / Estático sobrio / Pull back",
+        "texto_en_pantalla": "La frase clave del insight en pantalla",
+        "efecto_retencion": "Pausa visual que permite que el insight aterrice"
+      }
     ],
-    "plataforma_optimizada": "${platLabel}",
-    "sector_tca_activado": "Sector masivo activado: Dinero / Salud / Relaciones / Desarrollo",
-    "mecanismo_psicologico": "Gap informativo / Ataque de creencia / Contradicción / Identidad tribal",
+    "b_rolls_estrategicos": [
+      {
+        "momento": "Segundo o bloque donde se inserta",
+        "que_mostrar": "Descripción específica del b-roll — qué imagen o video",
+        "por_que_refuerza": "Conexión directa con el mensaje narrativo en ese momento",
+        "emocion_generada": "Emoción específica que activa este b-roll en el espectador"
+      },
+      {
+        "momento": "Segundo o bloque",
+        "que_mostrar": "B-roll 2",
+        "por_que_refuerza": "Razón estratégica",
+        "emocion_generada": "Emoción activada"
+      }
+    ],
+    "ritmo_de_cortes": {
+      "patron_general": "LENTO (cambio cada 8-12s) / MEDIO (cada 4-7s) / ACELERADO (cada 1-3s) / VARIABLE",
+      "descripcion": "Descripción del patrón de cortes y por qué ese ritmo sirve al formato",
+      "aceleraciones": "En qué momentos específicos se aceleran los cortes y por qué",
+      "desaceleraciones": "En qué momentos se ralentiza el ritmo visual para dar peso"
+    },
+    "musica": {
+      "tipo": "Descripción del estilo musical — electrónica tensa / piano suave / trap emocional / silencio estratégico",
+      "bpm_aproximado": "BPM sugerido — número específico o rango",
+      "emocion_dominante": "Qué emoción debe transmitir la música durante el video",
+      "entrada_musica": "En qué segundo entra la música si no empieza desde el inicio",
+      "cambio_musical": "Si hay cambio de intensidad musical — cuándo y por qué"
+    },
+    "efectos_de_retencion": {
+      "sonido_transicion": "Tipo de sonido de transición — whoosh / golpe / silencio / risas / cinematic boom",
+      "micro_silencios": "Momentos exactos donde se usa silencio estratégico y cuánto duran",
+      "cambios_de_plano": "Técnica de cambio de plano — corte seco / fundido / jump cut / match cut",
+      "micro_interrupciones": "Cambios de patrón visual que reactivan la atención — cuándo y qué tipo"
+    }
+  },
+  "miniatura_dominante": {
+    "frase_principal": "FRASE PRINCIPAL. Máx 5-6 palabras. Alto contraste emocional. Alta tensión. Sin cliché. Conecta con sector TCA activo. NO explica — INTERRUMPE.",
+    "variante_agresiva": "Versión más confrontacional y directa de la frase — ataca creencia o ego",
+    "variante_aspiracional": "Versión que activa deseo de identidad o pertenencia a élite",
+    "justificacion_estrategica": "Por qué esta frase específica funciona: qué mecanismo psicológico activa, qué gap de curiosidad abre, por qué detiene el scroll en ${platLabel}",
+    "emocion_dominante_activada": "Emoción específica que siente el espectador al leer la frase — antes de ver el video",
+    "gap_curiosidad": "Descripción exacta del vacío informativo que abre la frase y que solo el video puede cerrar",
+    "compatibilidad_plataformas": {
+      "TikTok": "¿Funciona en TikTok? Sí/No — y por qué — ajuste si necesario",
+      "Reels": "¿Funciona en Reels? Sí/No — y por qué — ajuste si necesario",
+      "YouTube": "¿Funciona en YouTube? Sí/No — y por qué — ajuste si necesario",
+      "Facebook": "¿Funciona en Facebook? Sí/No — y por qué — ajuste si necesario"
+    },
+    "sector_tca_activado": "Sector masivo conectado: Dinero / Salud / Relaciones / Desarrollo Personal",
+    "mecanismo_psicologico": "Gap informativo / Ataque de creencia / Contradicción de identidad / Urgencia implícita",
     "ctr_score": 0,
     "nivel_disrupcion": 0,
     "nivel_gap_curiosidad": 0,
     "nivel_polarizacion": 0,
     "compatibilidad_algoritmica": 0,
-    "coherencia_con_hook": true,
-    "razon_estrategica": "Explicación de por qué esta frase detiene el scroll en ${platLabel} y conecta con el hook"
+    "coherencia_con_hook": true
   },
   "dominio_narrativo": {
     "marco_impuesto": "El frame mental que el guion instala en el espectador",
