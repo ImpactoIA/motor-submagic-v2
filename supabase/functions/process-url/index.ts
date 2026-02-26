@@ -5404,340 +5404,189 @@ async function ejecutarIdeasRapidas(
   }
 }
 
-const promptUnica = `
-═══════════════════════════════════════════════════════════════════════════
-🌐 IDEA MULTIPLATAFORMA ${ideaIndex + 1} DE ${totalIdeas} — DOMINACIÓN TOTAL
-═══════════════════════════════════════════════════════════════════════════
+// ==================================================================================
+// 🌐 EJECUTAR UNA SOLA IDEA MULTIPLATAFORMA — Arquitectura anti-truncado
+// ==================================================================================
+async function ejecutarUnaIdeaMultiplatforma(
+  topic: string,
+  ideaIndex: number,
+  totalIdeas: number,
+  objective: string,
+  timing: string,
+  contexto: any,
+  openai: any,
+  settings: any = {}
+): Promise<{ idea: any; tokens: number }> {
 
-⚠️ TU IDENTIDAD:
-Eres el Sistema de Dominación Multiplataforma #1 del mundo.
-Generas EXACTAMENTE 1 idea con 5 adaptaciones que explotan el algoritmo
-de cada red social de forma radicalmente distinta.
+  const lensId   = settings.creative_lens || 'auto';
+  const lensData = CREATIVE_LENSES[lensId] || CREATIVE_LENSES['auto'];
+  const nicho    = settings.nicho || contexto.nicho || 'General';
 
-FRAME OBLIGATORIO: ${frameAsignado}
-ÁNGULO ESTRATÉGICO OBLIGATORIO: ${anguloAsignado}
+  const frames = [
+    'CONFRONTATIVO', 'REVELACIÓN', 'CONTRAINTUITIVO', 'FILOSÓFICO',
+    'ESTRATÉGICO', 'HISTORIA_IMPLÍCITA', 'COMPARATIVO',
+    'SISTEMA_ROTO', 'ADVERTENCIA', 'OPORTUNIDAD_INVISIBLE'
+  ];
+  const angulos = [
+    'Psicológico', 'Económico', 'Identidad', 'Estatus', 'Riesgo',
+    'Futuro', 'Sistema roto', 'Cultural', 'Moral', 'Filosófico'
+  ];
+  const frameAsignado  = frames[ideaIndex % frames.length];
+  const anguloAsignado = angulos[ideaIndex % angulos.length];
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧠 REGLA #1 — COHERENCIA TEMÁTICA ESTRICTA
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  const objetivoStrategy = getObjetivoStrategy(objective);
+  const timingStrategy   = getTimingStrategy(timing);
 
-TEMA DEL USUARIO: "${topic}"
-NICHO: "${nicho}"
+  const puntoA   = contexto.expertProfile?.point_a   ? `- Punto A: "${contexto.expertProfile.point_a}"`   : '';
+  const puntoB   = contexto.expertProfile?.point_b   ? `- Punto B: "${contexto.expertProfile.point_b}"`   : '';
+  const kbText   = contexto.knowledge_base_content   ? `BASE DE CONOCIMIENTO: "${contexto.knowledge_base_content.substring(0, 500)}..."\n⚠️ Usa ESTE conocimiento. No inventes contenido genérico.` : '';
 
-⚠️ CRÍTICO: La idea DEBE nacer del tema y nicho del usuario.
-Si el tema es "vender conocimiento" → la idea es sobre VENDER CONOCIMIENTO.
-Si el tema es "marca personal" → la idea es sobre MARCA PERSONAL.
-Si el tema es "fitness" → la idea es sobre FITNESS.
-
-PROHIBIDO: Meter IA, tecnología, automatización u otros temas externos
-a menos que el usuario lo haya mencionado explícitamente en su tema/nicho.
-
-El tema del usuario es el centro. Todo lo demás gira alrededor de él.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🚫 SISTEMA ANTI-REPETICIÓN + ANTI-CLICHÉS ABSOLUTO
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-PROHIBIDO en título y cualquier hook:
-❌ "Lo que nadie te dice..." ❌ "El error que cometes..."
-❌ "La verdad sobre..." ❌ "3 secretos para..."
-❌ "La revelación que cambiará..." ❌ "El mito de..."
-❌ "Rompe el mito..." ❌ "El 90%..." ❌ "Esto te sorprenderá..."
-❌ "Destruyendo mitos..." ❌ "El futuro de..." (sin postura específica)
-
-REFORMULACIÓN OBLIGATORIA — ejemplos:
-❌ "El mito del conocimiento" → ✅ "Vendiste tu conocimiento. Vendiste tu trampa."
-❌ "La verdad sobre vender" → ✅ "Vender lo que sabes cuesta más de lo que crees"
-❌ "Rompe el mito digital" → ✅ "Digitalizarte no te libera. Te reemplaza."
-❌ "El futuro del negocio" → ✅ "Tu negocio no necesita escalar. Necesita sobrevivir."
-
-REGLA ANTI-GENÉRICO: Si el título puede ser dicho por CUALQUIER creador
-de marketing digital sin cambiar nada → RECHAZAR y reescribir.
-El título debe ser tan específico que solo este experto lo diría.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧨 SISTEMA DE POSTURA DOMINANTE OBLIGATORIA
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-La idea DEBE tener los 4 elementos:
-□ Creencia falsa que destruye (específica del nicho)
-□ Enemigo implícito responsable (concreto, no abstracto)
-□ Nuevo marco mental superior (la visión única del experto)
-□ Solo este experto puede decir esto (identidad integrada)
-
-La postura se expresa DISTINTO en cada plataforma:
-→ TikTok: postura agresiva, sin filtro, ataque en 3 palabras
-→ Reels: postura aspiracional, elegante, identitaria
-→ YouTube: postura analítica, con evidencia implícita
-→ LinkedIn: postura de autoridad, medida pero firme
-→ Facebook: postura conversacional, accesible, genera debate
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚙️ MOTOR TCA — EXPANSIÓN MASIVA
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-La idea central DEBE estar en intersección N2-N3:
-N1 = micronicho técnico → PROHIBIDO
-N2 = temática principal del sector → VÁLIDO ✓
-N3 = sector masivo universal → VÁLIDO ✓
-
-SECTORES UNIVERSALES (elige el más relevante para el tema):
-→ Dinero / Libertad Financiera / Negocios
-→ Desarrollo Personal / Mentalidad / Identidad / Éxito
-→ Trabajo / Carrera / Productividad / Independencia
-→ Salud / Energía / Cuerpo
-→ Relaciones / Comunicación
-
-INTERSECCIÓN OBLIGATORIA: tema_usuario + dolor_avatar + sector_masivo
-mass_appeal_score MÍNIMO: 75
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎯 INTEGRACIÓN DEL AVATAR
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-La idea activa al menos 2:
-□ Dolor específico del avatar
-□ Deseo profundo
-□ Objeción clave
-□ Miedo silencioso
-□ Aspiración de identidad
-
-Por plataforma el avatar se aborda desde:
-→ TikTok: su frustración más cruda e inmediata
-→ Reels: su aspiración más profunda e identitaria
-→ YouTube: su necesidad de entender y tener certeza
-→ LinkedIn: su ambición profesional y miedo al estancamiento
-→ Facebook: su experiencia cotidiana relatable
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎭 LENTE CREATIVO: ${lensData.label}
-"${lensData.instruction}"
-
-Intensidad por plataforma:
-→ TikTok: intensidad MÁXIMA
-→ Reels: intensidad ELEGANTE
-→ YouTube: intensidad ANALÍTICA
-→ LinkedIn: intensidad PROFESIONAL
-→ Facebook: intensidad CONVERSACIONAL
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🌍 ADN ESTRICTO POR PLATAFORMA — SIN EXCEPCIONES
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-🎵 TikTok:
-→ Hook: MÁXIMO 4 palabras — shock INMEDIATO — para el scroll en 0.5s
-→ Ejemplos correctos: "Vendiste tu talento." / "Estás trabajando gratis." / "Nadie te compra."
-→ PROHIBIDO: frases largas, explicaciones, contexto previo, tono amable
-→ nivel_polarizacion ≥ 65 OBLIGATORIO
-
-📸 Reels:
-→ Hook: aspiracional, tribal, elegante — máx 8 palabras
-→ Ejemplos correctos: "Las personas que cobran lo que valen hacen esto." / "Tu conocimiento merece más que un curso barato."
-→ PROHIBIDO: agresividad excesiva, shock sin elegancia
-→ nivel_polarizacion ≥ 50 OBLIGATORIO
-
-🎬 YouTube:
-→ Hook: gap informativo + promesa implícita — genera curiosidad que no se puede ignorar
-→ Ejemplos correctos: "Hay una razón por la que los expertos con más conocimiento ganan menos." / "Esto le pasa al 8 de cada 10 profesionales que intentan vender lo que saben."
-→ PROHIBIDO: spoilers, hooks vagos, repetir el título
-→ nivel_polarizacion ≥ 55 OBLIGATORIO
-
-💼 LinkedIn:
-→ Hook: tesis profesional provocadora — reencuadre de carrera o negocio
-→ Ejemplos correctos: "Llevas 10 años acumulando experiencia. Y sigues cobrando como junior." / "Tu conocimiento no vale lo que crees. Aquí está la prueba."
-→ PROHIBIDO: emotividad excesiva, slang, shock sin sustancia
-→ nivel_polarizacion ≥ 50 OBLIGATORIO
-
-👥 Facebook:
-→ Hook: pregunta que divide opiniones O situación cotidiana completamente relatable
-→ Ejemplos correctos: "¿Cuánto tiempo llevas pensando en cobrar por lo que sabes y sin hacerlo?" / "Hay personas ganando dinero con exactamente lo mismo que tú sabes hacer gratis."
-→ PROHIBIDO: shock agresivo, jerga de internet, ritmo frenético
-→ nivel_polarizacion ≥ 50 OBLIGATORIO
-
-⚠️ REGLA CRÍTICA: El hook de TikTok y el de Facebook NUNCA pueden ser similares.
-Cada hook debe sonar como si fuera de un creador completamente diferente.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🚀 VALIDACIÓN GURÚ — ANTES DE ENTREGAR
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Por cada hook preguntarse:
-□ ¿Pararía el scroll en TikTok en 0.5 segundos?
-□ ¿Generaría guardados en Reels?
-□ ¿Haría clic desde la miniatura en YouTube?
-□ ¿Generaría reposts en LinkedIn?
-□ ¿Generaría 50+ comentarios en Facebook?
-□ ¿El título puede decirlo CUALQUIER creador? → Si sí: RECHAZAR
-
-Si 2+ respuestas son NO → reescribir antes de incluir.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-👤 PERFIL DEL SISTEMA
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-EXPERTO:
-- Posicionamiento: ${contexto.expertProfile?.unique_positioning || contexto.posicionamiento || 'Experto práctico'}
-- Transformación: ${contexto.expertProfile?.transformation_promise || 'Del punto A al punto B'}
-- Enemigo: ${contexto.expertProfile?.enemy || 'No definido'}
-${contexto.expertProfile?.point_a ? `- Punto A: "${contexto.expertProfile.point_a}"` : ''}
-${contexto.expertProfile?.point_b ? `- Punto B: "${contexto.expertProfile.point_b}"` : ''}
-
-AVATAR:
-- Perfil: ${contexto.avatar_ideal || 'Audiencia general'}
-- Dolor: ${contexto.dolor_principal || 'No definido'}
-- Deseo: ${contexto.deseo_principal || 'No definido'}
-
-${contexto.knowledge_base_content ? `BASE DE CONOCIMIENTO: "${contexto.knowledge_base_content.substring(0, 500)}..."
-⚠️ Usa ESTE conocimiento. No inventes contenido genérico.` : ''}
-
-OBJETIVO: ${objective}
-TIMING: ${timing}
-${objetivoStrategy}
-${timingStrategy}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📤 OUTPUT JSON — ESTRUCTURA EXACTA Y COMPLETA
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Responde SOLO con JSON válido. Sin markdown. Sin texto extra. Sin truncar.
-
-{
-  "id": ${ideaIndex + 1},
-  "titulo": "Título que SOLO este experto diría — específico, sin clichés",
-  "concepto": "Por qué esta idea conecta el tema con las 5 plataformas",
-  "idea_expandida_tca": "Tema expandido listo para Generador V600 — sector masivo N2-N3",
-  "tca": {
-    "nivel_tca": "N2 | N2.5 | N3",
-    "sector_utilizado": "sector masivo específico",
-    "interseccion_detectada": "dolor_avatar + transformacion_experto + sector",
-    "mass_appeal_score": 0,
-    "potencial_millonario": true,
-    "nivel_polarizacion": 0,
-    "razonamiento_estrategico": "por qué llega a millones en 5 redes"
-  },
-  "frame_usado": "${frameAsignado}",
-  "angulo_estrategico": "${anguloAsignado}",
-  "postura_dominante": {
-    "creencia_atacada": "creencia falsa específica del nicho que destruye",
-    "enemigo_implicito": "quién o qué concreto tiene la culpa",
-    "nuevo_marco_mental": "visión superior única del experto",
-    "solo_este_experto_puede_decirlo": true
-  },
-  "riesgo_emocional_activado": "Pérdida | Estatus | Vergüenza | Urgencia | Identidad amenazada | Conflicto invisible",
-  "originalidad_score": 0,
-  "diferenciacion_score": 0,
-  "formato_ganador": "PREGUNTA_CONFRONTATIVA | DECLARACION_DISRUPTIVA | COMPARACION_DIRECTA | ERROR_INVISIBLE | MITO_VS_REALIDAD",
-  "estructura_sugerida": "PAS | AIDA | Winner Rocket | Storytelling",
-  "disparador_principal": "Miedo | Curiosidad | Ambición | Rabia | Orgullo",
-  "emocion_objetivo": "emoción principal que activa la idea",
-  "objetivo_principal": "${objective}",
-  "contexto_temporal": "${timing}",
-  "potencial_viral": 0,
-  "razon_potencia": "por qué este concepto específico es poderoso",
-  "validacion_guru": {
-    "eleva_autoridad": true,
-    "posiciona_como_lider": true,
-    "rompe_consenso": true,
-    "potencial_viral_real": true,
-    "suena_diferente_al_mercado": true,
-    "funciona_en_5_plataformas": true
-  },
-  "adaptaciones": {
-    "TikTok": {
-      "hook": "MAX 4 PALABRAS — shock inmediato específico del tema",
-      "gancho_completo": "Primera línea exacta TikTok — agresiva, directa, sin contexto",
-      "caption_sugerido": "Caption TikTok corto con pregunta de debate o postura radical",
-      "miniatura_frase": "2-3 palabras para overlay de texto en pantalla",
-      "emocion_objetivo": "emoción cruda e inmediata",
-      "ctr_score": 0,
-      "nivel_polarizacion": 0,
-      "retencion_score": 0,
-      "mejor_horario": "7-9pm o 12-2pm entre semana",
-      "duracion_ideal": "15-45s",
-      "formato_visual": "Plano medio frontal — texto en pantalla — cortes cada 2s",
-      "mecanismo_retencion": "qué hace que vean los primeros 3 segundos completos"
-    },
-    "Reels": {
-      "hook": "Hook aspiracional o tribal — elegante, máx 8 palabras",
-      "gancho_completo": "Primera línea exacta Reels — aspiracional, identitaria",
-      "caption_sugerido": "Caption Reels con CTA de guardado y etiqueta a alguien",
-      "miniatura_frase": "Frase elegante para cover/portada de Reels",
-      "emocion_objetivo": "emoción aspiracional o identitaria",
-      "ctr_score": 0,
-      "nivel_polarizacion": 0,
-      "retencion_score": 0,
-      "mejor_horario": "6-9pm martes a viernes",
-      "duracion_ideal": "30-60s",
-      "formato_visual": "Alta calidad visual — transiciones suaves — audio sincronizado",
-      "mecanismo_retencion": "qué hace que guarden o compartan"
-    },
-    "YouTube": {
-      "hook": "Gap informativo fuerte — genera curiosidad irresistible",
-      "gancho_completo": "Primera línea exacta YouTube — analítica, con promesa implícita",
-      "caption_sugerido": "Descripción YouTube optimizada con keywords de búsqueda del nicho",
-      "miniatura_frase": "4-6 palabras de alto CTR para miniatura — tensión visual",
-      "emocion_objetivo": "curiosidad + necesidad de saber",
-      "ctr_score": 0,
-      "nivel_polarizacion": 0,
-      "retencion_score": 0,
-      "mejor_horario": "viernes 3-6pm o sábado mañana",
-      "duracion_ideal": "60s Short o 8-15min largo",
-      "formato_visual": "Cambios de ángulo — B-roll explicativo — subtítulos",
-      "mecanismo_retencion": "qué hace que vean más del 70% del video"
-    },
-    "LinkedIn": {
-      "hook": "Tesis profesional provocadora — reencuadre de carrera o negocio",
-      "gancho_completo": "Primera línea exacta LinkedIn — autoridad, medida pero firme",
-      "caption_sugerido": "Caption LinkedIn con insight + dato + pregunta para repost",
-      "miniatura_frase": "Frase de autoridad profesional para miniatura",
-      "emocion_objetivo": "ambición profesional o alerta de carrera",
-      "ctr_score": 0,
-      "nivel_polarizacion": 0,
-      "retencion_score": 0,
-      "mejor_horario": "martes-jueves 8-10am",
-      "duracion_ideal": "45-90s",
-      "formato_visual": "Plano limpio — subtítulos obligatorios — sin música agresiva",
-      "mecanismo_retencion": "qué hace que lo compartan a su red profesional"
-    },
-    "Facebook": {
-      "hook": "Pregunta que divide opiniones O situación cotidiana 100% relatable",
-      "gancho_completo": "Primera línea exacta Facebook — conversacional, cálida, accesible",
-      "caption_sugerido": "Caption Facebook que termina con pregunta abierta generando 50+ comentarios",
-      "miniatura_frase": "Frase conversacional clara para miniatura Facebook",
-      "emocion_objetivo": "identificación comunitaria o debate de opiniones",
-      "ctr_score": 0,
-      "nivel_polarizacion": 0,
-      "retencion_score": 0,
-      "mejor_horario": "7-10pm o domingo tarde",
-      "duracion_ideal": "60s-3min",
-      "formato_visual": "Subtítulos grandes obligatorios — ritmo pausado — tono cercano",
-      "mecanismo_retencion": "qué genera comentarios y debate en los primeros 30 min"
-    }
-  },
-  "plan_produccion": {
-    "video_base": "Descripción exacta y específica del video base a grabar UNA SOLA VEZ",
-    "duracion_grabacion": "duración óptima del video base para todas las plataformas",
-    "subtitulos_obligatorios": true,
-    "elementos_clave": ["elemento visual específico 1", "elemento 2"],
-    "orden_publicacion": ["1. plataforma con mayor tracción para este tema", "2.", "3.", "4.", "5."],
-    "razon_orden": "justificación estratégica específica del orden según el tema y algoritmos"
-  }
-}
-
-REGLAS FINALES — VALIDACIÓN ANTES DE RESPONDER:
-✓ El tema de la idea ES "${topic}" — no puede ser otro tema
-✓ Título ÚNICO que solo este experto diría — no genérico
-✓ Sin ningún cliché de la lista negra
-✓ mass_appeal_score ≥ 75 | originalidad_score > 75 | diferenciacion_score > 70
-✓ TikTok: hook máx 4 palabras + nivel_polarizacion ≥ 65
-✓ Reels: hook aspiracional + nivel_polarizacion ≥ 50
-✓ YouTube: hook gap informativo + nivel_polarizacion ≥ 55
-✓ LinkedIn: tesis profesional + nivel_polarizacion ≥ 50
-✓ Facebook: pregunta relatable + nivel_polarizacion ≥ 50
-✓ ctr_score ≥ 70 en todas las adaptaciones
-✓ Cada hook RADICALMENTE distinto al de otras plataformas
-✓ JSON válido y COMPLETO — nunca truncar
-`;
+  const promptUnica = [
+    '═══════════════════════════════════════════════════════════════════════════',
+    `🌐 IDEA MULTIPLATAFORMA ${ideaIndex + 1} DE ${totalIdeas} — DOMINACIÓN TOTAL`,
+    '═══════════════════════════════════════════════════════════════════════════',
+    '',
+    '⚠️ TU IDENTIDAD:',
+    'Eres el Sistema de Dominación Multiplataforma #1 del mundo.',
+    'Generas EXACTAMENTE 1 idea con 5 adaptaciones que explotan el algoritmo',
+    'de cada red social de forma radicalmente distinta.',
+    '',
+    `FRAME OBLIGATORIO: ${frameAsignado}`,
+    `ÁNGULO ESTRATÉGICO OBLIGATORIO: ${anguloAsignado}`,
+    '',
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    '🧠 REGLA #1 — COHERENCIA TEMÁTICA ESTRICTA',
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    '',
+    `TEMA DEL USUARIO: "${topic}"`,
+    `NICHO: "${nicho}"`,
+    '',
+    '⚠️ CRÍTICO: La idea DEBE nacer del tema y nicho del usuario.',
+    'Si el tema es "vender conocimiento" → la idea es sobre VENDER CONOCIMIENTO.',
+    'Si el tema es "marca personal" → la idea es sobre MARCA PERSONAL.',
+    'PROHIBIDO: Meter IA, tecnología u otros temas externos',
+    'a menos que el usuario lo haya mencionado explícitamente.',
+    '',
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    '🚫 ANTI-CLICHÉS ABSOLUTO — PROHIBIDO en título y hooks:',
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    'X "Lo que nadie te dice..." X "El error que cometes..."',
+    'X "La verdad sobre..." X "3 secretos para..."',
+    'X "La revelación que cambiará..." X "El mito de..."',
+    'X "Rompe el mito..." X "El 90%..." X "Destruyendo mitos..."',
+    'X "El futuro de..." (sin postura específica)',
+    '',
+    'REFORMULACIÓN OBLIGATORIA:',
+    'X "El mito del conocimiento" → OK "Vendiste tu conocimiento. Vendiste tu trampa."',
+    'X "La verdad sobre vender" → OK "Vender lo que sabes cuesta más de lo que crees"',
+    'X "Rompe el mito digital" → OK "Digitalizarte no te libera. Te reemplaza."',
+    '',
+    'REGLA: Si el título puede decirlo CUALQUIER creador de marketing → RECHAZAR.',
+    '',
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    '🧨 POSTURA DOMINANTE OBLIGATORIA (4 elementos):',
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    '[ ] Creencia falsa específica del nicho que destruye',
+    '[ ] Enemigo implícito concreto responsable',
+    '[ ] Nuevo marco mental superior del experto',
+    '[ ] Solo este experto puede decir esto',
+    '',
+    'Postura expresada DISTINTO por plataforma:',
+    '→ TikTok: agresiva, sin filtro, ataque en 3 palabras',
+    '→ Reels: aspiracional, elegante, identitaria',
+    '→ YouTube: analítica, con evidencia implícita',
+    '→ LinkedIn: autoridad, medida pero firme',
+    '→ Facebook: conversacional, accesible, genera debate',
+    '',
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    '⚙️ MOTOR TCA — EXPANSIÓN MASIVA',
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    'Posicionar en intersección N2-N3.',
+    'N1 = micronicho técnico → PROHIBIDO',
+    'N2 = temática principal del sector → VÁLIDO',
+    'N3 = sector masivo universal → VÁLIDO',
+    '',
+    'SECTORES: Dinero/Negocios | Desarrollo Personal | Trabajo/Carrera | Salud | Relaciones',
+    'INTERSECCIÓN: tema_usuario + dolor_avatar + sector_masivo',
+    'mass_appeal_score MÍNIMO: 75',
+    '',
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    `🎭 LENTE CREATIVO: ${lensData.label}`,
+    `"${lensData.instruction}"`,
+    '',
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    '🌍 ADN ESTRICTO POR PLATAFORMA',
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    '',
+    'TikTok:',
+    '→ Hook: MÁXIMO 4 palabras — shock en 0.5s',
+    '→ Ejemplos: "Vendiste tu talento." / "Estás trabajando gratis." / "Nadie te compra."',
+    '→ PROHIBIDO: frases largas, contexto previo, tono amable',
+    '→ nivel_polarizacion >= 65 OBLIGATORIO',
+    '',
+    'Reels:',
+    '→ Hook: aspiracional tribal elegante — máx 8 palabras',
+    '→ Ejemplos: "Las personas que cobran lo que valen hacen esto." / "Tu conocimiento merece más."',
+    '→ PROHIBIDO: agresividad excesiva, shock sin elegancia',
+    '→ nivel_polarizacion >= 50 OBLIGATORIO',
+    '',
+    'YouTube:',
+    '→ Hook: gap informativo — curiosidad irresistible',
+    '→ Ejemplos: "Hay una razón por la que los expertos con más conocimiento ganan menos."',
+    '→ PROHIBIDO: spoilers, hooks vagos, repetir título',
+    '→ nivel_polarizacion >= 55 OBLIGATORIO',
+    '',
+    'LinkedIn:',
+    '→ Hook: tesis profesional provocadora',
+    '→ Ejemplos: "Llevas 10 años acumulando experiencia. Y sigues cobrando como junior."',
+    '→ PROHIBIDO: emotividad excesiva, slang',
+    '→ nivel_polarizacion >= 50 OBLIGATORIO',
+    '',
+    'Facebook:',
+    '→ Hook: pregunta que divide opiniones O situación cotidiana relatable',
+    '→ Ejemplos: "¿Cuánto tiempo llevas pensando en cobrar por lo que sabes y sin hacerlo?"',
+    '→ PROHIBIDO: shock agresivo, jerga de internet',
+    '→ nivel_polarizacion >= 50 OBLIGATORIO',
+    '',
+    '⚠️ El hook de TikTok y Facebook NUNCA pueden ser similares.',
+    '',
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    '👤 PERFIL DEL SISTEMA',
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    '',
+    'EXPERTO:',
+    `- Posicionamiento: ${contexto.expertProfile?.unique_positioning || contexto.posicionamiento || 'Experto práctico'}`,
+    `- Transformación: ${contexto.expertProfile?.transformation_promise || 'Del punto A al punto B'}`,
+    `- Enemigo: ${contexto.expertProfile?.enemy || 'No definido'}`,
+    puntoA,
+    puntoB,
+    '',
+    'AVATAR:',
+    `- Perfil: ${contexto.avatar_ideal || 'Audiencia general'}`,
+    `- Dolor: ${contexto.dolor_principal || 'No definido'}`,
+    `- Deseo: ${contexto.deseo_principal || 'No definido'}`,
+    '',
+    kbText,
+    '',
+    `OBJETIVO: ${objective}`,
+    `TIMING: ${timing}`,
+    objetivoStrategy,
+    timingStrategy,
+    '',
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    '📤 OUTPUT JSON — ESTRUCTURA EXACTA. SIN MARKDOWN. SIN TRUNCAR.',
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    '',
+    `{"id":${ideaIndex + 1},"titulo":"Título que SOLO este experto diría — sin clichés","concepto":"Por qué esta idea conecta el tema con las 5 plataformas","idea_expandida_tca":"Tema expandido listo para Generador V600","tca":{"nivel_tca":"N2","sector_utilizado":"sector masivo","interseccion_detectada":"dolor + transformacion + sector","mass_appeal_score":0,"potencial_millonario":true,"nivel_polarizacion":0,"razonamiento_estrategico":"por qué llega a millones"},"frame_usado":"${frameAsignado}","angulo_estrategico":"${anguloAsignado}","postura_dominante":{"creencia_atacada":"creencia falsa del nicho","enemigo_implicito":"quién concreto tiene la culpa","nuevo_marco_mental":"visión superior del experto","solo_este_experto_puede_decirlo":true},"riesgo_emocional_activado":"Pérdida","originalidad_score":0,"diferenciacion_score":0,"formato_ganador":"DECLARACION_DISRUPTIVA","estructura_sugerida":"PAS","disparador_principal":"Miedo","emocion_objetivo":"emoción principal","objetivo_principal":"${objective}","contexto_temporal":"${timing}","potencial_viral":0,"razon_potencia":"por qué es poderoso","validacion_guru":{"eleva_autoridad":true,"posiciona_como_lider":true,"rompe_consenso":true,"potencial_viral_real":true,"suena_diferente_al_mercado":true,"funciona_en_5_plataformas":true},"adaptaciones":{"TikTok":{"hook":"MAX 4 PALABRAS shock","gancho_completo":"primera línea TikTok agresiva","caption_sugerido":"caption TikTok con debate","miniatura_frase":"2-3 palabras overlay","emocion_objetivo":"emoción cruda","ctr_score":0,"nivel_polarizacion":0,"retencion_score":0,"mejor_horario":"7-9pm","duracion_ideal":"15-45s","formato_visual":"plano frontal cortes 2s","mecanismo_retencion":"primeros 3 segundos"},"Reels":{"hook":"hook aspiracional elegante","gancho_completo":"primera línea Reels","caption_sugerido":"caption Reels guardado","miniatura_frase":"frase elegante portada","emocion_objetivo":"aspiracional","ctr_score":0,"nivel_polarizacion":0,"retencion_score":0,"mejor_horario":"6-9pm","duracion_ideal":"30-60s","formato_visual":"alta calidad visual","mecanismo_retencion":"guardar y compartir"},"YouTube":{"hook":"gap informativo fuerte","gancho_completo":"primera línea YouTube","caption_sugerido":"descripción con keywords","miniatura_frase":"4-6 palabras alto CTR","emocion_objetivo":"curiosidad","ctr_score":0,"nivel_polarizacion":0,"retencion_score":0,"mejor_horario":"viernes 3-6pm","duracion_ideal":"60s o 8-15min","formato_visual":"cambios ángulo b-roll","mecanismo_retencion":"70 porciento completado"},"LinkedIn":{"hook":"tesis profesional provocadora","gancho_completo":"primera línea LinkedIn","caption_sugerido":"caption con repost CTA","miniatura_frase":"frase autoridad","emocion_objetivo":"ambición profesional","ctr_score":0,"nivel_polarizacion":0,"retencion_score":0,"mejor_horario":"martes-jueves 8-10am","duracion_ideal":"45-90s","formato_visual":"plano limpio subtítulos","mecanismo_retencion":"compartir red profesional"},"Facebook":{"hook":"pregunta relatable comunidad","gancho_completo":"primera línea Facebook conversacional","caption_sugerido":"caption pregunta 50 comentarios","miniatura_frase":"frase conversacional clara","emocion_objetivo":"identificación comunidad","ctr_score":0,"nivel_polarizacion":0,"retencion_score":0,"mejor_horario":"7-10pm domingo","duracion_ideal":"60s-3min","formato_visual":"subtítulos grandes pausado","mecanismo_retencion":"comentarios primeros 30min"}},"plan_produccion":{"video_base":"descripción exacta video base único","duracion_grabacion":"duración óptima","subtitulos_obligatorios":true,"elementos_clave":["elemento 1","elemento 2"],"orden_publicacion":["1. plataforma 1","2. plataforma 2","3. plataforma 3","4. plataforma 4","5. plataforma 5"],"razon_orden":"justificación estratégica del orden"}}`,
+    '',
+    'REGLAS FINALES:',
+    'OK mass_appeal_score >= 75 | originalidad_score > 75 | diferenciacion_score > 70',
+    'OK TikTok nivel_polarizacion >= 65 | Reels >= 50 | YouTube >= 55 | LinkedIn >= 50 | Facebook >= 50',
+    'OK ctr_score >= 70 en todas las adaptaciones',
+    'OK Cada hook RADICALMENTE distinto al de otras plataformas',
+    'OK Sin clichés en ningún hook ni título',
+    'OK JSON válido y COMPLETO — nunca truncar'
+  ].join('\n');
 
   try {
     const completion = await openai.chat.completions.create({
@@ -5774,7 +5623,7 @@ REGLAS FINALES — VALIDACIÓN ANTES DE RESPONDER:
       }
     }
 
-    console.log(`[MULTI] ✅ Idea ${ideaIndex + 1}/${totalIdeas} generada | Score: ${idea.tca?.mass_appeal_score || '?'}`);
+    console.log(`[MULTI] OK Idea ${ideaIndex + 1}/${totalIdeas} | Score: ${idea.tca?.mass_appeal_score || '?'}`);
 
     return {
       idea,
@@ -5782,7 +5631,7 @@ REGLAS FINALES — VALIDACIÓN ANTES DE RESPONDER:
     };
 
   } catch (error) {
-    console.error(`[MULTI] ❌ Error en idea ${ideaIndex + 1}:`, error);
+    console.error(`[MULTI] ERROR en idea ${ideaIndex + 1}:`, error);
     return { idea: {}, tokens: 0 };
   }
 }
