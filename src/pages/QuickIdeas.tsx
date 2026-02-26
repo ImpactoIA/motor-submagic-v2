@@ -231,6 +231,7 @@ export const QuickIdeas = () => {
     
     // 👇👇👇 AGREGAR ESTA LÍNEA 👇👇👇
     const [selectedLens, setSelectedLens] = useState(CREATIVE_LENSES[0]);
+    const [isMultiplatform, setIsMultiplatform] = useState(false);
 
     // --- ESTADOS CONTEXTO ---
     const [experts, setExperts] = useState<any[]>([]);
@@ -298,8 +299,9 @@ export const QuickIdeas = () => {
                     // 🎯 NUEVOS PARÁMETROS ESTRATÉGICOS
                     settings: {
                         quantity: amount,
-                        platform: selectedPlatform.label,
+                        platform: isMultiplatform ? 'Multiplataforma' : selectedPlatform.label,
                         objective: selectedObjective.id,
+                        multiplatform: isMultiplatform,
                         
                         // 👇👇👇 AGREGAR ESTA LÍNEA 👇👇👇
                         creative_lens: selectedLens.id, 
@@ -433,7 +435,34 @@ export const QuickIdeas = () => {
                     <label className="text-xs font-black text-gray-500 uppercase mb-4 block tracking-widest flex items-center gap-2">
                         <Video size={14}/> 1. Selecciona la Plataforma
                     </label>
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+
+                    {/* BOTÓN MULTIPLATAFORMA */}
+                    <button
+                        onClick={() => setIsMultiplatform(!isMultiplatform)}
+                        className={`w-full mb-3 p-4 rounded-2xl border flex items-center justify-center gap-3 transition-all ${
+                            isMultiplatform
+                                ? 'bg-gradient-to-r from-indigo-900/40 via-purple-900/40 to-pink-900/40 border-purple-500/60 text-white shadow-lg ring-1 ring-purple-500/30 scale-[1.01]'
+                                : 'bg-gray-900/30 border-gray-700 text-gray-400 hover:border-purple-500/40 hover:text-gray-200'
+                        }`}
+                    >
+                        <span className="text-lg">🌐</span>
+                        <div className="text-left">
+                            <p className="text-sm font-black">
+                                {isMultiplatform ? '✅ MODO MULTIPLATAFORMA ACTIVO' : 'MODO MULTIPLATAFORMA'}
+                            </p>
+                            <p className="text-[10px] text-gray-400">
+                                1 idea central → 5 hooks distintos → domina TikTok + Reels + YouTube + LinkedIn + Facebook
+                            </p>
+                        </div>
+                        {isMultiplatform && (
+                            <span className="ml-auto text-[10px] font-black text-purple-400 bg-purple-500/10 px-2 py-1 rounded-full border border-purple-500/20">
+                                ACTIVO
+                            </span>
+                        )}
+                    </button>
+
+                    {/* PLATAFORMAS INDIVIDUALES */}
+                    <div className={`grid grid-cols-2 md:grid-cols-5 gap-3 transition-all ${isMultiplatform ? 'opacity-30 pointer-events-none' : 'opacity-100'}`}>
                         {PLATFORMS.map(p => (
                             <button 
                                 key={p.id} 
@@ -1091,6 +1120,61 @@ export const QuickIdeas = () => {
                                                 <span className="text-[9px] bg-orange-500/10 text-orange-400 px-2 py-1 rounded-full border border-orange-500/20 font-bold">
                                                     ⚡ {idea.riesgo_emocional_activado}
                                                 </span>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {/* 🌐 ADAPTACIONES MULTIPLATAFORMA */}
+                                    {(idea as any).adaptaciones && (
+                                        <div className="bg-gray-900/40 border border-purple-500/20 rounded-xl p-3 space-y-3">
+                                            <p className="text-[10px] font-black text-purple-400 uppercase tracking-widest">🌐 Adaptaciones por Plataforma</p>
+                                            {Object.entries((idea as any).adaptaciones).map(([plat, data]: [string, any]) => (
+                                                <div key={plat} className="bg-black/40 rounded-lg p-3 border border-white/5">
+                                                    <div className="flex items-center justify-between mb-2">
+                                                        <span className="text-[10px] font-black text-white uppercase">{plat}</span>
+                                                        <div className="flex gap-2">
+                                                            {data.ctr_score && (
+                                                                <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${data.ctr_score >= 80 ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
+                                                                    CTR {data.ctr_score}
+                                                                </span>
+                                                            )}
+                                                            {data.nivel_polarizacion && (
+                                                                <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400">
+                                                                    ⚡{data.nivel_polarizacion}
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    {data.hook && (
+                                                        <p className="text-xs text-white font-bold mb-1">"{data.hook}"</p>
+                                                    )}
+                                                    {data.gancho_completo && data.gancho_completo !== data.hook && (
+                                                        <p className="text-[10px] text-gray-400 italic mb-1">{data.gancho_completo}</p>
+                                                    )}
+                                                    {data.miniatura_frase && (
+                                                        <span className="text-[9px] bg-yellow-500/10 text-yellow-400 px-2 py-0.5 rounded border border-yellow-500/20">
+                                                            🖼️ {data.miniatura_frase}
+                                                        </span>
+                                                    )}
+                                                    {data.mejor_horario && (
+                                                        <p className="text-[9px] text-gray-600 mt-1">⏰ {data.mejor_horario}</p>
+                                                    )}
+                                                </div>
+                                            ))}
+                                            {(idea as any).plan_produccion && (
+                                                <div className="bg-indigo-900/20 rounded-lg p-3 border border-indigo-500/20">
+                                                    <p className="text-[9px] font-black text-indigo-400 uppercase mb-2">🎬 Plan de Producción</p>
+                                                    <p className="text-[10px] text-gray-300">{(idea as any).plan_produccion.video_base}</p>
+                                                    {(idea as any).plan_produccion.orden_publicacion && (
+                                                        <div className="flex flex-wrap gap-1 mt-2">
+                                                            {(idea as any).plan_produccion.orden_publicacion.map((p: string, i: number) => (
+                                                                <span key={i} className="text-[9px] bg-indigo-500/10 text-indigo-300 px-2 py-0.5 rounded-full">
+                                                                    {i+1}. {p}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                </div>
                                             )}
                                         </div>
                                     )}
