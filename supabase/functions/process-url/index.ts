@@ -1509,6 +1509,25 @@ Tu trabajo ES encontrar la intersección exacta entre:
 → Lo que NADIE en el nicho está diciendo todavía
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🧠 REGLA #0 — COHERENCIA TEMÁTICA ABSOLUTA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TEMA DEL USUARIO: "${temaEspecifico}"
+NICHO: "${nichoUsuario}"
+
+⚠️ CRÍTICO: Las ideas DEBEN nacer del tema exacto del usuario.
+Si el tema es "generar deseo de compra" → las ideas son sobre GENERAR DESEO DE COMPRA.
+Si el tema es "marca personal" → las ideas son sobre MARCA PERSONAL.
+Si el tema es "fitness" → las ideas son sobre FITNESS.
+
+PROHIBIDO: Introducir IA, tecnología, automatización u otros temas externos
+a menos que el usuario los haya mencionado EXPLÍCITAMENTE en su tema o nicho.
+
+El tema del usuario es el centro. Todo lo demás gira alrededor de él.
+Si el tema no menciona IA → ninguna idea puede mencionar IA.
+Si el tema no menciona tecnología → ninguna idea puede mencionar tecnología.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🚫 SISTEMA ANTI-REPETICIÓN ABSOLUTA
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
