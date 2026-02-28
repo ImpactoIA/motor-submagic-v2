@@ -3045,6 +3045,7 @@ FORMATO ACTIVO: ${settings.formato_narrativo || 'EDUCATIVO_AUTORIDAD'}
 
 ────────────────────────────────────────────────────────
 📚 EDUCATIVO DE AUTORIDAD
+[USAR SI: formato_narrativo = 'EDUCATIVO_AUTORIDAD'] → ACTIVAR SOLO ESTE FORMATO. IGNORAR LOS DEMÁS.
 Arquitectura: TESIS PROVOCADORA → EVIDENCIA CONTRAINTUITIVA → SISTEMA NOMBRADO → APLICACIÓN INMEDIATA → CTA DE POSICIONAMIENTO
 Gancho: Afirmación que contradice el consenso técnico del nicho
 Emoción dominante: Disonancia cognitiva → Claridad → Poder
@@ -3054,6 +3055,7 @@ PROHIBIDO: Tips genéricos, frases motivacionales, listas sin sistema
 
 ────────────────────────────────────────────────────────
 🎭 STORYTELLING EMOCIONAL
+[USAR SI: formato_narrativo = 'STORYTELLING_EMOCIONAL'] → ACTIVAR SOLO ESTE FORMATO. IGNORAR LOS DEMÁS.
 Arquitectura: IN MEDIA RES (escena de conflicto real) → CONTEXTO MÍNIMO → DETONANTE EMOCIONAL → GIRO NARRATIVO → APRENDIZAJE ENCARNADO → CTA IDENTITARIO
 Gancho: Empieza en el momento de máximo dolor o decisión, no antes
 Emoción dominante: Empatía → Tensión → Identificación → Resolución
@@ -3063,6 +3065,7 @@ PROHIBIDO: "Les voy a contar una historia...", moraleja explícita al final, con
 
 ────────────────────────────────────────────────────────
 📢 ANUNCIO DIRECTO
+[USAR SI: formato_narrativo = 'ANUNCIO_DIRECTO'] → ACTIVAR SOLO ESTE FORMATO. IGNORAR LOS DEMÁS.
 Arquitectura: FILTRO DE AVATAR (1 frase que selecciona al comprador) → DOLOR AFILADO → SOLUCIÓN DIFERENCIADA → PRUEBA IMPLÍCITA → OFERTA CON URGENCIA → CTA ÚNICO
 Gancho: Identifica al avatar exacto en la primera frase. Sin generalidades.
 Emoción dominante: Reconocimiento → Urgencia → Deseo → Acción
@@ -3072,6 +3075,7 @@ PROHIBIDO: Hablar del producto antes de hablar del dolor, CTAs múltiples, prome
 
 ────────────────────────────────────────────────────────
 🎣 ANUNCIO INDIRECTO
+[USAR SI: formato_narrativo = 'ANUNCIO_INDIRECTO'] → ACTIVAR SOLO ESTE FORMATO. IGNORAR LOS DEMÁS.
 Arquitectura: CONTENIDO DE VALOR PURO → PROBLEMA IMPLÍCITO → CONEXIÓN ORGÁNICA CON SOLUCIÓN → CTA SUAVE DE BAJO UMBRAL
 Gancho: Valor inmediato sin pedir nada. El avatar no sabe que es un anuncio.
 Emoción dominante: Curiosidad → Aprendizaje → Confianza → Deseo natural
@@ -3081,6 +3085,7 @@ PROHIBIDO: Mencionar precios, urgencia artificial, revelar que es un anuncio dem
 
 ────────────────────────────────────────────────────────
 ⚡ OPINIÓN / POLARIZACIÓN
+[USAR SI: formato_narrativo = 'OPINION_POLARIZACION'] → ACTIVAR SOLO ESTE FORMATO. IGNORAR LOS DEMÁS.
 Arquitectura: DECLARACIÓN DIVISIVA INMEDIATA → ARGUMENTO IRREFUTABLE → ATAQUE AL ENEMIGO IMPLÍCITO → LLAMADA A LA TRIBU → CTA DE POSICIONAMIENTO
 Gancho: Afirmación que hace que la mitad quiera irse y la otra mitad quiera quedarse
 Emoción dominante: Shock → Indignación o Afinidad → Tribalismo → Identidad
@@ -3090,6 +3095,7 @@ PROHIBIDO: "Por un lado... pero por otro...", conclusiones tibias, equilibrio fa
 
 ────────────────────────────────────────────────────────
 📊 CASO DE ESTUDIO
+[USAR SI: formato_narrativo = 'CASO_ESTUDIO'] → ACTIVAR SOLO ESTE FORMATO. IGNORAR LOS DEMÁS.
 Arquitectura: RESULTADO ESPECÍFICO Y CONCRETO (sin contexto aún) → SITUACIÓN INICIAL (punto A real) → SISTEMA APLICADO → RESULTADO MEDIBLE → EXTRACCIÓN DEL PRINCIPIO REPLICABLE → CTA
 Gancho: El resultado primero. El proceso después.
 Emoción dominante: Curiosidad → Credibilidad → Esperanza → Deseo de replicar
@@ -3099,6 +3105,7 @@ PROHIBIDO: Inventar números, resultados vagos, caso sin punto A y B claros
 
 ────────────────────────────────────────────────────────
 🔧 TUTORIAL PASO A PASO
+[USAR SI: formato_narrativo = 'TUTORIAL_PASO_A_PASO'] → ACTIVAR SOLO ESTE FORMATO. IGNORAR LOS DEMÁS.
 Arquitectura: PROMESA DE RESULTADO ESPECÍFICO → CONTEXTO DEL PROBLEMA (por qué fallan los demás) → PASOS NUMERADOS CON MICRO-APLICACIÓN → ERROR COMÚN POR PASO → RESULTADO ACUMULADO → CTA
 Gancho: La promesa de resultado es tan específica que el avatar siente que fue escrita para él
 Emoción dominante: Esperanza → Comprensión → Capacitación → Urgencia de aplicar
@@ -3108,6 +3115,7 @@ PROHIBIDO: Pasos genéricos sin micro-aplicación, saltar el "por qué fallan lo
 
 ────────────────────────────────────────────────────────
 🎙️ PODCAST CORTO REFLEXIVO
+[USAR SI: formato_narrativo = 'PODCAST_REFLEXIVO'] → ACTIVAR SOLO ESTE FORMATO. IGNORAR LOS DEMÁS.
 Arquitectura: PREGUNTA O TENSIÓN QUE EL AVATAR TIENE EN LA CABEZA → EXPLORACIÓN HONESTA (sin respuesta fácil) → REENCUADRE INESPERADO → NUEVA PREGUNTA QUE AMPLÍA LA PERSPECTIVA → CIERRE ABIERTO QUE GENERA REFLEXIÓN
 Gancho: La pregunta que el avatar se hace pero nunca dice en voz alta
 Emoción dominante: Reconocimiento → Incomodidad honesta → Expansión mental → Resonancia
@@ -3117,6 +3125,7 @@ PROHIBIDO: Respuestas fáciles, tono de maestro, CTA de venta directa
 
 ────────────────────────────────────────────────────────
 🏛️ MASTERCLASS COMPRIMIDA
+[USAR SI: formato_narrativo = 'MASTERCLASS_COMPRIMIDA'] → ACTIVAR SOLO ESTE FORMATO. IGNORAR LOS DEMÁS.
 Arquitectura: PROMESA DE TRANSFORMACIÓN DE PERSPECTIVA → MAPA MENTAL DEL SISTEMA → CONCEPTO 1 CON EJEMPLO REAL → CONCEPTO 2 CON APLICACIÓN → CONCEPTO 3 CON RESULTADO → SÍNTESIS EN UNA FRASE MEMORABLE → CTA DE PROFUNDIZACIÓN
 Gancho: "Lo que vas a aprender en los próximos 60 segundos cambia cómo ves [X] para siempre"
 Emoción dominante: Ambición intelectual → Sorpresa por claridad → Poder → Deseo de más
@@ -3126,6 +3135,7 @@ PROHIBIDO: Contenido superficial, ausencia de sistema, falta de ejemplos reales
 
 ────────────────────────────────────────────────────────
 💥 FRAME DISRUPTIVO / SHOCK
+[USAR SI: formato_narrativo = 'FRAME_DISRUPTIVO'] → ACTIVAR SOLO ESTE FORMATO. IGNORAR LOS DEMÁS.
 Arquitectura: AFIRMACIÓN IMPOSIBLE O CONTRAINTUITIVA (sin suavizar) → EVIDENCIA QUE LA SOSTIENE → REENCUADRE TOTAL DE LA REALIDAD → NUEVA ACCIÓN QUE ANTES PARECÍA ILÓGICA → CTA DE RUPTURA
 Gancho: Una sola frase que hace al avatar dudar de todo lo que creía sobre el tema
 Emoción dominante: Shock → Desconcierto → Reconstrucción → Poder nuevo
@@ -3427,12 +3437,12 @@ Responde SOLO con este JSON válido. Sin markdown, sin texto extra, sin explicac
   },
   "hook": "El hook exacto del guion (primeros 3 segundos)",
   "estructura_desglosada": {
-    "bloque_1_hook": "Texto del Hook con su variante de ejecución elegida",
-    "bloque_2_desarrollo": "Texto del Desarrollo con su variante elegida",
-    "bloque_3_escalada": "Texto de la Escalada emocional",
-    "bloque_4_insight": "Texto del Insight o sistema único",
-    "bloque_5_resolucion": "Texto de la Resolución: antes → después",
-    "bloque_6_cierre": "Texto del Cierre con CTA estratégico"
+    "bloque_1_hook": "BLOQUE 1: Texto del gancho según la arquitectura del formato activo",
+    "bloque_2_desarrollo": "BLOQUE 2: Texto del segundo bloque según el formato activo",
+    "bloque_3_escalada": "BLOQUE 3: Texto del tercer bloque según el formato activo",
+    "bloque_4_insight": "BLOQUE 4: Texto del cuarto bloque según el formato activo",
+    "bloque_5_resolucion": "BLOQUE 5: Texto del quinto bloque según el formato activo",
+    "bloque_6_cierre": "BLOQUE 6: Texto del cierre con CTA — ${closingConfig.label}"
   },
   "ganchos_opcionales": [
     {
@@ -3483,9 +3493,19 @@ Responde SOLO con este JSON válido. Sin markdown, sin texto extra, sin explicac
   },
   "activadores_psicologicos": [
     {
-      "tipo": "frase_memorable | dato_contraintuitivo | reencuadre | marco_sistema",
-      "contenido": "La frase o dato exacto del guion",
-      "razon": "Por qué este activador genera guardado o compartido"
+      "tipo": "frase_memorable",
+      "contenido": "La frase más poderosa y recordable del guion — la que el avatar quiere guardar",
+      "razon": "Genera guardado porque condensa la transformación en una sola idea"
+    },
+    {
+      "tipo": "dato_contraintuitivo",
+      "contenido": "El dato o afirmación que contradice lo que el avatar creía — el giro cognitivo",
+      "razon": "Genera compartido porque el avatar quiere mostrar que sabe algo que otros no"
+    },
+    {
+      "tipo": "reencuadre",
+      "contenido": "La nueva forma de ver el problema — el frame alternativo que propone el guion",
+      "razon": "Genera guardado porque redefine cómo el avatar piensa sobre el tema para siempre"
     }
   ],
   "plan_visual": [
@@ -7458,8 +7478,11 @@ function validarOutputGenerador(output: any, preAnalisis?: any): ResultadoValida
   // ── 6. IDENTIDAD VERBAL ──
   const identidadVerbal = output.identidad_verbal || {};
   const tieneIdentidad = (
+    identidadVerbal.agresividad !== undefined ||
+    identidadVerbal.polarizacion !== undefined ||
+    identidadVerbal.sofisticacion !== undefined ||
+    identidadVerbal.nivel_intensidad !== undefined ||
     identidadVerbal.nivel_agresividad !== undefined ||
-    identidadVerbal.nivel_polarizacion !== undefined ||
     identidadVerbal.sofisticacion_lexica !== undefined
   );
   if (!tieneIdentidad) {
@@ -9431,21 +9454,110 @@ async function getVideoContent(
 
 async function analizarImagenEstrategica(
   imageBase64: string,
-  openai: any
+  openai: any,
+  contextoUsuario?: {
+    nicho?: string;
+    avatar_ideal?: string;
+    dolor_principal?: string;
+    deseo_principal?: string;
+    plataforma?: string;
+    formato_narrativo?: string;
+    expertProfile?: any;
+  }
 ): Promise<string> {
-  console.log('[VISION] 👁️ Analizando imagen para extracción de concepto...');
+  console.log('[VISION V700] 👁️ Analizando imagen con contexto completo del usuario...');
+
+  const nicho          = contextoUsuario?.nicho             || 'General';
+  const avatar         = contextoUsuario?.avatar_ideal       || 'Audiencia objetivo del creador';
+  const dolor          = contextoUsuario?.dolor_principal    || 'No especificado';
+  const deseo          = contextoUsuario?.deseo_principal    || 'No especificado';
+  const plataforma     = contextoUsuario?.plataforma         || 'TikTok';
+  const formato        = contextoUsuario?.formato_narrativo  || 'EDUCATIVO_AUTORIDAD';
+  const mecanismo      = contextoUsuario?.expertProfile?.mechanism_name           || null;
+  const transformacion = contextoUsuario?.expertProfile?.transformation_promise   || null;
+  const enemigo        = contextoUsuario?.expertProfile?.enemy                    || null;
+
+  const formatoADN: Record<string, string> = {
+    EDUCATIVO_AUTORIDAD:    'Tesis provocadora → Evidencia contraintuitiva → Sistema nombrado → Aplicación inmediata. Busca el CONCEPTO que puede nombrarse y replicarse.',
+    STORYTELLING_EMOCIONAL: 'In media res → Conflicto real → Giro narrativo. Busca el DOLOR HUMANO o la situación de vida que cuenta la imagen.',
+    ANUNCIO_DIRECTO:        'Filtro de avatar → Dolor afilado → Solución diferenciada. Busca el PROBLEMA URGENTE que resuelve la imagen.',
+    ANUNCIO_INDIRECTO:      'Valor puro → Problema implícito → Solución orgánica. Busca el INSIGHT DE VALOR que puede entregarse sin vender.',
+    OPINION_POLARIZACION:   'Declaración divisiva → Argumento irrefutable → Llamada a la tribu. Busca el ÁNGULO CONFRONTATIVO que despierta el debate.',
+    CASO_ESTUDIO:           'Resultado concreto → Punto A → Sistema → Resultado medible. Busca el LOGRO O TRANSFORMACIÓN específica que puede documentarse.',
+    TUTORIAL_PASO_A_PASO:   'Promesa específica → Por qué fallan → Pasos con micro-aplicación. Busca el PROCESO ACCIONABLE que enseña la imagen.',
+    PODCAST_REFLEXIVO:      'Pregunta que el avatar tiene en la cabeza → Exploración honesta → Reencuadre. Busca la TENSIÓN FILOSÓFICA o dilema que abre reflexión.',
+    MASTERCLASS_COMPRIMIDA: 'Promesa de perspectiva → Mapa mental → Conceptos con ejemplos reales. Busca el SISTEMA COMPLETO que puede comprimirse.',
+    FRAME_DISRUPTIVO:       'Afirmación imposible → Evidencia que la sostiene → Reencuadre total. Busca la VERDAD CONTRAINTUITIVA que destroza una creencia.',
+  };
+
+  const adnFormato = formatoADN[formato] || formatoADN['EDUCATIVO_AUTORIDAD'];
+
+  const plataformaContext: Record<string, string> = {
+    'TikTok':         'El concepto debe funcionar en 30-60s. Gancho en los primeros 2 segundos. Ritmo staccato. Sin introducción.',
+    'Reels':          'El concepto debe funcionar en 30-60s con estética aspiracional. Música emotiva. Identidad tribal.',
+    'YouTube':        'El concepto puede expandirse a 8-15 min. Gap informativo profundo. Estructura en capítulos.',
+    'LinkedIn':       'El concepto debe resonar con profesionales. Reflexión experiencial. Primera persona. Tono sobrio.',
+    'Facebook':       'El concepto debe generar debate comunitario. Subtítulos completos. Audiencia amplia y emocional.',
+    'YouTube Shorts': 'Concepto en 60s máximo. Gancho instantáneo. Valor comprimido. Alto scroll-stopping.',
+  };
+
+  const plataformaGuia = plataformaContext[plataforma] || plataformaContext['TikTok'];
+
+  const systemPrompt = `Eres el Extractor de ADN Viral más preciso del mundo.
+Tu trabajo NO es describir imágenes. Es convertirlas en ARMAS NARRATIVAS personalizadas.
+
+CONTEXTO DEL CREADOR (usa esto para personalizar cada parte del análisis):
+- Nicho: ${nicho}
+- Avatar objetivo: ${avatar}
+- Dolor principal del avatar: ${dolor}
+- Deseo principal del avatar: ${deseo}
+- Plataforma destino: ${plataforma}
+- Formato narrativo activo: ${formato}
+${mecanismo      ? `- Mecanismo propietario del experto: "${mecanismo}" → intégralo si encaja` : ''}
+${transformacion ? `- Promesa de transformación: "${transformacion}" → conéctala con la imagen`  : ''}
+${enemigo        ? `- Enemigo común del experto: "${enemigo}" → úsalo si potencia la tensión`    : ''}
+
+ADN DEL FORMATO ACTIVO (${formato}):
+${adnFormato}
+
+GUÍA DE PLATAFORMA (${plataforma}):
+${plataformaGuia}
+
+EJECUTA ESTOS 4 DETECTORES EN ORDEN:
+
+DETECTOR 1 — TENSIÓN EXPLOTABLE:
+¿Qué conflicto, dolor o deseo del avatar de ${nicho} activa esta imagen?
+NO la descripción visual. SÍ la tensión narrativa específica para ${avatar}.
+
+DETECTOR 2 — ÁNGULO VIRAL PARA ${formato}:
+¿Cómo se convierte esta imagen en el gancho perfecto para el formato ${formato}?
+Usa el ADN del formato. Sé específico al nicho ${nicho}.
+
+DETECTOR 3 — INSIGHT CONTRAINTUITIVO:
+¿Qué verdad no obvia o reencuadre mental puede extraerse para ${plataforma}?
+Debe ser sorprendente. Que el avatar diga "nunca lo había visto así".
+
+DETECTOR 4 — SEMILLA FINAL:
+Escribe UN párrafo potente (80-120 palabras) que sirva como semilla exacta para el generador.
+Debe contener: la tensión, el ángulo para ${formato}, el dolor de ${avatar}, y el insight.
+Este párrafo es el input que usará el Motor V700 para generar el guion completo.
+
+RESPONDE SOLO con el párrafo del DETECTOR 4. Sin títulos, sin explicaciones adicionales.`;
 
   const response = await openai.chat.completions.create({
     model: "gpt-4o",
     messages: [
       {
         role: "system",
-        content: "Eres un Director Creativo Visionario. Tu trabajo es mirar una imagen y extraer su ÁNGULO VIRAL. No describas la imagen simplemente. Dime: ¿Qué historia de dolor, deseo o curiosidad cuenta esta imagen? ¿Qué concepto abstracto representa? Dame un párrafo potente que sirva como semilla para un guion viral."
+        content: systemPrompt
       },
       {
         role: "user",
         content: [
-          { type: "text", text: "Analiza esta imagen y extrae el concepto central para un video viral." },
+          {
+            type: "text",
+            text: `Analiza esta imagen para un creador de contenido de ${nicho} en ${plataforma}. Su avatar es "${avatar}" con dolor "${dolor}". Formato activo: ${formato}. Extrae el concepto viral personalizado.`
+          },
           {
             type: "image_url",
             image_url: {
@@ -9456,12 +9568,12 @@ async function analizarImagenEstrategica(
         ]
       }
     ],
-    max_tokens: 300
+    max_tokens: 600
   });
 
   const analisis = response.choices[0].message.content;
-  console.log('[VISION] ✅ Concepto extraído:', analisis);
-  return analisis;
+  console.log(`[VISION V700] ✅ Concepto extraído para ${nicho} | ${plataforma} | ${formato}:`, analisis?.substring(0, 100) + '...');
+  return analisis || '';
 }
 
 // ==================================================================================
@@ -10089,7 +10201,7 @@ if (body.closing_objective) settings.closing_objective = body.closing_objective;
 
       case 'generar_guion':
 case 'generador_guiones': {
-  console.log('[MODE] ✨ Generar Guion con Motor V600 (Texto + Visión + Pre-Análisis)');
+  console.log('[MODE] ✨ Generar Guion con Motor V700 (Texto + Visión + Pre-Análisis)');
 
   let temaUsuario = "";
   let modoGeneracion: 'idea' | 'texto' | 'imagen' = 'idea';
@@ -10101,13 +10213,21 @@ case 'generador_guiones': {
     modoGeneracion = 'imagen';
     
     try {
-      const conceptoVisual = await analizarImagenEstrategica(body.image, openai);
+      const conceptoVisual = await analizarImagenEstrategica(body.image, openai, {
+        nicho:             (userContext as any).nicho           || settings.nicho     || 'General',
+        avatar_ideal:      (userContext as any).avatar_ideal    || 'Audiencia objetivo',
+        dolor_principal:   (userContext as any).dolor_principal || 'No especificado',
+        deseo_principal:   (userContext as any).deseo_principal || 'No especificado',
+        plataforma:        settings.platform                    || 'TikTok',
+        formato_narrativo: settings.formato_narrativo           || 'EDUCATIVO_AUTORIDAD',
+        expertProfile:     (userContext as any).expertProfile   || null,
+      });
       const contextoAdicional = body.text || body.userInput || processedContext || "";
-      temaUsuario = `[ANÁLISIS DE IMAGEN]: ${conceptoVisual}\n\n[INSTRUCCIÓN ADICIONAL USUARIO]: ${contextoAdicional}`;
+      temaUsuario = `[ANÁLISIS DE IMAGEN V700]: ${conceptoVisual}\n\n[INSTRUCCIÓN ADICIONAL USUARIO]: ${contextoAdicional}`;
       
-      // Pre-análisis del concepto visual extraído
+      // Pre-análisis del concepto visual extraído (ya viene personalizado)
       preAnalisis = await preAnalizarInput(conceptoVisual, 'imagen', openai);
-      console.log('[MOTOR V600] 🧬 Fusión Visual + Pre-análisis completados.');
+      console.log('[MOTOR V700] 🧬 Fusión Visual Contextualizada + Pre-análisis completados.');
     } catch (imgError: any) {
       console.error('[ERROR VISION]', imgError);
       throw new Error("Error analizando la imagen. Asegúrate de que sea JPG/PNG válido.");
