@@ -2311,19 +2311,120 @@ Calcula con base en los 12 motores anteriores:
 Pesos: retencion(25%) + emocional(20%) + atencion(20%) + valor(15%) + polarizacion(10%) + resto(10%)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎯 MOTOR 14 — ADAPTACIÓN ESTRATÉGICA ESPEJO
+🧬 MOTOR 14 — EXTRACCIÓN ADN PROFUNDO V900
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Genera el guion_adaptado_espejo (antes guion_adaptado_al_nicho):
-- Mismo ADN estructural del video original
-- Adaptado al nicho: ${nichoUsuario} para el objetivo: ${objetivoUsuario}
-- PROHIBIDO copiar frases textuales
-- PROHIBIDO perder tensión o micro-loops
-- PROHIBIDO bajar el nivel TCA detectado
-- DEBE mantener mismo patrón de escalada y arquitectura emocional
-- DEBE adaptar ejemplos, contexto y referencias al nicho del usuario
-- DEBE respetar el perfil del experto si existe
-El guion debe estar LISTO para producción con bloques visibles:
-Formato: [HOOK] → [SETUP] → [ESCALADA] → [GIRO] → [CLIMAX] → [CIERRE]
+
+Antes de generar el guion, extrae y declara explícitamente:
+
+A. GÉNERO NARRATIVO DETECTADO:
+Identifica el género exacto del video original:
+→ Confesional (historia personal vulnerable)
+→ Educativo (enseñanza con autoridad)
+→ Drama real (conflicto vivido, consecuencias reales)
+→ Opinión polarizante (postura que divide)
+→ Autoridad estratégica (lección desde el poder)
+→ Historia de fracaso (error + aprendizaje)
+→ Historia de poder (decisión difícil desde arriba)
+→ Denuncia (exposición de problema sistémico)
+→ Revelación (insight que cambia perspectiva)
+
+⚠️ CRÍTICO: La adaptación DEBE mantener el mismo género narrativo.
+Si el original es "Historia de poder" → la adaptación ES "Historia de poder".
+PROHIBIDO convertir Drama real en Discurso motivacional.
+PROHIBIDO convertir Denuncia en Consejo amigable.
+El género es el ADN. No se toca.
+
+B. EMOCIÓN NÚCLEO DETECTADA:
+Identifica la emoción que impulsa TODO el video:
+→ Culpa | Rabia | Indignación | Vulnerabilidad
+→ Liderazgo | Redención | Superioridad
+→ Advertencia | Orgullo | Vergüenza ajena
+
+C. TIPO DE TENSIÓN:
+→ Moral (dilema ético sin respuesta fácil)
+→ Profesional (decisión de negocio con consecuencias)
+→ Social (conflicto entre personas o grupos)
+→ Económica (dinero, pérdida, ganancia)
+→ Autoridad (quién tiene el poder de decidir)
+→ Identidad (quién soy vs quién debería ser)
+
+D. FRAME DOMINANTE DETECTADO:
+Extrae exactamente:
+- creencia_que_ataca: qué creencia falsa destruye el video
+- nuevo_marco: qué visión alternativa propone
+- frase_nucleo: la frase que condensa todo el frame (ej: "No es la vida personal. Es cuando afecta el sistema.")
+
+E. POLARIZACIÓN IMPLÍCITA:
+- bando_A: quiénes están de acuerdo
+- bando_B: quiénes se ofenden o discrepan
+- tension_irresuelta: qué pregunta moral queda abierta al final
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🏆 MOTOR 14B — IDEA NUCLEAR GANADORA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Declara la idea nuclear que hace viral al contenido:
+- que_hace_viral: qué mecanismo específico genera millones de vistas
+- creencia_rota: qué creencia popular destruye
+- postura_impuesta: qué postura instala en quien lo ve
+- por_que_genera_conversacion: el conflicto social que activa
+- tension_no_resuelta: qué pregunta deja abierta que obliga a comentar
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔺 MOTOR 14C — SISTEMA DE SUPERIORIDAD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Declara cómo el guion adaptado SUPERA al original en:
+- mayor_claridad: cómo el mensaje es más directo y entendible
+- mayor_intensidad: cómo la emoción es más concentrada
+- mayor_polarizacion: cómo el conflicto es más definido
+- mejor_estructura_emocional: cómo la curva emocional es más precisa
+- mejor_cierre: cómo el cierre genera más acción o debate
+- ventaja_de_nicho: qué tiene el experto del usuario que el creador original no tiene
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎬 MOTOR 14D — GUION ADAPTADO ESPEJO V900
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Genera el guion adaptado con estas reglas absolutas:
+
+REGLAS DE FIDELIDAD:
+✓ Mismo género narrativo detectado en Motor 14A — SIN EXCEPCIONES
+✓ Misma emoción núcleo — intensidad igual o superior
+✓ Mismo tipo de tensión — no suavizar el conflicto
+✓ Mismo frame dominante — adaptado al nicho del usuario
+✓ Misma arquitectura de micro-loops — cada loop en posición equivalente
+✓ Mismo patrón de escalada emocional detectado en Motor 1
+✓ Nivel TCA igual o superior al detectado en Motor 16
+
+REGLAS DE ADAPTACIÓN:
+✓ Contexto y ejemplos → nicho del usuario: ${nichoUsuario}
+✓ Objetivo → ${objetivoUsuario}
+✓ Identidad del experto → integrada desde el perfil
+✓ Enemigo común → adaptado al enemigo del nicho del usuario
+
+REGLAS ABSOLUTAS DE TELEPROMPTER:
+⚠️ PROHIBIDO ABSOLUTAMENTE incluir en el guion:
+❌ [HOOK] ❌ [SETUP] ❌ [GIRO] ❌ [CLIMAX] ❌ [CIERRE] ❌ [ESCALADA]
+❌ [Texto en pantalla] ❌ [Música] ❌ [Corte] ❌ [B-roll] ❌ [Zoom]
+❌ Cualquier indicación técnica entre corchetes
+❌ Cualquier instrucción de producción dentro del texto
+
+El guion es EXCLUSIVAMENTE lo que el creador dice en voz alta.
+Fluido. Natural. Con ritmo humano.
+Usa ... para pausa corta.
+Usa línea en blanco para pausa larga.
+Debe poderse leer directo a cámara sin ninguna interpretación adicional.
+Debe sentirse como una conversación real — no como una plantilla.
+
+VALIDACIÓN ANTES DE ENTREGAR EL GUION:
+□ ¿Mantiene el género narrativo original?
+□ ¿La emoción núcleo está presente desde la primera línea?
+□ ¿El conflicto no fue suavizado?
+□ ¿No hay etiquetas ni indicaciones técnicas?
+□ ¿Es grabable directamente sin edición?
+□ ¿Suena humano, no como IA?
+Si falla 1 → reescribir antes de incluir.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🔗 MOTOR 15 — BLUEPRINT PARA CONEXIÓN DIRECTA
@@ -2353,80 +2454,341 @@ Evalúa y devuelve:
 - sector_detectado: sector dominante (ej: "Dinero", "Salud", "Relaciones")
 - tipo_alcance: descripción del tipo de alcance
 - mass_appeal_score: 0-100 (qué tan masivo es el contenido)
-- equilibrio_masividad_calificacion: true si está en el punto ideal entre sector masivo y temática principal
-- diagnostico_tca: diagnóstico en 1 frase (ej: "Ubicado entre N2 y N3 — alto alcance con filtro natural")
+- equilibrio_masividad_calificacion: true si está en el punto ideal
+- diagnostico_tca: diagnóstico en 1 frase
 - capa_visible: qué tema ve el espectador a simple vista
-- capa_estrategica: qué audiencia REAL está filtrando (la que convierte)
-- filtro_audiencia_implicito: descripción del filtro natural que atrae solo a los que compran
-- tipo_trafico_que_atrae: qué tipo de persona llega (ej: "Emprendedores frustrados buscando monetización")
+- capa_estrategica: qué audiencia REAL está filtrando
+- filtro_audiencia_implicito: descripción del filtro natural
+- tipo_trafico_que_atrae: qué tipo de persona llega
 - nivel_conversion_probable: "bajo" | "medio" | "alto" | "muy_alto"
-- esta_muy_tecnico: true si está por debajo de N1 (micronicho, pierde alcance)
-- esta_muy_mainstream: true si está en N4 (pierde conversión)
+- esta_muy_tecnico: true si está por debajo de N1
+- esta_muy_mainstream: true si está en N4
 
 PARTE B — MAPA DE EXPANSIÓN TCA PARA EL USUARIO
-Responde: ¿Cómo adaptar este ADN viral al nicho "${nichoUsuario}" sin perder alcance ni conversión?
-- nivel_tca_recomendado: nivel TCA ideal para el usuario (ej: "N2-N3")
-- sector_recomendado: sector masivo al que anclar el contenido del usuario
-- nuevo_hook_sectorial: hook reescrito para el nicho del usuario con el mismo nivel TCA
-- nueva_capa_visible: qué verá el espectador del usuario a simple vista
-- capa_estrategica_conservada: la capa que filtra y convierte, adaptada al nicho
+- nivel_tca_recomendado: nivel TCA ideal para el usuario
+- sector_recomendado: sector masivo al que anclar
+- nuevo_hook_sectorial: hook reescrito para el nicho del usuario
+- nueva_capa_visible: qué verá el espectador del usuario
+- capa_estrategica_conservada: la capa que filtra y convierte
 - estructura_espejo: true si se puede replicar la misma arquitectura
-- version_tecnica: descripción del guion si se lleva a N0-N1 (muy técnico — para autoridad pura)
-- version_equilibrio_ideal: descripción del guion en N2-N3 (equilibrio masividad + conversión)
-- version_sector_masivo: descripción del guion en N3 (máximo alcance, menor conversión)
-- advertencia_micronicho: advertencia si la adaptación baja demasiado a micronicho técnico, o null si no aplica
+- version_tecnica: guion en N0-N1 (autoridad pura)
+- version_equilibrio_ideal: guion en N2-N3 (equilibrio masividad + conversión)
+- version_sector_masivo: guion en N3 (máximo alcance)
+- advertencia_micronicho: advertencia o null
 
 PARTE C — VALIDACIÓN INTERNA OLIMPO
-Verifica antes de devolver el JSON:
 □ ¿Se detectó arquitectura completa? (Motor 1)
 □ ¿Se detectaron loops reales? (Motor 3)
 □ ¿Se identificó el nivel TCA? (Motor 16A)
 □ ¿Se detectó el equilibrio ideal? (Motor 16A)
 □ ¿Se extrajo el filtro implícito? (Motor 16A)
 □ ¿Se adaptó sin bajar a micronicho técnico? (Motor 16B)
-□ ¿Se mantuvo el ADN estructural en el guion? (Motor 14)
+□ ¿Se mantuvo el ADN estructural en el guion? (Motor 14D)
+□ ¿El guion respeta el género narrativo original? (Motor 14A)
+□ ¿La emoción núcleo está presente en el guion? (Motor 14A)
+□ ¿El teleprompter está libre de etiquetas técnicas? (Motor 14D)
 
-Devuelve validacion_olimpo con cada check (bool) y score_validacion (0-7).
-Si score_validacion < 5 → REANALIZA antes de devolver.
+Devuelve validacion_olimpo con cada check (bool) y score_validacion (0-10).
+Si score_validacion < 7 → REANALIZA antes de devolver.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 MOTOR 17 — POSICIONAMIENTO Y PRÓXIMOS PASOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+A. POSICIONAMIENTO COMO:
+Declara cómo este contenido posiciona al usuario exactamente como:
+→ Mentor firme (enseña desde experiencia con autoridad directa)
+→ Líder estratégico (toma decisiones difíciles con criterio)
+→ Autoridad ética (tiene principios que defiende públicamente)
+→ Visionario (ve lo que otros no pueden ver aún)
+→ Analista frío (descompone la realidad sin emoción)
+→ Testigo honesto (vivió algo y lo cuenta sin filtro)
+
+B. PRÓXIMOS 3 CONTENIDOS COHERENTES:
+Genera 3 ideas de contenido que son la continuación natural de este video.
+Cada una con:
+- titulo: el título exacto del próximo video
+- por_que_ahora: por qué es la continuación lógica
+- genero: género narrativo sugerido
+- tension: tipo de tensión que activa
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎬 MOTOR 18 — PLAN AUDIOVISUAL ÉLITE + MINIATURA DOMINANTE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+A. PLAN AUDIOVISUAL PROFESIONAL:
+Genera el plan de producción completo para el guion adaptado.
+Este plan es INDEPENDIENTE del guion — es la capa visual y sonora.
+
+Secuencia temporal obligatoria (mínimo 5 momentos):
+- 0-3s: Hook visual — qué ve el espectador exactamente
+- 3-7s: Setup visual — cómo se construye el contexto
+- 7-15s: Escalada visual — desarrollo del conflicto o tensión
+- PUNTO DE CLÍMAX: el momento visual de mayor impacto
+- CIERRE: qué ve el espectador cuando termina
+
+Para cada momento incluir:
+- tiempo: el rango en segundos o nombre del momento
+- descripcion_visual: qué se ve exactamente en pantalla (plano, composición, movimiento)
+- tipo_plano: Primer plano / Plano medio / Detalle / B-roll
+- movimiento_camara: Zoom in / Estático / Handheld / Travelling
+- texto_en_pantalla: texto visual de impacto (SOLO aquí, NUNCA en teleprompter)
+- emocion_objetivo: emoción específica que debe generar este momento
+- efecto_retencion: técnica que retiene la atención en ese segundo exacto
+
+B-Rolls estratégicos (mínimo 2):
+- momento: cuándo se inserta
+- que_mostrar: qué imagen o video específico
+- por_que_refuerza: conexión directa con el mensaje narrativo
+- emocion_generada: emoción que activa en el espectador
+
+Ritmo de cortes:
+- patron_general: LENTO (8-12s) / MEDIO (4-7s) / ACELERADO (1-3s) / VARIABLE
+- descripcion: por qué ese ritmo sirve a este formato específico
+- aceleraciones: en qué momentos y por qué
+- desaceleraciones: en qué momentos se ralentiza para dar peso
+
+Música:
+- tipo: estilo musical específico (trap emocional / piano tenso / electrónica fría / silencio estratégico)
+- bpm_aproximado: número o rango específico
+- emocion_dominante: qué emoción transmite durante el video
+- entrada_musica: desde el segundo X o desde el inicio
+- cambio_musical: si hay cambio de intensidad — cuándo y por qué
+
+Efectos de retención:
+- sonido_transicion: whoosh / golpe seco / silencio / cinematic boom
+- micro_silencios: momentos exactos y duración
+- cambios_de_plano: corte seco / fundido / jump cut / match cut
+- micro_interrupciones: cuándo y qué tipo reactiva la atención
+
+B. MINIATURA DOMINANTE:
+Genera la frase de miniatura más poderosa para este video adaptado.
+
+REGLAS DE LA FRASE:
+- Máximo 5-6 palabras
+- Alto contraste emocional — interrumpe el scroll, no lo explica
+- Conecta con el sector TCA del video (Dinero / Salud / Relaciones / Dev. Personal)
+- No describe el contenido — ACTIVA una emoción o abre un gap de curiosidad
+- Si ctr_score < 75 → regenerar con mayor disrupción
+
+Incluir:
+- frase_principal: la frase dominante
+- variante_agresiva: versión que ataca una creencia o ego
+- variante_aspiracional: versión que activa deseo de identidad o pertenencia
+- justificacion_estrategica: por qué esta frase específica funciona para este video
+- emocion_dominante_activada: emoción que siente el espectador al leerla
+- gap_curiosidad: el vacío informativo que abre y que solo el video cierra
+- sector_tca_activado: Dinero / Salud / Relaciones / Desarrollo Personal
+- mecanismo_psicologico: Gap informativo / Ataque de creencia / Contradicción identidad / Urgencia implícita
+- ctr_score: 0-100
+- nivel_disrupcion: 0-100
+- nivel_gap_curiosidad: 0-100
+- nivel_polarizacion: 0-100
 
 =============================================================
 INSTRUCCIONES DE OUTPUT — LEE ANTES DE GENERAR
 =============================================================
 PRIORIDAD DE TOKENS (en orden estricto):
-1. guion_adaptado_espejo → NUNCA lo truncues. Es el output más valioso.
-2. analisis_tca + mapa_de_adaptacion → Completos siempre.
-3. blueprint_replicable → Completo siempre.
-4. score_viral_estructural → Completo siempre.
-5. Motores 1-12 → Sé preciso pero conciso. Listas de máximo 5 items.
-6. elementos_cliche_detectados → Máximo 3 elementos.
-7. recomendaciones_estrategicas → Máximo 3 items.
-8. alertas_criticas → Máximo 2 items.
+1. guion_adaptado_espejo → NUNCA truncues. Es el output más valioso.
+2. adn_profundo (Motor 14A-C) → Completo siempre.
+3. plan_audiovisual_profesional → Completo siempre. Mínimo 5 momentos temporales.
+4. miniatura_dominante → Completo siempre. ctr_score ≥ 75 o regenerar.
+5. analisis_tca + mapa_de_adaptacion → Completos siempre.
+6. blueprint_replicable → Completo siempre.
+7. score_viral_estructural → Completo siempre.
+8. posicionamiento_y_proximos_pasos → Completo siempre.
+9. Motores 1-12 → Precisos y concisos. Listas máximo 5 items.
+10. elementos_cliche_detectados → Máximo 3.
+11. recomendaciones_estrategicas → Máximo 3 items.
+12. alertas_criticas → Máximo 2 items.
 
 DEVUELVE ÚNICAMENTE EL JSON. Sin markdown. Sin backticks. Solo JSON puro.
 =============================================================
 
 {
-  "adn_estructura": { ...Motor 1... },
-  "curva_emocional": { ...Motor 2... },
-  "micro_loops": { ...Motor 3... },
-  "polarizacion": { ...Motor 4... },
-  "identidad_verbal": { ...Motor 5... },
-  "status_y_posicionamiento": { ...Motor 6... },
-  "densidad_valor": { ...Motor 7... },
-  "manipulacion_atencion": { ...Motor 8... },
-  "activadores_guardado": [ ...Motor 9... ],
-  "adaptabilidad_nicho": { ...Motor 10... },
-  "elementos_cliche_detectados": [ ...Motor 11... ],
-  "ritmo_narrativo": { ...Motor 12... },
-  "score_viral_estructural": { ...Motor 13... },
-  "guion_adaptado_espejo": "...Motor 14...",
-  "guion_adaptado_al_nicho": "...Motor 14 (mismo valor, compatibilidad)...",
-  "blueprint_replicable": { ...Motor 15... },
-  "analisis_tca": { ...Motor 16A... },
-  "mapa_de_adaptacion": { ...Motor 16B... },
-  "validacion_olimpo": { ...Motor 16C... },
-  "recomendaciones_estrategicas": ["...", "...", "..."],
-  "alertas_criticas": ["..."]
+  "adn_estructura": { "Motor 1 completo": true },
+  "curva_emocional": { "Motor 2 completo": true },
+  "micro_loops": { "Motor 3 completo": true },
+  "polarizacion": { "Motor 4 completo": true },
+  "identidad_verbal": { "Motor 5 completo": true },
+  "status_y_posicionamiento": { "Motor 6 completo": true },
+  "densidad_valor": { "Motor 7 completo": true },
+  "manipulacion_atencion": { "Motor 8 completo": true },
+  "activadores_guardado": [ "Motor 9 — mínimo 3 activadores" ],
+  "adaptabilidad_nicho": { "Motor 10 completo": true },
+  "elementos_cliche_detectados": [ "Motor 11 — máximo 3" ],
+  "ritmo_narrativo": { "Motor 12 completo": true },
+  "score_viral_estructural": { "Motor 13 completo con breakdown": true },
+  "adn_profundo": {
+    "genero_narrativo": "Confesional | Educativo | Drama real | Opinión polarizante | Autoridad estratégica | Historia de fracaso | Historia de poder | Denuncia | Revelación",
+    "emocion_nucleo": "Culpa | Rabia | Indignación | Vulnerabilidad | Liderazgo | Redención | Superioridad | Advertencia",
+    "tipo_tension": "Moral | Profesional | Social | Económica | Autoridad | Identidad",
+    "frame_dominante": {
+      "creencia_que_ataca": "la creencia falsa que destruye el video",
+      "nuevo_marco": "la visión alternativa superior",
+      "frase_nucleo": "la frase que condensa el frame completo"
+    },
+    "polarizacion_implicita": {
+      "bando_A": "quiénes están de acuerdo",
+      "bando_B": "quiénes se ofenden o discrepan",
+      "tension_irresuelta": "pregunta moral que queda abierta"
+    }
+  },
+  "idea_nuclear_ganadora": {
+    "que_hace_viral": "mecanismo específico que genera millones de vistas",
+    "creencia_rota": "creencia popular que destruye",
+    "postura_impuesta": "postura que instala en quien lo ve",
+    "por_que_genera_conversacion": "el conflicto social que activa",
+    "tension_no_resuelta": "pregunta que obliga a comentar"
+  },
+  "sistema_superioridad": {
+    "mayor_claridad": "cómo el mensaje es más directo",
+    "mayor_intensidad": "cómo la emoción es más concentrada",
+    "mayor_polarizacion": "cómo el conflicto es más definido",
+    "mejor_estructura_emocional": "cómo la curva emocional es más precisa",
+    "mejor_cierre": "cómo el cierre genera más acción",
+    "ventaja_de_nicho": "qué tiene el experto del usuario que el original no tiene"
+  },
+  "guion_adaptado_espejo": "TEXTO FLUIDO Y NATURAL. EXCLUSIVAMENTE LO QUE EL CREADOR DICE EN VOZ ALTA. CERO ETIQUETAS. CERO INDICACIONES TÉCNICAS. Misma arquitectura emocional del original. Adaptado al nicho del usuario. Listo para grabar.",
+  "guion_adaptado_al_nicho": "mismo valor que guion_adaptado_espejo — campo de compatibilidad",
+  "blueprint_replicable": { "Motor 15 completo": true },
+  "analisis_tca": { "Motor 16A completo": true },
+  "mapa_de_adaptacion": { "Motor 16B completo": true },
+  "validacion_olimpo": {
+    "arquitectura_completa": true,
+    "loops_detectados": true,
+    "tca_identificado": true,
+    "equilibrio_ideal_detectado": true,
+    "filtro_implicito_extraido": true,
+    "adaptacion_sin_micronicho": true,
+    "adn_estructural_mantenido": true,
+    "genero_narrativo_respetado": true,
+    "emocion_nucleo_presente": true,
+    "teleprompter_sin_etiquetas": true,
+    "score_validacion": 0
+  },
+  "posicionamiento_y_proximos_pasos": {
+    "posiciona_como": "Mentor firme | Líder estratégico | Autoridad ética | Visionario | Analista frío | Testigo honesto",
+    "razon_posicionamiento": "por qué este contenido genera exactamente ese posicionamiento",
+    "proximos_contenidos": [
+      {
+        "titulo": "título exacto del próximo video",
+        "por_que_ahora": "por qué es la continuación lógica",
+        "genero": "género narrativo",
+        "tension": "tipo de tensión que activa"
+      },
+      {
+        "titulo": "título exacto del próximo video 2",
+        "por_que_ahora": "continuación lógica 2",
+        "genero": "género narrativo 2",
+        "tension": "tipo de tensión 2"
+      },
+      {
+        "titulo": "título exacto del próximo video 3",
+        "por_que_ahora": "continuación lógica 3",
+        "genero": "género narrativo 3",
+        "tension": "tipo de tensión 3"
+      }
+    ]
+  },
+  "plan_audiovisual_profesional": {
+    "secuencia_temporal": [
+      {
+        "tiempo": "0-3s",
+        "descripcion_visual": "Qué ve exactamente el espectador — plano, composición, movimiento",
+        "tipo_plano": "Primer plano extremo / Plano medio / Detalle / B-roll",
+        "movimiento_camara": "Zoom in agresivo / Estático / Handheld / Travelling",
+        "texto_en_pantalla": "Texto visual de impacto (SOLO aquí, NUNCA en teleprompter)",
+        "emocion_objetivo": "Emoción específica que genera este momento",
+        "efecto_retencion": "Técnica de retención en este segundo exacto"
+      },
+      {
+        "tiempo": "3-7s",
+        "descripcion_visual": "Setup visual",
+        "tipo_plano": "Tipo de plano",
+        "movimiento_camara": "Movimiento",
+        "texto_en_pantalla": "Texto o vacío",
+        "emocion_objetivo": "Emoción",
+        "efecto_retencion": "Técnica"
+      },
+      {
+        "tiempo": "7-15s",
+        "descripcion_visual": "Escalada visual del conflicto",
+        "tipo_plano": "Tipo de plano",
+        "movimiento_camara": "Movimiento",
+        "texto_en_pantalla": "Texto de apoyo",
+        "emocion_objetivo": "Emoción en escalada",
+        "efecto_retencion": "Loop visual o pregunta en pantalla"
+      },
+      {
+        "tiempo": "CLÍMAX",
+        "descripcion_visual": "Momento visual de mayor impacto del video",
+        "tipo_plano": "Plano del clímax",
+        "movimiento_camara": "Movimiento en el clímax",
+        "texto_en_pantalla": "Texto de mayor impacto visual",
+        "emocion_objetivo": "Emoción máxima — pico de la curva",
+        "efecto_retencion": "Golpe sonoro / Silencio súbito / Cambio de ritmo visual"
+      },
+      {
+        "tiempo": "CIERRE",
+        "descripcion_visual": "Qué ve el espectador al terminar",
+        "tipo_plano": "Plano del cierre",
+        "movimiento_camara": "Movimiento final",
+        "texto_en_pantalla": "Frase clave del insight en pantalla",
+        "emocion_objetivo": "Claridad / Sorpresa / Poder / Alivio",
+        "efecto_retencion": "Pausa visual que permite que el insight aterrice"
+      }
+    ],
+    "b_rolls_estrategicos": [
+      {
+        "momento": "Segundo o bloque donde se inserta",
+        "que_mostrar": "Descripción específica del b-roll",
+        "por_que_refuerza": "Conexión directa con el mensaje narrativo",
+        "emocion_generada": "Emoción específica que activa"
+      },
+      {
+        "momento": "Segundo bloque",
+        "que_mostrar": "B-roll 2",
+        "por_que_refuerza": "Razón estratégica",
+        "emocion_generada": "Emoción activada"
+      }
+    ],
+    "ritmo_de_cortes": {
+      "patron_general": "LENTO / MEDIO / ACELERADO / VARIABLE",
+      "descripcion": "Por qué ese ritmo sirve a este formato específico",
+      "aceleraciones": "En qué momentos y por qué se aceleran",
+      "desaceleraciones": "En qué momentos se ralentizan para dar peso"
+    },
+    "musica": {
+      "tipo": "Estilo musical específico — trap emocional / piano tenso / electrónica fría / silencio estratégico",
+      "bpm_aproximado": "Número o rango específico de BPM",
+      "emocion_dominante": "Emoción que transmite la música durante el video",
+      "entrada_musica": "Desde el segundo X o desde el inicio",
+      "cambio_musical": "Cambio de intensidad — cuándo y por qué"
+    },
+    "efectos_de_retencion": {
+      "sonido_transicion": "whoosh / golpe seco / silencio / cinematic boom",
+      "micro_silencios": "Momentos exactos y duración",
+      "cambios_de_plano": "corte seco / fundido / jump cut / match cut",
+      "micro_interrupciones": "Cuándo y qué tipo reactiva la atención"
+    }
+  },
+  "miniatura_dominante": {
+    "frase_principal": "FRASE PRINCIPAL. Máx 5-6 palabras. Interrumpe el scroll — no lo explica.",
+    "variante_agresiva": "Versión que ataca una creencia o ego del espectador",
+    "variante_aspiracional": "Versión que activa deseo de identidad o pertenencia a élite",
+    "justificacion_estrategica": "Por qué esta frase específica funciona para este video adaptado",
+    "emocion_dominante_activada": "Emoción que siente el espectador al leerla antes de ver el video",
+    "gap_curiosidad": "El vacío informativo exacto que abre y que solo el video puede cerrar",
+    "sector_tca_activado": "Dinero / Salud / Relaciones / Desarrollo Personal",
+    "mecanismo_psicologico": "Gap informativo / Ataque de creencia / Contradicción identidad / Urgencia implícita",
+    "ctr_score": 0,
+    "nivel_disrupcion": 0,
+    "nivel_gap_curiosidad": 0,
+    "nivel_polarizacion": 0
+  },
+  "recomendaciones_estrategicas": ["recomendación 1", "recomendación 2", "recomendación 3"],
+  "alertas_criticas": ["alerta 1", "alerta 2"]
 }
 `;
 
@@ -2468,8 +2830,14 @@ DIAGNOSTICA por qué el score no alcanzó el umbral y EJECUTA las siguientes acc
    - mapa_de_adaptacion: mantén el objeto exactamente como estaba
    - validacion_olimpo: recalcula si mejoraste, o mantén el anterior
    - blueprint_replicable: mantén el objeto exactamente como estaba
+   - adn_profundo: mantén el objeto exactamente como estaba
+   - idea_nuclear_ganadora: mantén el objeto exactamente como estaba
+   - sistema_superioridad: mantén el objeto exactamente como estaba
+   - posicionamiento_y_proximos_pasos: mantén el objeto exactamente como estaba
+   - plan_audiovisual_profesional: mantén el objeto exactamente como estaba
+   - miniatura_dominante: mantén el objeto exactamente como estaba
 
-DEVUELVE únicamente el JSON completo actualizado con los 17 motores. Sin texto adicional.
+DEVUELVE únicamente el JSON completo actualizado con los 21 motores. Sin texto adicional.
 `;
 
 const PROMPT_REFINAMIENTO_LOOP = buildPromptRefinamientoLoop;
@@ -6316,10 +6684,14 @@ const MOTORES_OBLIGATORIOS = [
   "elementos_cliche_detectados",
   "ritmo_narrativo",
   "score_viral_estructural",
+  "adn_profundo",
+  "idea_nuclear_ganadora",
+  "sistema_superioridad",
   "guion_adaptado_espejo",
   "blueprint_replicable",
   "analisis_tca",
-  "mapa_de_adaptacion"
+  "mapa_de_adaptacion",
+  "posicionamiento_y_proximos_pasos"
 ];
 
 const motoresFaltantes = MOTORES_OBLIGATORIOS.filter(
@@ -6345,17 +6717,19 @@ outputActual._completitud_pct = Math.round(
 if (outputActual.analisis_tca) {
   console.log(`[MOTOR PRO] 🌐 TCA Detectado: ${outputActual._nivel_tca} | Mass Appeal: ${outputActual._tca_score}/100 | Equilibrio: ${outputActual._equilibrio_tca}`);
   if (outputActual._validacion_olimpo) {
-    console.log(`[MOTOR PRO] ✅ Validación OLIMPO: ${outputActual._validacion_olimpo.score_validacion}/7`);
+    console.log(`[MOTOR PRO] ✅ Validación OLIMPO: ${outputActual._validacion_olimpo.score_validacion}/10`);
   }
 }
 
     // Mapeo de compatibilidad para el Frontend (TitanViral.tsx)
-    // Esto asegura que las gráficas nuevas reciban la data correcta
-    // Compatibilidad: guion_adaptado_al_nicho apunta al nuevo nombre
     outputActual.guion_adaptado_al_nicho = outputActual.guion_adaptado_espejo || outputActual.guion_adaptado_al_nicho;
     outputActual.guion_tecnico_completo = outputActual.guion_adaptado_espejo || outputActual.guion_adaptado_al_nicho;
+
+    // Mapeo plan audiovisual — columna izquierda del OmegaScriptView
+    outputActual.plan_visual = outputActual.plan_audiovisual_profesional?.secuencia_temporal || null;
+    outputActual.plan_visual_director = outputActual.plan_audiovisual_profesional?.secuencia_temporal || null;
     
-    // TCA — score para el indicador de completitud (ahora son 17 motores con TCA)
+    // TCA — score para el indicador de completitud (21 motores V900)
     outputActual._tca_score = outputActual.analisis_tca?.mass_appeal_score || 0;
     outputActual._nivel_tca = outputActual.analisis_tca?.nivel_tca_detectado || 'N/A';
     outputActual._equilibrio_tca = outputActual.analisis_tca?.equilibrio_masividad_calificacion || false;
@@ -6375,10 +6749,19 @@ if (outputActual.analisis_tca) {
       umbral_superado: scoreActual >= UMBRAL_CALIDAD
     };
 
-    // Mapeo para tarjetas visuales antiguas (Retrocompatibilidad)
+    // Mapeo analisis_estrategico V900 — usa datos reales del ADN profundo
     outputActual.analisis_estrategico = {
-      sesgo_cognitivo_detectado: outputActual.polarizacion?.ruptura_creencia_detectada || "Análisis Profundo",
-      estrategia_adaptacion: outputActual.adn_estructura?.patron_narrativo_detectado || "Estructura Viral Híbrida",
+      // V900: usa frame_dominante si existe, fallback a datos viejos
+      sesgo_cognitivo_detectado: outputActual.adn_profundo?.frame_dominante?.frase_nucleo
+        || outputActual.polarizacion?.ruptura_creencia_detectada
+        || "Análisis Profundo",
+      estrategia_adaptacion: outputActual.idea_nuclear_ganadora?.que_hace_viral
+        || outputActual.adn_estructura?.patron_narrativo_detectado
+        || "Estructura Viral Híbrida",
+      genero_narrativo: outputActual.adn_profundo?.genero_narrativo || null,
+      emocion_nucleo: outputActual.adn_profundo?.emocion_nucleo || null,
+      tipo_tension: outputActual.adn_profundo?.tipo_tension || null,
+      posiciona_como: outputActual.posicionamiento_y_proximos_pasos?.posiciona_como || null,
       nivel_fidelidad: `${scoreActual}%`
     };
 

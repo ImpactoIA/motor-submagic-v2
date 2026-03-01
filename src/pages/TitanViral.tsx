@@ -233,8 +233,53 @@ export interface ScoreViralEstructural {
   breakdown_motores: Record<string, number>;
 }
 
-// ─── MOTOR 14: Adaptación Estratégica ───────────────────────
-// El guion_adaptado_al_nicho es string directo en el output principal
+// ─── MOTOR 14: Adaptación Estratégica V900 ──────────────────
+
+export interface AdnProfundo {
+  genero_narrativo: string;
+  emocion_nucleo: string;
+  tipo_tension: string;
+  frame_dominante: {
+    creencia_que_ataca: string;
+    nuevo_marco: string;
+    frase_nucleo: string;
+  };
+  polarizacion_implicita: {
+    bando_A: string;
+    bando_B: string;
+    tension_irresuelta: string;
+  };
+}
+
+export interface IdeaNuclearGanadora {
+  que_hace_viral: string;
+  creencia_rota: string;
+  postura_impuesta: string;
+  por_que_genera_conversacion: string;
+  tension_no_resuelta: string;
+}
+
+export interface SistemaSuperioridad {
+  mayor_claridad: string;
+  mayor_intensidad: string;
+  mayor_polarizacion: string;
+  mejor_estructura_emocional: string;
+  mejor_cierre: string;
+  ventaja_de_nicho: string;
+}
+
+export interface ProximoContenido {
+  titulo: string;
+  por_que_ahora: string;
+  genero: string;
+  tension: string;
+}
+
+export interface PosicionamientoYProximosPasos {
+  posiciona_como: string;
+  razon_posicionamiento: string;
+  proximos_contenidos: ProximoContenido[];
+}
 
 // ─── MOTOR 15: Blueprint para Conexión Directa ──────────────
 export interface BlueprintReplicable {
@@ -319,20 +364,27 @@ export interface IngenieriaInversaProOutput {
   ritmo_narrativo: RitmoNarrativo;
   score_viral_estructural: ScoreViralEstructural;
 
-  // Motor 14 Output
+  // Motor 14 Output V900
   guion_adaptado_al_nicho: string;
   guion_adaptado_espejo: string;
+  adn_profundo?: AdnProfundo;
+  idea_nuclear_ganadora?: IdeaNuclearGanadora;
+  sistema_superioridad?: SistemaSuperioridad;
+  posicionamiento_y_proximos_pasos?: PosicionamientoYProximosPasos;
   analisis_tca: AnalisisTCA;
   mapa_de_adaptacion: MapaAdaptacionTCA;
   validacion_olimpo?: {
     arquitectura_completa: boolean;
-    loops_reales_detectados: boolean;
-    nivel_tca_identificado: boolean;
+    loops_detectados: boolean;
+    tca_identificado: boolean;
     equilibrio_ideal_detectado: boolean;
     filtro_implicito_extraido: boolean;
     adaptacion_sin_micronicho: boolean;
-    adn_estructural_conservado: boolean;
-    score_validacion: number; 
+    adn_estructural_mantenido: boolean;
+    genero_narrativo_respetado: boolean;
+    emocion_nucleo_presente: boolean;
+    teleprompter_sin_etiquetas: boolean;
+    score_validacion: number;
   };
 
   // Motor 15 Output — Blueprint para Generador + Juez
@@ -1264,6 +1316,206 @@ const TcaCard = ({ tca, mapa, nicho }: { tca: any; mapa: any; nicho?: string }) 
 };
 
 // ==================================================================================
+// 🧬 COMPONENTES V900 — ADN PROFUNDO + IDEA NUCLEAR + SUPERIORIDAD + POSICIONAMIENTO
+// ==================================================================================
+
+const AdnProfundoCard = ({ data }: { data: any }) => {
+  if (!data) return null;
+  const generoColors: Record<string, string> = {
+    'Confesional': 'text-pink-400 bg-pink-500/10 border-pink-500/20',
+    'Drama real': 'text-red-400 bg-red-500/10 border-red-500/20',
+    'Historia de poder': 'text-amber-400 bg-amber-500/10 border-amber-500/20',
+    'Denuncia': 'text-orange-400 bg-orange-500/10 border-orange-500/20',
+    'Opinión polarizante': 'text-purple-400 bg-purple-500/10 border-purple-500/20',
+    'Autoridad estratégica': 'text-blue-400 bg-blue-500/10 border-blue-500/20',
+    'Revelación': 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20',
+    'Educativo': 'text-green-400 bg-green-500/10 border-green-500/20',
+    'Historia de fracaso': 'text-gray-400 bg-gray-500/10 border-gray-500/20',
+  };
+  const genero = data.genero_narrativo || 'No detectado';
+  const badgeColor = generoColors[genero] || 'text-gray-400 bg-gray-500/10 border-gray-500/20';
+
+  return (
+    <div className="bg-[#0f1115] border border-red-500/30 rounded-2xl p-6">
+      <h4 className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+        <Flame size={12} /> ADN Viral Profundo
+      </h4>
+      <div className="flex flex-wrap gap-2 mb-4">
+        <span className={`text-xs font-black uppercase px-3 py-1.5 rounded-full border ${badgeColor}`}>
+          {genero}
+        </span>
+        {data.emocion_nucleo && (
+          <span className="text-xs font-black uppercase px-3 py-1.5 rounded-full border text-rose-400 bg-rose-500/10 border-rose-500/20">
+            {data.emocion_nucleo}
+          </span>
+        )}
+        {data.tipo_tension && (
+          <span className="text-xs font-black uppercase px-3 py-1.5 rounded-full border text-yellow-400 bg-yellow-500/10 border-yellow-500/20">
+            Tensión {data.tipo_tension}
+          </span>
+        )}
+      </div>
+      {data.frame_dominante && (
+        <div className="space-y-2 mb-4">
+          <div className="bg-[#080808] rounded-xl p-3 border border-red-500/10">
+            <p className="text-[9px] text-gray-600 uppercase tracking-widest mb-1">Creencia que ataca</p>
+            <p className="text-xs text-red-300 font-bold">{data.frame_dominante.creencia_que_ataca}</p>
+          </div>
+          <div className="bg-[#080808] rounded-xl p-3 border border-green-500/10">
+            <p className="text-[9px] text-gray-600 uppercase tracking-widest mb-1">Nuevo marco propuesto</p>
+            <p className="text-xs text-green-300 font-bold">{data.frame_dominante.nuevo_marco}</p>
+          </div>
+          {data.frame_dominante.frase_nucleo && (
+            <div className="bg-gradient-to-r from-red-900/20 to-orange-900/20 rounded-xl p-3 border border-orange-500/20">
+              <p className="text-[9px] text-gray-500 uppercase tracking-widest mb-1">Frase núcleo del frame</p>
+              <p className="text-sm text-white font-black italic">"{data.frame_dominante.frase_nucleo}"</p>
+            </div>
+          )}
+        </div>
+      )}
+      {data.polarizacion_implicita && (
+        <div className="grid grid-cols-2 gap-2">
+          <div className="bg-[#080808] rounded-lg px-3 py-2 border border-white/5">
+            <p className="text-[9px] text-green-500 uppercase tracking-widest mb-1">✓ De acuerdo</p>
+            <p className="text-[10px] text-gray-300">{data.polarizacion_implicita.bando_A}</p>
+          </div>
+          <div className="bg-[#080808] rounded-lg px-3 py-2 border border-white/5">
+            <p className="text-[9px] text-red-500 uppercase tracking-widest mb-1">✗ En contra</p>
+            <p className="text-[10px] text-gray-300">{data.polarizacion_implicita.bando_B}</p>
+          </div>
+          {data.polarizacion_implicita.tension_irresuelta && (
+            <div className="col-span-2 bg-[#080808] rounded-lg px-3 py-2 border border-purple-500/10">
+              <p className="text-[9px] text-purple-400 uppercase tracking-widest mb-1">Tensión sin resolver</p>
+              <p className="text-[10px] text-gray-300 italic">{data.polarizacion_implicita.tension_irresuelta}</p>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const IdeaNuclearCard = ({ data }: { data: any }) => {
+  if (!data) return null;
+  return (
+    <div className="bg-[#0f1115] border border-amber-500/30 rounded-2xl p-6">
+      <h4 className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+        <Zap size={12} fill="currentColor" className="text-amber-400" /> Idea Nuclear Ganadora
+      </h4>
+      <div className="space-y-3">
+        {[
+          { label: '¿Qué la hace viral?', val: data.que_hace_viral, color: 'text-amber-300' },
+          { label: 'Creencia que rompe', val: data.creencia_rota, color: 'text-red-300' },
+          { label: 'Postura que instala', val: data.postura_impuesta, color: 'text-blue-300' },
+          { label: '¿Por qué genera conversación?', val: data.por_que_genera_conversacion, color: 'text-purple-300' },
+          { label: 'Tensión que deja abierta', val: data.tension_no_resuelta, color: 'text-orange-300' },
+        ].map(item => item.val ? (
+          <div key={item.label} className="bg-[#080808] rounded-xl p-3 border border-white/5">
+            <p className="text-[9px] text-gray-600 uppercase tracking-widest mb-1">{item.label}</p>
+            <p className={`text-xs font-bold leading-relaxed ${item.color}`}>{item.val}</p>
+          </div>
+        ) : null)}
+      </div>
+    </div>
+  );
+};
+
+const SistemaSuperioridadCard = ({ data }: { data: any }) => {
+  if (!data) return null;
+  return (
+    <div className="bg-[#0f1115] border border-emerald-500/30 rounded-2xl p-6">
+      <h4 className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+        <MoveRight size={12} className="text-emerald-400" /> Cómo Superar al Original
+      </h4>
+      <div className="space-y-2">
+        {[
+          { label: 'Mayor claridad', val: data.mayor_claridad, icon: '🎯' },
+          { label: 'Mayor intensidad', val: data.mayor_intensidad, icon: '⚡' },
+          { label: 'Mayor polarización', val: data.mayor_polarizacion, icon: '🔥' },
+          { label: 'Mejor estructura emocional', val: data.mejor_estructura_emocional, icon: '📈' },
+          { label: 'Mejor cierre', val: data.mejor_cierre, icon: '🏁' },
+          { label: 'Ventaja de nicho', val: data.ventaja_de_nicho, icon: '👑' },
+        ].map(item => item.val ? (
+          <div key={item.label} className="flex items-start gap-3 bg-[#080808] rounded-xl p-3 border border-white/5">
+            <span className="text-base mt-0.5">{item.icon}</span>
+            <div>
+              <p className="text-[9px] text-gray-600 uppercase tracking-widest">{item.label}</p>
+              <p className="text-xs text-emerald-300 font-bold mt-0.5 leading-relaxed">{item.val}</p>
+            </div>
+          </div>
+        ) : null)}
+      </div>
+    </div>
+  );
+};
+
+const PosicionamientoCard = ({ data }: { data: any }) => {
+  if (!data) return null;
+  const posColorMap: Record<string, string> = {
+    'Mentor firme': 'text-yellow-400 bg-yellow-500/10 border-yellow-500/30',
+    'Líder estratégico': 'text-blue-400 bg-blue-500/10 border-blue-500/30',
+    'Autoridad ética': 'text-purple-400 bg-purple-500/10 border-purple-500/30',
+    'Visionario': 'text-cyan-400 bg-cyan-500/10 border-cyan-500/30',
+    'Analista frío': 'text-gray-400 bg-gray-500/10 border-gray-500/30',
+    'Testigo honesto': 'text-green-400 bg-green-500/10 border-green-500/30',
+  };
+  const pos = data.posiciona_como || '';
+  const badgeColor = posColorMap[pos] || 'text-white bg-white/5 border-white/10';
+
+  return (
+    <div className="bg-[#0f1115] border border-blue-500/30 rounded-2xl p-6">
+      <h4 className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+        <Target size={12} /> Posicionamiento + Próximos Pasos
+      </h4>
+      <div className="flex items-center gap-3 mb-4">
+        <span className={`text-sm font-black uppercase px-4 py-2 rounded-xl border ${badgeColor}`}>
+          {pos || 'Detectando...'}
+        </span>
+      </div>
+      {data.razon_posicionamiento && (
+        <p className="text-xs text-gray-400 leading-relaxed mb-5 bg-[#080808] rounded-xl p-3 border border-white/5">
+          {data.razon_posicionamiento}
+        </p>
+      )}
+      {data.proximos_contenidos?.length > 0 && (
+        <div>
+          <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-3">
+            3 Próximos Contenidos Estratégicos
+          </p>
+          <div className="space-y-3">
+            {data.proximos_contenidos.map((c: any, i: number) => (
+              <div key={i} className="bg-[#080808] rounded-xl p-3 border border-white/5 hover:border-blue-500/20 transition-colors">
+                <div className="flex items-start gap-2">
+                  <span className="text-blue-400 font-black text-xs shrink-0 mt-0.5">{i + 1}.</span>
+                  <div className="flex-1">
+                    <p className="text-xs text-white font-black leading-tight mb-1">"{c.titulo}"</p>
+                    <div className="flex gap-2 flex-wrap mt-1">
+                      {c.genero && (
+                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 font-bold">
+                          {c.genero}
+                        </span>
+                      )}
+                      {c.tension && (
+                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/20 font-bold">
+                          Tensión {c.tension}
+                        </span>
+                      )}
+                    </div>
+                    {c.por_que_ahora && (
+                      <p className="text-[10px] text-gray-500 mt-1 leading-relaxed">{c.por_que_ahora}</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ==================================================================================
 // 📊 COMPONENTES PRO: 15 MOTORES VISUALES
 // ==================================================================================
 
@@ -1311,8 +1563,12 @@ const MotoresActivosCard = ({ output }: { output: any }) => {
     { num: "07", nombre: "Valor", dato: output.densidad_valor?.tipo_valor_dominante },
     { num: "09", nombre: "Guardado", dato: `${output.activadores_guardado?.length || 0} triggers` },
     { num: "12", nombre: "Ritmo", dato: output.ritmo_narrativo?.velocidad_progresion },
+    { num: "14A", nombre: "Género", dato: output.adn_profundo?.genero_narrativo },
+    { num: "14B", nombre: "Idea Nuclear", dato: output.idea_nuclear_ganadora?.que_hace_viral?.substring(0, 40) },
+    { num: "14C", nombre: "Superioridad", dato: output.sistema_superioridad ? "✓ Detectada" : null },
     { num: "15", nombre: "Blueprint", dato: output.blueprint_replicable?.nombre_patron },
     { num: "16", nombre: "TCA", dato: output.analisis_tca?.nivel_tca_detectado ? `${output.analisis_tca.nivel_tca_detectado} — ${output.analisis_tca.sector_detectado || ''}` : null },
+    { num: "17", nombre: "Posicionamiento", dato: output.posicionamiento_y_proximos_pasos?.posiciona_como },
   ];
 
   return (
@@ -1887,26 +2143,90 @@ export const TitanViral = () => {
     </div>
   )}
 
-  {/* Validación OLIMPO */}
+  {/* Validación OLIMPO V900 — 10 checks */}
   {result.guion_generado._validacion_olimpo && (
-    <div className={`mb-6 px-4 py-3 rounded-xl border flex items-center gap-3 ${
-      result.guion_generado._validacion_olimpo.score_validacion >= 5
+    <div className={`mb-6 rounded-xl border p-4 ${
+      result.guion_generado._validacion_olimpo.score_validacion >= 7
         ? "bg-green-500/5 border-green-500/20"
+        : result.guion_generado._validacion_olimpo.score_validacion >= 5
+        ? "bg-yellow-500/5 border-yellow-500/20"
         : "bg-orange-500/5 border-orange-500/20"
     }`}>
-      <Sparkles size={14} className={result.guion_generado._validacion_olimpo.score_validacion >= 5 ? "text-green-400" : "text-orange-400"} />
-      <div>
-        <p className={`text-xs font-black uppercase tracking-wide ${
-          result.guion_generado._validacion_olimpo.score_validacion >= 5 ? "text-green-400" : "text-orange-400"
-        }`}>
-          Validación OLIMPO: {result.guion_generado._validacion_olimpo.score_validacion}/7 checks pasados
-        </p>
-        <p className="text-[10px] text-gray-500 mt-0.5">
-          {result.guion_generado._validacion_olimpo.score_validacion >= 5
-            ? "Análisis completo — ADN viral íntegro"
-            : "Análisis incompleto — revisar motores faltantes"}
-        </p>
+      <div className="flex items-center gap-3 mb-3">
+        <Sparkles size={14} className={
+          result.guion_generado._validacion_olimpo.score_validacion >= 7
+            ? "text-green-400"
+            : result.guion_generado._validacion_olimpo.score_validacion >= 5
+            ? "text-yellow-400"
+            : "text-orange-400"
+        } />
+        <div>
+          <p className={`text-xs font-black uppercase tracking-wide ${
+            result.guion_generado._validacion_olimpo.score_validacion >= 7
+              ? "text-green-400"
+              : result.guion_generado._validacion_olimpo.score_validacion >= 5
+              ? "text-yellow-400"
+              : "text-orange-400"
+          }`}>
+            Validación OLIMPO: {result.guion_generado._validacion_olimpo.score_validacion}/10 checks pasados
+          </p>
+          <p className="text-[10px] text-gray-500 mt-0.5">
+            {result.guion_generado._validacion_olimpo.score_validacion >= 7
+              ? "ADN viral íntegro — guion listo para dominar"
+              : result.guion_generado._validacion_olimpo.score_validacion >= 5
+              ? "Análisis completo — revisar checks pendientes"
+              : "Análisis incompleto — regenerar recomendado"}
+          </p>
+        </div>
       </div>
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
+        {[
+          { key: 'arquitectura_completa', label: 'Arquitectura' },
+          { key: 'loops_detectados', label: 'Loops' },
+          { key: 'tca_identificado', label: 'TCA' },
+          { key: 'adn_estructural_mantenido', label: 'ADN' },
+          { key: 'genero_narrativo_respetado', label: 'Género' },
+          { key: 'emocion_nucleo_presente', label: 'Emoción' },
+          { key: 'teleprompter_sin_etiquetas', label: 'Teleprompter' },
+          { key: 'equilibrio_ideal_detectado', label: 'Equilibrio' },
+          { key: 'filtro_implicito_extraido', label: 'Filtro' },
+          { key: 'adaptacion_sin_micronicho', label: 'Sin Micronicho' },
+        ].map(c => {
+          const val = result.guion_generado._validacion_olimpo[c.key];
+          return (
+            <div key={c.key} className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-[9px] font-black uppercase border ${
+              val ? 'bg-green-500/10 border-green-500/20 text-green-400' : 'bg-gray-800 border-gray-700 text-gray-600'
+            }`}>
+              <span>{val ? '✓' : '✗'}</span>
+              <span>{c.label}</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  )}
+
+  {/* FILA V900 — ADN Profundo + Idea Nuclear */}
+  {(result.guion_generado.adn_profundo || result.guion_generado.idea_nuclear_ganadora) && (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      {result.guion_generado.adn_profundo && (
+        <AdnProfundoCard data={result.guion_generado.adn_profundo} />
+      )}
+      {result.guion_generado.idea_nuclear_ganadora && (
+        <IdeaNuclearCard data={result.guion_generado.idea_nuclear_ganadora} />
+      )}
+    </div>
+  )}
+
+  {/* FILA V900 — Sistema Superioridad + Posicionamiento */}
+  {(result.guion_generado.sistema_superioridad || result.guion_generado.posicionamiento_y_proximos_pasos) && (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      {result.guion_generado.sistema_superioridad && (
+        <SistemaSuperioridadCard data={result.guion_generado.sistema_superioridad} />
+      )}
+      {result.guion_generado.posicionamiento_y_proximos_pasos && (
+        <PosicionamientoCard data={result.guion_generado.posicionamiento_y_proximos_pasos} />
+      )}
     </div>
   )}
 
@@ -1939,7 +2259,7 @@ export const TitanViral = () => {
       <AlertCircle size={14} className="text-orange-400 shrink-0" />
       <div>
         <p className="text-xs font-black text-orange-400 uppercase tracking-wide">
-          {result.guion_generado._motores_completos}/17 motores completados
+          {result.guion_generado._motores_completos}/21 motores completados
           ({result.guion_generado._completitud_pct}%)
         </p>
         <p className="text-[10px] text-gray-500 mt-0.5">
