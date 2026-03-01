@@ -418,40 +418,64 @@ const OmegaStrategy = ({ analysis }: { analysis: any }) => {
   if (!analysis) return null;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
-      {/* Tarjeta 1: Psicología */}
-      <div className="bg-[#0f1115] border border-purple-500/20 rounded-xl p-5 relative overflow-hidden hover:border-purple-500/40 transition-all">
-        <div className="absolute top-0 right-0 p-3 opacity-10"><Brain size={60} /></div>
-        <h4 className="text-purple-400 text-[10px] font-black uppercase tracking-widest mb-2 flex items-center gap-2">
-          <Brain size={12} /> Psicología Replicada
-        </h4>
-        <p className="text-white text-sm font-bold leading-relaxed">
-          {analysis.sesgo_cognitivo_detectado || 'Análisis psicológico aplicado'}
-        </p>
-        <div className="mt-3 px-2 py-1 bg-purple-500/10 rounded text-purple-300 text-[10px] font-mono inline-block border border-purple-500/20">
-          TRIGGER ACTIVO
-        </div>
-      </div>
-
-      {/* Tarjeta 2: Estrategia */}
-      <div className="col-span-2 bg-[#0f1115] border border-blue-500/20 rounded-xl p-5 relative overflow-hidden hover:border-blue-500/40 transition-all">
-        <div className="absolute top-0 right-0 p-3 opacity-10"><Target size={60} /></div>
-        <h4 className="text-blue-400 text-[10px] font-black uppercase tracking-widest mb-2 flex items-center gap-2">
-          <Target size={12} /> Estrategia de Adaptación
-        </h4>
-        <p className="text-white text-sm font-medium leading-relaxed">
-          {analysis.estrategia_adaptacion || 'Estructura viral adaptada a tu nicho'}
-        </p>
-        <div className="flex items-center gap-3 mt-4">
-          <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-blue-500 to-green-400"
-              style={{ width: analysis.nivel_fidelidad || '98%' }}
-            />
+    <div className="mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+      {/* Fila 1: Frame Núcleo + Idea que hace viral */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        {/* Frame núcleo */}
+        <div className="bg-[#0f1115] border border-red-500/20 rounded-xl p-5 relative overflow-hidden hover:border-red-500/40 transition-all">
+          <div className="absolute top-0 right-0 p-3 opacity-5"><Flame size={60} /></div>
+          <h4 className="text-red-400 text-[10px] font-black uppercase tracking-widest mb-2 flex items-center gap-2">
+            <Flame size={12} /> Frame Dominante Replicado
+          </h4>
+          <p className="text-white text-sm font-black leading-relaxed italic">
+            "{analysis.sesgo_cognitivo_detectado || 'Frame viral detectado y replicado'}"
+          </p>
+          <div className="flex gap-2 mt-3 flex-wrap">
+            {analysis.genero_narrativo && (
+              <span className="px-2 py-0.5 bg-red-500/10 border border-red-500/20 rounded-full text-[9px] font-black text-red-400 uppercase">
+                {analysis.genero_narrativo}
+              </span>
+            )}
+            {analysis.emocion_nucleo && (
+              <span className="px-2 py-0.5 bg-rose-500/10 border border-rose-500/20 rounded-full text-[9px] font-black text-rose-400 uppercase">
+                {analysis.emocion_nucleo}
+              </span>
+            )}
+            {analysis.tipo_tension && (
+              <span className="px-2 py-0.5 bg-orange-500/10 border border-orange-500/20 rounded-full text-[9px] font-black text-orange-400 uppercase">
+                Tensión {analysis.tipo_tension}
+              </span>
+            )}
           </div>
-          <span className="text-[10px] text-green-400 font-black tracking-wider">
-            {analysis.nivel_fidelidad || '98%'} FIDELIDAD
-          </span>
+        </div>
+
+        {/* Mecanismo viral */}
+        <div className="col-span-2 bg-[#0f1115] border border-amber-500/20 rounded-xl p-5 relative overflow-hidden hover:border-amber-500/40 transition-all">
+          <div className="absolute top-0 right-0 p-3 opacity-5"><Zap size={60} /></div>
+          <h4 className="text-amber-400 text-[10px] font-black uppercase tracking-widest mb-2 flex items-center gap-2">
+            <Zap size={12} fill="currentColor" /> Mecanismo de Viralidad Replicado
+          </h4>
+          <p className="text-white text-sm font-medium leading-relaxed">
+            {analysis.estrategia_adaptacion || 'Estructura viral adaptada a tu nicho'}
+          </p>
+          <div className="flex items-center justify-between mt-4">
+            <div className="flex items-center gap-3 flex-1 mr-4">
+              <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-amber-500 to-green-400"
+                  style={{ width: analysis.nivel_fidelidad || '98%' }}
+                />
+              </div>
+              <span className="text-[10px] text-green-400 font-black tracking-wider whitespace-nowrap">
+                {analysis.nivel_fidelidad || '98%'} FIDELIDAD
+              </span>
+            </div>
+            {analysis.posiciona_como && (
+              <span className="px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full text-[9px] font-black text-blue-400 uppercase whitespace-nowrap">
+                👤 {analysis.posiciona_como}
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -464,15 +488,25 @@ const OmegaStrategy = ({ analysis }: { analysis: any }) => {
 
 const OmegaScriptView = ({ scriptData }: { scriptData: any }) => {
   const [copied, setCopied] = useState(false);
+  const [activeTab, setActiveTab] = useState<'camara' | 'broll' | 'musica'>('camara');
 
   const scriptText =
     scriptData.guion_adaptado_al_nicho ||
     scriptData.guion_tecnico_completo ||
     scriptData.guion_completo;
+
+  // V900: lee plan_audiovisual_profesional primero, fallback a plan_visual viejo
+  const planAudiovisual = scriptData.plan_audiovisual_profesional || null;
   const visualPlan =
+    planAudiovisual?.secuencia_temporal ||
     scriptData.plan_visual_director ||
     scriptData.plan_visual_adaptado ||
     scriptData.plan_visual;
+  const bRolls = planAudiovisual?.b_rolls_estrategicos || [];
+  const musica = planAudiovisual?.musica || null;
+  const ritmoCamara = planAudiovisual?.ritmo_de_cortes || null;
+  const efectos = planAudiovisual?.efectos_de_retencion || null;
+  const miniatura = scriptData.miniatura_dominante || null;
 
   const copyScript = () => {
     if (!scriptText) return;
@@ -512,22 +546,67 @@ const OmegaScriptView = ({ scriptData }: { scriptData: any }) => {
               <Film size={12} /> Dirección de Cámara & Audio
             </h4>
           </div>
-          <div className="p-6 space-y-8 overflow-y-auto max-h-[600px] scrollbar-thin scrollbar-thumb-gray-800">
-            {visualPlan?.map((scene: any, idx: number) => (
+          {/* Tabs de navegación */}
+          {planAudiovisual && (
+            <div className="flex border-b border-white/5 px-4">
+              {[
+                { id: 'camara', label: '🎥 Cámara' },
+                { id: 'broll', label: '🎞 B-Roll' },
+                { id: 'musica', label: '🎧 Música' },
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as any)}
+                  className={`px-3 py-2 text-[10px] font-black uppercase tracking-wider transition-all border-b-2 ${
+                    activeTab === tab.id
+                      ? 'border-green-500 text-green-400'
+                      : 'border-transparent text-gray-600 hover:text-gray-400'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <div className="p-4 space-y-6 overflow-y-auto max-h-[600px] scrollbar-thin scrollbar-thumb-gray-800">
+
+            {/* TAB CÁMARA — secuencia temporal */}
+            {(!planAudiovisual || activeTab === 'camara') && visualPlan?.map((scene: any, idx: number) => (
               <div key={idx} className="relative pl-4 border-l-2 border-gray-800 text-xs group hover:border-green-500/50 transition-colors">
                 <div className="absolute -left-[5px] top-0 w-2 h-2 rounded-full bg-gray-800 border border-gray-700 group-hover:bg-green-500 group-hover:border-green-400 transition-colors" />
-                <span className="text-green-400 font-mono font-bold block mb-2 text-[10px] bg-green-900/10 inline-block px-1 rounded">
+                <span className="text-green-400 font-mono font-bold block mb-2 text-[10px] bg-green-900/10 inline-block px-1.5 py-0.5 rounded">
                   {scene.tiempo}
                 </span>
-                {(scene.accion_camara || scene.instruccion_produccion) && (
-                  <div className="mb-2 text-blue-300 font-bold flex items-start gap-1.5 leading-tight">
+                {scene.tipo_plano && (
+                  <span className="text-[9px] text-blue-400 font-bold bg-blue-500/10 px-1.5 py-0.5 rounded ml-1">
+                    {scene.tipo_plano}
+                  </span>
+                )}
+                {(scene.movimiento_camara || scene.accion_camara || scene.instruccion_produccion) && (
+                  <div className="mb-2 mt-1.5 text-blue-300 font-bold flex items-start gap-1.5 leading-tight">
                     <span className="opacity-50 mt-0.5">🎥</span>
-                    {scene.accion_camara || scene.instruccion_produccion}
+                    {scene.movimiento_camara || scene.accion_camara || scene.instruccion_produccion}
                   </div>
                 )}
                 <p className="text-gray-300 font-medium leading-relaxed mb-2">
                   {scene.descripcion_visual || scene.accion_adaptada || scene.accion_en_pantalla}
                 </p>
+                {scene.texto_en_pantalla && (
+                  <div className="bg-white/5 rounded px-2 py-1 mb-2 text-[10px] text-yellow-300 font-bold">
+                    📝 {scene.texto_en_pantalla}
+                  </div>
+                )}
+                {scene.emocion_objetivo && (
+                  <div className="text-[9px] text-rose-400 font-bold mb-1">
+                    ❤ {scene.emocion_objetivo}
+                  </div>
+                )}
+                {scene.efecto_retencion && (
+                  <div className="text-[9px] text-purple-400 font-bold">
+                    ⚡ {scene.efecto_retencion}
+                  </div>
+                )}
                 {(scene.audio_sfx || scene.audio) && (
                   <div className="mt-2 pt-2 border-t border-white/5 text-orange-400/90 text-[10px] font-mono flex items-center gap-1.5">
                     <span className="opacity-70">🔊</span> {scene.audio_sfx || scene.audio}
@@ -535,7 +614,136 @@ const OmegaScriptView = ({ scriptData }: { scriptData: any }) => {
                 )}
               </div>
             ))}
+
+            {/* TAB B-ROLL */}
+            {planAudiovisual && activeTab === 'broll' && (
+              <div className="space-y-4">
+                {bRolls.length > 0 ? bRolls.map((br: any, idx: number) => (
+                  <div key={idx} className="bg-[#080808] rounded-xl p-3 border border-white/5">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-[9px] font-black text-green-400 bg-green-500/10 px-2 py-0.5 rounded-full border border-green-500/20">
+                        {br.momento}
+                      </span>
+                    </div>
+                    <p className="text-xs text-white font-bold mb-1">🎞 {br.que_mostrar}</p>
+                    <p className="text-[10px] text-gray-400 mb-1">↳ {br.por_que_refuerza}</p>
+                    <p className="text-[9px] text-rose-400 font-bold">❤ {br.emocion_generada}</p>
+                  </div>
+                )) : (
+                  <p className="text-xs text-gray-600 text-center py-8">Sin b-rolls generados</p>
+                )}
+              </div>
+            )}
+
+            {/* TAB MÚSICA + EFECTOS */}
+            {planAudiovisual && activeTab === 'musica' && (
+              <div className="space-y-4">
+                {musica && (
+                  <div className="bg-[#080808] rounded-xl p-4 border border-orange-500/10">
+                    <p className="text-[9px] font-black text-orange-400 uppercase tracking-widest mb-3">🎧 Música</p>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs">
+                        <span className="text-gray-500">Estilo</span>
+                        <span className="text-white font-bold">{musica.tipo}</span>
+                      </div>
+                      <div className="flex justify-between text-xs">
+                        <span className="text-gray-500">BPM</span>
+                        <span className="text-orange-400 font-black">{musica.bpm_aproximado}</span>
+                      </div>
+                      <div className="flex justify-between text-xs">
+                        <span className="text-gray-500">Emoción</span>
+                        <span className="text-white font-bold">{musica.emocion_dominante}</span>
+                      </div>
+                      <div className="flex justify-between text-xs">
+                        <span className="text-gray-500">Entrada</span>
+                        <span className="text-white font-bold">{musica.entrada_musica}</span>
+                      </div>
+                      {musica.cambio_musical && (
+                        <div className="pt-2 border-t border-white/5 text-[10px] text-yellow-300">
+                          🔄 {musica.cambio_musical}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+                {ritmoCamara && (
+                  <div className="bg-[#080808] rounded-xl p-4 border border-purple-500/10">
+                    <p className="text-[9px] font-black text-purple-400 uppercase tracking-widest mb-3">✂ Ritmo de Cortes</p>
+                    <div className="space-y-2">
+                      <span className="text-xs font-black text-white bg-purple-500/10 px-2 py-1 rounded-full border border-purple-500/20 inline-block">
+                        {ritmoCamara.patron_general}
+                      </span>
+                      <p className="text-[10px] text-gray-400 leading-relaxed">{ritmoCamara.descripcion}</p>
+                      {ritmoCamara.aceleraciones && (
+                        <p className="text-[10px] text-green-400">⚡ {ritmoCamara.aceleraciones}</p>
+                      )}
+                      {ritmoCamara.desaceleraciones && (
+                        <p className="text-[10px] text-blue-400">🐌 {ritmoCamara.desaceleraciones}</p>
+                      )}
+                    </div>
+                  </div>
+                )}
+                {efectos && (
+                  <div className="bg-[#080808] rounded-xl p-4 border border-cyan-500/10">
+                    <p className="text-[9px] font-black text-cyan-400 uppercase tracking-widest mb-3">🔊 Efectos de Retención</p>
+                    <div className="space-y-1.5">
+                      {efectos.sonido_transicion && <p className="text-[10px] text-gray-300">🎵 {efectos.sonido_transicion}</p>}
+                      {efectos.micro_silencios && <p className="text-[10px] text-gray-300">🔇 {efectos.micro_silencios}</p>}
+                      {efectos.cambios_de_plano && <p className="text-[10px] text-gray-300">✂ {efectos.cambios_de_plano}</p>}
+                      {efectos.micro_interrupciones && <p className="text-[10px] text-gray-300">⚡ {efectos.micro_interrupciones}</p>}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Sin plan audiovisual — fallback mensaje */}
+            {!visualPlan && !planAudiovisual && (
+              <div className="flex flex-col items-center justify-center h-40 text-center">
+                <Film size={24} className="text-gray-700 mb-2" />
+                <p className="text-xs text-gray-600">Plan visual generándose...</p>
+              </div>
+            )}
           </div>
+
+          {/* Miniatura dominante — si existe */}
+          {miniatura && (
+            <div className="border-t border-white/5 p-4">
+              <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-3">🖼 Miniatura Dominante</p>
+              <div className="bg-gradient-to-r from-gray-900 to-black rounded-xl p-4 border border-white/5 mb-3">
+                <p className="text-xl font-black text-white text-center leading-tight">
+                  {miniatura.frase_principal}
+                </p>
+              </div>
+              <div className="grid grid-cols-2 gap-2 mb-3">
+                {miniatura.variante_agresiva && (
+                  <div className="bg-red-500/5 border border-red-500/15 rounded-lg p-2 text-center">
+                    <p className="text-[8px] text-red-400 font-black uppercase mb-1">Agresiva</p>
+                    <p className="text-[11px] text-white font-bold">{miniatura.variante_agresiva}</p>
+                  </div>
+                )}
+                {miniatura.variante_aspiracional && (
+                  <div className="bg-blue-500/5 border border-blue-500/15 rounded-lg p-2 text-center">
+                    <p className="text-[8px] text-blue-400 font-black uppercase mb-1">Aspiracional</p>
+                    <p className="text-[11px] text-white font-bold">{miniatura.variante_aspiracional}</p>
+                  </div>
+                )}
+              </div>
+              <div className="grid grid-cols-4 gap-2">
+                {[
+                  { label: 'CTR', val: miniatura.ctr_score, color: 'text-yellow-400' },
+                  { label: 'Disrupción', val: miniatura.nivel_disrupcion, color: 'text-red-400' },
+                  { label: 'Curiosidad', val: miniatura.nivel_gap_curiosidad, color: 'text-blue-400' },
+                  { label: 'Polarización', val: miniatura.nivel_polarizacion, color: 'text-pink-400' },
+                ].map(m => (
+                  <div key={m.label} className="text-center bg-[#080808] rounded-lg p-2 border border-white/5">
+                    <p className={`text-lg font-black ${m.color}`}>{m.val}</p>
+                    <p className="text-[8px] text-gray-600 uppercase">{m.label}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Teleprompter */}
