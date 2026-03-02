@@ -7008,89 +7008,25 @@ LEYES ABSOLUTAS:
    SOLO las palabras que el creador dice en voz alta.
 
 ═══════════════════════════════════════════════════
-DEVUELVE ESTE JSON EXACTO (sin markdown, sin backticks):
+DEVUELVE ÚNICAMENTE ESTE JSON (sin markdown, sin backticks):
 {
-  "guion_adaptado_espejo": "EL GUION COMPLETO — MÍNIMO ${minWords} PALABRAS. LISTO PARA GRABAR. SIN ETIQUETAS. SIN CORCHETES. SOLO VOZ.",
-  "guion_adaptado_al_nicho": "mismo contenido que guion_adaptado_espejo",
-  "por_que_llegara_a_millones": "análisis de por qué este guion específico tiene potencial viral masivo — qué elemento exacto lo dispara",
-  "como_supera_al_original": "en qué aspectos concretos esta adaptación es más poderosa que el video original analizado",
-  "momento_mas_compartible": "el segundo exacto y la frase exacta que más se va a compartir/guardar — y por qué",
-  "prediccion_comentarios": ["comentario tipo 1 que va a generar", "comentario tipo 2", "comentario tipo 3"],
+  "guion_adaptado_espejo": "GUION COMPLETO MÍNIMO ${minWords} PALABRAS — SOLO VOZ SIN ETIQUETAS",
+  "guion_adaptado_al_nicho": "igual que guion_adaptado_espejo",
+  "por_que_llegara_a_millones": "razón exacta del potencial viral",
+  "como_supera_al_original": "en qué es más poderoso que el video original",
+  "momento_mas_compartible": "frase exacta más compartible y por qué",
+  "prediccion_comentarios": ["comentario 1","comentario 2","comentario 3"],
   "plan_audiovisual_profesional": {
-    "secuencia_temporal": [
-      {
-        "tiempo": "0s-3s",
-        "descripcion_visual": "QUÉ SE VE exactamente en pantalla — sé específico",
-        "tipo_plano": "Primer plano / Plano medio / Plano general / Close-up / Over shoulder",
-        "movimiento_camara": "Estático / Zoom lento / Pan derecha / Handheld / Acercamiento",
-        "texto_en_pantalla": "Texto overlay exacto que aparece — o vacío si no hay",
-        "emocion_objetivo": "qué debe sentir el espectador en este momento",
-        "efecto_retencion": "qué hace que no cambien de video aquí",
-        "audio_sfx": "sonido ambiente o efecto de audio si aplica"
-      }
-    ],
-    "b_rolls_estrategicos": [
-      {
-        "momento": "segundo exacto donde insertar",
-        "que_mostrar": "descripción exacta del b-roll — qué grabar o qué stock usar",
-        "duracion_segundos": 3,
-        "por_que_refuerza": "cómo este b-roll amplifica el mensaje",
-        "emocion_generada": "emoción que activa",
-        "fuente_sugerida": "grabar tú mismo / stock Pexels / stock Pixabay / animación"
-      }
-    ],
-    "transiciones": [
-      {
-        "entre_escenas": "de escena X a escena Y",
-        "tipo_transicion": "Corte directo / Jump cut / Fade / Zoom out / Whip pan / Match cut",
-        "velocidad": "instantáneo / 0.3s / 0.5s",
-        "por_que_funciona": "razón narrativa de esta transición"
-      }
-    ],
-    "ritmo_de_cortes": {
-      "patron_general": "nombre del patrón — ej: staccato agresivo / fluido narrativo",
-      "descripcion": "cómo se siente el ritmo al verlo",
-      "frecuencia_promedio_seg": 2,
-      "aceleraciones": "en qué momentos cortar más rápido y por qué",
-      "desaceleraciones": "en qué momentos cortar más lento y por qué",
-      "regla_hook": "cómo deben ser los primeros 3 segundos de edición"
-    },
-    "musica": {
-      "tipo": "nombre del género exacto — ej: hip-hop instrumental lo-fi / cinematic tension",
-      "bpm_aproximado": 95,
-      "emocion_dominante": "emoción que transmite",
-      "volumen_relativo": "20% bajo la voz / 40% en intro / baja en momentos clave",
-      "entrada_musica": "descripción de cómo entra la música",
-      "cambio_musical": "si hay cambio de música o silencio estratégico y cuándo",
-      "referencias": "artistas o playlists de referencia — ej: NCS, Epidemic Sound mood: tension"
-    },
-    "efectos_de_retencion": {
-      "sonido_transicion": "efecto de sonido entre escenas — ej: whoosh, snap, impacto",
-      "micro_silencios": "dónde usar silencio estratégico para generar tensión",
-      "cambios_de_plano": "regla de cambio de plano para mantener atención",
-      "micro_interrupciones": "cortes inesperados que reinician la atención",
-      "subtitulos": "estilo de subtítulos — fuente, tamaño, color, posición, animación"
-    },
-    "checklist_produccion": [
-      "✓ Iluminación recomendada para este tipo de video",
-      "✓ Fondo sugerido y por qué",
-      "✓ Ropa/apariencia acorde al posicionamiento",
-      "✓ Equipo mínimo necesario",
-      "✓ Apps de edición recomendadas para este formato"
-    ]
+    "secuencia_temporal": [{"tiempo":"","descripcion_visual":"","tipo_plano":"","movimiento_camara":"","texto_en_pantalla":"","emocion_objetivo":"","efecto_retencion":"","audio_sfx":""}],
+    "b_rolls_estrategicos": [{"momento":"","que_mostrar":"","duracion_segundos":0,"por_que_refuerza":"","emocion_generada":"","fuente_sugerida":""}],
+    "transiciones": [{"entre_escenas":"","tipo_transicion":"","velocidad":"","por_que_funciona":""}],
+    "ritmo_de_cortes": {"patron_general":"","descripcion":"","frecuencia_promedio_seg":0,"aceleraciones":"","desaceleraciones":"","regla_hook":""},
+    "musica": {"tipo":"","bpm_aproximado":0,"emocion_dominante":"","volumen_relativo":"","entrada_musica":"","cambio_musical":"","referencias":""},
+    "efectos_de_retencion": {"sonido_transicion":"","micro_silencios":"","cambios_de_plano":"","micro_interrupciones":"","subtitulos":""},
+    "checklist_produccion": ["iluminación","fondo","apariencia","equipo","apps edición"]
   },
-  "miniatura_dominante": {
-    "frase_principal":"","variante_agresiva":"","variante_aspiracional":"",
-    "justificacion_estrategica":"","emocion_dominante_activada":"","gap_curiosidad":"",
-    "mecanismo_psicologico":"","ctr_score":0,"nivel_disrupcion":0,"nivel_gap_curiosidad":0,"nivel_polarizacion":0
-  },
-  "validacion_olimpo": {
-    "hook_genera_tension_inmediata":true,"creencia_destruida_claramente":true,
-    "micro_loops_presentes":true,"escalada_emocional_progresiva":true,
-    "climax_poderoso":true,"cierre_memorable":true,"cero_etiquetas_visibles":true,
-    "vocabulario_del_nicho":true,"tension_irresuelta_para_comentarios":true,
-    "supera_minimo_palabras":true,"score_validacion":10
-  }
+  "miniatura_dominante": {"frase_principal":"","variante_agresiva":"","variante_aspiracional":"","justificacion_estrategica":"","emocion_dominante_activada":"","gap_curiosidad":"","mecanismo_psicologico":"","ctr_score":0,"nivel_disrupcion":0,"nivel_gap_curiosidad":0,"nivel_polarizacion":0},
+  "validacion_olimpo": {"hook_genera_tension_inmediata":true,"creencia_destruida_claramente":true,"micro_loops_presentes":true,"escalada_emocional_progresiva":true,"climax_poderoso":true,"cierre_memorable":true,"cero_etiquetas_visibles":true,"vocabulario_del_nicho":true,"tension_irresuelta_para_comentarios":true,"supera_minimo_palabras":true,"score_validacion":10}
 }
 `;
 };
@@ -7162,7 +7098,7 @@ async function ejecutarIngenieriaInversaPro(
       contexto.expertProfile
     );
 
-    const TOKENS_FASE2 = esMasterclass ? 10000 : contentType === 'long' ? 7000 : 5000;
+    const TOKENS_FASE2 = esMasterclass ? 8000 : contentType === 'long' ? 6000 : 4000;
 
     const completionFase2 = await openai.chat.completions.create({
       model: 'gpt-4o',
