@@ -9995,8 +9995,8 @@ async function scrapeAndTranscribeVideo(
 
     console.log('[SCRAPER] ✅ Scraping completado');
 
-    if (videoData.transcript && videoData.transcript.length > 100) {
-      console.log('[SCRAPER] ℹ️ Usando transcript de subtítulos');
+    if (videoData.transcript && videoData.transcript.length > 50) {
+      console.log(`[SCRAPER] ℹ️ Usando transcript (${videoData.transcript.length} chars)`);
       return {
         transcript: videoData.transcript,
         description: videoData.description,
@@ -10006,8 +10006,19 @@ async function scrapeAndTranscribeVideo(
       };
     }
 
-    if (!videoData.videoUrl) {
-      throw new Error('No se pudo obtener URL del video');
+    if (!videoData.videoUrl || videoData.videoUrl === url) {
+      const fallbackContent = videoData.description || videoData.transcript || '';
+      if (fallbackContent.length > 20) {
+        console.log('[SCRAPER] ⚠️ Sin videoUrl descargable. Usando descripción como transcript.');
+        return {
+          transcript: fallbackContent,
+          description: fallbackContent,
+          duration: 0,
+          platform,
+          videoUrl: ''
+        };
+      }
+      throw new Error('No se pudo obtener contenido del video');
     }
 
     console.log('[SCRAPER] 🎤 Transcribiendo con Whisper...');
