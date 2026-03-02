@@ -6124,11 +6124,15 @@ async function scrapeFacebook(url: string): Promise<{
 
     const postData = items[0];
 
-    return {
-      videoUrl: (postData as any).videoUrl || url,
-      description: (postData as any).text || (postData as any).message || '',
-      duration: (postData as any).videoDuration || 0,
-    };
+    const transcriptFB = (postData as any).text || (postData as any).message || (postData as any).description || '';
+console.log('[SCRAPER] 📝 Transcript Facebook:', transcriptFB.substring(0, 100));
+
+return {
+  videoUrl: (postData as any).videoUrl || url,
+  description: transcriptFB,
+  transcript: transcriptFB,
+  duration: (postData as any).videoDuration || 0,
+};
   } catch (error: any) {
     console.error('[SCRAPER] ❌ Error en Apify Facebook:', error.message);
     return { videoUrl: url, description: '', duration: 0 };
@@ -9762,12 +9766,13 @@ async function scrapeTikTok(url: string): Promise<{
       const client = new ApifyClient({ token: apifyToken });
 
       const run = await client.actor('clockworks/tiktok-scraper').call({
-        postURLs: [url],
-        resultsPerPage: 1,
-        shouldDownloadVideos: true,
-        shouldDownloadCovers: false,
-        shouldDownloadSubtitles: false
-      });
+  postURLs: [url],
+  resultsPerPage: 1,
+  shouldDownloadVideos: true,
+  shouldDownloadCovers: false,
+  shouldDownloadSubtitles: true,
+  subtitlesLanguage: 'es'
+});
 
       const { items } = await client.dataset(run.defaultDatasetId).listItems();
       
@@ -9789,12 +9794,15 @@ async function scrapeTikTok(url: string): Promise<{
           duration: videoData.videoMeta?.duration || 'N/A'
       });
       
-      return {
-        videoUrl: videoData.videoUrl || videoData.videoUrlNoWatermark || url,
-        description: videoData.text || '',
-        transcript: videoData.text || '',
-        duration: videoData.videoMeta?.duration || 0
-      };
+      const transcriptFinal = videoData.subtitles || videoData.subtitleText || videoData.text || '';
+console.log('[SCRAPER] 📝 Transcript TikTok:', transcriptFinal.substring(0, 100));
+
+return {
+  videoUrl: videoData.videoUrl || videoData.videoUrlNoWatermark || url,
+  description: videoData.text || '',
+  transcript: transcriptFinal,
+  duration: videoData.videoMeta?.duration || 0
+};
       
   } catch (error: any) {
       console.error('[SCRAPER] ❌ Error en Apify TikTok:', error.message);
@@ -9844,11 +9852,15 @@ async function scrapeInstagram(url: string): Promise<{
 
       const videoData = items[0];
 
-      return {
-        videoUrl: videoData.videoUrl || videoData.displayUrl || url,
-        description: videoData.caption || '',
-        duration: videoData.videoDuration || 0
-      };
+      const transcriptIG = videoData.caption || videoData.accessibility_caption || '';
+console.log('[SCRAPER] 📝 Transcript Instagram:', transcriptIG.substring(0, 100));
+
+return {
+  videoUrl: videoData.videoUrl || videoData.displayUrl || url,
+  description: videoData.caption || '',
+  transcript: transcriptIG,
+  duration: videoData.videoDuration || 0
+};
       
   } catch (error: any) {
       console.error('[SCRAPER] ❌ Error en Apify Instagram:', error.message);
@@ -9880,6 +9892,7 @@ async function scrapeYouTube(url: string): Promise<{
         maxResults: 1,
         searchKeywords: '',
         subtitlesLanguage: 'es',
+        subtitlesLanguage2: 'en',
         subtitlesFormat: 'text'
       });
 
@@ -9895,7 +9908,7 @@ async function scrapeYouTube(url: string): Promise<{
       return {
         videoUrl: url,
         description: videoData.description || '',
-        transcript: videoData.subtitles || videoData.text || '',
+        transcript: videoData.subtitles || videoData.subtitleText || videoData.captions || videoData.text || videoData.description || '',
         duration: videoData.lengthSeconds || 0
       };
       
