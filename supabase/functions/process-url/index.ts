@@ -6624,6 +6624,252 @@ async function ejecutarUnaIdeaMultiplatforma(
   }
 }
 
+const PROMPT_ADN_FORENSE = (
+  transcripcion: string,
+  nichoOrigen: string,
+  nichoUsuario: string,
+  objetivoUsuario: string,
+  expertProfile?: any
+) => `
+Eres TITAN OMEGA OLIMPO — laboratorio forense de ADN viral.
+ESTA FASE: SOLO analizas. NO generas guion. NO escribes adaptaciones.
+Tu trabajo es extraer el ADN con precisión quirúrgica.
+
+=============================================================
+TRANSCRIPCIÓN A ANALIZAR:
+Nicho de origen: ${nichoOrigen}
+Nicho del usuario (destino): ${nichoUsuario}
+Objetivo del usuario: ${objetivoUsuario}
+
+TRANSCRIPCIÓN:
+${transcripcion}
+=============================================================
+
+${expertProfile ? `
+PERFIL DEL EXPERTO (considera al analizar):
+- Nivel Autoridad: ${expertProfile.authority_level || 'practicante'}
+- Objetivo: ${expertProfile.main_objective || 'autoridad'}
+- Confrontación: ${expertProfile.confrontation_level || 3}/5
+- Polémica: ${expertProfile.max_controversy || 3}/5
+${expertProfile.mechanism_name ? `- Mecanismo: "${expertProfile.mechanism_name}"` : ''}
+${expertProfile.enemy ? `- Enemigo: "${expertProfile.enemy}"` : ''}
+${expertProfile.mental_territory ? `- Territorio Mental: "${expertProfile.mental_territory}"` : ''}
+${expertProfile.point_a ? `- Punto A Avatar: "${expertProfile.point_a}"` : ''}
+${expertProfile.point_b ? `- Punto B: "${expertProfile.point_b}"` : ''}
+` : ''}
+
+EJECUTA LOS 17 MOTORES FORENSES. SIN EXCEPCIONES. SIN GUION.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔴 MOTOR 1 — DESCOMPOSICIÓN ESTRUCTURAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Mapea CADA bloque: tipo [hook/setup/escalada/giro/climax/resolucion/cierre_estrategico], inicio_seg, fin_seg, duracion_seg, descripcion, funcion_narrativa, intensidad 0-100.
+Determina: tipo_apertura, tipo_cierre, proporcion_hook_pct, velocidad_escalada, patron_narrativo_detectado, complejidad_estructural 0-100.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🟠 MOTOR 2 — CURVA EMOCIONAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+emocion_dominante, emocion_secundaria, emocion_final. picos_emocionales: [{segundo, emocion, intensidad, detonante}]. intensidad_promedio, variabilidad_emocional, arco_emocional (1 frase).
+Emociones específicas: "curiosidad ansiosa" no "curiosidad".
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🟡 MOTOR 3 — MICRO-LOOPS Y TENSIÓN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Detecta cada loop: tipo [promesa_abierta/cliffhanger/pregunta_pendiente/anticipacion/gancho_diferido], descripcion, apertura_seg, cierre_seg, intensidad.
+Calcula: total, intervalo_promedio, densidad_anticipacion, loops_sin_resolver, estrategia_tension.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🟤 MOTOR 4 — POLARIZACIÓN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+nivel_confrontacion 0-100, ruptura_creencia_detectada, enemigo_implicito, nivel_friccion_narrativa, mecanismo_polarizacion, afirmaciones_divisivas, posicionamiento_vs.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🟢 MOTOR 5 — IDENTIDAD VERBAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+longitud_promedio_frases, ritmo_sintactico [staccato/fluido/mixto/explosivo], proporcion_frases_cortas_pct, uso_metaforas 0-100, uso_imperativos 0-100, sofisticacion_lexica 0-100, nivel_agresividad_verbal 0-100, firma_linguistica, palabras_poder_detectadas.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔵 MOTOR 6 — STATUS Y POSICIONAMIENTO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+tipo_autoridad [mentor/rebelde/experto_tecnico/disruptor/insider/testigo/transformado], experiencia_proyectada, rol_narrativo, nivel_confianza_percibida, distancia_con_audiencia, prueba_social_detectada, mecanismos_autoridad.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚪ MOTOR 7 — DENSIDAD DE VALOR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+valor_por_minuto 0-100, porcentaje_contenido_abierto, profundidad_insight, micro_aprendizajes, ratio_promesa_entrega, tipo_valor_dominante.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🟣 MOTOR 8 — MANIPULACIÓN DE ATENCIÓN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+cambios_ritmo [{segundo, tipo, descripcion}], interrupciones_patron, reencuadres_mentales, golpes_narrativos [{segundo, descripcion, impacto}], reactivaciones_atencion, frecuencia_estimulacion.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔶 MOTOR 9 — ACTIVADORES DE GUARDADO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Detecta mínimo 3: tipo [frase_memorable/reencuadre/dato_contraintuitivo/formula_repetible/revelacion], contenido (parafrasea), segundo_aproximado, potencia_guardado.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🟦 MOTOR 10 — ADAPTABILIDAD AL NICHO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Para ${nichoUsuario}: sofisticacion_audiencia_target, nivel_conciencia_mercado, intensidad_psicologica_tolerable, ajustes_necesarios, riesgos_adaptacion.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚫ MOTOR 11 — ANTI-SATURACIÓN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Máximo 3: tipo, contenido, nivel_saturacion, alternativa_sugerida.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔷 MOTOR 12 — RITMO NARRATIVO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+velocidad_progresion, intervalo_promedio_entre_estimulos_seg, variacion_intensidad, fluidez_estructural, momentos_pausa, aceleraciones.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🏆 MOTOR 13 — SCORE VIRAL ESTRUCTURAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Calcula: retencion_estructural, intensidad_emocional, polarizacion, manipulacion_atencion, densidad_valor, viralidad_estructural_global (todos 0-100).
+breakdown_motores con score individual por motor.
+Pesos: retencion(25%)+emocional(20%)+atencion(20%)+valor(15%)+polarizacion(10%)+resto(10%).
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🧬 MOTOR 14A — ADN PROFUNDO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+genero_narrativo: Confesional|Educativo|Drama real|Opinión polarizante|Autoridad estratégica|Historia de fracaso|Historia de poder|Denuncia|Revelación
+emocion_nucleo: Culpa|Rabia|Indignación|Vulnerabilidad|Liderazgo|Redención|Superioridad|Advertencia
+tipo_tension: Moral|Profesional|Social|Económica|Autoridad|Identidad
+frame_dominante: {creencia_que_ataca, nuevo_marco, frase_nucleo}
+polarizacion_implicita: {bando_A, bando_B, tension_irresuelta}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🏆 MOTOR 14B — IDEA NUCLEAR GANADORA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+que_hace_viral, creencia_rota, postura_impuesta, por_que_genera_conversacion, tension_no_resuelta.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔺 MOTOR 14C — SISTEMA DE SUPERIORIDAD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Cómo la adaptación PUEDE superar al original:
+mayor_claridad, mayor_intensidad, mayor_polarizacion, mejor_estructura_emocional, mejor_cierre, ventaja_de_nicho.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔗 MOTOR 15 — BLUEPRINT REPLICABLE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+nombre_patron, formula_base, pasos_estructurales.
+equivalencias_estructurales: {hook_type, escalation_pattern, giro_type, closure_type}.
+equivalencias_psicologicas: {emocion_entrada, emocion_escalada, emocion_salida, tension_type, activation_mechanism}.
+equivalencias_verbales: {ritmo, agresividad, sofisticacion}.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🌐 MOTOR 16 — ANÁLISIS TCA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PARTE A: nivel_tca_detectado (N0-N4), sector_detectado, mass_appeal_score, equilibrio_masividad_calificacion, diagnostico_tca, capa_visible, capa_estrategica, filtro_audiencia_implicito, tipo_trafico_que_atrae, nivel_conversion_probable, esta_muy_tecnico, esta_muy_mainstream.
+PARTE B (mapa para ${nichoUsuario}): nivel_tca_recomendado, sector_recomendado, nuevo_hook_sectorial, nueva_capa_visible, estructura_espejo, version_equilibrio_ideal, advertencia_micronicho.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 MOTOR 17 — POSICIONAMIENTO Y PRÓXIMOS PASOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+posiciona_como: Mentor firme|Líder estratégico|Autoridad ética|Visionario|Analista frío|Testigo honesto.
+razon_posicionamiento.
+proximos_contenidos: 3 items [{titulo, por_que_ahora, genero, tension}].
+
+=============================================================
+OUTPUT FASE 1: SOLO ANÁLISIS FORENSE. CERO GUION.
+Motores 1-12: concisos, listas máximo 5 items.
+DEVUELVE ÚNICAMENTE JSON VÁLIDO. Sin markdown. Sin backticks.
+=============================================================
+`;
+
+const PROMPT_GUION_ELITE = (
+  adnForense: any,
+  nichoUsuario: string,
+  objetivoUsuario: string,
+  contentType: string,
+  platform: string,
+  expertProfile?: any
+): string => {
+  const minWords = contentType === 'masterclass' ? 700 : contentType === 'long' ? 400 : 200;
+  const idealWords = contentType === 'masterclass' ? 1200 : contentType === 'long' ? 600 : 280;
+  const duracion = contentType === 'masterclass' ? 'más de 10 minutos' : contentType === 'long' ? '3 a 10 minutos' : '30 a 90 segundos';
+
+  const genero = adnForense.adn_profundo?.genero_narrativo || 'No detectado';
+  const emocion = adnForense.adn_profundo?.emocion_nucleo || 'No detectada';
+  const tension = adnForense.adn_profundo?.tipo_tension || 'No detectado';
+  const frameNucleo = adnForense.adn_profundo?.frame_dominante?.frase_nucleo || '';
+  const creenciaAtaca = adnForense.adn_profundo?.frame_dominante?.creencia_que_ataca || '';
+  const ideanuclear = adnForense.idea_nuclear_ganadora?.que_hace_viral || '';
+  const postura = adnForense.idea_nuclear_ganadora?.postura_impuesta || '';
+  const patron = adnForense.adn_estructura?.patron_narrativo_detectado || '';
+  const hookType = adnForense.blueprint_replicable?.equivalencias_estructurales?.hook_type || '';
+  const closureType = adnForense.blueprint_replicable?.equivalencias_estructurales?.closure_type || '';
+  const totalLoops = adnForense.micro_loops?.total || 3;
+  const activador0 = adnForense.activadores_guardado?.[0]?.tipo || 'guardado';
+  const ritmoVerbal = adnForense.identidad_verbal?.ritmo_sintactico || '';
+  const bandoA = adnForense.adn_profundo?.polarizacion_implicita?.bando_A || '';
+  const bandoB = adnForense.adn_profundo?.polarizacion_implicita?.bando_B || '';
+  const sectorTca = adnForense.analisis_tca?.sector_detectado || 'Desarrollo Personal';
+
+  return `Eres el escritor de guiones virales #1 del mundo.
+Tu ÚNICA función: escribir el guion más poderoso posible + plan de producción + miniatura.
+El ADN ya fue extraído. Ahora ESCRIBE con todos los tokens disponibles.
+
+=============================================================
+ADN VIRAL EXTRAÍDO — USA ESTO COMO MOLDE EXACTO:
+=============================================================
+GÉNERO NARRATIVO: ${genero}
+EMOCIÓN NÚCLEO: ${emocion}
+TIPO DE TENSIÓN: ${tension}
+FRAME DOMINANTE: "${frameNucleo}"
+CREENCIA QUE DESTRUYE: "${creenciaAtaca}"
+IDEA QUE HACE VIRAL: ${ideanuclear}
+POSTURA QUE INSTALA: ${postura}
+PATRÓN NARRATIVO: ${patron}
+HOOK TYPE: ${hookType}
+CIERRE TYPE: ${closureType}
+MICRO-LOOPS A REPLICAR: ${totalLoops}
+ACTIVADOR DE GUARDADO: ${activador0}
+RITMO VERBAL: ${ritmoVerbal}
+BANDO A (de acuerdo): ${bandoA}
+BANDO B (en contra): ${bandoB}
+SECTOR TCA: ${sectorTca}
+=============================================================
+NICHO DEL USUARIO: ${nichoUsuario}
+OBJETIVO: ${objetivoUsuario}
+PLATAFORMA: ${platform}
+TIPO: ${contentType} — duración ${duracion}
+${expertProfile ? `
+PERFIL EXPERTO:
+- Mecanismo propio: ${expertProfile.mechanism_name || 'no definido'}
+- Enemigo común: ${expertProfile.enemy || 'no definido'}
+- Territorio mental: ${expertProfile.mental_territory || 'no definido'}
+- Punto A avatar: ${expertProfile.point_a || 'no definido'}
+- Punto B destino: ${expertProfile.point_b || 'no definido'}
+` : ''}
+=============================================================
+
+GUION — REGLAS ABSOLUTAS
+
+LONGITUD: MÍNIMO ${minWords} palabras. IDEAL ${idealWords} palabras.
+Si el guion tiene menos de ${minWords} palabras → ES UN FALLO.
+
+ESTRUCTURA OBLIGATORIA:
+1. HOOK → Impacto inmediato. Emoción: ${emocion}
+2. SETUP DEL CONFLICTO (15-25%) → Destruye: "${creenciaAtaca}"
+3. ESCALADA EMOCIONAL (40-55%) → ${totalLoops} micro-loops. Todo en universo de ${nichoUsuario}
+4. CLÍMAX → Momento más intenso. Confesión/revelación/dato que cambia todo
+5. CIERRE ESTRATÉGICO (15-20%) → Activa: ${activador0} | Instala: "${postura}"
+
+TELEPROMPTER — PROHIBICIONES:
+❌ [HOOK] [SETUP] [GIRO] [CLIMAX] [CIERRE] [ESCALADA] — ninguna etiqueta
+✅ SOLO lo que el creador dice en voz alta
+✅ Usa ... para pausa corta | línea en blanco para pausa larga
+
+plan_audiovisual_profesional: secuencia_temporal (min 5), b_rolls_estrategicos (min 2), ritmo_de_cortes, musica, efectos_de_retencion.
+miniatura_dominante: frase_principal, variante_agresiva, variante_aspiracional, ctr_score, nivel_disrupcion, nivel_polarizacion.
+validacion_olimpo: 10 checks booleanos + score_validacion.
+
+DEVUELVE ÚNICAMENTE JSON. Sin markdown. Sin backticks.
+`;
+};
+
 async function ejecutarIngenieriaInversaPro(
   content: string,
   contexto: any,
@@ -6631,7 +6877,6 @@ async function ejecutarIngenieriaInversaPro(
   nichoOrigen: string = "General"
 ): Promise<{ data: any; tokens: number }> {
 
-  // ─── CONFIGURACIÓN ───
   const videoDuracion  = contexto._videoDurationSecs || 0;
   const esReel         = videoDuracion > 0 && videoDuracion <= 90;
   const esMasterclass  = videoDuracion > 600;
@@ -6639,20 +6884,15 @@ async function ejecutarIngenieriaInversaPro(
   const nichoUsuario   = contexto.nicho || "General";
   const objetivoUsuario = contexto.deseo_principal || "Dominancia y Viralidad";
   const platform       = contexto.targetPlatform || 'TikTok';
-
-  const minWords = contentType === 'masterclass' ? 700 : contentType === 'long' ? 400 : 200;
-  const UMBRAL_ADN = 65; // Umbral para el análisis forense
-
-  console.log(`[MOTOR PRO V2] 🎬 Tipo: ${contentType.toUpperCase()} | Nicho: ${nichoUsuario}`);
-  console.log(`[MOTOR PRO V2] 📝 Guion mínimo: ${minWords} palabras`);
+  const minWords       = contentType === 'masterclass' ? 700 : contentType === 'long' ? 400 : 200;
 
   let tokensTotal = 0;
+  let outputActual: any = null;
+
+  console.log(`[MOTOR PRO V2] 🎬 Tipo: ${contentType.toUpperCase()} | Nicho: ${nichoUsuario.substring(0, 60)}`);
+  console.log(`[MOTOR PRO V2] 📝 Guion mínimo: ${minWords} palabras`);
 
   try {
-    // ═══════════════════════════════════════════════════
-    // FASE 1 — ADN FORENSE (análisis puro, sin guion)
-    // Tokens dedicados 100% al análisis
-    // ═══════════════════════════════════════════════════
     console.log(`[MOTOR PRO V2] 🔬 FASE 1: Extrayendo ADN forense...`);
 
     const promptFase1 = PROMPT_ADN_FORENSE(
@@ -6669,7 +6909,7 @@ async function ejecutarIngenieriaInversaPro(
       model: 'gpt-4o',
       response_format: { type: 'json_object' },
       messages: [
-        { role: 'system', content: 'Eres TITAN OMEGA OLIMPO. Eres el sistema forense de ADN viral más avanzado del mundo. Tu único trabajo en esta fase es analizar y extraer. NO generas guion. SOLO analizas. Devuelves ÚNICAMENTE JSON válido.' },
+        { role: 'system', content: 'Eres TITAN OMEGA OLIMPO. Sistema forense de ADN viral. Esta fase: SOLO analizas. NO generas guion. Devuelves ÚNICAMENTE JSON válido.' },
         { role: 'user', content: promptFase1 }
       ],
       temperature: 0.15,
@@ -6680,14 +6920,10 @@ async function ejecutarIngenieriaInversaPro(
     tokensTotal += completionFase1.usage?.total_tokens || 0;
 
     const scoreAdn = adnForense.score_viral_estructural?.viralidad_estructural_global || 0;
-    console.log(`[MOTOR PRO V2] ✅ FASE 1 completada. Score ADN: ${scoreAdn}/100`);
+    console.log(`[MOTOR PRO V2] ✅ FASE 1 completa. Score ADN: ${scoreAdn}/100`);
     console.log(`[MOTOR PRO V2] 🧬 Género: ${adnForense.adn_profundo?.genero_narrativo} | Emoción: ${adnForense.adn_profundo?.emocion_nucleo}`);
 
-    // ═══════════════════════════════════════════════════
-    // FASE 2 — GUION ÉLITE (escritura con tokens completos)
-    // El ADN ya está resuelto. Todos los tokens = guion.
-    // ═══════════════════════════════════════════════════
-    console.log(`[MOTOR PRO V2] ✍️ FASE 2: Generando guion élite con ADN completo...`);
+    console.log(`[MOTOR PRO V2] ✍️ FASE 2: Generando guion élite...`);
 
     const promptFase2 = PROMPT_GUION_ELITE(
       adnForense,
@@ -6704,7 +6940,7 @@ async function ejecutarIngenieriaInversaPro(
       model: 'gpt-4o',
       response_format: { type: 'json_object' },
       messages: [
-        { role: 'system', content: `Eres el escritor de guiones virales #1 del mundo. Tu ÚNICA función es escribir el guion más poderoso y completo posible. El guion DEBE tener MÍNIMO ${minWords} palabras. No puedes entregarlo más corto bajo ninguna circunstancia. Devuelves ÚNICAMENTE JSON válido.` },
+        { role: 'system', content: `Eres el escritor de guiones virales #1 del mundo. ÚNICA función: guion poderoso y completo. MÍNIMO ${minWords} palabras. Más corto = fallo crítico. JSON válido únicamente.` },
         { role: 'user', content: promptFase2 }
       ],
       temperature: 0.75,
@@ -6714,211 +6950,126 @@ async function ejecutarIngenieriaInversaPro(
     const outputGuion = JSON.parse(completionFase2.choices[0].message.content || '{}');
     tokensTotal += completionFase2.usage?.total_tokens || 0;
 
-    // Validar longitud del guion
-    const guionFinal = outputGuion.guion_adaptado_espejo || outputGuion.guion_adaptado_al_nicho || '';
-    const palabrasFinal = guionFinal.trim().split(/\s+/).filter(Boolean).length;
-    console.log(`[MOTOR PRO V2] 📝 Palabras en guion: ${palabrasFinal} (mínimo: ${minWords})`);
+    const guionTexto = outputGuion.guion_adaptado_espejo || outputGuion.guion_adaptado_al_nicho || '';
+    const palabrasFase2 = guionTexto.trim().split(/\s+/).filter(Boolean).length;
+    console.log(`[MOTOR PRO V2] 📝 Palabras guion fase 2: ${palabrasFase2} (mínimo: ${minWords})`);
 
-    // ═══════════════════════════════════════════════════
-    // FASE 3 — REFINAMIENTO (solo si guion es corto)
-    // Un loop quirúrgico SOLO para el guion
-    // ═══════════════════════════════════════════════════
     let guionFinalData = outputGuion;
 
-    if (palabrasFinal < minWords) {
-      console.warn(`[MOTOR PRO V2] ⚠️ Guion corto (${palabrasFinal}/${minWords}). Refinando solo el guion...`);
+    if (palabrasFase2 < minWords) {
+      console.warn(`[MOTOR PRO V2] ⚠️ Guion corto (${palabrasFase2}/${minWords}). Refinando...`);
 
-      const promptRefinamientoGuion = `Eres el escritor de guiones virales más exigente del mundo.
-
-El guion anterior es demasiado corto: tiene ${palabrasFinal} palabras. Necesita MÍNIMO ${minWords} palabras.
-
-ADN DEL VIDEO ORIGINAL:
-- Género: ${adnForense.adn_profundo?.genero_narrativo}
-- Emoción núcleo: ${adnForense.adn_profundo?.emocion_nucleo}
-- Frame dominante: ${adnForense.adn_profundo?.frame_dominante?.frase_nucleo}
-- Patrón narrativo: ${adnForense.adn_estructura?.patron_narrativo_detectado}
-
-GUION ANTERIOR (a ampliar):
-${guionFinal}
-
-NICHO DEL USUARIO: ${nichoUsuario}
-OBJETIVO: ${objetivoUsuario}
-
-REESCRIBE el guion COMPLETO con MÍNIMO ${minWords} palabras.
-Amplía con:
-- Más desarrollo del conflicto central
-- Más ejemplos específicos del nicho ${nichoUsuario}
-- Más tensión narrativa en la escalada
-- Cierre más potente y memorable
-
-MANTÉN los mismos campos del JSON anterior y agrega el guion ampliado en guion_adaptado_espejo y guion_adaptado_al_nicho.
-DEVUELVE ÚNICAMENTE JSON. Sin markdown.`;
+      const promptRef = `Escritor de guiones virales. El guion tiene solo ${palabrasFase2} palabras. Necesitas MÍNIMO ${minWords} palabras.
+ADN: Género: ${adnForense.adn_profundo?.genero_narrativo} | Emoción: ${adnForense.adn_profundo?.emocion_nucleo}
+GUION ACTUAL: ${guionTexto}
+NICHO: ${nichoUsuario}
+REESCRIBE completo con MÍNIMO ${minWords} palabras. Mantén plan_audiovisual_profesional, miniatura_dominante, validacion_olimpo.
+DEVUELVE ÚNICAMENTE JSON válido.`;
 
       const completionRef = await openai.chat.completions.create({
         model: 'gpt-4o',
         response_format: { type: 'json_object' },
         messages: [
-          { role: 'system', content: `Escritor de guiones virales. El guion DEBE tener MÍNIMO ${minWords} palabras. JSON válido únicamente.` },
-          { role: 'user', content: promptRefinamientoGuion }
+          { role: 'system', content: `Escritor viral. MÍNIMO ${minWords} palabras. JSON válido.` },
+          { role: 'user', content: promptRef }
         ],
         temperature: 0.8,
         max_tokens: TOKENS_FASE2
       });
 
-      const outputRefinado = JSON.parse(completionRef.choices[0].message.content || '{}');
+      const outputRef = JSON.parse(completionRef.choices[0].message.content || '{}');
       tokensTotal += completionRef.usage?.total_tokens || 0;
-
-      const palabrasRefinadas = (outputRefinado.guion_adaptado_espejo || '').trim().split(/\s+/).filter(Boolean).length;
-      console.log(`[MOTOR PRO V2] 📝 Post-refinamiento: ${palabrasRefinadas} palabras`);
-
-      if (palabrasRefinadas > palabrasFinal) {
-        guionFinalData = outputRefinado;
-      }
+      const palabrasRef = (outputRef.guion_adaptado_espejo || '').trim().split(/\s+/).filter(Boolean).length;
+      console.log(`[MOTOR PRO V2] 📝 Post-refinamiento: ${palabrasRef} palabras`);
+      if (palabrasRef > palabrasFase2) guionFinalData = outputRef;
     }
 
-    // ═══════════════════════════════════════════════════
-    // FASE 4 — FUSIÓN Y MAPEO FINAL
-    // Combinar ADN forense + Guion élite en un único objeto
-    // ═══════════════════════════════════════════════════
-    const outputActual: any = {
-      // ADN FORENSE — todos los motores de análisis
+    outputActual = {
       ...adnForense,
-      // GUION + PRODUCCIÓN — de la fase 2/3
-      guion_adaptado_espejo: guionFinalData.guion_adaptado_espejo || guionFinalData.guion_adaptado_al_nicho || '',
-      guion_adaptado_al_nicho: guionFinalData.guion_adaptado_espejo || guionFinalData.guion_adaptado_al_nicho || '',
-      guion_tecnico_completo: guionFinalData.guion_adaptado_espejo || guionFinalData.guion_adaptado_al_nicho || '',
+      guion_adaptado_espejo:        guionFinalData.guion_adaptado_espejo || guionFinalData.guion_adaptado_al_nicho || '',
+      guion_adaptado_al_nicho:      guionFinalData.guion_adaptado_espejo || guionFinalData.guion_adaptado_al_nicho || '',
+      guion_tecnico_completo:       guionFinalData.guion_adaptado_espejo || guionFinalData.guion_adaptado_al_nicho || '',
       plan_audiovisual_profesional: guionFinalData.plan_audiovisual_profesional || null,
-      miniatura_dominante: guionFinalData.miniatura_dominante || null,
-      validacion_olimpo: guionFinalData.validacion_olimpo || adnForense.validacion_olimpo || null,
-      // Sistema de superioridad puede venir de fase 1 o 2
-      sistema_superioridad: adnForense.sistema_superioridad || guionFinalData.sistema_superioridad || null,
+      miniatura_dominante:          guionFinalData.miniatura_dominante || null,
+      validacion_olimpo:            guionFinalData.validacion_olimpo || adnForense.validacion_olimpo || null,
+      sistema_superioridad:         adnForense.sistema_superioridad || guionFinalData.sistema_superioridad || null,
     };
 
     const scoreActual = adnForense.score_viral_estructural?.viralidad_estructural_global || 0;
     const palabrasFinales = outputActual.guion_adaptado_espejo.trim().split(/\s+/).filter(Boolean).length;
 
-    console.log(`[MOTOR PRO V2] 🏆 FUSIÓN COMPLETA`);
-    console.log(`[MOTOR PRO V2] 📊 Score ADN: ${scoreActual}/100`);
-    console.log(`[MOTOR PRO V2] 📝 Palabras guion final: ${palabrasFinales}`);
+    const MOTORES_OBLIGATORIOS = [
+      "adn_estructura", "curva_emocional", "micro_loops", "polarizacion",
+      "identidad_verbal", "status_y_posicionamiento", "densidad_valor",
+      "manipulacion_atencion", "activadores_guardado", "adaptabilidad_nicho",
+      "elementos_cliche_detectados", "ritmo_narrativo", "score_viral_estructural",
+      "adn_profundo", "idea_nuclear_ganadora", "sistema_superioridad",
+      "guion_adaptado_espejo", "blueprint_replicable", "analisis_tca",
+      "mapa_de_adaptacion", "posicionamiento_y_proximos_pasos"
+    ];
 
-    // ─── FASE 3: VALIDACIÓN Y MAPEO FINAL ───
-    
-    // Validación de Integridad (Anti-Pantalla Blanca)
-    // Validación completa de los 15 motores
-const MOTORES_OBLIGATORIOS = [
-  "adn_estructura",
-  "curva_emocional",
-  "micro_loops",
-  "polarizacion",
-  "identidad_verbal",
-  "status_y_posicionamiento",
-  "densidad_valor",
-  "manipulacion_atencion",
-  "activadores_guardado",
-  "adaptabilidad_nicho",
-  "elementos_cliche_detectados",
-  "ritmo_narrativo",
-  "score_viral_estructural",
-  "adn_profundo",
-  "idea_nuclear_ganadora",
-  "sistema_superioridad",
-  "guion_adaptado_espejo",
-  "blueprint_replicable",
-  "analisis_tca",
-  "mapa_de_adaptacion",
-  "posicionamiento_y_proximos_pasos"
-];
+    const motoresFaltantes = MOTORES_OBLIGATORIOS.filter(
+      m => !outputActual[m] || (Array.isArray(outputActual[m]) && outputActual[m].length === 0)
+    );
 
-const motoresFaltantes = MOTORES_OBLIGATORIOS.filter(
-  motor => !outputActual[motor] ||
-  (Array.isArray(outputActual[motor]) && outputActual[motor].length === 0)
-);
+    if (motoresFaltantes.length > 0) {
+      console.warn(`[MOTOR PRO V2] ⚠️ Motores incompletos: ${motoresFaltantes.join(", ")}`);
+    }
 
-if (motoresFaltantes.length > 5) {
-  throw new Error(`Motores faltantes críticos: ${motoresFaltantes.join(", ")}`);
-}
+    outputActual._motores_faltantes  = motoresFaltantes;
+    outputActual._motores_completos  = MOTORES_OBLIGATORIOS.length - motoresFaltantes.length;
+    outputActual._completitud_pct    = Math.round((outputActual._motores_completos / MOTORES_OBLIGATORIOS.length) * 100);
 
-if (motoresFaltantes.length > 0) {
-  console.warn(`[MOTOR PRO] ⚠️ Motores incompletos: ${motoresFaltantes.join(", ")}`);
-}
-
-// Marcar motores faltantes para el frontend
-outputActual._motores_faltantes = motoresFaltantes;
-outputActual._motores_completos = MOTORES_OBLIGATORIOS.length - motoresFaltantes.length;
-outputActual._completitud_pct = Math.round(
-  (outputActual._motores_completos / MOTORES_OBLIGATORIOS.length) * 100
-);
-// Log TCA detectado
-if (outputActual.analisis_tca) {
-  console.log(`[MOTOR PRO] 🌐 TCA Detectado: ${outputActual._nivel_tca} | Mass Appeal: ${outputActual._tca_score}/100 | Equilibrio: ${outputActual._equilibrio_tca}`);
-  if (outputActual._validacion_olimpo) {
-    console.log(`[MOTOR PRO] ✅ Validación OLIMPO: ${outputActual._validacion_olimpo.score_validacion}/10`);
-  }
-}
-
-    // Mapeo de compatibilidad para el Frontend (TitanViral.tsx)
-    outputActual.guion_adaptado_al_nicho = outputActual.guion_adaptado_espejo || outputActual.guion_adaptado_al_nicho;
-    outputActual.guion_tecnico_completo = outputActual.guion_adaptado_espejo || outputActual.guion_adaptado_al_nicho;
-
-    // Mapeo plan audiovisual — columna izquierda del OmegaScriptView
-    outputActual.plan_visual = outputActual.plan_audiovisual_profesional?.secuencia_temporal || null;
+    outputActual.plan_visual          = outputActual.plan_audiovisual_profesional?.secuencia_temporal || null;
     outputActual.plan_visual_director = outputActual.plan_audiovisual_profesional?.secuencia_temporal || null;
-    
-    // TCA — score para el indicador de completitud (21 motores V900)
-    outputActual._tca_score = outputActual.analisis_tca?.mass_appeal_score || 0;
-    outputActual._nivel_tca = outputActual.analisis_tca?.nivel_tca_detectado || 'N/A';
-    outputActual._equilibrio_tca = outputActual.analisis_tca?.equilibrio_masividad_calificacion || false;
-    outputActual._validacion_olimpo = outputActual.validacion_olimpo || null;
-    outputActual.indice_fidelidad = calcularIndiceFidelidad(outputActual);
+    outputActual._tca_score           = outputActual.analisis_tca?.mass_appeal_score || 0;
+    outputActual._nivel_tca           = outputActual.analisis_tca?.nivel_tca_detectado || 'N/A';
+    outputActual._equilibrio_tca      = outputActual.analisis_tca?.equilibrio_masividad_calificacion || false;
+    outputActual._validacion_olimpo   = outputActual.validacion_olimpo || null;
+    outputActual.indice_fidelidad               = calcularIndiceFidelidad(outputActual);
     outputActual.equivalencia_psicologica_calculada = extraerEquivalenciaPsicologica(outputActual);
     outputActual.progresion_emocional_calculada = calcularProgrecionEmocional(outputActual);
-    outputActual.metricas_micro_loops = calcularMetricasMicroLoops(outputActual);
-    outputActual.paquete_juez_viral = prepararPaqueteParaJuezViral(outputActual);
-    outputActual.listo_para_auditoria = outputActual.paquete_juez_viral?.listo_para_juez || false;
+    outputActual.metricas_micro_loops           = calcularMetricasMicroLoops(outputActual);
+    outputActual.paquete_juez_viral             = prepararPaqueteParaJuezViral(outputActual);
+    outputActual.listo_para_auditoria           = outputActual.paquete_juez_viral?.listo_para_juez || false;
 
-    // Metadata del proceso para depuración
     outputActual.loop_info = {
-      iteraciones_realizadas: iteracion,
+      arquitectura: 'V2_DOS_FASES',
+      score_adn: scoreAdn,
       score_final: scoreActual,
-      umbral_objetivo: UMBRAL_CALIDAD,
-      umbral_superado: scoreActual >= UMBRAL_CALIDAD
+      palabras_guion: palabrasFinales,
+      tokens_fase1: completionFase1.usage?.total_tokens || 0,
+      tokens_fase2: completionFase2.usage?.total_tokens || 0,
+      tokens_totales: tokensTotal
     };
 
-    // Mapeo analisis_estrategico V900 — usa datos reales del ADN profundo
     outputActual.analisis_estrategico = {
-      // V900: usa frame_dominante si existe, fallback a datos viejos
       sesgo_cognitivo_detectado: outputActual.adn_profundo?.frame_dominante?.frase_nucleo
-        || outputActual.polarizacion?.ruptura_creencia_detectada
-        || "Análisis Profundo",
+        || outputActual.polarizacion?.ruptura_creencia_detectada || "Análisis Profundo",
       estrategia_adaptacion: outputActual.idea_nuclear_ganadora?.que_hace_viral
-        || outputActual.adn_estructura?.patron_narrativo_detectado
-        || "Estructura Viral Híbrida",
-      genero_narrativo: outputActual.adn_profundo?.genero_narrativo || null,
-      emocion_nucleo: outputActual.adn_profundo?.emocion_nucleo || null,
-      tipo_tension: outputActual.adn_profundo?.tipo_tension || null,
-      posiciona_como: outputActual.posicionamiento_y_proximos_pasos?.posiciona_como || null,
-      nivel_fidelidad: `${scoreActual}%`
+        || outputActual.adn_estructura?.patron_narrativo_detectado || "Estructura Viral Híbrida",
+      genero_narrativo:  outputActual.adn_profundo?.genero_narrativo || null,
+      emocion_nucleo:    outputActual.adn_profundo?.emocion_nucleo || null,
+      tipo_tension:      outputActual.adn_profundo?.tipo_tension || null,
+      posiciona_como:    outputActual.posicionamiento_y_proximos_pasos?.posiciona_como || null,
+      nivel_fidelidad:   `${scoreActual}%`
     };
 
-    console.log(`[MOTOR PRO] ✅ PROCESO FINALIZADO CON ÉXITO.`);
-    console.log(`[MOTOR PRO] 🏆 Score Final: ${scoreActual} | Tokens Totales: ${tokensTotal}`);
-    
+    console.log(`[MOTOR PRO V2] ✅ PROCESO COMPLETO`);
+    console.log(`[MOTOR PRO V2] 📊 Score ADN: ${scoreActual}/100 | Palabras guion: ${palabrasFinales} | Tokens: ${tokensTotal}`);
+
     return { data: outputActual, tokens: tokensTotal };
 
   } catch (error: any) {
-    console.error("[MOTOR PRO] ❌ Error Crítico en el Proceso:", error);
-    
-    // SALVAVIDAS: Si el loop falló pero tenemos un resultado previo parcial, lo entregamos
-    // para no dejar al usuario con un error vacío.
+    console.error("[MOTOR PRO V2] ❌ Error Crítico:", error);
     if (outputActual && outputActual.adn_estructura) {
-        console.warn("[MOTOR PRO] ⚠️ Recuperando resultado parcial tras error en refinamiento.");
-        return { data: outputActual, tokens: tokensTotal };
+      console.warn("[MOTOR PRO V2] ⚠️ Recuperando resultado parcial.");
+      return { data: outputActual, tokens: tokensTotal };
     }
-    
-    // Si no hay nada que salvar, lanzamos el error
     throw new Error("Fallo crítico en Ingeniería Inversa Pro: " + error.message);
   }
 }
+
 
 function prepararPaqueteParaJuezViral(outputMotores: any): any {
   try {
