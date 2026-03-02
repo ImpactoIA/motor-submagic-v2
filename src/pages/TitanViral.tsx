@@ -2403,8 +2403,7 @@ export const TitanViral = () => {
           {/* Componentes */}
           <div className="space-y-8">
             
-           {/* 1. ESTRATEGIA */}
-<OmegaStrategy analysis={result.guion_generado?.analisis_estrategico} />
+           
 {/* 2. GUION */}
 <OmegaScriptView scriptData={result.guion_generado} />
 
@@ -2516,24 +2515,7 @@ export const TitanViral = () => {
     </div>
   )}
 
-  {/* Fila 1 — Fidelidad + Micro-Loops */}
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-    <FidelidadCard data={result.guion_generado.indice_fidelidad} />
-    <MicroLoopsCard data={result.guion_generado.metricas_micro_loops} />
-  </div>
-
-  {/* Fila 2 — Polarización + Identidad Verbal */}
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-    <PolarizacionCard data={result.guion_generado.polarizacion} />
-    <IdentidadVerbalCard data={result.guion_generado.identidad_verbal} />
-  </div>
-
-  {/* Fila 3 — Status + Densidad de Valor */}
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-    <StatusCard data={result.guion_generado.status_y_posicionamiento} />
-    <DensidadValorCard data={result.guion_generado.densidad_valor} />
-  </div>
-
+  
   {/* Fila 4 — Activadores de Guardado (ancho completo) */}
   <div className="mb-6">
     <ActivadoresCard data={result.guion_generado.activadores_guardado} />

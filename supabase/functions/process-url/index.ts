@@ -6908,6 +6908,64 @@ EXPERTO QUE GRABARÁ ESTE GUION:
 IMPORTANTE: Integra estos datos en el guion — son el alma del contenido.` : ''}
 
 ═══════════════════════════════════════════════════
+🔴 SISTEMA 1 — CONSERVACIÓN DE INTENSIDAD (OBLIGATORIO)
+═══════════════════════════════════════════════════
+El video original tiene nivel de conflicto: ALTO.
+Tu adaptación DEBE tener nivel equivalente o superior.
+PROHIBIDO suavizar, abstraer o convertir el conflicto en concepto.
+
+SI el original tiene → una historia concreta con consecuencia real
+TU adaptación DEBE tener → una historia concreta equivalente en ${nichoUsuario}
+
+SI el original tiene → una decisión impopular que duele
+TU adaptación DEBE tener → una decisión equivalente que también duela en ${nichoUsuario}
+
+SI el original tiene → riesgo social, tema incómodo, tensión real
+TU adaptación DEBE tener → el mismo nivel de incomodidad en el universo de ${nichoUsuario}
+
+PROHIBIDO ABSOLUTO:
+❌ Convertir historias concretas en conceptos abstractos
+❌ Eliminar el conflicto para sonar "más educativo"
+❌ Suavizar la polarización para sonar "más neutral"
+❌ Reemplazar escenas reales por metáforas bonitas
+❌ Guion "reflexivo" cuando el original es "crudo"
+
+═══════════════════════════════════════════════════
+🔴 SISTEMA 2 — CONCRETIZACIÓN OBLIGATORIA
+═══════════════════════════════════════════════════
+Cada sección necesita UN CASO CONCRETO, no teoría:
+
+HOOK: Una situación específica que el oyente ha vivido. No una pregunta retórica genérica.
+CONFLICTO: Un error real, una decisión difícil, una consecuencia que dolió. No "a veces pasa".
+ESCALADA: Ejemplos concretos del nicho ${nichoUsuario}. Nada de "muchos profesionales".
+CLÍMAX: La decisión más difícil. La que nadie quiere tomar. Dicha sin rodeos.
+CIERRE: La postura más fuerte. La que divide opiniones. Sin suavizar.
+
+═══════════════════════════════════════════════════
+🔴 SISTEMA 3 — ESCALADA EMOCIONAL REAL (NO PLANA)
+═══════════════════════════════════════════════════
+La curva emocional DEBE subir. Cada párrafo más intenso que el anterior.
+
+Párrafo 1: Tensión baja — la situación cotidiana
+Párrafo 2: Tensión media — el conflicto aparece
+Párrafo 3: Tensión alta — la decisión difícil
+Párrafo 4: Tensión máxima — la consecuencia, el dolor, la postura
+Párrafo 5: Resolución — el frame que lo cambia todo
+
+Si la curva es PLANA → el guion es un fallo. Reescríbelo.
+
+═══════════════════════════════════════════════════
+🔴 SISTEMA 4 — POLARIZACIÓN REAL (MÍNIMO 70/100)
+═══════════════════════════════════════════════════
+El guion DEBE crear dos bandos claros:
+BANDO A (de acuerdo): "${bandoA}" — adaptado a ${nichoUsuario}
+BANDO B (en contra): "${bandoB}" — adaptado a ${nichoUsuario}
+
+La polarización nace del CONFLICTO, no del equilibrio.
+No busques que todos estén de acuerdo. Busca que la mitad quiera comentar en contra.
+Tensión irresuelta que genera comentarios: "${tensionNoResuelta}"
+
+═══════════════════════════════════════════════════
 LEYES ABSOLUTAS:
 ═══════════════════════════════════════════════════
 
@@ -6918,46 +6976,108 @@ LEYES ABSOLUTAS:
 
    HOOK (${propHookPct}% — primeras palabras):
    → Tipo "${hookType}". Emoción: ${emocion}. Sin introducción, sin contexto.
-   → Primera frase destruye: "${creenciaAtaca}" aplicada al universo de ${nichoUsuario}
+   → Primera frase destruye: "${creenciaAtaca}" aplicada concretamente a ${nichoUsuario}
+   → Historia o situación ESPECÍFICA — no pregunta retórica genérica
    → En 3 segundos el oyente piensa: "esto es exactamente lo que me pasa"
    → Si hay nuevo_hook_sectorial úsalo: "${nuevoHook}"
 
    SETUP DEL CONFLICTO (15-20%):
-   → Instala al enemigo adaptado a ${nichoUsuario} (versión del "${bandoB}")
-   → Amplía el dolor. El oyente siente que alguien finalmente lo entiende.
-   → Introduce el nuevo marco: "${nuevoMarco}"
+   → Caso concreto — un error real, una decisión difícil, una consecuencia
+   → Instala al enemigo real de ${nichoUsuario} (versión del "${bandoB}")
+   → El dolor debe ser ESPECÍFICO y reconocible, no genérico
 
    ESCALADA EMOCIONAL (40-50%):
-   → Velocidad: ${velocidadEscalada}. Cada párrafo SUBE la intensidad.
+   → Velocidad: ${velocidadEscalada}. Cada párrafo MÁS INTENSO que el anterior.
    → Replica ${totalLoops} micro-loops. Estrategia: ${estrategiaTension}
-   → ${reencuadresMentales.length > 0 ? `Incluye estos reencuadres: ${JSON.stringify(reencuadresMentales)}` : 'Incluye mínimo 2 reencuadres mentales que cambien la perspectiva del oyente.'}
-   → TODO el contenido, ejemplos y metáforas son del universo de ${nichoUsuario}
-   → CERO referencias al video original
+   → ${reencuadresMentales.length > 0 ? `Reencuadres obligatorios: ${JSON.stringify(reencuadresMentales)}` : 'Mínimo 2 reencuadres que cambien la perspectiva — concretos, no abstractos.'}
+   → TODO en el universo de ${nichoUsuario} — cero referencias al video original
 
    CLÍMAX:
-   → ${golpesNarrativos.length > 0 ? `Golpe narrativo: "${golpesNarrativos[0]?.descripcion || ''}"` : 'El momento más intenso — revelación o dato que cambia todo.'}
-   → Postura definitiva: "${postura}"
+   → La decisión más difícil. La consecuencia que dolió. Dicha sin rodeos.
+   → ${golpesNarrativos.length > 0 ? `Golpe narrativo: "${golpesNarrativos[0]?.descripcion || ''}"` : 'Momento de máxima intensidad — confesión, decisión impopular o revelación que incomoda.'}
+   → Postura definitiva sin suavizar: "${postura}"
 
    CIERRE ESTRATÉGICO (15-20%):
    → Activa guardado con: ${activador0} y ${activador1}
    → Deja sin resolver: "${tensionNoResuelta}" — genera comentarios
-   → Última frase: la más memorable. Que la repitan mentalmente todo el día.
+   → Última frase: la más fuerte. La que polariza. La que se repite.
 
-③ ESTILO: Ritmo ${ritmoVerbal}. Usa "..." para pausa. Línea en blanco para pausa larga.
+③ ESTILO: Ritmo ${ritmoVerbal}. Agresividad ${agresividad}/100.
+   Frases cortas en momentos de tensión. "..." para pausa. Línea en blanco para pausa larga.
 ④ PROHIBIDO: [HOOK] [SETUP] [ESCALADA] [CLIMAX] [CIERRE] — ninguna etiqueta visible.
-   SOLO palabras que el creador dice en voz alta.
+   SOLO las palabras que el creador dice en voz alta.
 
 ═══════════════════════════════════════════════════
 DEVUELVE ESTE JSON EXACTO (sin markdown, sin backticks):
 {
-  "guion_adaptado_espejo": "EL GUION COMPLETO — MÍNIMO ${minWords} PALABRAS",
+  "guion_adaptado_espejo": "EL GUION COMPLETO — MÍNIMO ${minWords} PALABRAS. LISTO PARA GRABAR. SIN ETIQUETAS. SIN CORCHETES. SOLO VOZ.",
   "guion_adaptado_al_nicho": "mismo contenido que guion_adaptado_espejo",
+  "por_que_llegara_a_millones": "análisis de por qué este guion específico tiene potencial viral masivo — qué elemento exacto lo dispara",
+  "como_supera_al_original": "en qué aspectos concretos esta adaptación es más poderosa que el video original analizado",
+  "momento_mas_compartible": "el segundo exacto y la frase exacta que más se va a compartir/guardar — y por qué",
+  "prediccion_comentarios": ["comentario tipo 1 que va a generar", "comentario tipo 2", "comentario tipo 3"],
   "plan_audiovisual_profesional": {
-    "secuencia_temporal": [{"tiempo":"","descripcion_visual":"","tipo_plano":"","movimiento_camara":"","texto_en_pantalla":"","emocion_objetivo":"","efecto_retencion":""}],
-    "b_rolls_estrategicos": [{"momento":"","que_mostrar":"","por_que_refuerza":"","emocion_generada":""}],
-    "ritmo_de_cortes": {"patron_general":"","descripcion":"","aceleraciones":"","desaceleraciones":"","frecuencia_promedio_seg":0},
-    "musica": {"tipo":"","bpm_aproximado":0,"emocion_dominante":"","entrada_musica":"","cambio_musical":""},
-    "efectos_de_retencion": {"sonido_transicion":"","micro_silencios":"","cambios_de_plano":"","micro_interrupciones":""}
+    "secuencia_temporal": [
+      {
+        "tiempo": "0s-3s",
+        "descripcion_visual": "QUÉ SE VE exactamente en pantalla — sé específico",
+        "tipo_plano": "Primer plano / Plano medio / Plano general / Close-up / Over shoulder",
+        "movimiento_camara": "Estático / Zoom lento / Pan derecha / Handheld / Acercamiento",
+        "texto_en_pantalla": "Texto overlay exacto que aparece — o vacío si no hay",
+        "emocion_objetivo": "qué debe sentir el espectador en este momento",
+        "efecto_retencion": "qué hace que no cambien de video aquí",
+        "audio_sfx": "sonido ambiente o efecto de audio si aplica"
+      }
+    ],
+    "b_rolls_estrategicos": [
+      {
+        "momento": "segundo exacto donde insertar",
+        "que_mostrar": "descripción exacta del b-roll — qué grabar o qué stock usar",
+        "duracion_segundos": 3,
+        "por_que_refuerza": "cómo este b-roll amplifica el mensaje",
+        "emocion_generada": "emoción que activa",
+        "fuente_sugerida": "grabar tú mismo / stock Pexels / stock Pixabay / animación"
+      }
+    ],
+    "transiciones": [
+      {
+        "entre_escenas": "de escena X a escena Y",
+        "tipo_transicion": "Corte directo / Jump cut / Fade / Zoom out / Whip pan / Match cut",
+        "velocidad": "instantáneo / 0.3s / 0.5s",
+        "por_que_funciona": "razón narrativa de esta transición"
+      }
+    ],
+    "ritmo_de_cortes": {
+      "patron_general": "nombre del patrón — ej: staccato agresivo / fluido narrativo",
+      "descripcion": "cómo se siente el ritmo al verlo",
+      "frecuencia_promedio_seg": 2,
+      "aceleraciones": "en qué momentos cortar más rápido y por qué",
+      "desaceleraciones": "en qué momentos cortar más lento y por qué",
+      "regla_hook": "cómo deben ser los primeros 3 segundos de edición"
+    },
+    "musica": {
+      "tipo": "nombre del género exacto — ej: hip-hop instrumental lo-fi / cinematic tension",
+      "bpm_aproximado": 95,
+      "emocion_dominante": "emoción que transmite",
+      "volumen_relativo": "20% bajo la voz / 40% en intro / baja en momentos clave",
+      "entrada_musica": "descripción de cómo entra la música",
+      "cambio_musical": "si hay cambio de música o silencio estratégico y cuándo",
+      "referencias": "artistas o playlists de referencia — ej: NCS, Epidemic Sound mood: tension"
+    },
+    "efectos_de_retencion": {
+      "sonido_transicion": "efecto de sonido entre escenas — ej: whoosh, snap, impacto",
+      "micro_silencios": "dónde usar silencio estratégico para generar tensión",
+      "cambios_de_plano": "regla de cambio de plano para mantener atención",
+      "micro_interrupciones": "cortes inesperados que reinician la atención",
+      "subtitulos": "estilo de subtítulos — fuente, tamaño, color, posición, animación"
+    },
+    "checklist_produccion": [
+      "✓ Iluminación recomendada para este tipo de video",
+      "✓ Fondo sugerido y por qué",
+      "✓ Ropa/apariencia acorde al posicionamiento",
+      "✓ Equipo mínimo necesario",
+      "✓ Apps de edición recomendadas para este formato"
+    ]
   },
   "miniatura_dominante": {
     "frase_principal":"","variante_agresiva":"","variante_aspiracional":"",
