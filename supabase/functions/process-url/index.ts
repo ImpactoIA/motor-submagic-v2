@@ -6634,7 +6634,8 @@ const PROMPT_ADN_FORENSE = (
   nichoOrigen: string,
   nichoUsuario: string,
   objetivoUsuario: string,
-  expertProfile?: any
+  expertProfile?: any,
+  contexto?: any
 ) => `
 Eres TITAN OMEGA OLIMPO — laboratorio forense de ADN viral.
 ESTA FASE: SOLO analizas. NO generas guion. NO escribes adaptaciones.
@@ -6999,13 +7000,14 @@ async function ejecutarIngenieriaInversaPro(
   try {
     console.log(`[MOTOR PRO V2] 🔬 FASE 1: Extrayendo ADN forense...`);
 
-    const promptFase1 = PROMPT_ADN_FORENSE(
-      content,
-      nichoOrigen,
-      nichoUsuario,
-      objetivoUsuario,
-      contexto.expertProfile
-    );
+  const promptFase1 = PROMPT_ADN_FORENSE(
+  content,
+  nichoOrigen,
+  nichoUsuario,
+  objetivoUsuario,
+  contexto.expertProfile,
+  contexto
+);
 
     const TOKENS_FASE1 = esMasterclass ? 8000 : 6000;
 
