@@ -2382,49 +2382,115 @@ Declara cómo el guion adaptado SUPERA al original en:
 - mejor_cierre: cómo el cierre genera más acción o debate
 - ventaja_de_nicho: qué tiene el experto del usuario que el creador original no tiene
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎬 MOTOR 14D — GUION ADAPTADO ESPEJO V900
+🎬 MOTOR 14D — GUION ADAPTADO ESPEJO V900 — MÁXIMA POTENCIA
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Genera el guion adaptado con estas reglas absolutas:
+⚡ ESTE ES EL OUTPUT MÁS IMPORTANTE DE TODO EL SISTEMA.
+El guion es la razón por la que el usuario pagó. Todo lo demás es soporte.
 
-REGLAS DE FIDELIDAD:
+═══════════════════════════════════════════
+LONGITUD OBLIGATORIA — SIN EXCEPCIÓN
+═══════════════════════════════════════════
+El video original tuvo una duración específica. El guion debe reflejar esa duración.
+Hablar en cámara = aproximadamente 2.5 palabras por segundo.
+
+🎯 REEL / SHORT (hasta 90s) → MÍNIMO 180 palabras. IDEAL 200-250 palabras.
+📹 VIDEO LARGO (90s - 10min) → MÍNIMO 350 palabras. IDEAL 400-600 palabras.
+🎓 MASTERCLASS (más de 10min) → MÍNIMO 700 palabras. IDEAL 900-1400 palabras.
+
+⛔ UN GUION CON MENOS PALABRAS QUE EL MÍNIMO = FALLA CRÍTICA.
+Si el guion que generaste no alcanza el mínimo → AMPLÍA con más profundidad emocional,
+más desarrollo del conflicto, más ejemplos del nicho, más tensión narrativa.
+NUNCA entregues un guion corto. NUNCA.
+
+═══════════════════════════════════════════
+ESTRUCTURA OBLIGATORIA DEL GUION
+═══════════════════════════════════════════
+El guion DEBE tener esta arquitectura extraída del video original (Motor 1):
+
+1. HOOK (primeros 3-5 segundos del guion)
+   → La frase de mayor impacto emocional del video original — adaptada al nicho del usuario
+   → Debe causar el mismo efecto psicológico que el hook original
+   → Debe ser la primera línea del guion — sin introducción, sin contexto previo
+
+2. SETUP / CONFLICTO (siguiente 15-25% del guion)
+   → Establece el conflicto o tensión del video adaptado al contexto del usuario
+   → Introduce el problema, el enemigo, o la contradicción que el guion va a resolver
+   → Debe crear urgencia o curiosidad inmediata
+
+3. ESCALADA EMOCIONAL (40-60% del guion)
+   → Cada párrafo eleva la intensidad emocional — nunca desciende en esta sección
+   → Aquí van los micro-loops detectados en Motor 3: cada uno en su posición equivalente
+   → Incluye ejemplos, datos o anécdotas del nicho del usuario: ${nichoUsuario}
+   → El espectador debe sentirse identificado, cuestionado y emocionalmente comprometido
+
+4. CLÍMAX / GIRO (momento de mayor intensidad)
+   → El momento de mayor impacto del video original — replicado con el mismo peso emocional
+   → Puede ser una revelación, una confesión, una acusación, una estadística que cambia todo
+   → Debe sentirse como un punto de no retorno en el guion
+
+5. RESOLUCIÓN / CIERRE ESTRATÉGICO (último 15-20% del guion)
+   → Cierre que deja al espectador con una acción clara, una pregunta abierta, o una postura instalada
+   → Activa guardado, comentario o seguimiento según el activador detectado en Motor 9
+   → El último párrafo debe ser la frase más memorable y potente del guion
+
+═══════════════════════════════════════════
+REGLAS DE ADAPTACIÓN AL NICHO — CRÍTICAS
+═══════════════════════════════════════════
+✓ NICHO DEL USUARIO: ${nichoUsuario}
+✓ OBJETIVO DEL USUARIO: ${objetivoUsuario}
+
+⚠️ CADA ELEMENTO DEL VIDEO ORIGINAL DEBE TRADUCIRSE AL NICHO DEL USUARIO:
+→ Si el original habla de "despedir empleados" y el nicho es "coaching de vida" →
+  el guion habla de "abandonar una relación que te frena" con la MISMA arquitectura emocional
+→ Si el original habla de "startups" y el nicho es "fitness" →
+  el guion habla de "entrenar sin resultados" con el MISMO nivel de tensión
+→ Los CONTEXTOS cambian. La ARQUITECTURA EMOCIONAL es idéntica.
+
+El nicho del usuario es: ${nichoUsuario}
+Adapta TODO — ejemplos, metáforas, enemigo, problema, solución — a ese nicho.
+NUNCA uses el contexto original del video. SIEMPRE el contexto del usuario.
+
+REGLAS DE FIDELIDAD ESTRUCTURAL:
 ✓ Mismo género narrativo detectado en Motor 14A — SIN EXCEPCIONES
 ✓ Misma emoción núcleo — intensidad igual o superior
 ✓ Mismo tipo de tensión — no suavizar el conflicto
-✓ Mismo frame dominante — adaptado al nicho del usuario
+✓ Mismo frame dominante — reescrito en el nicho del usuario
 ✓ Misma arquitectura de micro-loops — cada loop en posición equivalente
 ✓ Mismo patrón de escalada emocional detectado en Motor 1
 ✓ Nivel TCA igual o superior al detectado en Motor 16
 
-REGLAS DE ADAPTACIÓN:
-✓ Contexto y ejemplos → nicho del usuario: ${nichoUsuario}
-✓ Objetivo → ${objetivoUsuario}
-✓ Identidad del experto → integrada desde el perfil
-✓ Enemigo común → adaptado al enemigo del nicho del usuario
-
-REGLAS ABSOLUTAS DE TELEPROMPTER:
-⚠️ PROHIBIDO ABSOLUTAMENTE incluir en el guion:
+═══════════════════════════════════════════
+REGLAS ABSOLUTAS DE TELEPROMPTER
+═══════════════════════════════════════════
+⚠️ PROHIBIDO ABSOLUTAMENTE:
 ❌ [HOOK] ❌ [SETUP] ❌ [GIRO] ❌ [CLIMAX] ❌ [CIERRE] ❌ [ESCALADA]
 ❌ [Texto en pantalla] ❌ [Música] ❌ [Corte] ❌ [B-roll] ❌ [Zoom]
-❌ Cualquier indicación técnica entre corchetes
-❌ Cualquier instrucción de producción dentro del texto
+❌ Cualquier indicación técnica entre corchetes o paréntesis
+❌ Cualquier instrucción de producción dentro del texto hablado
+❌ Números de sección, títulos de bloque, marcadores de estructura
 
 El guion es EXCLUSIVAMENTE lo que el creador dice en voz alta.
-Fluido. Natural. Con ritmo humano.
+Fluido. Natural. Con ritmo humano. Como si lo estuvieras contando a un amigo.
 Usa ... para pausa corta.
 Usa línea en blanco para pausa larga.
-Debe poderse leer directo a cámara sin ninguna interpretación adicional.
-Debe sentirse como una conversación real — no como una plantilla.
+El creador debe poder leer esto directo a cámara sin ninguna interpretación adicional.
+Debe sonar como una persona real — no como IA, no como plantilla, no como guion corporativo.
 
-VALIDACIÓN ANTES DE ENTREGAR EL GUION:
+═══════════════════════════════════════════
+VALIDACIÓN FINAL — OBLIGATORIA ANTES DE ENTREGAR
+═══════════════════════════════════════════
+□ ¿El guion tiene el mínimo de palabras requerido para su tipo?
+□ ¿Tiene los 5 bloques estructurales completos?
+□ ¿Está 100% adaptado al nicho del usuario? ¿No hay ni una referencia al contexto original?
 □ ¿Mantiene el género narrativo original?
 □ ¿La emoción núcleo está presente desde la primera línea?
-□ ¿El conflicto no fue suavizado?
-□ ¿No hay etiquetas ni indicaciones técnicas?
+□ ¿El conflicto tiene la misma intensidad — no fue suavizado?
+□ ¿No hay etiquetas ni indicaciones técnicas en el texto?
 □ ¿Es grabable directamente sin edición?
-□ ¿Suena humano, no como IA?
-Si falla 1 → reescribir antes de incluir.
+□ ¿Suena como una persona real hablando — no como IA?
+□ ¿El cierre activa una acción (guardar, comentar, seguir)?
+Si falla cualquier check → REESCRIBIR COMPLETO antes de incluir en el JSON.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🔗 MOTOR 15 — BLUEPRINT PARA CONEXIÓN DIRECTA
@@ -2836,6 +2902,12 @@ DIAGNOSTICA por qué el score no alcanzó el umbral y EJECUTA las siguientes acc
    - posicionamiento_y_proximos_pasos: mantén el objeto exactamente como estaba
    - plan_audiovisual_profesional: mantén el objeto exactamente como estaba
    - miniatura_dominante: mantén el objeto exactamente como estaba
+
+6. REESCRIBE COMPLETAMENTE el guion_adaptado_espejo si tiene menos de ${minWords} palabras.
+   El guion DEBE tener mínimo ${minWords} palabras para ${contentTypeCtx}.
+   El nicho del usuario es: ${nichoUsuario} — CADA elemento del guion debe estar en ese nicho.
+   NUNCA entregues el mismo guion corto que ya fue rechazado.
+   AMPLÍA con más profundidad emocional, más conflicto, más ejemplos del nicho.
 
 DEVUELVE únicamente el JSON completo actualizado con los 21 motores. Sin texto adicional.
 `;
@@ -6558,113 +6630,176 @@ async function ejecutarIngenieriaInversaPro(
   openai: any,
   nichoOrigen: string = "General"
 ): Promise<{ data: any; tokens: number }> {
-  
-// 1. Configuración de Dominancia adaptativa por tipo de contenido
-  const videoDuracion = contexto._videoDurationSecs || 0;
-  const esReel        = videoDuracion > 0 && videoDuracion <= 90;
-  const esMasterclass = videoDuracion > 600;
 
-  // Umbral adaptado al tipo de contenido:
-  // Masterclass → 65 (análisis más complejo, score naturalmente menor)
-  // Reel        → 78 (contenido corto, más fácil de diseccionar bien)
-  // Video largo → 75 (baseline estándar)
-  const UMBRAL_CALIDAD = esMasterclass ? 65
-                       : esReel        ? 78
-                       :                 75;
+  // ─── CONFIGURACIÓN ───
+  const videoDuracion  = contexto._videoDurationSecs || 0;
+  const esReel         = videoDuracion > 0 && videoDuracion <= 90;
+  const esMasterclass  = videoDuracion > 600;
+  const contentType    = contexto.contentType || (esReel ? 'reel' : esMasterclass ? 'masterclass' : 'long');
+  const nichoUsuario   = contexto.nicho || "General";
+  const objetivoUsuario = contexto.deseo_principal || "Dominancia y Viralidad";
+  const platform       = contexto.targetPlatform || 'TikTok';
 
-  // Masterclass ya consume muchos tokens — limitar iteraciones
-  const MAX_ITERACIONES = esMasterclass ? 2 : 3;
+  const minWords = contentType === 'masterclass' ? 700 : contentType === 'long' ? 400 : 200;
+  const UMBRAL_ADN = 65; // Umbral para el análisis forense
 
-  // Tokens adaptados al tipo de contenido
-  const MAX_TOKENS_OUTPUT = esMasterclass ? 10000
-                          : esReel        ? 7000
-                          :                 8000;
-
-  console.log(`[MOTOR PRO] 🎬 Tipo: ${esMasterclass ? 'MASTERCLASS' : esReel ? 'REEL/SHORT' : 'VIDEO LARGO'}`);
-  console.log(`[MOTOR PRO] 🎯 Umbral: ${UMBRAL_CALIDAD}/100 | Iteraciones máx: ${MAX_ITERACIONES} | Tokens: ${MAX_TOKENS_OUTPUT}`);
+  console.log(`[MOTOR PRO V2] 🎬 Tipo: ${contentType.toUpperCase()} | Nicho: ${nichoUsuario}`);
+  console.log(`[MOTOR PRO V2] 📝 Guion mínimo: ${minWords} palabras`);
 
   let tokensTotal = 0;
 
-  // 2. Preparación de Contexto
-  const nichoUsuario = contexto.nicho || "General";
-  const objetivoUsuario = contexto.deseo_principal || "Dominancia y Viralidad";
-
-  // ─── FASE 1: ANÁLISIS INICIAL (FORENSE) ───
-  // Llamamos al Prompt Maestro que pegaste arriba
-  const promptInicial = PROMPT_INGENIERIA_INVERSA_PRO(
-    content, 
-    nichoOrigen, 
-    nichoUsuario, 
-    objetivoUsuario,
-    contexto.expertProfile
-  );
-  let outputActual: any = null;
-  let scoreActual = 0;
-  let iteracion = 0;
-
   try {
-    // Primera inyección a la IA
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4o', // OBLIGATORIO: Modelo de alta inteligencia
+    // ═══════════════════════════════════════════════════
+    // FASE 1 — ADN FORENSE (análisis puro, sin guion)
+    // Tokens dedicados 100% al análisis
+    // ═══════════════════════════════════════════════════
+    console.log(`[MOTOR PRO V2] 🔬 FASE 1: Extrayendo ADN forense...`);
+
+    const promptFase1 = PROMPT_ADN_FORENSE(
+      content,
+      nichoOrigen,
+      nichoUsuario,
+      objetivoUsuario,
+      contexto.expertProfile
+    );
+
+    const TOKENS_FASE1 = esMasterclass ? 8000 : 6000;
+
+    const completionFase1 = await openai.chat.completions.create({
+      model: 'gpt-4o',
       response_format: { type: 'json_object' },
       messages: [
-        { role: 'system', content: 'Eres TITAN OMEGA. El sistema de extracción de ADN Viral más sofisticado del mundo.' },
-        { role: 'user', content: promptInicial }
+        { role: 'system', content: 'Eres TITAN OMEGA OLIMPO. Eres el sistema forense de ADN viral más avanzado del mundo. Tu único trabajo en esta fase es analizar y extraer. NO generas guion. SOLO analizas. Devuelves ÚNICAMENTE JSON válido.' },
+        { role: 'user', content: promptFase1 }
       ],
-      temperature: 0.2, // Frío y preciso para el análisis inicial
-      max_tokens: MAX_TOKENS_OUTPUT
+      temperature: 0.15,
+      max_tokens: TOKENS_FASE1
     });
 
-    outputActual = JSON.parse(completion.choices[0].message.content || '{}');
-    tokensTotal += completion.usage?.total_tokens || 0;
-    
-    // Extracción del Score Inicial (con protección anti-crash)
-    scoreActual = outputActual.score_viral_estructural?.viralidad_estructural_global || 0;
-    
-    console.log(`[MOTOR PRO] 📊 Análisis Inicial Completado.`);
-    console.log(`[MOTOR PRO] 🎲 Score Obtenido: ${scoreActual}/100`);
+    const adnForense = JSON.parse(completionFase1.choices[0].message.content || '{}');
+    tokensTotal += completionFase1.usage?.total_tokens || 0;
 
-    // ─── FASE 2: LOOP DE REFINAMIENTO AUTOMÁTICO (EL "TURBO") ───
-    // Si el contenido es débil, la IA se auto-corrige hasta alcanzar la excelencia
-    while (scoreActual < UMBRAL_CALIDAD && iteracion < MAX_ITERACIONES) {
-      iteracion++;
-      console.log(`[MOTOR PRO] ⚠️ Score bajo detectado. Iniciando Refinamiento Automático #${iteracion}...`);
+    const scoreAdn = adnForense.score_viral_estructural?.viralidad_estructural_global || 0;
+    console.log(`[MOTOR PRO V2] ✅ FASE 1 completada. Score ADN: ${scoreAdn}/100`);
+    console.log(`[MOTOR PRO V2] 🧬 Género: ${adnForense.adn_profundo?.genero_narrativo} | Emoción: ${adnForense.adn_profundo?.emocion_nucleo}`);
 
-      // Llamamos al Prompt de Refinamiento que pegaste arriba
-      const promptRefinamiento = PROMPT_REFINAMIENTO_LOOP(
-        JSON.stringify(outputActual),
-        scoreActual,
-        UMBRAL_CALIDAD,
-        iteracion,
-        nichoUsuario
-      );
+    // ═══════════════════════════════════════════════════
+    // FASE 2 — GUION ÉLITE (escritura con tokens completos)
+    // El ADN ya está resuelto. Todos los tokens = guion.
+    // ═══════════════════════════════════════════════════
+    console.log(`[MOTOR PRO V2] ✍️ FASE 2: Generando guion élite con ADN completo...`);
+
+    const promptFase2 = PROMPT_GUION_ELITE(
+      adnForense,
+      nichoUsuario,
+      objetivoUsuario,
+      contentType,
+      platform,
+      contexto.expertProfile
+    );
+
+    const TOKENS_FASE2 = esMasterclass ? 10000 : contentType === 'long' ? 7000 : 5000;
+
+    const completionFase2 = await openai.chat.completions.create({
+      model: 'gpt-4o',
+      response_format: { type: 'json_object' },
+      messages: [
+        { role: 'system', content: `Eres el escritor de guiones virales #1 del mundo. Tu ÚNICA función es escribir el guion más poderoso y completo posible. El guion DEBE tener MÍNIMO ${minWords} palabras. No puedes entregarlo más corto bajo ninguna circunstancia. Devuelves ÚNICAMENTE JSON válido.` },
+        { role: 'user', content: promptFase2 }
+      ],
+      temperature: 0.75,
+      max_tokens: TOKENS_FASE2
+    });
+
+    const outputGuion = JSON.parse(completionFase2.choices[0].message.content || '{}');
+    tokensTotal += completionFase2.usage?.total_tokens || 0;
+
+    // Validar longitud del guion
+    const guionFinal = outputGuion.guion_adaptado_espejo || outputGuion.guion_adaptado_al_nicho || '';
+    const palabrasFinal = guionFinal.trim().split(/\s+/).filter(Boolean).length;
+    console.log(`[MOTOR PRO V2] 📝 Palabras en guion: ${palabrasFinal} (mínimo: ${minWords})`);
+
+    // ═══════════════════════════════════════════════════
+    // FASE 3 — REFINAMIENTO (solo si guion es corto)
+    // Un loop quirúrgico SOLO para el guion
+    // ═══════════════════════════════════════════════════
+    let guionFinalData = outputGuion;
+
+    if (palabrasFinal < minWords) {
+      console.warn(`[MOTOR PRO V2] ⚠️ Guion corto (${palabrasFinal}/${minWords}). Refinando solo el guion...`);
+
+      const promptRefinamientoGuion = `Eres el escritor de guiones virales más exigente del mundo.
+
+El guion anterior es demasiado corto: tiene ${palabrasFinal} palabras. Necesita MÍNIMO ${minWords} palabras.
+
+ADN DEL VIDEO ORIGINAL:
+- Género: ${adnForense.adn_profundo?.genero_narrativo}
+- Emoción núcleo: ${adnForense.adn_profundo?.emocion_nucleo}
+- Frame dominante: ${adnForense.adn_profundo?.frame_dominante?.frase_nucleo}
+- Patrón narrativo: ${adnForense.adn_estructura?.patron_narrativo_detectado}
+
+GUION ANTERIOR (a ampliar):
+${guionFinal}
+
+NICHO DEL USUARIO: ${nichoUsuario}
+OBJETIVO: ${objetivoUsuario}
+
+REESCRIBE el guion COMPLETO con MÍNIMO ${minWords} palabras.
+Amplía con:
+- Más desarrollo del conflicto central
+- Más ejemplos específicos del nicho ${nichoUsuario}
+- Más tensión narrativa en la escalada
+- Cierre más potente y memorable
+
+MANTÉN los mismos campos del JSON anterior y agrega el guion ampliado en guion_adaptado_espejo y guion_adaptado_al_nicho.
+DEVUELVE ÚNICAMENTE JSON. Sin markdown.`;
 
       const completionRef = await openai.chat.completions.create({
         model: 'gpt-4o',
         response_format: { type: 'json_object' },
         messages: [
-          { role: 'system', content: 'Eres el Motor de Refinamiento de Calidad Titan Omega.' },
-          { role: 'user', content: promptRefinamiento }
+          { role: 'system', content: `Escritor de guiones virales. El guion DEBE tener MÍNIMO ${minWords} palabras. JSON válido únicamente.` },
+          { role: 'user', content: promptRefinamientoGuion }
         ],
-        temperature: 0.4, // Subimos temperatura para buscar soluciones creativas al problema
-        max_tokens: MAX_TOKENS_OUTPUT
+        temperature: 0.8,
+        max_tokens: TOKENS_FASE2
       });
 
       const outputRefinado = JSON.parse(completionRef.choices[0].message.content || '{}');
       tokensTotal += completionRef.usage?.total_tokens || 0;
 
-      // Evaluar si la mejora funcionó
-      const nuevoScore = outputRefinado.score_viral_estructural?.viralidad_estructural_global || 0;
-      console.log(`[MOTOR PRO] 📈 Resultado Refinamiento: ${scoreActual} -> ${nuevoScore}`);
+      const palabrasRefinadas = (outputRefinado.guion_adaptado_espejo || '').trim().split(/\s+/).filter(Boolean).length;
+      console.log(`[MOTOR PRO V2] 📝 Post-refinamiento: ${palabrasRefinadas} palabras`);
 
-      if (nuevoScore > scoreActual) {
-        outputActual = outputRefinado; // Aceptamos la mejora
-        scoreActual = nuevoScore;
-      } else {
-        console.log('[MOTOR PRO] ⚠️ El refinamiento no logró superar la versión anterior. Manteniendo base.');
-        // No rompemos el loop, intentamos una vez más si quedan intentos
+      if (palabrasRefinadas > palabrasFinal) {
+        guionFinalData = outputRefinado;
       }
     }
+
+    // ═══════════════════════════════════════════════════
+    // FASE 4 — FUSIÓN Y MAPEO FINAL
+    // Combinar ADN forense + Guion élite en un único objeto
+    // ═══════════════════════════════════════════════════
+    const outputActual: any = {
+      // ADN FORENSE — todos los motores de análisis
+      ...adnForense,
+      // GUION + PRODUCCIÓN — de la fase 2/3
+      guion_adaptado_espejo: guionFinalData.guion_adaptado_espejo || guionFinalData.guion_adaptado_al_nicho || '',
+      guion_adaptado_al_nicho: guionFinalData.guion_adaptado_espejo || guionFinalData.guion_adaptado_al_nicho || '',
+      guion_tecnico_completo: guionFinalData.guion_adaptado_espejo || guionFinalData.guion_adaptado_al_nicho || '',
+      plan_audiovisual_profesional: guionFinalData.plan_audiovisual_profesional || null,
+      miniatura_dominante: guionFinalData.miniatura_dominante || null,
+      validacion_olimpo: guionFinalData.validacion_olimpo || adnForense.validacion_olimpo || null,
+      // Sistema de superioridad puede venir de fase 1 o 2
+      sistema_superioridad: adnForense.sistema_superioridad || guionFinalData.sistema_superioridad || null,
+    };
+
+    const scoreActual = adnForense.score_viral_estructural?.viralidad_estructural_global || 0;
+    const palabrasFinales = outputActual.guion_adaptado_espejo.trim().split(/\s+/).filter(Boolean).length;
+
+    console.log(`[MOTOR PRO V2] 🏆 FUSIÓN COMPLETA`);
+    console.log(`[MOTOR PRO V2] 📊 Score ADN: ${scoreActual}/100`);
+    console.log(`[MOTOR PRO V2] 📝 Palabras guion final: ${palabrasFinales}`);
 
     // ─── FASE 3: VALIDACIÓN Y MAPEO FINAL ───
     
@@ -10074,11 +10209,19 @@ function calculateTitanCost(
 
     // ─── PASO 2: Tabla de precios multi-URL ───
     // Estructura: { tipo: [1_url, 2-3_urls, 4-5_urls] }
+    // V2: 2 llamadas al modelo = mayor costo operativo real
+    // Reel: 2 llamadas ~$0.08 | Video Largo: ~$0.18 | Masterclass: ~$0.35
+    // Precio refleja calidad diferenciada — guion élite garantizado
     const PRECIO_TABLA: Record<number, number[]> = {
-      15: [15, 25, 35],  // Reels: 1 URL = 15, 2-3 = 25, 4-5 = 35
-      45: [45, 65, 85],  // Video Largo: 1 URL = 45, 2-3 = 65, 4-5 = 85
-      60: [60, 85, 110], // Masterclass: 1 URL = 60, 2-3 = 85, 4-5 = 110
+      20: [20, 35, 50],   // Reels (era 15): 1 URL = 20, 2-3 = 35, 4-5 = 50
+      55: [55, 80, 105],  // Video Largo (era 45): 1 URL = 55, 2-3 = 80, 4-5 = 105
+      75: [75, 105, 135], // Masterclass (era 60): 1 URL = 75, 2-3 = 105, 4-5 = 135
     };
+
+    // Actualizar baseCostPerUrl a los nuevos valores
+    if (baseCostPerUrl === 15) baseCostPerUrl = 20;
+    else if (baseCostPerUrl === 45) baseCostPerUrl = 55;
+    else if (baseCostPerUrl === 60) baseCostPerUrl = 75;
 
     const tabla = PRECIO_TABLA[baseCostPerUrl] || PRECIO_TABLA[15];
     let totalCost: number;
@@ -10540,11 +10683,20 @@ if (body.closing_objective) settings.closing_objective = body.closing_objective;
         }
 
         // ── Autopsia del contenido principal (o contenido combinado) ──
-        // ✅ PEGAR ESTO (Poder Total):
+        // 🚀 EJECUCIÓN DEL MOTOR PRO V900 — 21 Motores + Loop de Calidad
         
-        // 🚀 EJECUCIÓN DEL MOTOR PRO (15 Motores + Loop de Calidad)
-        // Analiza el contenido acumulado de todas las fuentes
-        // Inyectar duración al contexto para que el executor adapte umbrales
+        // CRÍTICO: Inyectar el nicho/tema del usuario en el contexto
+        // targetTopic = body.text = lo que el usuario escribió en "Tu nicho / tema"
+        if (targetTopic && targetTopic.trim().length > 0) {
+          (userContext as any).nicho = targetTopic.trim();
+          (userContext as any).nicho_usuario_explicito = targetTopic.trim();
+        }
+        
+        // Inyectar tipo de contenido para que el motor sepa la longitud objetivo
+        (userContext as any).contentType = settings.contentType || 'reel';
+        (userContext as any).targetPlatform = settings.platform || platName;
+        
+        // Inyectar duración del video original para adaptar umbrales
         userContext._videoDurationSecs = videoDurationSecs;
 
         const motorRes = await ejecutarIngenieriaInversaPro(
@@ -10553,7 +10705,6 @@ if (body.closing_objective) settings.closing_objective = body.closing_objective;
           openai,
           platName 
         );
-
         // 📦 ESTRUCTURACIÓN PARA FRONTEND (DOMINANCIA)
         result = {
           guion_generado: motorRes.data, // JSON PRO Completo

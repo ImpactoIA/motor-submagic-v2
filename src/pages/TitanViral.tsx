@@ -39,17 +39,17 @@ const CONTENT_CONFIGS: Record<ContentType, CreditConfig> = {
   reel: {
     label: 'Reel / Short',
     icon: '🎥',
-    costs: { single: 15, multi23: 25, multi45: 35 },
+    costs: { single: 20, multi23: 35, multi45: 50 },
   },
   long: {
     label: 'Video Largo',
     icon: '🎬',
-    costs: { single: 45, multi23: 65, multi45: 85 },
+    costs: { single: 55, multi23: 80, multi45: 105 },
   },
   masterclass: {
     label: 'Masterclass',
     icon: '🎓',
-    costs: { single: 60, multi23: 85, multi45: 110 },
+    costs: { single: 75, multi23: 105, multi45: 135 },
   },
 };
 
@@ -524,6 +524,20 @@ const OmegaScriptView = ({ scriptData }: { scriptData: any }) => {
             <span className="bg-green-500 text-black text-[9px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider">
               READY TO SHOOT
             </span>
+            {scriptText && (() => {
+              const words = scriptText.trim().split(/\s+/).filter(Boolean).length;
+              const isShort = words < 150;
+              const isGood = words >= 180;
+              return (
+                <span className={`text-[9px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider ${
+                  isGood ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                  : isShort ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                  : 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
+                }`}>
+                  {words} palabras {isGood ? '✓' : isShort ? '⚠ corto' : '~'}
+                </span>
+              );
+            })()}
           </div>
           <h3 className="text-lg font-black text-white flex items-center gap-2 tracking-tight">
             <Clapperboard className="text-green-400" size={20} /> GUION DE PRODUCCIÓN
