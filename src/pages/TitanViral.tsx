@@ -1865,9 +1865,9 @@ export const TitanViral = () => {
     
     // Extraemos el texto plano del guion generado para enviarlo al juez
     const scriptText = 
-      result.guion_generado.guion_tecnico_completo || 
-      result.guion_generado.guion_completo_adaptado || 
-      result.guion_generado.guion_completo;
+  result.guion_generado?.guion_tecnico_completo || 
+  result.guion_generado?.guion_completo_adaptado || 
+  result.guion_generado?.guion_completo || '';
 
     try {
       const { data, error } = await supabase.functions.invoke('process-url', {
@@ -2353,8 +2353,7 @@ export const TitanViral = () => {
           <div className="space-y-8">
             
            {/* 1. ESTRATEGIA */}
-<OmegaStrategy analysis={result.guion_generado.analisis_estrategico} />
-
+<OmegaStrategy analysis={result.guion_generado?.analisis_estrategico} />
 {/* 2. GUION */}
 <OmegaScriptView scriptData={result.guion_generado} />
 
@@ -2499,7 +2498,7 @@ export const TitanViral = () => {
           ({result.guion_generado._completitud_pct}%)
         </p>
         <p className="text-[10px] text-gray-500 mt-0.5">
-          Motores incompletos: {result.guion_generado._motores_faltantes.join(", ")}
+          Motores incompletos: {result.guion_generado._motores_faltantes?.join(", ")}
         </p>
       </div>
     </div>
