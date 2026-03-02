@@ -1985,7 +1985,7 @@ export const TitanViral = () => {
         avatarId: selectedAvatarId || undefined,
         knowledgeBaseId: selectedKnowledgeBaseId || undefined,
         settings: {
-          platform: targetPlatform,
+          platform: selectedPlatform,
           contentType,
           urlCount,
         },
@@ -2095,9 +2095,9 @@ export const TitanViral = () => {
               {['TikTok', 'Reels', 'YouTube', 'LinkedIn', 'Facebook'].map((p) => (
                 <button
                   key={p}
-                  onClick={() => setTargetPlatform(p)}
+                  onClick={() => setSelectedPlatform(p)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${
-                    targetPlatform === p
+                    selectedPlatform === p
                       ? 'bg-blue-500/15 text-blue-400 border-blue-500/30'
                       : 'bg-[#080808] text-gray-500 border-white/5 hover:text-gray-300'
                   }`}

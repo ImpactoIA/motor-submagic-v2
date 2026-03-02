@@ -6987,7 +6987,7 @@ async function ejecutarIngenieriaInversaPro(
   const contentType    = contexto.contentType || (esReel ? 'reel' : esMasterclass ? 'masterclass' : 'long');
   const nichoUsuario   = contexto.nicho || "General";
   const objetivoUsuario = contexto.deseo_principal || "Dominancia y Viralidad";
-  const platform       = contexto.targetPlatform || 'TikTok';
+  const platform       = contexto.targetPlatform || contexto.platform || 'TikTok';
   const minWords       = contentType === 'masterclass' ? 800 : contentType === 'long' ? 450 : 250;
 
   let tokensTotal = 0;
