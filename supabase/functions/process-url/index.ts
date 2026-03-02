@@ -11023,7 +11023,7 @@ if (body.closing_objective) settings.closing_objective = body.closing_objective;
 
         // ── Multi-URL: el frontend envía body.urls (array) o body.url (string) ──
         const rawUrls: string[] = body.urls || (body.url ? [body.url] : []);
-        const outputLanguage: string = body.outputLanguage || 'es';
+        const outputLanguage: string = body.outputLanguage || settings.outputLanguage || 'es';
         const languageNames: Record<string, string> = {
         'es': 'español — escribe como hispanohablante nativo, adapta modismos y referencias culturales',
         'en': 'English — write as a native English speaker, adapt idioms and cultural references',
