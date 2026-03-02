@@ -1899,6 +1899,7 @@ export const TitanViral = () => {
   // ─── Tipo de contenido y plataforma ───
   const [contentType, setContentType] = useState<ContentType>('reel');
   const [selectedPlatform, setSelectedPlatform] = useState<string>('TikTok');
+  const [selectedLanguage, setSelectedLanguage] = useState<string>('es'); // 👈 ESTA ES LA LÍNEA QUE FALTABA
 
   // ─── Contexto ───
   const [selectedAvatarId, setSelectedAvatarId] = useState<string>('');
@@ -1988,10 +1989,9 @@ export const TitanViral = () => {
           platform: selectedPlatform,
           contentType,
           urlCount,
+          outputLanguage: selectedLanguage // 👈 LO MOVEMOS ADENTRO DE SETTINGS Y USAMOS LA VARIABLE CORRECTA
         },
-        outputLanguage: outputLanguage,
       };
-
       if (uploadMode === 'url') {
         payload.urls = validUrls;
         payload.url  = validUrls[0]; 
