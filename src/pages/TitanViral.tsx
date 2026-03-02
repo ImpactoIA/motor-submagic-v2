@@ -1898,7 +1898,7 @@ export const TitanViral = () => {
 
   // ─── Tipo de contenido y plataforma ───
   const [contentType, setContentType] = useState<ContentType>('reel');
-  const [targetPlatform, setTargetPlatform] = useState('TikTok');
+  const [selectedPlatform, setSelectedPlatform] = useState<string>('TikTok');
 
   // ─── Contexto ───
   const [selectedAvatarId, setSelectedAvatarId] = useState<string>('');
@@ -1989,6 +1989,7 @@ export const TitanViral = () => {
           contentType,
           urlCount,
         },
+        outputLanguage: outputLanguage,
       };
 
       if (uploadMode === 'url') {
@@ -2106,6 +2107,56 @@ export const TitanViral = () => {
               ))}
             </div>
           </div>
+
+           {/* ── SELECTOR DE IDIOMA DE SALIDA ── */}
+<div className="mt-5">
+  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-2 mb-3">
+    <span className="text-base">🌍</span> Idioma del guion de salida
+  </label>
+  <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+    {[
+      { code: 'es', flag: '🇪🇸', label: 'Español',   sub: 'Salida en español'     },
+      { code: 'en', flag: '🇺🇸', label: 'English',   sub: 'Output in English'     },
+      { code: 'pt', flag: '🇧🇷', label: 'Português', sub: 'Saída em português'    },
+      { code: 'fr', flag: '🇫🇷', label: 'Français',  sub: 'Sortie en français'    },
+    ].map(lang => (
+      <button
+        key={lang.code}
+        type="button"
+        onClick={() => setSelectedLanguage(lang.code)}
+        className={`relative flex flex-col items-center gap-1 px-3 py-3 rounded-xl border text-center transition-all duration-200
+          ${selectedLanguage === lang.code
+            ? 'bg-green-500/10 border-green-500/60 shadow-[0_0_12px_-3px_rgba(34,197,94,0.4)]'
+            : 'bg-white/2 border-white/8 hover:border-white/20 hover:bg-white/5'
+          }`}
+      >
+        {selectedLanguage === lang.code && (
+          <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-green-400 shadow-[0_0_6px_rgba(34,197,94,0.8)]" />
+        )}
+        <span className="text-xl">{lang.flag}</span>
+        <span className={`text-[11px] font-black ${selectedLanguage === lang.code ? 'text-green-400' : 'text-white'}`}>
+          {lang.label}
+        </span>
+        <span className="text-[9px] text-gray-600 leading-tight">{lang.sub}</span>
+      </button>
+    ))}
+  </div>
+  {selectedLanguage !== 'es' && (
+    <div className="mt-2 flex items-start gap-2 bg-blue-500/5 border border-blue-500/20 rounded-lg px-3 py-2">
+      <span className="text-blue-400 text-sm mt-0.5">⚡</span>
+      <p className="text-[10px] text-blue-400/80 leading-relaxed">
+        El ADN viral se extrae en cualquier idioma. El guion final se escribe en{' '}
+        <strong>
+          {selectedLanguage === 'en' ? 'English' :
+           selectedLanguage === 'pt' ? 'Português' :
+           selectedLanguage === 'fr' ? 'Français' : 'Español'}
+        </strong>{' '}
+        — adaptado culturalmente, no traducido.
+      </p>
+    </div>
+  )}
+</div>
+          
 
           {/* MODO URL / FILE */}
           <div className="space-y-3">

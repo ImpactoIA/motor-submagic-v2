@@ -6131,6 +6131,7 @@ return {
   videoUrl: (postData as any).videoUrl || url,
   description: transcriptFB,
   transcript: transcriptFB,
+  detectedLanguage: (postData as any).language || 'auto',
   duration: (postData as any).videoDuration || 0,
 };
   } catch (error: any) {
@@ -6645,6 +6646,11 @@ Nicho de origen: ${nichoOrigen}
 Nicho del usuario (destino): ${nichoUsuario}
 Objetivo del usuario: ${objetivoUsuario}
 
+IDIOMA ORIGEN DEL VIDEO: ${contexto?.detectedSourceLanguage || 'auto-detectado'}
+IDIOMA DE SALIDA DEL GUION: ${contexto?.outputLanguageFull || 'español — escribe como hispanohablante nativo'}
+REGLA: Si el video es en inglés y el guion va en español — NO traduzcas, RECREA.
+El guion debe sonar como si un nativo de ese idioma lo hubiera pensado así desde el principio.
+
 TRANSCRIPCIÓN:
 ${transcripcion}
 =============================================================
@@ -6776,9 +6782,33 @@ razon_posicionamiento.
 proximos_contenidos: 3 items [{titulo, por_que_ahora, genero, tension}].
 
 =============================================================
-OUTPUT FASE 1: SOLO ANÁLISIS FORENSE. CERO GUION.
-Motores 1-12: concisos, listas máximo 5 items.
-DEVUELVE ÚNICAMENTE JSON VÁLIDO. Sin markdown. Sin backticks.
+=============================================================
+OUTPUT OBLIGATORIO — USA EXACTAMENTE ESTAS CLAVES JSON:
+{
+  "adn_estructura": {"patron_narrativo_detectado":"","tipo_apertura":"","tipo_cierre":"","proporcion_hook_pct":0,"velocidad_escalada":"","complejidad_estructural":0,"bloques":[]},
+  "curva_emocional": {"emocion_dominante":"","emocion_secundaria":"","emocion_final":"","picos_emocionales":[],"intensidad_promedio":0,"variabilidad_emocional":0,"arco_emocional":""},
+  "micro_loops": {"total":0,"loops":[],"intervalo_promedio":0,"densidad_anticipacion":0,"loops_sin_resolver":0,"estrategia_tension":""},
+  "polarizacion": {"nivel_confrontacion":0,"ruptura_creencia_detectada":"","enemigo_implicito":"","nivel_friccion_narrativa":0,"mecanismo_polarizacion":"","afirmaciones_divisivas":[],"posicionamiento_vs":""},
+  "identidad_verbal": {"longitud_promedio_frases":0,"ritmo_sintactico":"","proporcion_frases_cortas_pct":0,"uso_metaforas":0,"uso_imperativos":0,"sofisticacion_lexica":0,"nivel_agresividad_verbal":0,"firma_linguistica":"","palabras_poder_detectadas":[]},
+  "status_y_posicionamiento": {"tipo_autoridad":"","experiencia_proyectada":"","rol_narrativo":"","nivel_confianza_percibida":0,"distancia_con_audiencia":"","prueba_social_detectada":"","mecanismos_autoridad":[]},
+  "densidad_valor": {"valor_por_minuto":0,"porcentaje_contenido_abierto":0,"profundidad_insight":0,"micro_aprendizajes":[],"ratio_promesa_entrega":0,"tipo_valor_dominante":""},
+  "manipulacion_atencion": {"cambios_ritmo":[],"interrupciones_patron":0,"reencuadres_mentales":[],"golpes_narrativos":[],"reactivaciones_atencion":0,"frecuencia_estimulacion":""},
+  "activadores_guardado": [{"tipo":"","contenido":"","segundo_aproximado":0,"potencia_guardado":0}],
+  "adaptabilidad_nicho": {"sofisticacion_audiencia_target":"","nivel_conciencia_mercado":"","intensidad_psicologica_tolerable":0,"ajustes_necesarios":[],"riesgos_adaptacion":[]},
+  "elementos_cliche_detectados": [{"tipo":"","contenido":"","nivel_saturacion":0,"alternativa_sugerida":""}],
+  "ritmo_narrativo": {"velocidad_progresion":"","intervalo_promedio_entre_estimulos_seg":0,"variacion_intensidad":0,"fluidez_estructural":0,"momentos_pausa":[],"aceleraciones":[]},
+  "score_viral_estructural": {"retencion_estructural":0,"intensidad_emocional":0,"polarizacion":0,"manipulacion_atencion":0,"densidad_valor":0,"viralidad_estructural_global":0,"breakdown_motores":{}},
+  "adn_profundo": {"genero_narrativo":"","emocion_nucleo":"","tipo_tension":"","frame_dominante":{"creencia_que_ataca":"","nuevo_marco":"","frase_nucleo":""},"polarizacion_implicita":{"bando_A":"","bando_B":"","tension_irresuelta":""}},
+  "idea_nuclear_ganadora": {"que_hace_viral":"","creencia_rota":"","postura_impuesta":"","por_que_genera_conversacion":"","tension_no_resuelta":""},
+  "sistema_superioridad": {"mayor_claridad":"","mayor_intensidad":"","mayor_polarizacion":"","mejor_estructura_emocional":"","mejor_cierre":"","ventaja_de_nicho":""},
+  "blueprint_replicable": {"nombre_patron":"","formula_base":"","pasos_estructurales":[],"equivalencias_estructurales":{"hook_type":"","escalation_pattern":"","giro_type":"","closure_type":""},"equivalencias_psicologicas":{"emocion_entrada":"","emocion_escalada":"","emocion_salida":"","tension_type":"","activation_mechanism":""},"equivalencias_verbales":{"ritmo":"","agresividad":0,"sofisticacion":0}},
+  "analisis_tca": {"nivel_tca_detectado":"","sector_detectado":"","mass_appeal_score":0,"equilibrio_masividad_calificacion":false,"diagnostico_tca":"","nivel_tca_recomendado":"","sector_recomendado":"","nuevo_hook_sectorial":"","nueva_capa_visible":"","advertencia_micronicho":""},
+  "mapa_de_adaptacion": {"cambios_necesarios":[],"riesgos":[],"oportunidades":[]},
+  "posicionamiento_y_proximos_pasos": {"posiciona_como":"","razon_posicionamiento":"","proximos_contenidos":[]}
+}
+RELLENA TODOS LOS CAMPOS con datos reales del análisis. Nunca dejes strings vacíos ni números en 0 si hay datos.
+Si la transcripción es corta, infiere el ADN con lo disponible — NUNCA devuelvas campos vacíos.
+DEVUELVE ÚNICAMENTE JSON VÁLIDO. Sin markdown. Sin backticks. Sin texto antes ni después.
 =============================================================
 `;
 
@@ -6794,83 +6824,153 @@ const PROMPT_GUION_ELITE = (
   const idealWords = contentType === 'masterclass' ? 1200 : contentType === 'long' ? 600 : 280;
   const duracion = contentType === 'masterclass' ? 'más de 10 minutos' : contentType === 'long' ? '3 a 10 minutos' : '30 a 90 segundos';
 
-  const genero = adnForense.adn_profundo?.genero_narrativo || 'No detectado';
-  const emocion = adnForense.adn_profundo?.emocion_nucleo || 'No detectada';
-  const tension = adnForense.adn_profundo?.tipo_tension || 'No detectado';
+  const genero = adnForense.adn_profundo?.genero_narrativo || 'Autoridad estratégica';
+  const emocion = adnForense.adn_profundo?.emocion_nucleo || 'Indignación';
+  const tension = adnForense.adn_profundo?.tipo_tension || 'Profesional';
   const frameNucleo = adnForense.adn_profundo?.frame_dominante?.frase_nucleo || '';
   const creenciaAtaca = adnForense.adn_profundo?.frame_dominante?.creencia_que_ataca || '';
+  const nuevoMarco = adnForense.adn_profundo?.frame_dominante?.nuevo_marco || '';
   const ideanuclear = adnForense.idea_nuclear_ganadora?.que_hace_viral || '';
   const postura = adnForense.idea_nuclear_ganadora?.postura_impuesta || '';
+  const creenciaRota = adnForense.idea_nuclear_ganadora?.creencia_rota || '';
+  const tensionNoResuelta = adnForense.idea_nuclear_ganadora?.tension_no_resuelta || '';
   const patron = adnForense.adn_estructura?.patron_narrativo_detectado || '';
+  const velocidadEscalada = adnForense.adn_estructura?.velocidad_escalada || 'progresiva';
+  const propHookPct = adnForense.adn_estructura?.proporcion_hook_pct || 15;
   const hookType = adnForense.blueprint_replicable?.equivalencias_estructurales?.hook_type || '';
+  const escalationPattern = adnForense.blueprint_replicable?.equivalencias_estructurales?.escalation_pattern || '';
   const closureType = adnForense.blueprint_replicable?.equivalencias_estructurales?.closure_type || '';
   const totalLoops = adnForense.micro_loops?.total || 3;
-  const activador0 = adnForense.activadores_guardado?.[0]?.tipo || 'guardado';
-  const ritmoVerbal = adnForense.identidad_verbal?.ritmo_sintactico || '';
+  const estrategiaTension = adnForense.micro_loops?.estrategia_tension || '';
+  const activadores = adnForense.activadores_guardado || [];
+  const activador0 = activadores[0]?.tipo || 'frase_memorable';
+  const activador1 = activadores[1]?.tipo || 'reencuadre';
+  const ritmoVerbal = adnForense.identidad_verbal?.ritmo_sintactico || 'staccato';
+  const agresividad = adnForense.identidad_verbal?.nivel_agresividad_verbal || 70;
   const bandoA = adnForense.adn_profundo?.polarizacion_implicita?.bando_A || '';
   const bandoB = adnForense.adn_profundo?.polarizacion_implicita?.bando_B || '';
+  const tensionIrresuelta = adnForense.adn_profundo?.polarizacion_implicita?.tension_irresuelta || '';
   const sectorTca = adnForense.analisis_tca?.sector_detectado || 'Desarrollo Personal';
+  const nuevoHook = adnForense.analisis_tca?.nuevo_hook_sectorial || '';
+  const ventajaNicho = adnForense.sistema_superioridad?.ventaja_de_nicho || '';
+  const mayorIntensidad = adnForense.sistema_superioridad?.mayor_intensidad || '';
+  const golpesNarrativos = adnForense.manipulacion_atencion?.golpes_narrativos || [];
+  const reencuadresMentales = adnForense.manipulacion_atencion?.reencuadres_mentales || [];
 
-  return `Eres el escritor de guiones virales #1 del mundo.
-Tu ÚNICA función: escribir el guion más poderoso posible + plan de producción + miniatura.
-El ADN ya fue extraído. Ahora ESCRIBE con todos los tokens disponibles.
+  return `Eres el escritor de guiones virales #1 del mundo hispanohablante.
+MISIÓN: Tomar el ADN exacto de este video viral y crear un guion SUPERIOR adaptado al nicho del usuario.
+El análisis ya está hecho. Ahora tienes UNA SOLA FUNCIÓN: escribir el guion más poderoso posible.
 
-=============================================================
-ADN VIRAL EXTRAÍDO — USA ESTO COMO MOLDE EXACTO:
-=============================================================
-GÉNERO NARRATIVO: ${genero}
+═══════════════════════════════════════════════════
+ADN VIRAL EXTRAÍDO — ESTE ES TU MOLDE EXACTO:
+═══════════════════════════════════════════════════
+GÉNERO: ${genero}
 EMOCIÓN NÚCLEO: ${emocion}
-TIPO DE TENSIÓN: ${tension}
+TENSIÓN: ${tension}
 FRAME DOMINANTE: "${frameNucleo}"
 CREENCIA QUE DESTRUYE: "${creenciaAtaca}"
-IDEA QUE HACE VIRAL: ${ideanuclear}
-POSTURA QUE INSTALA: ${postura}
+NUEVO MARCO QUE INSTALA: "${nuevoMarco}"
+QUÉ LO HACE VIRAL: ${ideanuclear}
+POSTURA QUE IMPONE: "${postura}"
+CREENCIA ROTA: "${creenciaRota}"
+TENSIÓN QUE DEJA SIN RESOLVER (genera comentarios): "${tensionNoResuelta}"
 PATRÓN NARRATIVO: ${patron}
 HOOK TYPE: ${hookType}
-CIERRE TYPE: ${closureType}
-MICRO-LOOPS A REPLICAR: ${totalLoops}
-ACTIVADOR DE GUARDADO: ${activador0}
-RITMO VERBAL: ${ritmoVerbal}
-BANDO A (de acuerdo): ${bandoA}
-BANDO B (en contra): ${bandoB}
+ESCALATION PATTERN: ${escalationPattern}
+CLOSURE TYPE: ${closureType}
+MICRO-LOOPS: ${totalLoops} (estrategia: ${estrategiaTension})
+ACTIVADOR PRINCIPAL: ${activador0} | SECUNDARIO: ${activador1}
+RITMO: ${ritmoVerbal} | AGRESIVIDAD: ${agresividad}/100
+BANDO A (de acuerdo): "${bandoA}"
+BANDO B (en contra): "${bandoB}"
+TENSIÓN IRRESUELTA: "${tensionIrresuelta}"
+NUEVO HOOK PARA EL NICHO: "${nuevoHook}"
+VENTAJA DEL NICHO: "${ventajaNicho}"
+MAYOR INTENSIDAD POSIBLE: "${mayorIntensidad}"
+PROPORCIÓN HOOK: ${propHookPct}% | VELOCIDAD ESCALADA: ${velocidadEscalada}
 SECTOR TCA: ${sectorTca}
-=============================================================
-NICHO DEL USUARIO: ${nichoUsuario}
+
+═══════════════════════════════════════════════════
+DESTINO DE LA ADAPTACIÓN:
+═══════════════════════════════════════════════════
+NICHO: ${nichoUsuario}
 OBJETIVO: ${objetivoUsuario}
 PLATAFORMA: ${platform}
-TIPO: ${contentType} — duración ${duracion}
+FORMATO: ${contentType} — ${duracion}
 ${expertProfile ? `
-PERFIL EXPERTO:
-- Mecanismo propio: ${expertProfile.mechanism_name || 'no definido'}
-- Enemigo común: ${expertProfile.enemy || 'no definido'}
-- Territorio mental: ${expertProfile.mental_territory || 'no definido'}
-- Punto A avatar: ${expertProfile.point_a || 'no definido'}
-- Punto B destino: ${expertProfile.point_b || 'no definido'}
-` : ''}
-=============================================================
+EXPERTO QUE GRABARÁ ESTE GUION:
+- Mecanismo único: "${expertProfile.mechanism_name || 'no definido'}"
+- Enemigo que combate: "${expertProfile.enemy || 'no definido'}"
+- Territorio mental: "${expertProfile.mental_territory || 'no definido'}"
+- Punto A del avatar (dolor): "${expertProfile.point_a || 'no definido'}"
+- Punto B del avatar (transformación): "${expertProfile.point_b || 'no definido'}"
+IMPORTANTE: Integra estos datos en el guion — son el alma del contenido.` : ''}
 
-GUION — REGLAS ABSOLUTAS
+═══════════════════════════════════════════════════
+LEYES ABSOLUTAS:
+═══════════════════════════════════════════════════
 
-LONGITUD: MÍNIMO ${minWords} palabras. IDEAL ${idealWords} palabras.
-Si el guion tiene menos de ${minWords} palabras → ES UN FALLO.
+① LONGITUD: MÍNIMO ${minWords} palabras. IDEAL ${idealWords} palabras.
+   Guion menor a ${minWords} palabras = FALLO. No lo entregues.
 
-ESTRUCTURA OBLIGATORIA:
-1. HOOK → Impacto inmediato. Emoción: ${emocion}
-2. SETUP DEL CONFLICTO (15-25%) → Destruye: "${creenciaAtaca}"
-3. ESCALADA EMOCIONAL (40-55%) → ${totalLoops} micro-loops. Todo en universo de ${nichoUsuario}
-4. CLÍMAX → Momento más intenso. Confesión/revelación/dato que cambia todo
-5. CIERRE ESTRATÉGICO (15-20%) → Activa: ${activador0} | Instala: "${postura}"
+② ESTRUCTURA OBLIGATORIA:
 
-TELEPROMPTER — PROHIBICIONES:
-❌ [HOOK] [SETUP] [GIRO] [CLIMAX] [CIERRE] [ESCALADA] — ninguna etiqueta
-✅ SOLO lo que el creador dice en voz alta
-✅ Usa ... para pausa corta | línea en blanco para pausa larga
+   HOOK (${propHookPct}% — primeras palabras):
+   → Tipo "${hookType}". Emoción: ${emocion}. Sin introducción, sin contexto.
+   → Primera frase destruye: "${creenciaAtaca}" aplicada al universo de ${nichoUsuario}
+   → En 3 segundos el oyente piensa: "esto es exactamente lo que me pasa"
+   → Si hay nuevo_hook_sectorial úsalo: "${nuevoHook}"
 
-plan_audiovisual_profesional: secuencia_temporal (min 5), b_rolls_estrategicos (min 2), ritmo_de_cortes, musica, efectos_de_retencion.
-miniatura_dominante: frase_principal, variante_agresiva, variante_aspiracional, ctr_score, nivel_disrupcion, nivel_polarizacion.
-validacion_olimpo: 10 checks booleanos + score_validacion.
+   SETUP DEL CONFLICTO (15-20%):
+   → Instala al enemigo adaptado a ${nichoUsuario} (versión del "${bandoB}")
+   → Amplía el dolor. El oyente siente que alguien finalmente lo entiende.
+   → Introduce el nuevo marco: "${nuevoMarco}"
 
-DEVUELVE ÚNICAMENTE JSON. Sin markdown. Sin backticks.
+   ESCALADA EMOCIONAL (40-50%):
+   → Velocidad: ${velocidadEscalada}. Cada párrafo SUBE la intensidad.
+   → Replica ${totalLoops} micro-loops. Estrategia: ${estrategiaTension}
+   → ${reencuadresMentales.length > 0 ? `Incluye estos reencuadres: ${JSON.stringify(reencuadresMentales)}` : 'Incluye mínimo 2 reencuadres mentales que cambien la perspectiva del oyente.'}
+   → TODO el contenido, ejemplos y metáforas son del universo de ${nichoUsuario}
+   → CERO referencias al video original
+
+   CLÍMAX:
+   → ${golpesNarrativos.length > 0 ? `Golpe narrativo: "${golpesNarrativos[0]?.descripcion || ''}"` : 'El momento más intenso — revelación o dato que cambia todo.'}
+   → Postura definitiva: "${postura}"
+
+   CIERRE ESTRATÉGICO (15-20%):
+   → Activa guardado con: ${activador0} y ${activador1}
+   → Deja sin resolver: "${tensionNoResuelta}" — genera comentarios
+   → Última frase: la más memorable. Que la repitan mentalmente todo el día.
+
+③ ESTILO: Ritmo ${ritmoVerbal}. Usa "..." para pausa. Línea en blanco para pausa larga.
+④ PROHIBIDO: [HOOK] [SETUP] [ESCALADA] [CLIMAX] [CIERRE] — ninguna etiqueta visible.
+   SOLO palabras que el creador dice en voz alta.
+
+═══════════════════════════════════════════════════
+DEVUELVE ESTE JSON EXACTO (sin markdown, sin backticks):
+{
+  "guion_adaptado_espejo": "EL GUION COMPLETO — MÍNIMO ${minWords} PALABRAS",
+  "guion_adaptado_al_nicho": "mismo contenido que guion_adaptado_espejo",
+  "plan_audiovisual_profesional": {
+    "secuencia_temporal": [{"tiempo":"","descripcion_visual":"","tipo_plano":"","movimiento_camara":"","texto_en_pantalla":"","emocion_objetivo":"","efecto_retencion":""}],
+    "b_rolls_estrategicos": [{"momento":"","que_mostrar":"","por_que_refuerza":"","emocion_generada":""}],
+    "ritmo_de_cortes": {"patron_general":"","descripcion":"","aceleraciones":"","desaceleraciones":"","frecuencia_promedio_seg":0},
+    "musica": {"tipo":"","bpm_aproximado":0,"emocion_dominante":"","entrada_musica":"","cambio_musical":""},
+    "efectos_de_retencion": {"sonido_transicion":"","micro_silencios":"","cambios_de_plano":"","micro_interrupciones":""}
+  },
+  "miniatura_dominante": {
+    "frase_principal":"","variante_agresiva":"","variante_aspiracional":"",
+    "justificacion_estrategica":"","emocion_dominante_activada":"","gap_curiosidad":"",
+    "mecanismo_psicologico":"","ctr_score":0,"nivel_disrupcion":0,"nivel_gap_curiosidad":0,"nivel_polarizacion":0
+  },
+  "validacion_olimpo": {
+    "hook_genera_tension_inmediata":true,"creencia_destruida_claramente":true,
+    "micro_loops_presentes":true,"escalada_emocional_progresiva":true,
+    "climax_poderoso":true,"cierre_memorable":true,"cero_etiquetas_visibles":true,
+    "vocabulario_del_nicho":true,"tension_irresuelta_para_comentarios":true,
+    "supera_minimo_palabras":true,"score_validacion":10
+  }
+}
 `;
 };
 
@@ -6888,7 +6988,7 @@ async function ejecutarIngenieriaInversaPro(
   const nichoUsuario   = contexto.nicho || "General";
   const objetivoUsuario = contexto.deseo_principal || "Dominancia y Viralidad";
   const platform       = contexto.targetPlatform || 'TikTok';
-  const minWords       = contentType === 'masterclass' ? 700 : contentType === 'long' ? 400 : 200;
+  const minWords       = contentType === 'masterclass' ? 800 : contentType === 'long' ? 450 : 250;
 
   let tokensTotal = 0;
   let outputActual: any = null;
@@ -6922,6 +7022,8 @@ async function ejecutarIngenieriaInversaPro(
 
     const adnForense = JSON.parse(completionFase1.choices[0].message.content || '{}');
     tokensTotal += completionFase1.usage?.total_tokens || 0;
+    adnForense._outputLanguage = contexto.outputLanguage || 'es';
+    adnForense._outputLanguageFull = contexto.outputLanguageFull || 'español — escribe como hispanohablante nativo';
 
     const scoreAdn = adnForense.score_viral_estructural?.viralidad_estructural_global || 0;
     console.log(`[MOTOR PRO V2] ✅ FASE 1 completa. Score ADN: ${scoreAdn}/100`);
@@ -6968,7 +7070,21 @@ ADN: Género: ${adnForense.adn_profundo?.genero_narrativo} | Emoción: ${adnFore
 GUION ACTUAL: ${guionTexto}
 NICHO: ${nichoUsuario}
 REESCRIBE completo con MÍNIMO ${minWords} palabras. Mantén plan_audiovisual_profesional, miniatura_dominante, validacion_olimpo.
-DEVUELVE ÚNICAMENTE JSON válido.`;
+═══════════════════════════════════════════════════
+⚠️ IDIOMA OBLIGATORIO DEL GUION:
+Escribe "guion_adaptado_espejo" ÚNICAMENTE en: ${adnForense._outputLanguageFull || 'español — escribe como hispanohablante nativo'}
+
+REGLAS:
+- Si el ADN viene de inglés y el guion va en español: NO traduzcas — RECREA.
+  Que suene como si un brillante hispanohablante lo hubiera pensado así desde siempre.
+- Adapta modismos, ejemplos y referencias culturales al idioma destino.
+- Jamás debe sentirse como traducción.
+- Las claves del JSON siempre en snake_case inglés.
+- Solo el contenido del guion va en el idioma seleccionado.
+═══════════════════════════════════════════════════
+DEVUELVE ÚNICAMENTE JSON válido. Sin markdown. Sin backticks.
+`;
+
 
       const completionRef = await openai.chat.completions.create({
         model: 'gpt-4o',
@@ -9771,7 +9887,10 @@ async function scrapeTikTok(url: string): Promise<{
   shouldDownloadVideos: true,
   shouldDownloadCovers: false,
   shouldDownloadSubtitles: true,
-  subtitlesLanguage: 'es'
+  subtitlesLanguage: 'es',
+  subtitlesLanguage2: 'en',
+  subtitlesLanguage3: 'pt',
+  subtitlesLanguage4: 'fr',
 });
 
       const { items } = await client.dataset(run.defaultDatasetId).listItems();
@@ -9859,6 +9978,7 @@ return {
   videoUrl: videoData.videoUrl || videoData.displayUrl || url,
   description: videoData.caption || '',
   transcript: transcriptIG,
+  detectedLanguage: videoData.language || 'auto',
   duration: videoData.videoDuration || 0
 };
       
@@ -9893,7 +10013,9 @@ async function scrapeYouTube(url: string): Promise<{
         searchKeywords: '',
         subtitlesLanguage: 'es',
         subtitlesLanguage2: 'en',
-        subtitlesFormat: 'text'
+        subtitlesLanguage3: 'pt',
+        subtitlesLanguage4: 'fr',
+        subtitlesFormat: 'text',
       });
 
       const { items } = await client.dataset(run.defaultDatasetId).listItems();
@@ -9951,8 +10073,9 @@ async function transcribeVideoWithWhisper(videoUrl: string, openai: any): Promis
   console.log('[WHISPER] ✅ Transcripción completada');
 
   return {
-    transcript: transcription.text,
-    duration: transcription.duration || 0
+  transcript: transcription.text,
+  duration: transcription.duration || 0,
+  language: transcription.language || 'auto',
   };
 }
 
@@ -9998,12 +10121,13 @@ async function scrapeAndTranscribeVideo(
     if (videoData.transcript && videoData.transcript.length > 50) {
       console.log(`[SCRAPER] ℹ️ Usando transcript (${videoData.transcript.length} chars)`);
       return {
-        transcript: videoData.transcript,
-        description: videoData.description,
-        duration: 0,
-        platform,
-        videoUrl: videoData.videoUrl
-      };
+  transcript: videoData.transcript,
+  description: videoData.description,
+  duration: 0,
+  platform,
+  videoUrl: videoData.videoUrl,
+  detectedLanguage: (videoData as any).detectedLanguage || 'auto'
+};
     }
 
     if (!videoData.videoUrl || videoData.videoUrl === url) {
@@ -10025,12 +10149,14 @@ async function scrapeAndTranscribeVideo(
     const whisperResult = await transcribeVideoWithWhisper(videoData.videoUrl, openai);
 
     return {
-      transcript: whisperResult.transcript,
-      description: videoData.description,
-      duration: whisperResult.duration,
-      platform,
-      videoUrl: videoData.videoUrl
-    };
+  transcript: whisperResult.transcript,
+  description: videoData.description,
+  duration: whisperResult.duration,
+  platform,
+  videoUrl: videoData.videoUrl,
+  detectedLanguage: (whisperResult as any).language || 'auto'
+};
+   
 
   } catch (error: any) {
     console.error('[SCRAPER] ❌ Error:', error.message);
@@ -10700,6 +10826,8 @@ if (body.closing_objective) settings.closing_objective = body.closing_objective;
             platName          = videoData.platform || platName;
             videoSource       = videoData.source;
             videoDurationSecs = videoData.duration || 0;
+            (userContext as any).detectedSourceLanguage = (videoData as any).detectedLanguage || 'auto';
+            console.log(`[RECREATE] 🌍 Idioma video origen: ${(videoData as any).detectedLanguage || 'auto-detectado'} → Guion en: ${outputLanguage}`);
 
             if (videoData.duration > 0) {
             copyWhisperMinutes = Math.ceil(videoData.duration / 60);
@@ -10773,6 +10901,14 @@ if (body.closing_objective) settings.closing_objective = body.closing_objective;
 
         // ── Multi-URL: el frontend envía body.urls (array) o body.url (string) ──
         const rawUrls: string[] = body.urls || (body.url ? [body.url] : []);
+        const outputLanguage: string = body.outputLanguage || 'es';
+        const languageNames: Record<string, string> = {
+        'es': 'español — escribe como hispanohablante nativo, adapta modismos y referencias culturales',
+        'en': 'English — write as a native English speaker, adapt idioms and cultural references',
+        'pt': 'português brasileiro — escreva como falante nativo, adapte expressões e referências culturais',
+        'fr': 'français — écris comme un locuteur natif, adapte les expressions et références culturelles'
+};
+const outputLanguageFull = languageNames[outputLanguage] || languageNames['es'];
         const urlCount = rawUrls.filter((u: string) => u && u.trim()).length;
 
         // Pasar urlCount al sistema de costos
@@ -10870,6 +11006,8 @@ if (body.closing_objective) settings.closing_objective = body.closing_objective;
         // Inyectar tipo de contenido para que el motor sepa la longitud objetivo
         (userContext as any).contentType = settings.contentType || 'reel';
         (userContext as any).targetPlatform = settings.platform || platName;
+        (userContext as any).outputLanguage = outputLanguage;
+        (userContext as any).outputLanguageFull = outputLanguageFull;
         
         // Inyectar duración del video original para adaptar umbrales
         userContext._videoDurationSecs = videoDurationSecs;
