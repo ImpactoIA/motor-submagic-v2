@@ -1741,22 +1741,35 @@ const PosicionamientoCard = ({ data }: { data: any }) => {
 // 📊 COMPONENTES PRO: 15 MOTORES VISUALES
 // ==================================================================================
 
-const IRProScoreCard = ({ score }: { score: any }) => (
+const IRProScoreCard = ({ score }: { score: any }) => {
+  if (!score) return (
+    <div className="bg-[#0f1115] border border-purple-500/30 rounded-2xl p-6">
+      <h3 className="text-purple-400 text-[10px] font-black uppercase tracking-widest mb-4 flex items-center gap-2">
+        <Zap size={12} fill="currentColor" /> Score Viral Estructural
+      </h3>
+      <div className="flex items-baseline gap-2 mb-6">
+        <span className="text-5xl font-black text-white">—</span>
+        <span className="text-gray-500 font-bold">/100</span>
+      </div>
+      <p className="text-gray-600 text-xs">Procesando motores...</p>
+    </div>
+  );
+  return (
   <div className="bg-[#0f1115] border border-purple-500/30 rounded-2xl p-6 shadow-[0_0_30px_-10px_rgba(168,85,247,0.2)]">
     <h3 className="text-purple-400 text-[10px] font-black uppercase tracking-widest mb-4 flex items-center gap-2">
       <Zap size={12} fill="currentColor" /> Score Viral Estructural
     </h3>
     <div className="flex items-baseline gap-2 mb-6">
-      <span className="text-5xl font-black text-white">{score.viralidad_estructural_global || 0}</span>
+      <span className="text-5xl font-black text-white">{score?.viralidad_estructural_global || 0}</span>
       <span className="text-gray-500 font-bold">/100</span>
     </div>
     <div className="space-y-4">
       {[
-        { label: "Retención", val: score.retencion_estructural, color: "bg-blue-500" },
-        { label: "Emoción", val: score.intensidad_emocional, color: "bg-pink-500" },
-        { label: "Polarización", val: score.polarizacion, color: "bg-orange-500" },
-        { label: "Atención", val: score.manipulacion_atencion, color: "bg-purple-500" },
-        { label: "Valor", val: score.densidad_valor, color: "bg-green-500" },
+        { label: "Retención", val: score?.retencion_estructural || 0, color: "bg-blue-500" },
+        { label: "Emoción", val: score?.intensidad_emocional || 0, color: "bg-pink-500" },
+        { label: "Polarización", val: score?.polarizacion || 0, color: "bg-orange-500" },
+        { label: "Atención", val: score?.manipulacion_atencion || 0, color: "bg-purple-500" },
+        { label: "Valor", val: score?.densidad_valor || 0, color: "bg-green-500" },
       ].map(item => (
         <div key={item.label} className="space-y-1.5">
           <div className="flex justify-between text-[10px] font-bold uppercase tracking-tighter">
@@ -1773,7 +1786,8 @@ const IRProScoreCard = ({ score }: { score: any }) => (
       ))}
     </div>
   </div>
-);
+  );
+};
 
 const MotoresActivosCard = ({ output }: { output: any }) => {
   const motores = [
@@ -2311,7 +2325,7 @@ export const TitanViral = () => {
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Lado Izquierdo: Score Forense */}
         <div className="lg:col-span-4">
-            <IRProScoreCard score={result.guion_generado.score_viral_estructural} />
+            <IRProScoreCard score={result.guion_generado?.score_viral_estructural} />
         </div>
         
         {/* Lado Derecho: Actividad de Motores */}
