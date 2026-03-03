@@ -7083,7 +7083,7 @@ async function ejecutarIngenieriaInversaPro(
     const TOKENS_FASE2 = esMasterclass ? 8000 : contentType === 'long' ? 6000 : 4000;
 
     const completionFase2 = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: 'gpt-4o-mini',
       response_format: { type: 'json_object' },
       messages: [
         { role: 'system', content: `Eres el escritor de guiones virales #1 del mundo. ÚNICA función: guion poderoso y completo. MÍNIMO ${minWords} palabras. Más corto = fallo crítico. JSON válido únicamente.` },
@@ -7127,7 +7127,7 @@ DEVUELVE ÚNICAMENTE JSON válido. Sin markdown. Sin backticks.
 
 
       const completionRef = await openai.chat.completions.create({
-        model: 'gpt-4o',
+        model: 'gpt-4o-mini',
         response_format: { type: 'json_object' },
         messages: [
           { role: 'system', content: `Escritor viral. MÍNIMO ${minWords} palabras. JSON válido.` },
