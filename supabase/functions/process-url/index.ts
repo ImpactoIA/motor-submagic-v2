@@ -10157,8 +10157,20 @@ async function scrapeTikTok(url: string): Promise<{
           duration: videoData.videoMeta?.duration || 'N/A'
       });
       
-      const transcriptFinal = videoData.subtitles || videoData.subtitleText || videoData.text || '';
-console.log('[SCRAPER] 📝 Transcript TikTok:', transcriptFinal.substring(0, 100));
+      // subtitles puede ser array de objetos [{text,start,end}] o string plano
+      let transcriptFinal = '';
+      if (Array.isArray(videoData.subtitles)) {
+        transcriptFinal = videoData.subtitles.map((s: any) => s.text || s.content || '').join(' ').trim();
+      } else if (typeof videoData.subtitles === 'string' && videoData.subtitles.length > 10) {
+        transcriptFinal = videoData.subtitles;
+      } else if (videoData.subtitleText) {
+        transcriptFinal = videoData.subtitleText;
+      }
+      // Si subtítulos vacíos, usar descripción como fallback hasta que Whisper lo reemplace
+      if (!transcriptFinal || transcriptFinal.length < 30) {
+        transcriptFinal = videoData.text || '';
+      }
+      console.log(`[SCRAPER] 📝 Transcript TikTok (${transcriptFinal.length} chars):`, transcriptFinal.substring(0, 100));
 
 return {
   videoUrl: videoData.videoUrl || videoData.videoUrlNoWatermark || url,
@@ -10184,6 +10196,8 @@ return {
 async function scrapeInstagram(url: string): Promise<{ 
     videoUrl: string; 
     description: string;
+    transcript?: string;
+    detectedLanguage?: string;
     duration?: number;
 }> {
   const apifyToken = Deno.env.get('APIFY_API_TOKEN');
@@ -11207,7 +11221,7 @@ const outputLanguageFull = languageNames[outputLanguage] || languageNames['es'];
 
               if (i === 0) {
                 // Primera URL: datos principales
-                contentToAnalyze  = (videoData.transcript || '').slice(0, 3000);
+                contentToAnalyze  = (videoData.transcript || '').slice(0, 6000);
                 videoDescription  = videoData.description;
                 platName          = videoData.platform || platName;
                 videoSource       = videoData.source;
@@ -11292,7 +11306,7 @@ const motorRes = await ejecutarIngenieriaInversaPro(
   contentToAnalyze, 
   userContext,
   openai,
-  platName 
+  videoDescription || platName  // usa la descripción del video como contexto de origen
 );
         // 📦 ESTRUCTURACIÓN PARA FRONTEND (DOMINANCIA)
         result = {
