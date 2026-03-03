@@ -7106,8 +7106,11 @@ async function ejecutarIngenieriaInversaPro(
     point_b: contexto.expertProfile.point_b,
   } : undefined;
 
+  // ✅ Truncar transcript ANTES del prompt — preserva instrucciones completas
+  const contentTruncado = content.slice(0, 4000);
+
   const promptFase1 = PROMPT_ADN_FORENSE(
-  content,
+  contentTruncado,
   nichoOrigen,
   nichoUsuario,
   objetivoUsuario,
@@ -7115,13 +7118,14 @@ async function ejecutarIngenieriaInversaPro(
   { detectedSourceLanguage: contexto.detectedSourceLanguage, outputLanguageFull: contexto.outputLanguageFull }
 );
 
-    const TOKENS_FASE1 = esMasterclass ? 2000 : 1500;
+    const TOKENS_FASE1 = esMasterclass ? 2000 : 1800;
 
-    // ✅ Truncar prompt para no superar 30k TPM
-    const promptFase1Truncado = promptFase1.slice(0, 8000);
+    // ✅ Truncar solo el transcript, NO el prompt de instrucciones
+    // El transcript va dentro del prompt — truncamos solo esa parte antes de construir
+    const promptFase1Truncado = promptFase1.slice(0, 11000);
 
     const completionFase1 = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model: 'gpt-4o',
       response_format: { type: 'json_object' },
       messages: [
         { role: 'system', content: 'Eres TITAN OMEGA OLIMPO. Sistema forense de ADN viral. Esta fase: SOLO analizas. NO generas guion. Devuelves ÚNICAMENTE JSON válido.' },
@@ -7165,8 +7169,8 @@ async function ejecutarIngenieriaInversaPro(
 
     // ✅ Delay de 62s: garantiza ventana TPM 100% limpia antes del guion
     console.log('[MOTOR PRO V2] ⏳ Limpiando ventana TPM para máximo poder en guion...');
-    // ✅ 12s es suficiente: FASE 1 con mini usa ~9k tokens, ventana se limpia en <12s
-    await new Promise(resolve => setTimeout(resolve, 12000));
+    // ✅ 5s suficiente: FASE 1 usa ~11k tokens, ventana se limpia rápido
+    await new Promise(resolve => setTimeout(resolve, 5000));
 
     // ✅ Comprimir contexto: eliminar redundancias sin perder ADN viral
     const promptFase2Final = promptFase2
