@@ -6325,7 +6325,7 @@ async function ejecutarIdeasRapidas(
         { role: 'user', content: prompt }
       ],
       temperature: isMultiplatformMode ? 0.75 : 0.8,
-      max_tokens: isMultiplatformMode ? 12000 : 5000
+      max_tokens: isMultiplatformMode ? 6000 : 4000
     });
 
      // 4. Parsear respuesta con limpieza robusta
@@ -6593,7 +6593,7 @@ async function ejecutarUnaIdeaMultiplatforma(
         { role: 'user', content: promptUnica }
       ],
       temperature: 0.78,
-      max_tokens: 4000
+      max_tokens: 3000
     });
 
     const raw = completion.choices[0].message.content || '{}';
