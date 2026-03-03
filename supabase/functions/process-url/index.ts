@@ -7165,7 +7165,7 @@ async function ejecutarIngenieriaInversaPro(
       expertProfileFase2
     );
 
-    const TOKENS_FASE2 = esMasterclass ? 5000 : contentType === 'long' ? 4000 : 3500;
+    const TOKENS_FASE2 = esMasterclass ? 7000 : contentType === 'long' ? 6000 : 5000;
 
     // ✅ Delay de 62s: garantiza ventana TPM 100% limpia antes del guion
     console.log('[MOTOR PRO V2] ⏳ Limpiando ventana TPM para máximo poder en guion...');
@@ -8157,7 +8157,37 @@ DEVUELVE SOLO ESTE JSON:
       max_tokens: 3000
     });
 
-    const resultado = JSON.parse(completion.choices[0].message.content || '{}');
+    const rawFase2 = completionFase2.choices[0].message.content || '{}';
+let resultadoFase2: any = {};
+try {
+  resultadoFase2 = JSON.parse(rawFase2);
+} catch (jsonErr) {
+  console.warn('[MOTOR PRO V2] ⚠️ JSON truncado — intentando reparar...');
+  // Reparar JSON cortado: cerrar strings y objetos abiertos
+  let reparado = rawFase2.trimEnd();
+  // Cerrar string abierta si termina sin comilla
+  const openStrings = (reparado.match(/"/g) || []).length % 2;
+  if (openStrings !== 0) reparado += '"';
+  // Contar llaves y corchetes abiertos y cerrarlos
+  let abiertasLlave  = (reparado.match(/{/g) || []).length - (reparado.match(/}/g) || []).length;
+  let abiertosCorche = (reparado.match(/\[/g) || []).length - (reparado.match(/\]/g) || []).length;
+  // Eliminar coma final si existe antes de cerrar
+  reparado = reparado.replace(/,\s*$/, '');
+  while (abiertosCorche-- > 0) reparado += ']';
+  while (abiertasLlave-- > 0)  reparado += '}';
+  try {
+    resultadoFase2 = JSON.parse(reparado);
+    console.log('[MOTOR PRO V2] ✅ JSON reparado exitosamente');
+  } catch (e2) {
+    console.error('[MOTOR PRO V2] ❌ JSON irreparable — usando fallback mínimo');
+    resultadoFase2 = {
+      guion_adaptado_al_nicho: rawFase2.substring(0, 3000),
+      guion_tecnico_completo:  rawFase2.substring(0, 3000),
+      _error_json: true,
+      _motores_faltantes: ['json_truncado'],
+    };
+  }
+}
 
     // Aplicar correcciones al output
     const outputLimpio = { ...output };
