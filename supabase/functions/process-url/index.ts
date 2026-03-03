@@ -7139,13 +7139,21 @@ async function ejecutarIngenieriaInversaPro(
 
     console.log(`[MOTOR PRO V2] ✍️ FASE 2: Generando guion élite...`);
 
+    const expertProfileFase2 = contexto.expertProfile ? {
+      mechanism_name: contexto.expertProfile.mechanism_name,
+      enemy: contexto.expertProfile.enemy,
+      mental_territory: contexto.expertProfile.mental_territory,
+      point_a: contexto.expertProfile.point_a,
+      point_b: contexto.expertProfile.point_b,
+    } : undefined;
+
     const promptFase2 = PROMPT_GUION_ELITE(
       adnForense,
       nichoUsuario,
       objetivoUsuario,
       contentType,
       platform,
-      contexto.expertProfile
+      expertProfileFase2
     );
 
     const TOKENS_FASE2 = esMasterclass ? 9000 : contentType === 'long' ? 7000 : 5000;
