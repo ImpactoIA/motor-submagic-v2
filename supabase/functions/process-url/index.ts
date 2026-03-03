@@ -6784,33 +6784,15 @@ proximos_contenidos: 3 items [{titulo, por_que_ahora, genero, tension}].
 
 =============================================================
 =============================================================
-OUTPUT OBLIGATORIO — USA EXACTAMENTE ESTAS CLAVES JSON:
-{
-  "adn_estructura": {"patron_narrativo_detectado":"","tipo_apertura":"","tipo_cierre":"","proporcion_hook_pct":0,"velocidad_escalada":"","complejidad_estructural":0,"bloques":[]},
-  "curva_emocional": {"emocion_dominante":"","emocion_secundaria":"","emocion_final":"","picos_emocionales":[],"intensidad_promedio":0,"variabilidad_emocional":0,"arco_emocional":""},
-  "micro_loops": {"total":0,"loops":[],"intervalo_promedio":0,"densidad_anticipacion":0,"loops_sin_resolver":0,"estrategia_tension":""},
-  "polarizacion": {"nivel_confrontacion":0,"ruptura_creencia_detectada":"","enemigo_implicito":"","nivel_friccion_narrativa":0,"mecanismo_polarizacion":"","afirmaciones_divisivas":[],"posicionamiento_vs":""},
-  "identidad_verbal": {"longitud_promedio_frases":0,"ritmo_sintactico":"","proporcion_frases_cortas_pct":0,"uso_metaforas":0,"uso_imperativos":0,"sofisticacion_lexica":0,"nivel_agresividad_verbal":0,"firma_linguistica":"","palabras_poder_detectadas":[]},
-  "status_y_posicionamiento": {"tipo_autoridad":"","experiencia_proyectada":"","rol_narrativo":"","nivel_confianza_percibida":0,"distancia_con_audiencia":"","prueba_social_detectada":"","mecanismos_autoridad":[]},
-  "densidad_valor": {"valor_por_minuto":0,"porcentaje_contenido_abierto":0,"profundidad_insight":0,"micro_aprendizajes":[],"ratio_promesa_entrega":0,"tipo_valor_dominante":""},
-  "manipulacion_atencion": {"cambios_ritmo":[],"interrupciones_patron":0,"reencuadres_mentales":[],"golpes_narrativos":[],"reactivaciones_atencion":0,"frecuencia_estimulacion":""},
-  "activadores_guardado": [{"tipo":"","contenido":"","segundo_aproximado":0,"potencia_guardado":0}],
-  "adaptabilidad_nicho": {"sofisticacion_audiencia_target":"","nivel_conciencia_mercado":"","intensidad_psicologica_tolerable":0,"ajustes_necesarios":[],"riesgos_adaptacion":[]},
-  "elementos_cliche_detectados": [{"tipo":"","contenido":"","nivel_saturacion":0,"alternativa_sugerida":""}],
-  "ritmo_narrativo": {"velocidad_progresion":"","intervalo_promedio_entre_estimulos_seg":0,"variacion_intensidad":0,"fluidez_estructural":0,"momentos_pausa":[],"aceleraciones":[]},
-  "score_viral_estructural": {"retencion_estructural":0,"intensidad_emocional":0,"polarizacion":0,"manipulacion_atencion":0,"densidad_valor":0,"viralidad_estructural_global":0,"breakdown_motores":{}},
-  "adn_profundo": {"genero_narrativo":"","emocion_nucleo":"","tipo_tension":"","frame_dominante":{"creencia_que_ataca":"","nuevo_marco":"","frase_nucleo":""},"polarizacion_implicita":{"bando_A":"","bando_B":"","tension_irresuelta":""}},
-  "idea_nuclear_ganadora": {"que_hace_viral":"","creencia_rota":"","postura_impuesta":"","por_que_genera_conversacion":"","tension_no_resuelta":""},
-  "sistema_superioridad": {"mayor_claridad":"","mayor_intensidad":"","mayor_polarizacion":"","mejor_estructura_emocional":"","mejor_cierre":"","ventaja_de_nicho":""},
-  "blueprint_replicable": {"nombre_patron":"","formula_base":"","pasos_estructurales":[],"equivalencias_estructurales":{"hook_type":"","escalation_pattern":"","giro_type":"","closure_type":""},"equivalencias_psicologicas":{"emocion_entrada":"","emocion_escalada":"","emocion_salida":"","tension_type":"","activation_mechanism":""},"equivalencias_verbales":{"ritmo":"","agresividad":0,"sofisticacion":0}},
-  "analisis_tca": {"nivel_tca_detectado":"","sector_detectado":"","mass_appeal_score":0,"equilibrio_masividad_calificacion":false,"diagnostico_tca":"","nivel_tca_recomendado":"","sector_recomendado":"","nuevo_hook_sectorial":"","nueva_capa_visible":"","advertencia_micronicho":""},
-  "mapa_de_adaptacion": {"cambios_necesarios":[],"riesgos":[],"oportunidades":[]},
-  "posicionamiento_y_proximos_pasos": {"posiciona_como":"","razon_posicionamiento":"","proximos_contenidos":[]}
-}
-RELLENA TODOS LOS CAMPOS con datos reales del análisis. Nunca dejes strings vacíos ni números en 0 si hay datos.
-Si la transcripción es corta, infiere el ADN con lo disponible — NUNCA devuelvas campos vacíos.
-DEVUELVE ÚNICAMENTE JSON VÁLIDO. Sin markdown. Sin backticks. Sin texto antes ni después.
-=============================================================
+DEVUELVE JSON con estas claves exactas — sin agregar ni omitir ninguna:
+adn_estructura, curva_emocional, micro_loops, polarizacion, identidad_verbal, status_y_posicionamiento, densidad_valor, manipulacion_atencion, activadores_guardado, adaptabilidad_nicho, elementos_cliche_detectados, ritmo_narrativo, score_viral_estructural, adn_profundo, idea_nuclear_ganadora, sistema_superioridad, blueprint_replicable, analisis_tca, mapa_de_adaptacion, posicionamiento_y_proximos_pasos.
+Campos críticos obligatorios:
+- score_viral_estructural: incluye viralidad_estructural_global (0-100)
+- adn_profundo: incluye genero_narrativo, emocion_nucleo, tipo_tension, frame_dominante, polarizacion_implicita
+- blueprint_replicable: incluye equivalencias_estructurales con hook_type, escalation_pattern, closure_type
+- micro_loops: incluye total y estrategia_tension
+- activadores_guardado: mínimo 3 items con tipo y contenido
+DEVUELVE ÚNICAMENTE JSON VÁLIDO. Sin markdown. Sin backticks.
 `;
 
 const PROMPT_GUION_ELITE = (
