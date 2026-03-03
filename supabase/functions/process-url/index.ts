@@ -10861,7 +10861,11 @@ if (body.closing_objective) settings.closing_objective = body.closing_objective;
               openai
             );
 
-            contentToAnalyze  = videoData.transcript;
+            const transcriptPart = videoData.transcript || '';
+            const descriptionPart = (videoData as any).description || '';
+            contentToAnalyze = transcriptPart.length >= descriptionPart.length
+              ? transcriptPart
+              : (transcriptPart + (descriptionPart && descriptionPart !== transcriptPart ? '\n\n' + descriptionPart : ''));
             videoDescription  = videoData.description;
             platName          = videoData.platform || platName;
             videoSource       = videoData.source;
