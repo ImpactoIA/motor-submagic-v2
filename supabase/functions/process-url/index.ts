@@ -7118,24 +7118,35 @@ async function ejecutarIngenieriaInversaPro(
   { detectedSourceLanguage: contexto.detectedSourceLanguage, outputLanguageFull: contexto.outputLanguageFull }
 );
 
-    const TOKENS_FASE1 = esMasterclass ? 2000 : 1800;
+    const TOKENS_FASE1 = esMasterclass ? 4000 : 3500;
 
-    // ✅ Truncar solo el transcript, NO el prompt de instrucciones
-    // El transcript va dentro del prompt — truncamos solo esa parte antes de construir
-    const promptFase1Truncado = promptFase1.slice(0, 11000);
+    // Truncar prompt FASE 1 para respetar límite TPM
+    const promptFase1Truncado = promptFase1.slice(0, 10000);
 
     const completionFase1 = await openai.chat.completions.create({
       model: 'gpt-4o',
       response_format: { type: 'json_object' },
       messages: [
-        { role: 'system', content: 'Eres TITAN OMEGA OLIMPO. Sistema forense de ADN viral. Esta fase: SOLO analizas. NO generas guion. Devuelves ÚNICAMENTE JSON válido.' },
+        { role: 'system', content: 'Eres TITAN OMEGA OLIMPO. Sistema forense de ADN viral. Esta fase: SOLO analizas. NO generas guion. Devuelves ÚNICAMENTE JSON válido y COMPLETO. Nunca truncues el JSON.' },
         { role: 'user', content: promptFase1Truncado }
       ],
       temperature: 0.15,
       max_tokens: TOKENS_FASE1
     });
 
-    const adnForense = JSON.parse(completionFase1.choices[0].message.content || '{}');
+    // Parseo robusto con reparación de JSON truncado
+    let adnForense: any = {};
+    try {
+      adnForense = JSON.parse(completionFase1.choices[0].message.content || '{}');
+    } catch (jsonErr) {
+      let raw = completionFase1.choices[0].message.content || '{}';
+      const openBraces = (raw.match(/\{/g) || []).length;
+      const closeBraces = (raw.match(/\}/g) || []).length;
+      const missing = openBraces - closeBraces;
+      if (missing > 0) raw = raw + '}'.repeat(missing);
+      try { adnForense = JSON.parse(raw); } catch { adnForense = {}; }
+      console.warn('[MOTOR PRO V2] ⚠️ JSON FASE 1 reparado tras truncamiento');
+    }
     tokensTotal += completionFase1.usage?.total_tokens || 0;
     adnForense._outputLanguage = contexto.outputLanguage || 'es';
     adnForense._outputLanguageFull = contexto.outputLanguageFull || 'español — escribe como hispanohablante nativo';
@@ -7165,19 +7176,17 @@ async function ejecutarIngenieriaInversaPro(
       expertProfileFase2
     );
 
-    const TOKENS_FASE2 = esMasterclass ? 7000 : contentType === 'long' ? 6000 : 5000;
+    const TOKENS_FASE2 = esMasterclass ? 6000 : contentType === 'long' ? 5000 : 4000;
 
-    // ✅ Delay de 62s: garantiza ventana TPM 100% limpia antes del guion
-    console.log('[MOTOR PRO V2] ⏳ Limpiando ventana TPM para máximo poder en guion...');
-    // ✅ 5s suficiente: FASE 1 usa ~11k tokens, ventana se limpia rápido
+    // Esperar 5s para que la ventana TPM se resetee después de FASE 1
+    console.log('[MOTOR PRO V2] ⏳ Limpiando ventana TPM...');
     await new Promise(resolve => setTimeout(resolve, 5000));
 
-    // ✅ Comprimir contexto: eliminar redundancias sin perder ADN viral
+    // Comprimir prompt FASE 2: máximo 18000 chars → seguro con 30k TPM limpio
     const promptFase2Final = promptFase2
-      .replace(/\n{3,}/g, '\n\n')       // colapsa saltos de línea excesivos
-      .replace(/[ \t]{2,}/g, ' ')        // colapsa espacios redundantes
-      .slice(0, 14000);                  // máximo seguro con 30k TPM limpio
-
+      .replace(/\n{3,}/g, '\n\n')
+      .replace(/[ \t]{2,}/g, ' ')
+      .slice(0, 18000);
     const completionFase2 = await openai.chat.completions.create({
       model: 'gpt-4o',                   // ✅ FULL gpt-4o — sin compromiso
       response_format: { type: 'json_object' },
