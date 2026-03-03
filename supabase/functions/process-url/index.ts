@@ -7306,16 +7306,18 @@ DEVUELVE ÚNICAMENTE JSON válido. Sin markdown. Sin backticks.
 
       const outputRef = JSON.parse(completionRef.choices[0].message.content || '{}');
       tokensTotal += completionRef.usage?.total_tokens || 0;
-      const palabrasRef = (outputRef.guion_adaptado_espejo || '').trim().split(/\s+/).filter(Boolean).length;
+      const guionRefRaw = outputRef.guion_adaptado_espejo || outputRef.guion_adaptado_al_nicho || '';
+      const guionRefStr = typeof guionRefRaw === 'string' ? guionRefRaw : JSON.stringify(guionRefRaw);
+      const palabrasRef = guionRefStr.trim().split(/\s+/).filter(Boolean).length;
       console.log(`[MOTOR PRO V2] 📝 Post-refinamiento: ${palabrasRef} palabras`);
       if (palabrasRef > palabrasFase2) guionFinalData = outputRef;
     }
 
     outputActual = {
       ...adnForense,
-      guion_adaptado_espejo:        guionFinalData.guion_adaptado_espejo || guionFinalData.guion_adaptado_al_nicho || '',
-      guion_adaptado_al_nicho:      guionFinalData.guion_adaptado_espejo || guionFinalData.guion_adaptado_al_nicho || '',
-      guion_tecnico_completo:       guionFinalData.guion_adaptado_espejo || guionFinalData.guion_adaptado_al_nicho || '',
+      guion_adaptado_espejo:        (() => { const g = guionFinalData.guion_adaptado_espejo || guionFinalData.guion_adaptado_al_nicho || ''; return typeof g === 'string' ? g : JSON.stringify(g); })(),
+      guion_adaptado_al_nicho:      (() => { const g = guionFinalData.guion_adaptado_espejo || guionFinalData.guion_adaptado_al_nicho || ''; return typeof g === 'string' ? g : JSON.stringify(g); })(),
+      guion_tecnico_completo:       (() => { const g = guionFinalData.guion_adaptado_espejo || guionFinalData.guion_adaptado_al_nicho || ''; return typeof g === 'string' ? g : JSON.stringify(g); })(),
       plan_audiovisual_profesional: guionFinalData.plan_audiovisual_profesional || null,
       miniatura_dominante:          guionFinalData.miniatura_dominante || null,
       validacion_olimpo:            guionFinalData.validacion_olimpo || adnForense.validacion_olimpo || null,
@@ -7323,7 +7325,8 @@ DEVUELVE ÚNICAMENTE JSON válido. Sin markdown. Sin backticks.
     };
 
     const scoreActual = adnForense.score_viral_estructural?.viralidad_estructural_global || 0;
-    const palabrasFinales = outputActual.guion_adaptado_espejo.trim().split(/\s+/).filter(Boolean).length;
+    const guionFinalStr = typeof outputActual.guion_adaptado_espejo === 'string' ? outputActual.guion_adaptado_espejo : '';
+    const palabrasFinales = guionFinalStr.trim().split(/\s+/).filter(Boolean).length;
 
     const MOTORES_OBLIGATORIOS = [
       "adn_estructura", "curva_emocional", "micro_loops", "polarizacion",
