@@ -2311,53 +2311,94 @@ Calcula con base en los 12 motores anteriores:
 Pesos: retencion(25%) + emocional(20%) + atencion(20%) + valor(15%) + polarizacion(10%) + resto(10%)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧬 MOTOR 14 — EXTRACCIÓN ADN PROFUNDO V900
+🧬 MOTOR 14 — EXTRACCIÓN ADN PROFUNDO V1000
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Antes de generar el guion, extrae y declara explícitamente:
+AXIOMA CENTRAL: No adaptes el tema. Replica el mecanismo emocional.
+El contexto cambia. La arquitectura emocional es idéntica.
 
-A. GÉNERO NARRATIVO DETECTADO:
+A. GÉNERO NARRATIVO REAL (OBLIGATORIO — NO CAMBIAR EN ADAPTACIÓN):
 Identifica el género exacto del video original:
-→ Confesional (historia personal vulnerable)
-→ Educativo (enseñanza con autoridad)
-→ Drama real (conflicto vivido, consecuencias reales)
-→ Opinión polarizante (postura que divide)
-→ Autoridad estratégica (lección desde el poder)
-→ Historia de fracaso (error + aprendizaje)
-→ Historia de poder (decisión difícil desde arriba)
-→ Denuncia (exposición de problema sistémico)
-→ Revelación (insight que cambia perspectiva)
+→ Confesional crudo (historia personal vulnerable, exposición real)
+→ Drama moral (decisión difícil con consecuencias éticas)
+→ Historia de fracaso (error real + aprendizaje costoso)
+→ Opinión confrontativa (postura que divide sin pedir perdón)
+→ Revelación incómoda (verdad que el mercado prefiere ignorar)
+→ Caso polémico (situación real con juicio implícito)
+→ Historia de poder (decisión difícil desde posición de autoridad)
+→ Denuncia sistémica (exposición de problema estructural)
+→ Autoridad estratégica (lección desde experiencia superior)
 
-⚠️ CRÍTICO: La adaptación DEBE mantener el mismo género narrativo.
-Si el original es "Historia de poder" → la adaptación ES "Historia de poder".
-PROHIBIDO convertir Drama real en Discurso motivacional.
-PROHIBIDO convertir Denuncia en Consejo amigable.
-El género es el ADN. No se toca.
+⛔ CRÍTICO V1000: La adaptación DEBE mantener el MISMO género narrativo.
+PROHIBIDO: convertir Drama moral en Discurso motivacional.
+PROHIBIDO: convertir Confesional en Consejo amigable.
+PROHIBIDO: convertir Denuncia en Lista de tips.
+El género es el ADN. No se suaviza. No se reinterpreta.
 
-B. EMOCIÓN NÚCLEO DETECTADA:
-Identifica la emoción que impulsa TODO el video:
+B. TIPO DE CONFLICTO (CLASIFICAR Y REPLICAR):
+Clasifica exactamente qué tipo de conflicto usa el video original:
+→ Conflicto interpersonal (entre personas concretas)
+→ Conflicto moral (dilema ético sin respuesta fácil)
+→ Conflicto reputacional (imagen vs verdad)
+→ Conflicto económico (dinero, pérdida, ganancia real)
+→ Conflicto de poder (quién decide, quién obedece)
+→ Conflicto ético (principios vs conveniencia)
+
+La adaptación DEBE replicar el MISMO tipo de conflicto en el nicho del usuario.
+Si el original tiene conflicto moral → la adaptación tiene conflicto moral.
+No sustituir conflicto concreto por concepto abstracto.
+
+C. NIVEL DE RIESGO NARRATIVO (MEDIR Y MANTENER):
+Evalúa el riesgo del video original en estas 4 dimensiones:
+→ ¿Toca un tema incómodo o tabú del nicho? (Sí/No + nivel 0-100)
+→ ¿Hay riesgo reputacional para el creador? (Sí/No + nivel 0-100)
+→ ¿Hay exposición personal real? (Sí/No + nivel 0-100)
+→ ¿Hay postura impopular que puede generar rechazo? (Sí/No + nivel 0-100)
+
+riesgo_total: promedio de los 4 (0-100)
+clasificacion_riesgo: "Bajo (0-30)" | "Medio (31-60)" | "Alto (61-80)" | "Extremo (81-100)"
+
+⛔ REGLA ABSOLUTA: Si el original tiene riesgo ALTO o EXTREMO →
+la adaptación NO PUEDE ser riesgo BAJO o MEDIO.
+Un guion seguro que adapta un video de alto riesgo = FALLA CRÍTICA.
+
+D. INTENSIDAD EMOCIONAL REAL:
+Mide la intensidad emocional REAL del video original:
+→ Baja (contenido informativo sin carga emocional fuerte)
+→ Media (hay emoción pero no domina)
+→ Alta (la emoción ES el vehículo del mensaje)
+→ Extrema (el video opera principalmente desde la emoción cruda)
+
+La adaptación debe igualar o superar esta intensidad.
+Si la adaptación tiene menor intensidad → REGENERAR OBLIGATORIAMENTE.
+
+E. EMOCIÓN NÚCLEO DETECTADA:
+Identifica la emoción que impulsa TODO el video (una sola, dominante):
 → Culpa | Rabia | Indignación | Vulnerabilidad
 → Liderazgo | Redención | Superioridad
-→ Advertencia | Orgullo | Vergüenza ajena
+→ Advertencia | Orgullo | Vergüenza ajena | Miedo legítimo
 
-C. TIPO DE TENSIÓN:
+F. TIPO DE TENSIÓN:
 → Moral (dilema ético sin respuesta fácil)
-→ Profesional (decisión de negocio con consecuencias)
+→ Profesional (decisión de negocio con consecuencias reales)
 → Social (conflicto entre personas o grupos)
 → Económica (dinero, pérdida, ganancia)
 → Autoridad (quién tiene el poder de decidir)
 → Identidad (quién soy vs quién debería ser)
 
-D. FRAME DOMINANTE DETECTADO:
-Extrae exactamente:
+G. FRAME DOMINANTE:
 - creencia_que_ataca: qué creencia falsa destruye el video
-- nuevo_marco: qué visión alternativa propone
-- frase_nucleo: la frase que condensa todo el frame (ej: "No es la vida personal. Es cuando afecta el sistema.")
+- nuevo_marco: qué visión alternativa superior propone
+- frase_nucleo: la frase que condensa todo el frame
 
-E. POLARIZACIÓN IMPLÍCITA:
-- bando_A: quiénes están de acuerdo
-- bando_B: quiénes se ofenden o discrepan
+H. POLARIZACIÓN IMPLÍCITA (SISTEMA DE DOS BANDOS):
+- bando_A: quiénes están completamente de acuerdo
+- bando_B: quiénes se ofenden o discrepan activamente
 - tension_irresuelta: qué pregunta moral queda abierta al final
+- nivel_polarizacion_real: 0-100
+
+La adaptación debe replicar esta estructura de dos bandos en el nicho del usuario.
+No eliminar la fricción. Amplificarla con equivalencia estructural.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🏆 MOTOR 14B — IDEA NUCLEAR GANADORA
@@ -2435,62 +2476,61 @@ El guion DEBE tener esta arquitectura extraída del video original (Motor 1):
    → El último párrafo debe ser la frase más memorable y potente del guion
 
 ═══════════════════════════════════════════
-REGLAS DE ADAPTACIÓN AL NICHO — CRÍTICAS
+SISTEMA DE EQUIVALENCIA ESTRUCTURAL V1000
 ═══════════════════════════════════════════
-✓ NICHO DEL USUARIO: ${nichoUsuario}
-✓ OBJETIVO DEL USUARIO: ${objetivoUsuario}
 
-⚠️ CADA ELEMENTO DEL VIDEO ORIGINAL DEBE TRADUCIRSE AL NICHO DEL USUARIO:
-→ Si el original habla de "despedir empleados" y el nicho es "coaching de vida" →
-  el guion habla de "abandonar una relación que te frena" con la MISMA arquitectura emocional
-→ Si el original habla de "startups" y el nicho es "fitness" →
-  el guion habla de "entrenar sin resultados" con el MISMO nivel de tensión
-→ Los CONTEXTOS cambian. La ARQUITECTURA EMOCIONAL es idéntica.
+AXIOMA: Lo que funcionó en X (por conflicto + tensión + frame)
+funciona en Y (con conflicto equivalente + tensión equivalente + frame equivalente).
+No por copiar tema. Sino por replicar mecanismo.
 
-El nicho del usuario es: ${nichoUsuario}
-Adapta TODO — ejemplos, metáforas, enemigo, problema, solución — a ese nicho.
-NUNCA uses el contexto original del video. SIEMPRE el contexto del usuario.
+MAPA DE EQUIVALENCIA OBLIGATORIO:
+Si en el original ocurre:
+→ Acción polémica + Consecuencia pública + Decisión dolorosa + Postura firme + Frame fuerte
+En la adaptación DEBE existir:
+→ Acción polémica EQUIVALENTE en ${nichoUsuario} + Consecuencia pública EQUIVALENTE + Decisión difícil EQUIVALENTE + Postura firme EQUIVALENTE + Frame fuerte EQUIVALENTE
+
+PROHIBICIÓN ABSOLUTA DE ABSTRACCIÓN:
+❌ Si el original tiene historia concreta → la adaptación tiene historia concreta (NO concepto)
+❌ Si el original tiene escena real → la adaptación tiene escena real (NO descripción genérica)
+❌ Si el original tiene consecuencia → la adaptación tiene consecuencia (NO moraleja)
+❌ Si no hay escena concreta en el guion → REGENERAR
+
+ESCALADA EMOCIONAL OBLIGATORIA — CURVA V1000:
+El guion DEBE seguir esta arquitectura de intensidad creciente:
+1. HOOK CON TENSIÓN INMEDIATA → intensidad de entrada ≥ 65/100
+2. REVELACIÓN INICIAL → introduce el conflicto real, sin suavizar
+3. ESCALADA PROGRESIVA → cada párrafo eleva la intensidad, nunca desciende
+4. PUNTO CRÍTICO → el momento de mayor impacto (si no existe → REGENERAR)
+5. DECISIÓN CLARA → el creador o el protagonista toma una postura firme
+6. CONSECUENCIA → hay un resultado real o implicado (no abstracto)
+7. FRAME FINAL CONTUNDENTE → la última frase instala una postura, no da consejo
+
+⛔ Si no hay PUNTO CRÍTICO identificable → guion inválido, regenerar.
+⛔ Si no hay DECISIÓN CLARA → guion inválido, regenerar.
+⛔ Si el cierre es aspiracional genérico → guion inválido, regenerar.
+
+NICHO DEL USUARIO: ${nichoUsuario}
+OBJETIVO DEL USUARIO: ${objetivoUsuario}
 
 REGLAS DE FIDELIDAD ESTRUCTURAL:
 ✓ Mismo género narrativo detectado en Motor 14A — SIN EXCEPCIONES
-✓ Misma emoción núcleo — intensidad igual o superior
-✓ Mismo tipo de tensión — no suavizar el conflicto
+✓ Mismo tipo de conflicto detectado en Motor 14B — NO suavizar
+✓ Nivel de riesgo igual o superior al detectado en Motor 14C
+✓ Intensidad emocional igual o superior al detectado en Motor 14C
+✓ Misma emoción núcleo — desde la primera línea
 ✓ Mismo frame dominante — reescrito en el nicho del usuario
 ✓ Misma arquitectura de micro-loops — cada loop en posición equivalente
-✓ Mismo patrón de escalada emocional detectado en Motor 1
+✓ Mismo patrón de escalada emocional — detectado en Motor 1
 ✓ Nivel TCA igual o superior al detectado en Motor 16
 
-═══════════════════════════════════════════
-REGLAS ABSOLUTAS DE TELEPROMPTER
-═══════════════════════════════════════════
-⚠️ PROHIBIDO ABSOLUTAMENTE:
-❌ [HOOK] ❌ [SETUP] ❌ [GIRO] ❌ [CLIMAX] ❌ [CIERRE] ❌ [ESCALADA]
-❌ [Texto en pantalla] ❌ [Música] ❌ [Corte] ❌ [B-roll] ❌ [Zoom]
-❌ Cualquier indicación técnica entre corchetes o paréntesis
-❌ Cualquier instrucción de producción dentro del texto hablado
-❌ Números de sección, títulos de bloque, marcadores de estructura
-
-El guion es EXCLUSIVAMENTE lo que el creador dice en voz alta.
-Fluido. Natural. Con ritmo humano. Como si lo estuvieras contando a un amigo.
-Usa ... para pausa corta.
-Usa línea en blanco para pausa larga.
-El creador debe poder leer esto directo a cámara sin ninguna interpretación adicional.
-Debe sonar como una persona real — no como IA, no como plantilla, no como guion corporativo.
-
-═══════════════════════════════════════════
-VALIDACIÓN FINAL — OBLIGATORIA ANTES DE ENTREGAR
-═══════════════════════════════════════════
-□ ¿El guion tiene el mínimo de palabras requerido para su tipo?
-□ ¿Tiene los 5 bloques estructurales completos?
-□ ¿Está 100% adaptado al nicho del usuario? ¿No hay ni una referencia al contexto original?
-□ ¿Mantiene el género narrativo original?
-□ ¿La emoción núcleo está presente desde la primera línea?
-□ ¿El conflicto tiene la misma intensidad — no fue suavizado?
-□ ¿No hay etiquetas ni indicaciones técnicas en el texto?
-□ ¿Es grabable directamente sin edición?
-□ ¿Suena como una persona real hablando — no como IA?
-□ ¿El cierre activa una acción (guardar, comentar, seguir)?
-Si falla cualquier check → REESCRIBIR COMPLETO antes de incluir en el JSON.
+VALIDACIÓN ANTI-SUAVIZAMIENTO (EJECUTAR ANTES DE ENTREGAR):
+□ ¿El guion se volvió genérico? → Si sí: REGENERAR
+□ ¿Perdió el conflicto original? → Si sí: REGENERAR
+□ ¿Perdió intensidad emocional? → Si sí: REGENERAR
+□ ¿Perdió el riesgo narrativo? → Si sí: REGENERAR
+□ ¿Suena "seguro" o "amigable"? → Si sí: REGENERAR
+□ ¿Es menos polémico que el original? → Si sí: REGENERAR
+□ ¿La adaptación es conceptual en lugar de concreta? → Si sí: REGENERAR
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🔗 MOTOR 15 — BLUEPRINT PARA CONEXIÓN DIRECTA
@@ -2638,18 +2678,19 @@ REGLAS DE LA FRASE:
 - Si ctr_score < 75 → regenerar con mayor disrupción
 
 Incluir:
-- frase_principal: la frase dominante
-- variante_agresiva: versión que ataca una creencia o ego
-- variante_aspiracional: versión que activa deseo de identidad o pertenencia
-- justificacion_estrategica: por qué esta frase específica funciona para este video
-- emocion_dominante_activada: emoción que siente el espectador al leerla
+- frase_principal: la frase dominante — debe ser POLÉMICA, con tensión, que insinúe el conflicto del video. PROHIBIDO que suene aspiracional, motivacional o positiva. Si suena "segura" → regenerar.
+- variante_agresiva: versión que ataca directamente una creencia o ego del espectador
+- variante_conflicto: versión que expone el conflicto central del video en 4-5 palabras (NO aspiracional)
+- justificacion_estrategica: por qué esta frase específica funciona para este video y este conflicto
+- emocion_dominante_activada: emoción que siente el espectador al leerla (debe ser tensión, incomodidad, curiosidad urgente o indignación — NO esperanza ni motivación)
 - gap_curiosidad: el vacío informativo que abre y que solo el video cierra
 - sector_tca_activado: Dinero / Salud / Relaciones / Desarrollo Personal
-- mecanismo_psicologico: Gap informativo / Ataque de creencia / Contradicción identidad / Urgencia implícita
+- mecanismo_psicologico: Gap informativo / Ataque de creencia / Contradicción identidad / Urgencia implícita / Conflicto expuesto
 - ctr_score: 0-100
 - nivel_disrupcion: 0-100
 - nivel_gap_curiosidad: 0-100
 - nivel_polarizacion: 0-100
+- regla_v1000: si nivel_polarizacion < 60 o la frase suena positiva → REGENERAR con mayor fricción
 
 =============================================================
 INSTRUCCIONES DE OUTPUT — LEE ANTES DE GENERAR
@@ -2708,12 +2749,16 @@ DEVUELVE ÚNICAMENTE EL JSON. Sin markdown. Sin backticks. Solo JSON puro.
     "tension_no_resuelta": "pregunta que obliga a comentar"
   },
   "sistema_superioridad": {
-    "mayor_claridad": "cómo el mensaje es más directo",
-    "mayor_intensidad": "cómo la emoción es más concentrada",
-    "mayor_polarizacion": "cómo el conflicto es más definido",
-    "mejor_estructura_emocional": "cómo la curva emocional es más precisa",
-    "mejor_cierre": "cómo el cierre genera más acción",
-    "ventaja_de_nicho": "qué tiene el experto del usuario que el original no tiene"
+    "mayor_claridad": "cómo el mensaje adaptado es más directo y entendible que el original",
+    "mayor_intensidad": "cómo la emoción está más concentrada y sostenida que en el original",
+    "mayor_polarizacion": "cómo el conflicto está más definido y amplificado en el nicho del usuario",
+    "mejor_estructura_emocional": "cómo la curva emocional es más precisa — con punto crítico más claro",
+    "mejor_cierre": "cómo el cierre genera más debate, guardado o seguimiento que el original",
+    "ventaja_de_nicho": "qué tiene el experto del usuario que el creador original NO tiene",
+    "conflicto_amplificado": "cómo el conflicto equivalente en el nicho del usuario es más relevante para su audiencia específica",
+    "riesgo_equivalente_confirmado": true,
+    "genero_mantenido_confirmado": true,
+    "no_fue_suavizado": true
   },
   "guion_adaptado_espejo": "TEXTO FLUIDO Y NATURAL. EXCLUSIVAMENTE LO QUE EL CREADOR DICE EN VOZ ALTA. CERO ETIQUETAS. CERO INDICACIONES TÉCNICAS. Misma arquitectura emocional del original. Adaptado al nicho del usuario. Listo para grabar.",
   "guion_adaptado_al_nicho": "mismo valor que guion_adaptado_espejo — campo de compatibilidad",
@@ -2731,7 +2776,32 @@ DEVUELVE ÚNICAMENTE EL JSON. Sin markdown. Sin backticks. Solo JSON puro.
     "genero_narrativo_respetado": true,
     "emocion_nucleo_presente": true,
     "teleprompter_sin_etiquetas": true,
+    "conflicto_original_preservado": true,
+    "riesgo_narrativo_mantenido": true,
+    "intensidad_equivalente_o_superior": true,
+    "guion_concreto_no_abstracto": true,
+    "punto_critico_presente": true,
+    "decision_clara_presente": true,
     "score_validacion": 0
+  },
+  "equivalencia_estructural_v1000": {
+    "genero_narrativo_original": "género detectado",
+    "genero_narrativo_adaptado": "debe ser idéntico al original",
+    "tipo_conflicto_original": "Moral | Interpersonal | Reputacional | Económico | Poder | Ético",
+    "tipo_conflicto_adaptado": "equivalente en el nicho del usuario",
+    "riesgo_narrativo_original": 0,
+    "riesgo_narrativo_adaptado": 0,
+    "intensidad_emocional_original": "Baja | Media | Alta | Extrema",
+    "intensidad_emocional_adaptada": "igual o superior",
+    "bando_A_original": "descripción",
+    "bando_A_adaptado": "equivalente en nicho",
+    "bando_B_original": "descripción",
+    "bando_B_adaptado": "equivalente en nicho",
+    "punto_critico_detectado": true,
+    "decision_clara_detectada": true,
+    "abstraccion_detectada": false,
+    "fidelidad_mecanismo_score": 0,
+    "alerta_suavizamiento": "null o descripción del problema si existe"
   },
   "posicionamiento_y_proximos_pasos": {
     "posiciona_como": "Mentor firme | Líder estratégico | Autoridad ética | Visionario | Analista frío | Testigo honesto",
@@ -7037,7 +7107,25 @@ DEVUELVE ÚNICAMENTE ESTE JSON (sin markdown, sin backticks):
     "checklist_produccion": ["iluminación","fondo","apariencia","equipo","apps edición"]
   },
   "miniatura_dominante": {"frase_principal":"","variante_agresiva":"","variante_aspiracional":"","justificacion_estrategica":"","emocion_dominante_activada":"","gap_curiosidad":"","mecanismo_psicologico":"","ctr_score":0,"nivel_disrupcion":0,"nivel_gap_curiosidad":0,"nivel_polarizacion":0},
-  "validacion_olimpo": {"hook_genera_tension_inmediata":true,"creencia_destruida_claramente":true,"micro_loops_presentes":true,"escalada_emocional_progresiva":true,"climax_poderoso":true,"cierre_memorable":true,"cero_etiquetas_visibles":true,"vocabulario_del_nicho":true,"tension_irresuelta_para_comentarios":true,"supera_minimo_palabras":true,"score_validacion":10}
+  "validacion_olimpo": {
+    "arquitectura_completa": true,
+    "loops_detectados": true,
+    "tca_identificado": true,
+    "equilibrio_ideal_detectado": true,
+    "filtro_implicito_extraido": true,
+    "adaptacion_sin_micronicho": true,
+    "adn_estructural_mantenido": true,
+    "genero_narrativo_respetado": true,
+    "emocion_nucleo_presente": true,
+    "teleprompter_sin_etiquetas": true,
+    "conflicto_original_preservado": true,
+    "riesgo_narrativo_mantenido": true,
+    "intensidad_equivalente_o_superior": true,
+    "guion_concreto_no_abstracto": true,
+    "punto_critico_presente": true,
+    "decision_clara_presente": true,
+    "score_validacion": 0
+  },
 }
 `;
 };
