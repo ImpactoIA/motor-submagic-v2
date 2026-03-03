@@ -7106,18 +7106,6 @@ async function ejecutarIngenieriaInversaPro(
     point_b: contexto.expertProfile.point_b,
   } : undefined;
 
-  const expertProfileFase1 = contexto.expertProfile ? {
-    authority_level: contexto.expertProfile.authority_level,
-    main_objective: contexto.expertProfile.main_objective,
-    confrontation_level: contexto.expertProfile.confrontation_level,
-    max_controversy: contexto.expertProfile.max_controversy,
-    mechanism_name: contexto.expertProfile.mechanism_name,
-    enemy: contexto.expertProfile.enemy,
-    mental_territory: contexto.expertProfile.mental_territory,
-    point_a: contexto.expertProfile.point_a,
-    point_b: contexto.expertProfile.point_b,
-  } : undefined;
-
   const promptFase1 = PROMPT_ADN_FORENSE(
   content,
   nichoOrigen,
