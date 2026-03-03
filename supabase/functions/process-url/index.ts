@@ -7092,10 +7092,10 @@ async function ejecutarIngenieriaInversaPro(
   { detectedSourceLanguage: contexto.detectedSourceLanguage, outputLanguageFull: contexto.outputLanguageFull }
 );
 
-    const TOKENS_FASE1 = esMasterclass ? 4000 : 3500;
+    const TOKENS_FASE1 = esMasterclass ? 5000 : 4500;
 
     // Truncar prompt FASE 1 para respetar límite TPM
-    const promptFase1Truncado = promptFase1.slice(0, 10000);
+    const promptFase1Truncado = promptFase1.slice(0, 8000);
 
     const completionFase1 = await openai.chat.completions.create({
       model: 'gpt-4o',
