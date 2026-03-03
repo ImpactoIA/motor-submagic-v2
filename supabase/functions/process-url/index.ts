@@ -6803,7 +6803,7 @@ const PROMPT_GUION_ELITE = (
   platform: string,
   expertProfile?: any
 ): string => {
-  const minWords = contentType === 'masterclass' ? 700 : contentType === 'long' ? 400 : 200;
+  const minWords = contentType === 'masterclass' ? 700 : contentType === 'long' ? 400 : 150;
   const idealWords = contentType === 'masterclass' ? 1200 : contentType === 'long' ? 600 : 280;
   const duracion = contentType === 'masterclass' ? 'más de 10 minutos' : contentType === 'long' ? '3 a 10 minutos' : '30 a 90 segundos';
 
@@ -7047,7 +7047,7 @@ async function ejecutarIngenieriaInversaPro(
   contexto
 );
 
-    const TOKENS_FASE1 = esMasterclass ? 8000 : 6000;
+    const TOKENS_FASE1 = esMasterclass ? 6000 : 4000;
 
     const completionFase1 = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
