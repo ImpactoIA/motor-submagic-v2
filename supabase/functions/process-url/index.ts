@@ -7115,14 +7115,17 @@ async function ejecutarIngenieriaInversaPro(
   { detectedSourceLanguage: contexto.detectedSourceLanguage, outputLanguageFull: contexto.outputLanguageFull }
 );
 
-    const TOKENS_FASE1 = esMasterclass ? 5000 : 3500;
+    const TOKENS_FASE1 = esMasterclass ? 2000 : 1500;
+
+    // ✅ Truncar prompt para no superar 30k TPM
+    const promptFase1Truncado = promptFase1.slice(0, 8000);
 
     const completionFase1 = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: 'gpt-4o-mini',
       response_format: { type: 'json_object' },
       messages: [
         { role: 'system', content: 'Eres TITAN OMEGA OLIMPO. Sistema forense de ADN viral. Esta fase: SOLO analizas. NO generas guion. Devuelves ÚNICAMENTE JSON válido.' },
-        { role: 'user', content: promptFase1 }
+        { role: 'user', content: promptFase1Truncado }
       ],
       temperature: 0.15,
       max_tokens: TOKENS_FASE1
@@ -7135,6 +7138,8 @@ async function ejecutarIngenieriaInversaPro(
 
     const scoreAdn = adnForense.score_viral_estructural?.viralidad_estructural_global || 0;
     console.log(`[MOTOR PRO V2] ✅ FASE 1 completa. Score ADN: ${scoreAdn}/100`);
+    // ✅ Delay anti-TPM: esperar 2s entre fases para resetear ventana de tokens
+    await new Promise(resolve => setTimeout(resolve, 2000))
     console.log(`[MOTOR PRO V2] 🧬 Género: ${adnForense.adn_profundo?.genero_narrativo} | Emoción: ${adnForense.adn_profundo?.emocion_nucleo}`);
 
     console.log(`[MOTOR PRO V2] ✍️ FASE 2: Generando guion élite...`);
@@ -7156,14 +7161,25 @@ async function ejecutarIngenieriaInversaPro(
       expertProfileFase2
     );
 
-    const TOKENS_FASE2 = esMasterclass ? 9000 : contentType === 'long' ? 7000 : 5000;
+    const TOKENS_FASE2 = esMasterclass ? 5000 : contentType === 'long' ? 4000 : 3500;
+
+    // ✅ Delay de 62s: garantiza ventana TPM 100% limpia antes del guion
+    console.log('[MOTOR PRO V2] ⏳ Limpiando ventana TPM para máximo poder en guion...');
+    // ✅ 12s es suficiente: FASE 1 con mini usa ~9k tokens, ventana se limpia en <12s
+    await new Promise(resolve => setTimeout(resolve, 12000));
+
+    // ✅ Comprimir contexto: eliminar redundancias sin perder ADN viral
+    const promptFase2Final = promptFase2
+      .replace(/\n{3,}/g, '\n\n')       // colapsa saltos de línea excesivos
+      .replace(/[ \t]{2,}/g, ' ')        // colapsa espacios redundantes
+      .slice(0, 14000);                  // máximo seguro con 30k TPM limpio
 
     const completionFase2 = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: 'gpt-4o',                   // ✅ FULL gpt-4o — sin compromiso
       response_format: { type: 'json_object' },
       messages: [
         { role: 'system', content: `Eres el escritor de guiones virales #1 del mundo. ÚNICA función: guion poderoso y completo. MÍNIMO ${minWords} palabras. Más corto = fallo crítico. JSON válido únicamente.` },
-        { role: 'user', content: promptFase2 }
+        { role: 'user', content: promptFase2Final }
       ],
       temperature: 0.75,
       max_tokens: TOKENS_FASE2
@@ -10183,7 +10199,7 @@ async function transcribeVideoWithWhisper(videoUrl: string, openai: any): Promis
   const transcription = await openai.audio.transcriptions.create({
     file: videoFile,
     model: 'whisper-1',
-    language: 'es',
+    // ✅ Sin 'language': Whisper autodetecta inglés, portugués, español, etc.
     response_format: 'verbose_json'
   });
 
@@ -10947,7 +10963,10 @@ if (body.closing_objective) settings.closing_objective = body.closing_objective;
             platName          = videoData.platform || platName;
             videoSource       = videoData.source;
             videoDurationSecs = videoData.duration || 0;
-            (userContext as any).detectedSourceLanguage = (videoData as any).detectedLanguage || 'auto';
+            // ✅ Usar el idioma real detectado por Whisper en verbose_json
+            const detectedLang = transcription?.language || (videoData as any).detectedLanguage || 'auto';
+            (userContext as any).detectedSourceLanguage = detectedLang;
+            console.log(`[IDIOMA] 🌍 Detectado: ${detectedLang} → Guion en: ${outputLanguage}`);
             console.log(`[RECREATE] 🌍 Idioma video origen: ${(videoData as any).detectedLanguage || 'auto-detectado'} → Guion en: ${outputLanguage}`);
 
             if (videoData.duration > 0) {
@@ -11063,14 +11082,15 @@ const outputLanguageFull = languageNames[outputLanguage] || languageNames['es'];
 
               if (i === 0) {
                 // Primera URL: datos principales
-                contentToAnalyze  = videoData.transcript;
+                contentToAnalyze  = (videoData.transcript || '').slice(0, 3000);
                 videoDescription  = videoData.description;
                 platName          = videoData.platform || platName;
                 videoSource       = videoData.source;
                 videoDurationSecs = videoData.duration || 0;
               } else {
-                // URLs adicionales: acumular contenido con separador
-                contentToAnalyze += `\n\n[VIDEO ${i + 1}]:\n${videoData.transcript}`;
+              // ✅ Truncar cada transcript antes de concatenar para no explotar TPM
+              const transcriptExtra = (videoData.transcript || '').slice(0, 2500);
+              contentToAnalyze += `\n\n[VIDEO ${i + 1}]:\n${transcriptExtra}`;
               }
 
               if (videoData.duration > 0) {
@@ -11133,12 +11153,22 @@ const outputLanguageFull = languageNames[outputLanguage] || languageNames['es'];
         // Inyectar duración del video original para adaptar umbrales
         userContext._videoDurationSecs = videoDurationSecs;
 
-        const motorRes = await ejecutarIngenieriaInversaPro(
-          contentToAnalyze, 
-          userContext,
-          openai,
-          platName 
-        );
+        // ✅ Inyectar ADN de todos los videos analizados individualmente
+if (multiAnalysis.length > 1) {
+  (userContext as any).multi_adn_sources = multiAnalysis.map((a: any) => ({
+    genero: a.adn_profundo?.genero_narrativo,
+    emocion: a.adn_profundo?.emocion_nucleo,
+    hook: a.adn_estructura?.tipo_apertura,
+    score: a.score_viral_estructural?.viralidad_estructural_global,
+  }));
+}
+
+const motorRes = await ejecutarIngenieriaInversaPro(
+  contentToAnalyze, 
+  userContext,
+  openai,
+  platName 
+);
         // 📦 ESTRUCTURACIÓN PARA FRONTEND (DOMINANCIA)
         result = {
           guion_generado: motorRes.data, // JSON PRO Completo
@@ -11156,6 +11186,7 @@ const outputLanguageFull = languageNames[outputLanguage] || languageNames['es'];
             urls_analizadas: urlCount,
             original_url: rawUrls[0] || null,
             uploaded_file: body.uploadedFileName || null,
+            nicho_usuario: targetTopic || userContext?.nicho || '',
           }
         };
 
