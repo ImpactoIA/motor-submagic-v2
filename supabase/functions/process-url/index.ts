@@ -7182,8 +7182,11 @@ async function ejecutarIngenieriaInversaPro(
 
     const TOKENS_FASE1 = esMasterclass ? 5000 : 4500;
 
-    // Truncar prompt FASE 1 para respetar límite TPM
-    const promptFase1Truncado = promptFase1.slice(0, 8000);
+// Comprimir prompt FASE 1 — preserva todos los motores completos
+    const promptFase1Truncado = promptFase1
+      .replace(/\n{3,}/g, '\n\n')
+      .replace(/[ \t]{2,}/g, ' ')
+      .slice(0, 22000);
 
     const completionFase1 = await openai.chat.completions.create({
       model: 'gpt-4o',
@@ -10359,16 +10362,30 @@ async function scrapeAndTranscribeVideo(
 
     console.log('[SCRAPER] ✅ Scraping completado');
 
-    if (videoData.transcript && videoData.transcript.length > 50) {
+    // Solo usar transcript directo si es suficientemente rico (>300 chars = discurso real, no solo descripción)
+    if (videoData.transcript && videoData.transcript.length > 300) {
       console.log(`[SCRAPER] ℹ️ Usando transcript (${videoData.transcript.length} chars)`);
       return {
-  transcript: videoData.transcript,
-  description: videoData.description,
-  duration: 0,
-  platform,
-  videoUrl: videoData.videoUrl,
-  detectedLanguage: (videoData as any).detectedLanguage || 'auto'
-};
+        transcript: videoData.transcript,
+        description: videoData.description,
+        duration: (videoData as any).duration || 0,
+        platform,
+        videoUrl: videoData.videoUrl,
+        detectedLanguage: (videoData as any).detectedLanguage || 'auto'
+      };
+    }
+
+    // Transcript corto = solo descripción del post → forzar Whisper si hay videoUrl
+    if (videoData.transcript && videoData.transcript.length > 50 && (!videoData.videoUrl || videoData.videoUrl === url)) {
+      console.log(`[SCRAPER] ℹ️ Transcript corto (${videoData.transcript.length} chars) y sin videoUrl — usando descripción`);
+      return {
+        transcript: videoData.transcript,
+        description: videoData.description,
+        duration: 0,
+        platform,
+        videoUrl: videoData.videoUrl,
+        detectedLanguage: (videoData as any).detectedLanguage || 'auto'
+      };
     }
 
     if (!videoData.videoUrl || videoData.videoUrl === url) {
