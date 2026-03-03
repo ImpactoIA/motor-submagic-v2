@@ -6834,8 +6834,8 @@ const PROMPT_GUION_ELITE = (
   platform: string,
   expertProfile?: any
 ): string => {
-  const minWords = contentType === 'masterclass' ? 700 : contentType === 'long' ? 400 : 150;
-  const idealWords = contentType === 'masterclass' ? 1200 : contentType === 'long' ? 600 : 280;
+  const minWords = contentType === 'masterclass' ? 700 : contentType === 'long' ? 400 : 250;
+  const idealWords = contentType === 'masterclass' ? 1200 : contentType === 'long' ? 650 : 380;
   const duracion = contentType === 'masterclass' ? 'más de 10 minutos' : contentType === 'long' ? '3 a 10 minutos' : '30 a 90 segundos';
 
   const genero = adnForense.adn_profundo?.genero_narrativo || 'Autoridad estratégica';
@@ -6896,163 +6896,137 @@ const PROMPT_GUION_ELITE = (
   const elementoPeligrosoEquiv = ic.equivalente_en_nicho?.elemento_peligroso_equivalente || '';
 
   return `Eres el escritor de guiones virales #1 del mundo hispanohablante.
-MISIÓN: Tomar el ADN exacto de este video viral y crear un guion SUPERIOR adaptado al nicho del usuario.
-El análisis ya está hecho. Ahora tienes UNA SOLA FUNCIÓN: escribir el guion más poderoso posible.
+AXIOMA CENTRAL V1000: "No adaptes el tema. Replica el mecanismo emocional."
+MISIÓN ABSOLUTA: Tomar el ADN exacto de este video viral y crear un guion SUPERIOR.
+No reinterpretación. No concepto abstracto. REPLICACIÓN DE MECANISMO con equivalencia estructural.
 
 ═══════════════════════════════════════════════════
-ADN VIRAL EXTRAÍDO — ESTE ES TU MOLDE EXACTO:
+🔬 MECANISMO VIRAL REAL — LO QUE EXPLOTÓ ESTE VIDEO:
 ═══════════════════════════════════════════════════
-GÉNERO: ${genero}
+GÉNERO NARRATIVO: ${genero}
+→ TU GUION DEBE SER DEL MISMO GÉNERO. Si es "Confesional crudo" — debe ser crudo. No reflexivo.
+
+TIPO DE CONFLICTO CENTRAL: ${tension}
+→ Debes replicar ESTE TIPO de conflicto en ${nichoUsuario}. No cambiarlo por otro.
+
+NIVEL DE RIESGO ORIGINAL: ${nivelRiesgo.toUpperCase()}
+→ Tu adaptación DEBE tener riesgo ${nivelRiesgo}. Si el original es riesgo alto, tu guion no puede ser seguro.
+
 EMOCIÓN NÚCLEO: ${emocion}
-TENSIÓN: ${tension}
+→ El oyente debe sentir exactamente esta emoción. No una versión suavizada.
+
+INTENSIDAD EMOCIONAL: ${nivelIncomodidad}/100
+→ Tu guion debe alcanzar mínimo ${Math.min(nivelIncomodidad + 5, 100)}/100 de intensidad.
+
+═══════════════════════════════════════════════════
+🎬 ESCENA CONCRETA ORIGINAL (EL CORAZÓN DEL VIDEO):
+═══════════════════════════════════════════════════
+ESCENA EXACTA: "${escenaConcreta}"
+DECISIÓN IMPOPULAR: "${decisionImpopular}"
+CONSECUENCIA REAL: "${consecuenciaReal}"
+POR QUÉ INCOMODA: "${porQueIncomoda}"
+ELEMENTO PELIGROSO (lo que genera comentarios en contra): "${elementoPeligroso}"
+
+═══════════════════════════════════════════════════
+🎯 EQUIVALENCIA ESTRUCTURAL PARA ${nichoUsuario.toUpperCase()}:
+═══════════════════════════════════════════════════
+${escenaEquiv ? `ESCENA EQUIVALENTE EN TU NICHO: "${escenaEquiv}"` : `CREA UNA ESCENA CONCRETA en ${nichoUsuario} con la misma carga emocional que: "${escenaConcreta}"`}
+${decisionEquiv ? `DECISIÓN EQUIVALENTE: "${decisionEquiv}"` : `CREA UNA DECISIÓN IMPOPULAR equivalente en ${nichoUsuario}`}
+${consecuenciaEquiv ? `CONSECUENCIA EQUIVALENTE: "${consecuenciaEquiv}"` : `CREA UNA CONSECUENCIA REAL con costo concreto (dinero, relación, reputación)`}
+${elementoPeligrosoEquiv ? `ELEMENTO PELIGROSO EQUIVALENTE: "${elementoPeligrosoEquiv}"` : `CREA EL ELEMENTO que más va a dividir opiniones en ${nichoUsuario}`}
+
+⚠️ REGLA DE ORO: Si el original tiene escena → tu guion tiene escena. Si tiene consecuencia → tiene consecuencia.
+PROHIBIDO ABSOLUTO: Convertir escenas concretas en conceptos abstractos o metáforas bonitas.
+
+═══════════════════════════════════════════════════
+🧬 ADN VIRAL COMPLETO — TU MOLDE:
+═══════════════════════════════════════════════════
 FRAME DOMINANTE: "${frameNucleo}"
 CREENCIA QUE DESTRUYE: "${creenciaAtaca}"
 NUEVO MARCO QUE INSTALA: "${nuevoMarco}"
 QUÉ LO HACE VIRAL: ${ideanuclear}
 POSTURA QUE IMPONE: "${postura}"
 CREENCIA ROTA: "${creenciaRota}"
-TENSIÓN QUE DEJA SIN RESOLVER (genera comentarios): "${tensionNoResuelta}"
-PATRÓN NARRATIVO: ${patron}
-HOOK TYPE: ${hookType}
-ESCALATION PATTERN: ${escalationPattern}
-CLOSURE TYPE: ${closureType}
-MICRO-LOOPS: ${totalLoops} (estrategia: ${estrategiaTension})
-ACTIVADOR PRINCIPAL: ${activador0} | SECUNDARIO: ${activador1}
-RITMO: ${ritmoVerbal} | AGRESIVIDAD: ${agresividad}/100
-BANDO A (de acuerdo): "${bandoA}"
-BANDO B (en contra): "${bandoB}"
-TENSIÓN IRRESUELTA: "${tensionIrresuelta}"
-NUEVO HOOK PARA EL NICHO: "${nuevoHook}"
-VENTAJA DEL NICHO: "${ventajaNicho}"
-MAYOR INTENSIDAD POSIBLE: "${mayorIntensidad}"
-PROPORCIÓN HOOK: ${propHookPct}% | VELOCIDAD ESCALADA: ${velocidadEscalada}
-SECTOR TCA: ${sectorTca}
+POR QUÉ GENERA CONVERSACIÓN: "${porQueConversacion}"
+TENSIÓN SIN RESOLVER: "${tensionNoResuelta}"
+PATRÓN NARRATIVO: ${patron} | HOOK: ${hookType} | ESCALADA: ${escalationPattern} | CIERRE: ${closureType}
+MICRO-LOOPS: ${totalLoops} — estrategia: ${estrategiaTension}
+ACTIVADOR 1: ${activador0} | ACTIVADOR 2: ${activador1}
+RITMO: ${ritmoVerbal} | AGRESIVIDAD VERBAL: ${agresividad}/100
+BANDO A: "${bandoA}" | BANDO B: "${bandoB}"
+VENTAJA DE NICHO: "${ventajaNicho}" | MAYOR INTENSIDAD POSIBLE: "${mayorIntensidad}"
+NUEVO HOOK SECTORIAL: "${nuevoHook}"
 
 ═══════════════════════════════════════════════════
-DESTINO DE LA ADAPTACIÓN:
+👤 DESTINO:
 ═══════════════════════════════════════════════════
-NICHO: ${nichoUsuario}
-OBJETIVO: ${objetivoUsuario}
-PLATAFORMA: ${platform}
-FORMATO: ${contentType} — ${duracion}
-${expertProfile ? `
-EXPERTO QUE GRABARÁ ESTE GUION:
-- Mecanismo único: "${expertProfile.mechanism_name || 'no definido'}"
-- Enemigo que combate: "${expertProfile.enemy || 'no definido'}"
-- Territorio mental: "${expertProfile.mental_territory || 'no definido'}"
-- Punto A del avatar (dolor): "${expertProfile.point_a || 'no definido'}"
-- Punto B del avatar (transformación): "${expertProfile.point_b || 'no definido'}"
-IMPORTANTE: Integra estos datos en el guion — son el alma del contenido.` : ''}
+NICHO: ${nichoUsuario} | OBJETIVO: ${objetivoUsuario}
+PLATAFORMA: ${platform} | FORMATO: ${contentType} — ${duracion}
+${expertProfile ? `EXPERTO: Mecanismo="${expertProfile.mechanism_name || ''}" | Enemigo="${expertProfile.enemy || ''}" | Punto A="${expertProfile.point_a || ''}" | Punto B="${expertProfile.point_b || ''}"` : ''}
 
 ═══════════════════════════════════════════════════
-🔴 SISTEMA 1 — CONSERVACIÓN DE INTENSIDAD (OBLIGATORIO)
-═══════════════════════════════════════════════════
-El video original tiene nivel de conflicto: ALTO.
-Tu adaptación DEBE tener nivel equivalente o superior.
-PROHIBIDO suavizar, abstraer o convertir el conflicto en concepto.
-
-SI el original tiene → una historia concreta con consecuencia real
-TU adaptación DEBE tener → una historia concreta equivalente en ${nichoUsuario}
-
-SI el original tiene → una decisión impopular que duele
-TU adaptación DEBE tener → una decisión equivalente que también duela en ${nichoUsuario}
-
-SI el original tiene → riesgo social, tema incómodo, tensión real
-TU adaptación DEBE tener → el mismo nivel de incomodidad en el universo de ${nichoUsuario}
-
-PROHIBIDO ABSOLUTO:
-❌ Convertir historias concretas en conceptos abstractos
-❌ Eliminar el conflicto para sonar "más educativo"
-❌ Suavizar la polarización para sonar "más neutral"
-❌ Reemplazar escenas reales por metáforas bonitas
-❌ Guion "reflexivo" cuando el original es "crudo"
-
-═══════════════════════════════════════════════════
-🔴 SISTEMA 2 — CONCRETIZACIÓN OBLIGATORIA
-═══════════════════════════════════════════════════
-Cada sección necesita UN CASO CONCRETO, no teoría:
-
-HOOK: Una situación específica que el oyente ha vivido. No una pregunta retórica genérica.
-CONFLICTO: Un error real, una decisión difícil, una consecuencia que dolió. No "a veces pasa".
-ESCALADA: Ejemplos concretos del nicho ${nichoUsuario}. Nada de "muchos profesionales".
-CLÍMAX: La decisión más difícil. La que nadie quiere tomar. Dicha sin rodeos.
-CIERRE: La postura más fuerte. La que divide opiniones. Sin suavizar.
-
-═══════════════════════════════════════════════════
-🔴 SISTEMA 3 — ESCALADA EMOCIONAL REAL (NO PLANA)
-═══════════════════════════════════════════════════
-La curva emocional DEBE subir. Cada párrafo más intenso que el anterior.
-
-Párrafo 1: Tensión baja — la situación cotidiana
-Párrafo 2: Tensión media — el conflicto aparece
-Párrafo 3: Tensión alta — la decisión difícil
-Párrafo 4: Tensión máxima — la consecuencia, el dolor, la postura
-Párrafo 5: Resolución — el frame que lo cambia todo
-
-Si la curva es PLANA → el guion es un fallo. Reescríbelo.
-
-═══════════════════════════════════════════════════
-🔴 SISTEMA 4 — POLARIZACIÓN REAL (MÍNIMO 70/100)
-═══════════════════════════════════════════════════
-El guion DEBE crear dos bandos claros:
-BANDO A (de acuerdo): "${bandoA}" — adaptado a ${nichoUsuario}
-BANDO B (en contra): "${bandoB}" — adaptado a ${nichoUsuario}
-
-La polarización nace del CONFLICTO, no del equilibrio.
-No busques que todos estén de acuerdo. Busca que la mitad quiera comentar en contra.
-Tensión irresuelta que genera comentarios: "${tensionNoResuelta}"
-
-═══════════════════════════════════════════════════
-LEYES ABSOLUTAS:
+🔴 LEYES ABSOLUTAS V1000 — VIOLACIÓN = REGENERAR
 ═══════════════════════════════════════════════════
 
-① LONGITUD: MÍNIMO ${minWords} palabras. IDEAL ${idealWords} palabras.
-   Guion menor a ${minWords} palabras = FALLO. No lo entregues.
+LEY 1 — EQUIVALENCIA ESTRUCTURAL (la más importante):
+Cada elemento del original tiene su equivalente en el guion:
+  Original: ${escenaConcreta ? `"${escenaConcreta.substring(0,80)}..."` : 'escena concreta'}
+  Tu guion: escena concreta equivalente en ${nichoUsuario}
+  Original: ${decisionImpopular ? `"${decisionImpopular.substring(0,80)}..."` : 'decisión impopular'}
+  Tu guion: decisión impopular equivalente en ${nichoUsuario}
+  Original: ${consecuenciaReal ? `"${consecuenciaReal.substring(0,80)}..."` : 'consecuencia real'}
+  Tu guion: consecuencia real con costo concreto en ${nichoUsuario}
+NO CAMBIES ESTRUCTURA POR CONCEPTO.
 
-② ESTRUCTURA OBLIGATORIA:
+LEY 2 — ESCALADA EMOCIONAL OBLIGATORIA (7 pasos):
+  Paso 1 HOOK: Tensión inmediata — situación específica que el oyente ha vivido
+  Paso 2 REVELACIÓN: El conflicto aparece — concreto, no abstracto
+  Paso 3 ESCALADA: La situación empeora — ejemplos reales del nicho
+  Paso 4 PUNTO CRÍTICO: El momento más difícil — decisión que nadie quiere tomar
+  Paso 5 DECISIÓN: La elección impopular — dicha sin rodeos, sin suavizar
+  Paso 6 CONSECUENCIA: El costo real — dinero, relación, reputación, oportunidad
+  Paso 7 FRAME FINAL: La postura más fuerte — la que divide opiniones
+Si falta punto crítico → regenerar. Si falta decisión clara → regenerar. Si curva es plana → regenerar.
 
-   HOOK (${propHookPct}% — primeras palabras):
-   → Tipo "${hookType}". Emoción: ${emocion}. Sin introducción, sin contexto.
-   → Primera frase destruye: "${creenciaAtaca}" aplicada concretamente a ${nichoUsuario}
-   → Historia o situación ESPECÍFICA — no pregunta retórica genérica
-   → En 3 segundos el oyente piensa: "esto es exactamente lo que me pasa"
-   → Si hay nuevo_hook_sectorial úsalo: "${nuevoHook}"
+LEY 3 — POLARIZACIÓN MÍNIMA 70/100:
+  Bando A: "${bandoA}" adaptado a ${nichoUsuario}
+  Bando B: "${bandoB}" adaptado a ${nichoUsuario}
+  No busques que todos estén de acuerdo. Busca que la mitad comente en contra.
+  Tensión irresuelta que genera debate: "${tensionNoResuelta}"
 
-   SETUP DEL CONFLICTO (15-20%):
-   → Caso concreto — un error real, una decisión difícil, una consecuencia
-   → Instala al enemigo real de ${nichoUsuario} (versión del "${bandoB}")
-   → El dolor debe ser ESPECÍFICO y reconocible, no genérico
+LEY 4 — SUPERIORIDAD OBLIGATORIA:
+  Tu guion DEBE superar al original en:
+  → Mayor claridad narrativa del conflicto
+  → Mayor precisión en la decisión impopular
+  → Mayor contundencia en el frame final
+  → Mejor hook — más específico, más tenso
+  → Cierre más polarizante
 
-   ESCALADA EMOCIONAL (40-50%):
-   → Velocidad: ${velocidadEscalada}. Cada párrafo MÁS INTENSO que el anterior.
-   → Replica ${totalLoops} micro-loops. Estrategia: ${estrategiaTension}
-   → ${reencuadresMentales.length > 0 ? `Reencuadres obligatorios: ${JSON.stringify(reencuadresMentales)}` : 'Mínimo 2 reencuadres que cambien la perspectiva — concretos, no abstractos.'}
-   → TODO en el universo de ${nichoUsuario} — cero referencias al video original
+LEY 5 — AUTOEVALUACIÓN ANTES DE ENTREGAR:
+  Si tu guion suena "reflexivo" cuando el original era "crudo" → REGENERAR
+  Si tu guion usa conceptos donde el original usaba escenas → REGENERAR
+  Si tu guion es menos polémico que el original → REGENERAR
+  Si no hay punto donde el oyente piense "esto es muy fuerte" → REGENERAR
+  Si el cierre no divide opiniones → REGENERAR
 
-   CLÍMAX:
-   → La decisión más difícil. La consecuencia que dolió. Dicha sin rodeos.
-   → ${golpesNarrativos.length > 0 ? `Golpe narrativo: "${golpesNarrativos[0]?.descripcion || ''}"` : 'Momento de máxima intensidad — confesión, decisión impopular o revelación que incomoda.'}
-   → Postura definitiva sin suavizar: "${postura}"
+LEY 6 — TELEPROMPTER PURO:
+  SOLO las palabras que el creador dice en voz alta.
+  Sin etiquetas [HOOK] [ESCALADA] [CLIMAX] — ninguna visible.
+  Frases cortas en tensión. "..." para pausa. Línea en blanco para pausa larga.
+  Ritmo: ${ritmoVerbal}. Agresividad: ${agresividad}/100.
 
-   CIERRE ESTRATÉGICO (15-20%):
-   → Activa guardado con: ${activador0} y ${activador1}
-   → Deja sin resolver: "${tensionNoResuelta}" — genera comentarios
-   → Última frase: la más fuerte. La que polariza. La que se repite.
-
-③ ESTILO: Ritmo ${ritmoVerbal}. Agresividad ${agresividad}/100.
-   Frases cortas en momentos de tensión. "..." para pausa. Línea en blanco para pausa larga.
-④ PROHIBIDO: [HOOK] [SETUP] [ESCALADA] [CLIMAX] [CIERRE] — ninguna etiqueta visible.
-   SOLO las palabras que el creador dice en voz alta.
+LEY 7 — LONGITUD: MÍNIMO ${minWords} palabras. IDEAL ${idealWords} palabras.
+  Menos de ${minWords} = fallo. No entregar.
 
 ═══════════════════════════════════════════════════
 DEVUELVE ÚNICAMENTE ESTE JSON (sin markdown, sin backticks):
 {
-  "guion_adaptado_espejo": "GUION COMPLETO MÍNIMO ${minWords} PALABRAS — SOLO VOZ SIN ETIQUETAS",
+  "guion_adaptado_espejo": "GUION COMPLETO MÍNIMO ${minWords} PALABRAS — SOLO VOZ, CERO ETIQUETAS, MÁXIMA INTENSIDAD",
   "guion_adaptado_al_nicho": "igual que guion_adaptado_espejo",
-  "por_que_llegara_a_millones": "razón exacta del potencial viral",
-  "como_supera_al_original": "en qué es más poderoso que el video original",
-  "momento_mas_compartible": "frase exacta más compartible y por qué",
-  "prediccion_comentarios": ["comentario 1","comentario 2","comentario 3"],
+  "por_que_llegara_a_millones": "mecanismo emocional exacto que lo hará viral",
+  "como_supera_al_original": "en qué aspectos concretos es más poderoso",
+  "momento_mas_compartible": "frase exacta del guion más compartible y por qué genera guardado",
+  "prediccion_comentarios": ["comentario en contra exacto","comentario a favor exacto","comentario de identificación exacto"],
   "plan_audiovisual_profesional": {
     "secuencia_temporal": [{"tiempo":"","descripcion_visual":"","tipo_plano":"","movimiento_camara":"","texto_en_pantalla":"","emocion_objetivo":"","efecto_retencion":"","audio_sfx":""}],
     "b_rolls_estrategicos": [{"momento":"","que_mostrar":"","duracion_segundos":0,"por_que_refuerza":"","emocion_generada":"","fuente_sugerida":""}],
