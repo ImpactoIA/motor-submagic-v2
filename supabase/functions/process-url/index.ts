@@ -6762,6 +6762,36 @@ Cómo la adaptación PUEDE superar al original:
 mayor_claridad, mayor_intensidad, mayor_polarizacion, mejor_estructura_emocional, mejor_cierre, ventaja_de_nicho.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔥 MOTOR 14D — INTENSIDAD CONFLICTUAL (ANTI-SUAVIZACIÓN)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CRÍTICO: Este motor previene que el guion se vuelva abstracto y sin fuerza.
+Sin este motor, la adaptación se convierte en "reflexión" en lugar de "conflicto real".
+
+nivel_riesgo_original: bajo|medio|alto|extremo
+  → ¿Qué tan arriesgado socialmente? ¿Puede generar rechazo fuerte?
+
+escena_concreta_principal: LA ESCENA EXACTA del video. No el concepto — LA ESCENA.
+  → Quién hizo qué, cuándo, con qué consecuencia. 1-2 oraciones máximo.
+
+decision_impopular: la decisión más difícil que tomó o reveló el creador
+  → Lo específico. Lo que incomoda. Sin abstraer.
+
+consecuencia_real: qué pasó exactamente como resultado. Con daño o pérdida concreta.
+  → No "aprendí algo". El costo real: dinero, relación, reputación, oportunidad.
+
+nivel_incomodidad: 0-100
+
+por_que_incomoda: razón específica de la tensión social — no "toca temas difíciles"
+
+elemento_peligroso: el elemento EXACTO que más divide y genera comentarios en contra
+
+equivalente_en_nicho:
+  escena_equivalente: caso concreto en el nicho del usuario con la misma carga emocional
+  decision_equivalente: decisión impopular equivalente en el nicho del usuario
+  consecuencia_equivalente: consecuencia real con costo concreto en el nicho del usuario
+  elemento_peligroso_equivalente: elemento que genera la misma polarización en el nicho del usuario
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🔗 MOTOR 15 — BLUEPRINT REPLICABLE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 nombre_patron, formula_base, pasos_estructurales.
@@ -6785,13 +6815,14 @@ proximos_contenidos: 3 items [{titulo, por_que_ahora, genero, tension}].
 =============================================================
 =============================================================
 DEVUELVE JSON con estas claves exactas — sin agregar ni omitir ninguna:
-adn_estructura, curva_emocional, micro_loops, polarizacion, identidad_verbal, status_y_posicionamiento, densidad_valor, manipulacion_atencion, activadores_guardado, adaptabilidad_nicho, elementos_cliche_detectados, ritmo_narrativo, score_viral_estructural, adn_profundo, idea_nuclear_ganadora, sistema_superioridad, blueprint_replicable, analisis_tca, mapa_de_adaptacion, posicionamiento_y_proximos_pasos.
+adn_estructura, curva_emocional, micro_loops, polarizacion, identidad_verbal, status_y_posicionamiento, densidad_valor, manipulacion_atencion, activadores_guardado, adaptabilidad_nicho, elementos_cliche_detectados, ritmo_narrativo, score_viral_estructural, adn_profundo, idea_nuclear_ganadora, sistema_superioridad, intensidad_conflictual, blueprint_replicable, analisis_tca, mapa_de_adaptacion, posicionamiento_y_proximos_pasos.
 Campos críticos obligatorios:
 - score_viral_estructural: incluye viralidad_estructural_global (0-100)
 - adn_profundo: incluye genero_narrativo, emocion_nucleo, tipo_tension, frame_dominante, polarizacion_implicita
 - blueprint_replicable: incluye equivalencias_estructurales con hook_type, escalation_pattern, closure_type
 - micro_loops: incluye total y estrategia_tension
 - activadores_guardado: mínimo 3 items con tipo y contenido
+- intensidad_conflictual: incluye nivel_riesgo_original, escena_concreta_principal, decision_impopular, consecuencia_real, nivel_incomodidad, por_que_incomoda, elemento_peligroso, equivalente_en_nicho
 DEVUELVE ÚNICAMENTE JSON VÁLIDO. Sin markdown. Sin backticks.
 `;
 
@@ -6839,6 +6870,30 @@ const PROMPT_GUION_ELITE = (
   const mayorIntensidad = adnForense.sistema_superioridad?.mayor_intensidad || '';
   const golpesNarrativos = adnForense.manipulacion_atencion?.golpes_narrativos || [];
   const reencuadresMentales = adnForense.manipulacion_atencion?.reencuadres_mentales || [];
+  const golpe0 = golpesNarrativos[0]?.descripcion || '';
+  const reencuadre0 = reencuadresMentales[0] || '';
+  const firmaLinguistica = adnForense.identidad_verbal?.firma_linguistica || '';
+  const palabrasPoder = adnForense.identidad_verbal?.palabras_poder_detectadas || [];
+  const bloques = adnForense.adn_estructura?.bloques || [];
+  const loopsDetalle = adnForense.micro_loops?.loops || [];
+  const activador0Contenido = activadores[0]?.contenido || '';
+  const activador2 = activadores[2]?.tipo || 'dato_contraintuitivo';
+  const formulaBase = adnForense.blueprint_replicable?.formula_base || '';
+  const pasosEstructurales = adnForense.blueprint_replicable?.pasos_estructurales || [];
+  const porQueConversacion = adnForense.idea_nuclear_ganadora?.por_que_genera_conversacion || '';
+  const versionEquilibrio = adnForense.analisis_tca?.version_equilibrio_ideal || adnForense.mapa_de_adaptacion?.version_equilibrio_ideal || '';
+  const ic = adnForense.intensidad_conflictual || {};
+  const nivelRiesgo = ic.nivel_riesgo_original || 'alto';
+  const escenaConcreta = ic.escena_concreta_principal || '';
+  const decisionImpopular = ic.decision_impopular || '';
+  const consecuenciaReal = ic.consecuencia_real || '';
+  const nivelIncomodidad = ic.nivel_incomodidad || 70;
+  const porQueIncomoda = ic.por_que_incomoda || '';
+  const elementoPeligroso = ic.elemento_peligroso || '';
+  const escenaEquiv = ic.equivalente_en_nicho?.escena_equivalente || '';
+  const decisionEquiv = ic.equivalente_en_nicho?.decision_equivalente || '';
+  const consecuenciaEquiv = ic.equivalente_en_nicho?.consecuencia_equivalente || '';
+  const elementoPeligrosoEquiv = ic.equivalente_en_nicho?.elemento_peligroso_equivalente || '';
 
   return `Eres el escritor de guiones virales #1 del mundo hispanohablante.
 MISIÓN: Tomar el ADN exacto de este video viral y crear un guion SUPERIOR adaptado al nicho del usuario.
@@ -7038,19 +7093,44 @@ async function ejecutarIngenieriaInversaPro(
   try {
     console.log(`[MOTOR PRO V2] 🔬 FASE 1: Extrayendo ADN forense...`);
 
+  // Recortar expertProfile para FASE 1 — solo campos clave, sin bases de conocimiento enormes
+  const expertProfileFase1 = contexto.expertProfile ? {
+    authority_level: contexto.expertProfile.authority_level,
+    main_objective: contexto.expertProfile.main_objective,
+    confrontation_level: contexto.expertProfile.confrontation_level,
+    max_controversy: contexto.expertProfile.max_controversy,
+    mechanism_name: contexto.expertProfile.mechanism_name,
+    enemy: contexto.expertProfile.enemy,
+    mental_territory: contexto.expertProfile.mental_territory,
+    point_a: contexto.expertProfile.point_a,
+    point_b: contexto.expertProfile.point_b,
+  } : undefined;
+
+  const expertProfileFase1 = contexto.expertProfile ? {
+    authority_level: contexto.expertProfile.authority_level,
+    main_objective: contexto.expertProfile.main_objective,
+    confrontation_level: contexto.expertProfile.confrontation_level,
+    max_controversy: contexto.expertProfile.max_controversy,
+    mechanism_name: contexto.expertProfile.mechanism_name,
+    enemy: contexto.expertProfile.enemy,
+    mental_territory: contexto.expertProfile.mental_territory,
+    point_a: contexto.expertProfile.point_a,
+    point_b: contexto.expertProfile.point_b,
+  } : undefined;
+
   const promptFase1 = PROMPT_ADN_FORENSE(
   content,
   nichoOrigen,
   nichoUsuario,
   objetivoUsuario,
-  contexto.expertProfile,
-  contexto
+  expertProfileFase1,
+  { detectedSourceLanguage: contexto.detectedSourceLanguage, outputLanguageFull: contexto.outputLanguageFull }
 );
 
-    const TOKENS_FASE1 = esMasterclass ? 6000 : 4000;
+    const TOKENS_FASE1 = esMasterclass ? 5000 : 3500;
 
     const completionFase1 = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model: 'gpt-4o',
       response_format: { type: 'json_object' },
       messages: [
         { role: 'system', content: 'Eres TITAN OMEGA OLIMPO. Sistema forense de ADN viral. Esta fase: SOLO analizas. NO generas guion. Devuelves ÚNICAMENTE JSON válido.' },
@@ -7080,10 +7160,10 @@ async function ejecutarIngenieriaInversaPro(
       contexto.expertProfile
     );
 
-    const TOKENS_FASE2 = esMasterclass ? 8000 : contentType === 'long' ? 6000 : 4000;
+    const TOKENS_FASE2 = esMasterclass ? 9000 : contentType === 'long' ? 7000 : 5000;
 
     const completionFase2 = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model: 'gpt-4o',
       response_format: { type: 'json_object' },
       messages: [
         { role: 'system', content: `Eres el escritor de guiones virales #1 del mundo. ÚNICA función: guion poderoso y completo. MÍNIMO ${minWords} palabras. Más corto = fallo crítico. JSON válido únicamente.` },
@@ -7127,10 +7207,10 @@ DEVUELVE ÚNICAMENTE JSON válido. Sin markdown. Sin backticks.
 
 
       const completionRef = await openai.chat.completions.create({
-        model: 'gpt-4o-mini',
+        model: 'gpt-4o',
         response_format: { type: 'json_object' },
         messages: [
-          { role: 'system', content: `Escritor viral. MÍNIMO ${minWords} palabras. JSON válido.` },
+          { role: 'system', content: `Escritor viral. MÍNIMO ${minWords} palabras en el guion. JSON válido.` },
           { role: 'user', content: promptRef }
         ],
         temperature: 0.8,
@@ -7164,6 +7244,7 @@ DEVUELVE ÚNICAMENTE JSON válido. Sin markdown. Sin backticks.
       "manipulacion_atencion", "activadores_guardado", "adaptabilidad_nicho",
       "elementos_cliche_detectados", "ritmo_narrativo", "score_viral_estructural",
       "adn_profundo", "idea_nuclear_ganadora", "sistema_superioridad",
+      "intensidad_conflictual",
       "guion_adaptado_espejo", "blueprint_replicable", "analisis_tca",
       "mapa_de_adaptacion", "posicionamiento_y_proximos_pasos"
     ];
