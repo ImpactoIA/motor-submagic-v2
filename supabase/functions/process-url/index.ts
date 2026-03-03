@@ -7050,7 +7050,7 @@ async function ejecutarIngenieriaInversaPro(
     const TOKENS_FASE1 = esMasterclass ? 8000 : 6000;
 
     const completionFase1 = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: 'gpt-4o-mini',
       response_format: { type: 'json_object' },
       messages: [
         { role: 'system', content: 'Eres TITAN OMEGA OLIMPO. Sistema forense de ADN viral. Esta fase: SOLO analizas. NO generas guion. Devuelves ÚNICAMENTE JSON válido.' },
