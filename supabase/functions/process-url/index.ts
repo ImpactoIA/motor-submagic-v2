@@ -7235,8 +7235,8 @@ async function ejecutarIngenieriaInversaPro(
 
     const scoreAdn = adnForense.score_viral_estructural?.viralidad_estructural_global || 0;
     console.log(`[MOTOR PRO V2] ✅ FASE 1 completa. Score ADN: ${scoreAdn}/100`);
-    // ✅ Delay anti-TPM: esperar 2s entre fases para resetear ventana de tokens
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    // ✅ Delay anti-TPM reducido para evitar Timeout
+    await new Promise(resolve => setTimeout(resolve, 500))
     console.log(`[MOTOR PRO V2] 🧬 Género: ${adnForense.adn_profundo?.genero_narrativo} | Emoción: ${adnForense.adn_profundo?.emocion_nucleo}`);
 
     console.log(`[MOTOR PRO V2] ✍️ FASE 2: Generando guion élite...`);
@@ -7260,9 +7260,9 @@ async function ejecutarIngenieriaInversaPro(
 
     const TOKENS_FASE2 = esMasterclass ? 6000 : contentType === 'long' ? 5000 : 4000;
 
-    // Esperar 5s para que la ventana TPM se resetee después de FASE 1
+    // Esperar reducido para evitar Timeout
     console.log('[MOTOR PRO V2] ⏳ Limpiando ventana TPM...');
-    await new Promise(resolve => setTimeout(resolve, 5000));
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
     // Comprimir prompt FASE 2: máximo 18000 chars → seguro con 30k TPM limpio
     const promptFase2Final = promptFase2
