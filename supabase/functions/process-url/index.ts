@@ -7252,11 +7252,6 @@ async function ejecutarIngenieriaInversaPro(
     if (Object.keys(adnForense).length === 0 || !adnForense.score_viral_estructural) {
         throw new Error("El video es demasiado complejo y el motor falló al extraer el ADN. Por favor, intenta de nuevo.");
     }
-    
-    // 🛡️ SEGURO ANTI-FALLOS: Si FASE 1 colapsa, abortar antes de arruinar FASE 2
-    if (Object.keys(adnForense).length === 0 || !adnForense.score_viral_estructural) {
-        throw new Error("El video es demasiado complejo y el motor falló al extraer el ADN. Por favor, intenta de nuevo.");
-    }
 
     tokensTotal += completionFase1.usage?.total_tokens || 0;
     adnForense._outputLanguage = contexto.outputLanguage || 'es';
