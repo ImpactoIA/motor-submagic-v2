@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -6,8 +6,9 @@ import {
   Loader2, Target, Brain, Film, Flame,
   Clapperboard, Sparkles, MoveRight, Upload,
   Trash2, Link as LinkIcon, Plus, X,
-  Clock, Layers,
-  Gavel, AlertCircle, RefreshCw
+  Clock, Layers, TrendingUp, Eye, Share2,
+  Gavel, AlertCircle, RefreshCw, ChevronDown,
+  PlayCircle, BarChart3, Cpu, Wand2
 } from 'lucide-react';
 
 // ==================================================================================
@@ -50,11 +51,13 @@ function computeCost(type: ContentType, urlCount: number): number {
 // 🎬 COMPONENTE: GUION + PLAN AUDIOVISUAL (lo más importante)
 // ==================================================================================
 
-const OmegaScriptView = ({ scriptData }: { scriptData: any }) => {
+const OmegaScriptView = ({ scriptData, contentType = 'reel' }: { scriptData: any; contentType?: string }) => {
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState<'camara' | 'broll' | 'musica'>('camara');
 
+  // ✅ FIX BUG #2 — orden correcto: espejo > al_nicho > tecnico_completo
   const scriptText =
+    scriptData.guion_adaptado_espejo ||
     scriptData.guion_adaptado_al_nicho ||
     scriptData.guion_tecnico_completo ||
     scriptData.guion_completo;
@@ -75,9 +78,13 @@ const OmegaScriptView = ({ scriptData }: { scriptData: any }) => {
   };
 
   const words = scriptText?.trim().split(/\s+/).filter(Boolean).length || 0;
-  const wordsBadge = words >= 180 ? { cls: 'bg-blue-500/20 text-blue-400 border-blue-500/30', label: `${words} palabras ✓` }
-    : words < 150 ? { cls: 'bg-red-500/20 text-red-400 border-red-500/30', label: `${words} palabras ⚠ corto` }
-    : { cls: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30', label: `${words} palabras ~` };
+  // ✅ FIX BUG #5 — umbrales sincronizados con backend minWords
+  const minWords = contentType === 'masterclass' ? 800 : contentType === 'long' ? 450 : 250;
+  const wordsBadge = words >= minWords
+    ? { cls: 'bg-blue-500/20 text-blue-400 border-blue-500/30', label: `${words} palabras ✓` }
+    : words >= Math.round(minWords * 0.85)
+    ? { cls: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30', label: `${words} palabras ~` }
+    : { cls: 'bg-red-500/20 text-red-400 border-red-500/30', label: `${words} palabras ⚠ corto` };
 
   return (
     <div className="bg-[#080808] border border-green-500/30 rounded-2xl overflow-hidden shadow-[0_0_50px_-20px_rgba(34,197,94,0.15)]">
@@ -111,16 +118,16 @@ const OmegaScriptView = ({ scriptData }: { scriptData: any }) => {
           </div>
 
           {planAudiovisual && (
-            <div className="flex border-b border-white/5 px-4">
+            <div className="flex border-b border-white/5 px-4 overflow-x-auto">
               {[
                 { id: 'camara', label: '🎥 Cámara' },
                 { id: 'broll',  label: '🎞 B-Roll' },
-                { id: 'musica', label: '🎧 Música' },
+                { id: 'musica', label: '🎧 Audio' },
               ].map(tab => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`px-3 py-2 text-[10px] font-black uppercase tracking-wider transition-all border-b-2 ${
+                  className={`px-3 py-2 text-[10px] font-black uppercase tracking-wider transition-all border-b-2 whitespace-nowrap ${
                     activeTab === tab.id ? 'border-green-500 text-green-400' : 'border-transparent text-gray-600 hover:text-gray-400'
                   }`}
                 >
@@ -135,127 +142,371 @@ const OmegaScriptView = ({ scriptData }: { scriptData: any }) => {
             {(!planAudiovisual || activeTab === 'camara') && visualPlan?.map((scene: any, idx: number) => (
               <div key={idx} className="relative pl-4 border-l-2 border-gray-800 text-xs group hover:border-green-500/50 transition-colors">
                 <div className="absolute -left-[5px] top-0 w-2 h-2 rounded-full bg-gray-800 border border-gray-700 group-hover:bg-green-500 group-hover:border-green-400 transition-colors" />
-                <span className="text-green-400 font-mono font-bold block mb-2 text-[10px] bg-green-900/10 inline-block px-1.5 py-0.5 rounded">{scene.tiempo}</span>
-                {scene.tipo_plano && <span className="text-[9px] text-blue-400 font-bold bg-blue-500/10 px-1.5 py-0.5 rounded ml-1">{scene.tipo_plano}</span>}
+                <div className="flex items-center gap-2 mb-2 flex-wrap">
+                  <span className="text-green-400 font-mono font-bold text-[10px] bg-green-900/10 inline-block px-1.5 py-0.5 rounded">{scene.tiempo}</span>
+                  {scene.tipo_plano && <span className="text-[9px] text-blue-400 font-bold bg-blue-500/10 px-1.5 py-0.5 rounded">{scene.tipo_plano}</span>}
+                  {scene.emocion_objetivo && <span className="text-[9px] text-rose-400 font-bold bg-rose-500/10 px-1.5 py-0.5 rounded">❤ {scene.emocion_objetivo}</span>}
+                </div>
                 {(scene.movimiento_camara || scene.accion_camara || scene.instruccion_produccion) && (
-                  <div className="mb-2 mt-1.5 text-blue-300 font-bold flex items-start gap-1.5 leading-tight">
+                  <div className="mb-2 text-blue-300 font-bold flex items-start gap-1.5 leading-tight">
                     <span className="opacity-50 mt-0.5">🎥</span>
                     {scene.movimiento_camara || scene.accion_camara || scene.instruccion_produccion}
                   </div>
                 )}
                 <p className="text-gray-300 font-medium leading-relaxed mb-2">{scene.descripcion_visual || scene.accion_adaptada || scene.accion_en_pantalla}</p>
-                {scene.texto_en_pantalla && <div className="bg-white/5 rounded px-2 py-1 mb-2 text-[10px] text-yellow-300 font-bold">📝 {scene.texto_en_pantalla}</div>}
-                {scene.emocion_objetivo && <div className="text-[9px] text-rose-400 font-bold mb-1">❤ {scene.emocion_objetivo}</div>}
-                {scene.efecto_retencion && <div className="text-[9px] text-purple-400 font-bold">⚡ {scene.efecto_retencion}</div>}
+                {scene.texto_en_pantalla && (
+                  <div className="bg-white/5 rounded px-2 py-1 mb-2 text-[10px] text-yellow-300 font-bold">📝 {scene.texto_en_pantalla}</div>
+                )}
+                {scene.efecto_retencion && (
+                  <div className="text-[9px] text-purple-400 font-bold mb-1">⚡ {scene.efecto_retencion}</div>
+                )}
                 {(scene.audio_sfx || scene.audio) && (
-                  <div className="mt-2 pt-2 border-t border-white/5 text-orange-400/90 text-[10px] font-mono flex items-center gap-1.5">
+                  <div className="mt-1.5 pt-1.5 border-t border-white/5 text-orange-400/90 text-[10px] font-mono flex items-center gap-1.5">
                     <span className="opacity-70">🔊</span> {scene.audio_sfx || scene.audio}
+                  </div>
+                )}
+                {scene.transicion && (
+                  <div className="mt-1 text-[9px] text-cyan-400/80 font-bold flex items-center gap-1">
+                    <span>→</span> {scene.transicion}
                   </div>
                 )}
               </div>
             ))}
-
-            {/* TAB B-ROLL */}
-            {planAudiovisual && activeTab === 'broll' && (
-              <div className="space-y-4">
-                {bRolls.length > 0 ? bRolls.map((br: any, idx: number) => (
-                  <div key={idx} className="bg-[#080808] rounded-xl p-3 border border-white/5">
-                    <span className="text-[9px] font-black text-green-400 bg-green-500/10 px-2 py-0.5 rounded-full border border-green-500/20 inline-block mb-2">{br.momento}</span>
-                    <p className="text-xs text-white font-bold mb-1">🎞 {br.que_mostrar}</p>
-                    <p className="text-[10px] text-gray-400 mb-1">↳ {br.por_que_refuerza}</p>
-                    <p className="text-[9px] text-rose-400 font-bold">❤ {br.emocion_generada}</p>
+            {(!planAudiovisual && !visualPlan) && (
+              <div className="space-y-3 py-2">
+                <div className="text-[9px] font-black text-yellow-400 uppercase tracking-widest mb-2">⚡ Guía de dirección automática</div>
+                {[
+                  { t: '0-3s HOOK', c: 'Close-up cara', m: 'Cámara estática o micro-zoom in', sfx: 'Silencio total o 1 nota musical' },
+                  { t: '3-15s SETUP', c: 'Medium shot / Plano americano', m: 'Ligero movimiento lateral', sfx: 'Música 80BPM entrada suave' },
+                  { t: '15-40s CLÍMAX', c: 'Serie de close-ups + B-roll', m: 'Cortes rápidos cada 1-2s', sfx: 'Subida musical + SFX impacto' },
+                  { t: '40s-FIN CIERRE', c: 'Medium shot fijo', m: 'Zoom out lento', sfx: 'Fade musical + CTA verbal' },
+                ].map((s, i) => (
+                  <div key={i} className="relative pl-4 border-l-2 border-gray-800 group hover:border-green-500/40 transition-colors">
+                    <div className="absolute -left-[5px] top-0 w-2 h-2 rounded-full bg-gray-800" />
+                    <span className="text-green-400 font-mono font-bold text-[10px] bg-green-900/10 inline-block px-1.5 py-0.5 rounded mb-1">{s.t}</span>
+                    <p className="text-xs text-gray-300 font-bold mb-0.5">🎥 {s.c}</p>
+                    <p className="text-[10px] text-blue-400/80 mb-0.5">↳ {s.m}</p>
+                    <p className="text-[10px] text-orange-400/80">🔊 {s.sfx}</p>
                   </div>
-                )) : <p className="text-xs text-gray-600 text-center py-8">Sin b-rolls generados</p>}
+                ))}
               </div>
             )}
 
-            {/* TAB MÚSICA */}
+            {/* TAB B-ROLL — PROFESIONAL */}
+            {planAudiovisual && activeTab === 'broll' && (
+              <div className="space-y-3">
+                {/* Header explicativo */}
+                <div className="bg-blue-500/5 border border-blue-500/15 rounded-xl px-3 py-2 text-[10px] text-blue-300/80">
+                  <span className="font-black">🎞 B-ROLL ESTRATÉGICO</span> — Planos de apoyo para reforzar la narrativa en cada momento clave
+                </div>
+                {bRolls.length > 0 ? bRolls.map((br: any, idx: number) => (
+                  <div key={idx} className="bg-[#080808] rounded-xl p-3 border border-white/5 hover:border-blue-500/20 transition-colors">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[9px] font-black text-green-400 bg-green-500/10 px-2 py-0.5 rounded-full border border-green-500/20">{br.momento}</span>
+                      {br.duracion_segundos && <span className="text-[9px] text-gray-600 font-bold">⏱ {br.duracion_segundos}s</span>}
+                    </div>
+                    <p className="text-xs text-white font-bold mb-1.5">🎥 {br.que_mostrar}</p>
+                    {br.tipo_plano && (
+                      <span className="inline-block text-[9px] font-black px-2 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 mb-1.5">{br.tipo_plano}</span>
+                    )}
+                    <p className="text-[10px] text-gray-400 mb-1.5 leading-relaxed">↳ {br.por_que_refuerza}</p>
+                    <div className="flex items-center gap-3 pt-1.5 border-t border-white/5">
+                      <p className="text-[9px] text-rose-400 font-bold">❤ {br.emocion_generada}</p>
+                      {br.transicion_recomendada && (
+                        <p className="text-[9px] text-cyan-400 font-bold">✂ {br.transicion_recomendada}</p>
+                      )}
+                    </div>
+                  </div>
+                )) : (
+                  <div className="space-y-2">
+                    <p className="text-xs text-gray-600 text-center py-4">B-rolls no especificados — recomendaciones generales:</p>
+                    {[
+                      { tiempo: '0-3s', rec: 'Plano cerrado de cara (hook visual)', tipo: 'Close-up', emocion: 'Intriga' },
+                      { tiempo: '10-20s', rec: 'Recurso del tema central + texto animado', tipo: 'Insert shot', emocion: 'Contexto' },
+                      { tiempo: 'climax', rec: 'Corte a plano general o reacción', tipo: 'Wide/Reaction', emocion: 'Impacto' },
+                      { tiempo: 'cierre', rec: 'Plano medio con CTA visual', tipo: 'Medium shot', emocion: 'Acción' },
+                    ].map((r, i) => (
+                      <div key={i} className="bg-[#080808] rounded-xl p-3 border border-white/5 border-dashed">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-[9px] font-black text-yellow-400 bg-yellow-500/10 px-2 py-0.5 rounded-full border border-yellow-500/20">{r.tiempo}</span>
+                          <span className="text-[9px] text-purple-400 font-bold">{r.tipo}</span>
+                        </div>
+                        <p className="text-[10px] text-gray-300 font-bold">{r.rec}</p>
+                        <p className="text-[9px] text-rose-400 mt-0.5">❤ {r.emocion}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* TAB AUDIO — PROFESIONAL COMPLETO */}
             {planAudiovisual && activeTab === 'musica' && (
               <div className="space-y-4">
-                {musica && (
-                  <div className="bg-[#080808] rounded-xl p-4 border border-orange-500/10">
-                    <p className="text-[9px] font-black text-orange-400 uppercase tracking-widest mb-3">🎧 Música</p>
-                    <div className="space-y-2">
+
+                {/* 🎧 MÚSICA */}
+                {musica ? (
+                  <div className="bg-[#080808] rounded-xl p-4 border border-orange-500/15">
+                    <p className="text-[9px] font-black text-orange-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                      🎧 Música de Fondo
+                    </p>
+                    <div className="grid grid-cols-2 gap-2 mb-3">
                       {[
-                        { l: 'Estilo', v: musica.tipo, c: 'text-white' },
-                        { l: 'BPM', v: musica.bpm_aproximado, c: 'text-orange-400' },
-                        { l: 'Emoción', v: musica.emocion_dominante, c: 'text-white' },
-                        { l: 'Entrada', v: musica.entrada_musica, c: 'text-white' },
-                      ].map(item => (
-                        <div key={item.l} className="flex justify-between text-xs">
-                          <span className="text-gray-500">{item.l}</span>
-                          <span className={`font-bold ${item.c}`}>{item.v}</span>
+                        { l: 'Estilo', v: musica.tipo || musica.estilo, c: 'text-white' },
+                        { l: 'BPM', v: musica.bpm_aproximado || musica.bpm, c: 'text-orange-400 font-black text-sm' },
+                        { l: 'Emoción dominante', v: musica.emocion_dominante, c: 'text-rose-300' },
+                        { l: 'Entrada', v: musica.entrada_musica || musica.inicio, c: 'text-green-400' },
+                      ].filter(i => i.v).map(item => (
+                        <div key={item.l} className="bg-black/30 rounded-lg px-3 py-2">
+                          <p className="text-[8px] text-gray-600 uppercase tracking-widest mb-0.5">{item.l}</p>
+                          <span className={`text-xs font-bold ${item.c}`}>{item.v}</span>
                         </div>
                       ))}
-                      {musica.cambio_musical && <div className="pt-2 border-t border-white/5 text-[10px] text-yellow-300">🔄 {musica.cambio_musical}</div>}
+                    </div>
+                    {musica.cambio_musical && (
+                      <div className="px-3 py-2 bg-yellow-500/5 border border-yellow-500/15 rounded-lg text-[10px] text-yellow-300">
+                        🔄 {musica.cambio_musical}
+                      </div>
+                    )}
+                    {musica.referencias && (
+                      <div className="mt-2 px-3 py-2 bg-blue-500/5 border border-blue-500/15 rounded-lg text-[10px] text-blue-300">
+                        🎵 Ref: {musica.referencias}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="bg-[#080808] rounded-xl p-4 border border-orange-500/10 border-dashed">
+                    <p className="text-[9px] font-black text-orange-400 uppercase tracking-widest mb-2">🎧 Guía de Música</p>
+                    <div className="space-y-1.5 text-[10px] text-gray-400">
+                      <p>• <span className="text-white font-bold">Hook (0-5s):</span> Sin música o intro de 1 nota — fuerza atención</p>
+                      <p>• <span className="text-white font-bold">Desarrollo:</span> 80-110 BPM — ritmo motivador sin distraer</p>
+                      <p>• <span className="text-white font-bold">Clímax:</span> Subida de volumen o swell para impacto</p>
+                      <p>• <span className="text-white font-bold">Cierre:</span> Fade out o nota larga sostenida</p>
                     </div>
                   </div>
                 )}
-                {ritmoCamara && (
-                  <div className="bg-[#080808] rounded-xl p-4 border border-purple-500/10">
-                    <p className="text-[9px] font-black text-purple-400 uppercase tracking-widest mb-3">✂ Ritmo de Cortes</p>
-                    <span className="text-xs font-black text-white bg-purple-500/10 px-2 py-1 rounded-full border border-purple-500/20 inline-block">{ritmoCamara.patron_general}</span>
-                    <p className="text-[10px] text-gray-400 leading-relaxed mt-2">{ritmoCamara.descripcion}</p>
-                    {ritmoCamara.aceleraciones && <p className="text-[10px] text-green-400 mt-1">⚡ {ritmoCamara.aceleraciones}</p>}
-                    {ritmoCamara.desaceleraciones && <p className="text-[10px] text-blue-400 mt-1">🐌 {ritmoCamara.desaceleraciones}</p>}
-                  </div>
-                )}
-                {efectos && (
-                  <div className="bg-[#080808] rounded-xl p-4 border border-cyan-500/10">
-                    <p className="text-[9px] font-black text-cyan-400 uppercase tracking-widest mb-3">🔊 Efectos de Retención</p>
+
+                {/* ✂ RITMO DE CORTES */}
+                {ritmoCamara ? (
+                  <div className="bg-[#080808] rounded-xl p-4 border border-purple-500/15">
+                    <p className="text-[9px] font-black text-purple-400 uppercase tracking-widest mb-3">✂ Ritmo de Edición</p>
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-xs font-black text-white bg-purple-500/15 px-3 py-1 rounded-full border border-purple-500/25">
+                        {ritmoCamara.patron_general}
+                      </span>
+                    </div>
+                    {ritmoCamara.descripcion && (
+                      <p className="text-[10px] text-gray-400 leading-relaxed mb-2">{ritmoCamara.descripcion}</p>
+                    )}
                     <div className="space-y-1.5">
-                      {efectos.sonido_transicion && <p className="text-[10px] text-gray-300">🎵 {efectos.sonido_transicion}</p>}
-                      {efectos.micro_silencios && <p className="text-[10px] text-gray-300">🔇 {efectos.micro_silencios}</p>}
-                      {efectos.cambios_de_plano && <p className="text-[10px] text-gray-300">✂ {efectos.cambios_de_plano}</p>}
+                      {ritmoCamara.aceleraciones && (
+                        <div className="flex items-start gap-2 text-[10px]">
+                          <span className="text-green-400 font-black shrink-0 mt-0.5">⚡</span>
+                          <span className="text-gray-300"><span className="text-green-400 font-bold">Aceleraciones:</span> {ritmoCamara.aceleraciones}</span>
+                        </div>
+                      )}
+                      {ritmoCamara.desaceleraciones && (
+                        <div className="flex items-start gap-2 text-[10px]">
+                          <span className="text-blue-400 font-black shrink-0 mt-0.5">🐌</span>
+                          <span className="text-gray-300"><span className="text-blue-400 font-bold">Desaceleraciones:</span> {ritmoCamara.desaceleraciones}</span>
+                        </div>
+                      )}
+                      {ritmoCamara.frecuencia_cortes && (
+                        <div className="flex items-start gap-2 text-[10px]">
+                          <span className="text-yellow-400 font-black shrink-0 mt-0.5">⏱</span>
+                          <span className="text-gray-300"><span className="text-yellow-400 font-bold">Frecuencia:</span> {ritmoCamara.frecuencia_cortes}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="bg-[#080808] rounded-xl p-4 border border-purple-500/10 border-dashed">
+                    <p className="text-[9px] font-black text-purple-400 uppercase tracking-widest mb-2">✂ Guía de Edición</p>
+                    <div className="space-y-1.5 text-[10px] text-gray-400">
+                      <p>• <span className="text-white font-bold">Hook:</span> Corte cada 1-2s — máxima energía</p>
+                      <p>• <span className="text-white font-bold">Desarrollo:</span> Corte cada 3-5s — ritmo sostenido</p>
+                      <p>• <span className="text-white font-bold">Clímax:</span> J-cut o L-cut para transición suave</p>
+                      <p>• <span className="text-white font-bold">Cierre:</span> Plano largo sin cortes — fuerza escucha</p>
                     </div>
                   </div>
                 )}
-                {!musica && !ritmoCamara && !efectos && <p className="text-xs text-gray-600 text-center py-8">Sin datos de música generados</p>}
+
+                {/* 🔊 EFECTOS DE RETENCIÓN + TRANSICIONES */}
+                <div className="bg-[#080808] rounded-xl p-4 border border-cyan-500/15">
+                  <p className="text-[9px] font-black text-cyan-400 uppercase tracking-widest mb-3">🔊 Efectos & Transiciones</p>
+                  {efectos ? (
+                    <div className="space-y-2">
+                      {efectos.sonido_transicion && (
+                        <div className="flex items-start gap-2.5 bg-black/30 rounded-lg px-3 py-2">
+                          <span className="text-lg shrink-0">🎵</span>
+                          <div>
+                            <p className="text-[8px] text-gray-600 uppercase tracking-widest mb-0.5">Sonido de transición</p>
+                            <p className="text-[10px] text-gray-200 font-bold">{efectos.sonido_transicion}</p>
+                          </div>
+                        </div>
+                      )}
+                      {efectos.micro_silencios && (
+                        <div className="flex items-start gap-2.5 bg-black/30 rounded-lg px-3 py-2">
+                          <span className="text-lg shrink-0">🔇</span>
+                          <div>
+                            <p className="text-[8px] text-gray-600 uppercase tracking-widest mb-0.5">Micro-silencios estratégicos</p>
+                            <p className="text-[10px] text-gray-200 font-bold">{efectos.micro_silencios}</p>
+                          </div>
+                        </div>
+                      )}
+                      {efectos.cambios_de_plano && (
+                        <div className="flex items-start gap-2.5 bg-black/30 rounded-lg px-3 py-2">
+                          <span className="text-lg shrink-0">✂</span>
+                          <div>
+                            <p className="text-[8px] text-gray-600 uppercase tracking-widest mb-0.5">Cambios de plano</p>
+                            <p className="text-[10px] text-gray-200 font-bold">{efectos.cambios_de_plano}</p>
+                          </div>
+                        </div>
+                      )}
+                      {efectos.micro_interrupciones && (
+                        <div className="flex items-start gap-2.5 bg-black/30 rounded-lg px-3 py-2">
+                          <span className="text-lg shrink-0">⚡</span>
+                          <div>
+                            <p className="text-[8px] text-gray-600 uppercase tracking-widest mb-0.5">Micro-interrupciones</p>
+                            <p className="text-[10px] text-gray-200 font-bold">{efectos.micro_interrupciones}</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="space-y-2 text-[10px]">
+                      {[
+                        { icon: '🎵', label: 'Transición entrada', val: 'Whoosh + zoom in — refuerza el hook' },
+                        { icon: '🔇', label: 'Silencio estratégico', val: 'Pausa 0.5s antes del punto crítico — tensión máxima' },
+                        { icon: '✂', label: 'Jump cut', val: 'En momentos de reencuadre para mantener energía' },
+                        { icon: '🔔', label: 'SFX de impacto', val: 'Sonido de golpe suave al revelar dato clave' },
+                        { icon: '📳', label: 'Texto animado', val: 'Palabras clave en pantalla sincronizadas con voz' },
+                      ].map((r, i) => (
+                        <div key={i} className="flex items-start gap-2.5 bg-black/30 rounded-lg px-3 py-2">
+                          <span className="text-sm shrink-0">{r.icon}</span>
+                          <div>
+                            <p className="text-[8px] text-gray-600 uppercase tracking-widest mb-0.5">{r.label}</p>
+                            <p className="text-[10px] text-gray-300 font-bold">{r.val}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {!musica && !ritmoCamara && !efectos && (
+                  <p className="text-[10px] text-gray-600 text-center py-2">
+                    ↑ Guías de producción profesional generadas automáticamente
+                  </p>
+                )}
               </div>
             )}
 
-            {!visualPlan && !planAudiovisual && (
-              <div className="flex flex-col items-center justify-center h-40 text-center">
-                <Film size={24} className="text-gray-700 mb-2" />
-                <p className="text-xs text-gray-600">Plan visual generándose...</p>
-              </div>
-            )}
           </div>
 
-          {/* 🖼 MINIATURA DOMINANTE */}
+          {/* 🖼 MINIATURA + FRASES POR RED SOCIAL */}
           {miniatura && (
-            <div className="border-t border-white/5 p-4">
-              <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-3">🖼 Miniatura Dominante</p>
-              <div className="bg-gradient-to-r from-gray-900 to-black rounded-xl p-4 border border-white/10 mb-3 text-center">
-                <p className="text-xl font-black text-white leading-tight">{miniatura.frase_principal}</p>
+            <div className="border-t border-white/5 p-4 space-y-4">
+              {/* Frase principal */}
+              <div>
+                <p className="text-[9px] font-black text-yellow-400 uppercase tracking-widest mb-2">🖼 Frase de Miniatura</p>
+                <div className="bg-gradient-to-r from-yellow-900/20 to-orange-900/10 rounded-xl p-4 border border-yellow-500/25 text-center mb-2">
+                  <p className="text-xl font-black text-white leading-tight">{miniatura.frase_principal}</p>
+                  {miniatura.emocion_dominante_activada && (
+                    <p className="text-[9px] text-yellow-400/70 mt-1 uppercase tracking-widest">{miniatura.emocion_dominante_activada}</p>
+                  )}
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  {miniatura.variante_agresiva && (
+                    <div className="bg-red-500/5 border border-red-500/15 rounded-lg p-2.5">
+                      <p className="text-[8px] text-red-400 font-black uppercase mb-1">🔥 Agresiva</p>
+                      <p className="text-[11px] text-white font-bold leading-snug">{miniatura.variante_agresiva}</p>
+                    </div>
+                  )}
+                  {miniatura.variante_aspiracional && (
+                    <div className="bg-blue-500/5 border border-blue-500/15 rounded-lg p-2.5">
+                      <p className="text-[8px] text-blue-400 font-black uppercase mb-1">✨ Aspiracional</p>
+                      <p className="text-[11px] text-white font-bold leading-snug">{miniatura.variante_aspiracional}</p>
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="grid grid-cols-2 gap-2 mb-3">
-                {miniatura.variante_agresiva && (
-                  <div className="bg-red-500/5 border border-red-500/15 rounded-lg p-2 text-center">
-                    <p className="text-[8px] text-red-400 font-black uppercase mb-1">Agresiva</p>
-                    <p className="text-[11px] text-white font-bold">{miniatura.variante_agresiva}</p>
+
+              {/* Frases por plataforma */}
+              {miniatura.frases_por_plataforma && (
+                <div>
+                  <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-2">📱 Hook por Red Social</p>
+                  <div className="space-y-1.5">
+                    {[
+                      { key: 'tiktok',          icon: '🎵', label: 'TikTok',          color: 'border-pink-500/20 hover:border-pink-500/40',   textColor: 'text-pink-300'   },
+                      { key: 'instagram_reels', icon: '📸', label: 'Instagram Reels', color: 'border-purple-500/20 hover:border-purple-500/40', textColor: 'text-purple-300' },
+                      { key: 'youtube',         icon: '▶️', label: 'YouTube',         color: 'border-red-500/20 hover:border-red-500/40',       textColor: 'text-red-300'    },
+                      { key: 'linkedin',        icon: '💼', label: 'LinkedIn',        color: 'border-blue-500/20 hover:border-blue-500/40',     textColor: 'text-blue-300'   },
+                      { key: 'facebook',        icon: '👥', label: 'Facebook',        color: 'border-indigo-500/20 hover:border-indigo-500/40', textColor: 'text-indigo-300' },
+                    ].map(p => miniatura.frases_por_plataforma[p.key] ? (
+                      <div key={p.key} className={`bg-[#080808] rounded-lg px-3 py-2 border ${p.color} transition-colors`}>
+                        <div className="flex items-start gap-2">
+                          <span className="text-sm shrink-0 leading-tight mt-0.5">{p.icon}</span>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[8px] text-gray-600 uppercase tracking-widest font-black">{p.label}</p>
+                            <p className={`text-[11px] font-black leading-snug mt-0.5 ${p.textColor}`}>
+                              "{miniatura.frases_por_plataforma[p.key]}"
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ) : null)}
                   </div>
-                )}
-                {miniatura.variante_aspiracional && (
-                  <div className="bg-blue-500/5 border border-blue-500/15 rounded-lg p-2 text-center">
-                    <p className="text-[8px] text-blue-400 font-black uppercase mb-1">Aspiracional</p>
-                    <p className="text-[11px] text-white font-bold">{miniatura.variante_aspiracional}</p>
+                </div>
+              )}
+
+              {/* Títulos del video */}
+              {miniatura.titulo_video && (
+                <div>
+                  <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-2">🎬 Títulos del Video</p>
+                  <div className="space-y-1.5">
+                    {[miniatura.titulo_video.opcion_1, miniatura.titulo_video.opcion_2, miniatura.titulo_video.opcion_3].map((t: string, i: number) => t && (
+                      <div key={i} className="bg-[#080808] rounded-lg px-3 py-2 border border-white/5 flex items-center gap-2">
+                        <span className="text-[9px] font-black text-gray-600 shrink-0">0{i+1}</span>
+                        <p className="text-[11px] text-gray-200 font-bold leading-snug">"{t}"</p>
+                      </div>
+                    ))}
                   </div>
-                )}
-              </div>
-              <div className="grid grid-cols-4 gap-2">
+                </div>
+              )}
+
+              {/* Scores CTR */}
+              <div className="grid grid-cols-4 gap-1.5">
                 {[
-                  { label: 'CTR',        val: miniatura.ctr_score,           color: 'text-yellow-400' },
-                  { label: 'Disrupción', val: miniatura.nivel_disrupcion,     color: 'text-red-400'    },
-                  { label: 'Curiosidad', val: miniatura.nivel_gap_curiosidad, color: 'text-blue-400'   },
-                  { label: 'Polariz.',   val: miniatura.nivel_polarizacion,   color: 'text-pink-400'   },
+                  { label: 'CTR',        val: miniatura.ctr_score,           color: 'text-yellow-400', bg: 'bg-yellow-500/10' },
+                  { label: 'Disrupción', val: miniatura.nivel_disrupcion,     color: 'text-red-400',    bg: 'bg-red-500/10'    },
+                  { label: 'Curiosidad', val: miniatura.nivel_gap_curiosidad, color: 'text-blue-400',   bg: 'bg-blue-500/10'   },
+                  { label: 'Polariz.',   val: miniatura.nivel_polarizacion,   color: 'text-pink-400',   bg: 'bg-pink-500/10'   },
                 ].map(m => (
-                  <div key={m.label} className="text-center bg-[#080808] rounded-lg p-2 border border-white/5">
+                  <div key={m.label} className={`text-center ${m.bg} rounded-lg p-2 border border-white/5`}>
                     <p className={`text-lg font-black ${m.color}`}>{m.val}</p>
                     <p className="text-[8px] text-gray-600 uppercase">{m.label}</p>
                   </div>
                 ))}
               </div>
+
+              {/* Gap de curiosidad y mecanismo */}
+              {(miniatura.gap_curiosidad || miniatura.mecanismo_psicologico) && (
+                <div className="space-y-1.5">
+                  {miniatura.gap_curiosidad && (
+                    <div className="bg-[#080808] rounded-lg px-3 py-2 border border-white/5">
+                      <p className="text-[8px] text-gray-600 uppercase tracking-widest mb-0.5">❓ Gap de curiosidad</p>
+                      <p className="text-[10px] text-gray-300 font-bold leading-relaxed">{miniatura.gap_curiosidad}</p>
+                    </div>
+                  )}
+                  {miniatura.mecanismo_psicologico && (
+                    <div className="bg-[#080808] rounded-lg px-3 py-2 border border-white/5">
+                      <p className="text-[8px] text-gray-600 uppercase tracking-widest mb-0.5">🧠 Mecanismo psicológico</p>
+                      <p className="text-[10px] text-gray-300 font-bold">{miniatura.mecanismo_psicologico}</p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -267,6 +518,61 @@ const OmegaScriptView = ({ scriptData }: { scriptData: any }) => {
               {scriptText}
             </div>
           </div>
+
+          {/* PODER DEL GUION — Las 3 frases que lo harán viral */}
+          {(scriptData.hook_primeros_3_segundos || scriptData.frase_de_oro || scriptData.punto_de_no_retorno || scriptData.por_que_llegara_a_millones) && (
+            <div className="mt-8 pt-6 border-t border-white/5 space-y-3">
+              <p className="text-[9px] font-black text-green-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                <Flame size={11} fill="currentColor" /> Poder del Guion — Las frases que lo harán viral
+              </p>
+
+              {scriptData.hook_primeros_3_segundos && (
+                <div className="bg-gradient-to-r from-green-900/20 to-emerald-900/10 rounded-xl p-4 border border-green-500/30">
+                  <p className="text-[8px] text-green-400 font-black uppercase tracking-widest mb-1.5">🎯 Hook — Primeros 3 segundos</p>
+                  <p className="text-sm text-green-200 font-black leading-relaxed italic">"{scriptData.hook_primeros_3_segundos}"</p>
+                </div>
+              )}
+
+              {scriptData.frase_de_oro && (
+                <div className="bg-gradient-to-r from-yellow-900/20 to-amber-900/10 rounded-xl p-4 border border-yellow-500/30">
+                  <p className="text-[8px] text-yellow-400 font-black uppercase tracking-widest mb-1.5">⭐ Frase de Oro — La que se guarda sola</p>
+                  <p className="text-sm text-yellow-200 font-black leading-relaxed italic">"{scriptData.frase_de_oro}"</p>
+                </div>
+              )}
+
+              {scriptData.punto_de_no_retorno && (
+                <div className="bg-gradient-to-r from-red-900/20 to-rose-900/10 rounded-xl p-4 border border-red-500/30">
+                  <p className="text-[8px] text-red-400 font-black uppercase tracking-widest mb-1.5">💥 Punto de No Retorno — La que divide</p>
+                  <p className="text-sm text-red-200 font-black leading-relaxed italic">"{scriptData.punto_de_no_retorno}"</p>
+                </div>
+              )}
+
+              {scriptData.por_que_llegara_a_millones && (
+                <div className="bg-[#0a0a0a] rounded-xl p-4 border border-white/10">
+                  <p className="text-[8px] text-purple-400 font-black uppercase tracking-widest mb-1.5">🚀 Por qué llegará a millones</p>
+                  <p className="text-xs text-gray-300 leading-relaxed">{scriptData.por_que_llegara_a_millones}</p>
+                </div>
+              )}
+
+              {/* Predicción de comentarios */}
+              {scriptData.prediccion_comentarios?.length > 0 && (
+                <div>
+                  <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-2">💬 Comentarios predichos</p>
+                  <div className="space-y-1.5">
+                    {scriptData.prediccion_comentarios.map((c: string, i: number) => (
+                      <div key={i} className={`flex items-start gap-2.5 rounded-lg px-3 py-2 border text-[10px] ${i === 0 ? 'bg-red-500/5 border-red-500/15' : i === 1 ? 'bg-green-500/5 border-green-500/15' : 'bg-blue-500/5 border-blue-500/15'}`}>
+                        <span className="shrink-0 text-sm">{i === 0 ? '😤' : i === 1 ? '🙌' : '🪞'}</span>
+                        <div>
+                          <p className="text-[8px] font-black uppercase tracking-widest text-gray-600 mb-0.5">{i === 0 ? 'En contra' : i === 1 ? 'A favor' : 'Identificación'}</p>
+                          <p className="text-gray-300 leading-relaxed italic">"{c}"</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -358,19 +664,40 @@ const IdeaNuclearCard = ({ data }: { data: any }) => {
       <h4 className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
         <Zap size={12} fill="currentColor" className="text-amber-400" /> Idea Nuclear Ganadora
       </h4>
-      <div className="space-y-3">
-        {[
-          { label: '¿Qué la hace viral?',         val: data.que_hace_viral,           color: 'text-amber-300'  },
-          { label: 'Creencia que rompe',           val: data.creencia_rota,            color: 'text-red-300'    },
-          { label: 'Postura que instala',          val: data.postura_impuesta,         color: 'text-blue-300'   },
-          { label: '¿Por qué genera conversación?',val: data.por_que_genera_conversacion, color: 'text-purple-300'},
-          { label: 'Tensión que deja abierta',     val: data.tension_no_resuelta,      color: 'text-orange-300' },
-        ].map(item => item.val ? (
-          <div key={item.label} className="bg-[#080808] rounded-xl p-3 border border-white/5">
-            <p className="text-[9px] text-gray-600 uppercase tracking-widest mb-1">{item.label}</p>
-            <p className={`text-xs font-bold leading-relaxed ${item.color}`}>{item.val}</p>
+
+      {/* Motor viral — campo más importante */}
+      {data.que_hace_viral && (
+        <div className="bg-gradient-to-r from-amber-900/20 to-orange-900/10 rounded-xl p-4 border border-amber-500/25 mb-3">
+          <p className="text-[8px] text-amber-500 uppercase tracking-widest mb-1 font-black">⚡ Motor viral — por qué explota</p>
+          <p className="text-sm text-amber-200 font-black leading-relaxed">{data.que_hace_viral}</p>
+        </div>
+      )}
+
+      <div className="space-y-2.5">
+        {data.creencia_rota && (
+          <div className="bg-[#080808] rounded-xl p-3 border border-red-500/15">
+            <p className="text-[8px] text-red-400 uppercase tracking-widest mb-1 font-black">💥 Creencia que destruye</p>
+            <p className="text-xs text-red-200 font-bold leading-relaxed">{data.creencia_rota}</p>
           </div>
-        ) : null)}
+        )}
+        {data.postura_impuesta && (
+          <div className="bg-[#080808] rounded-xl p-3 border border-blue-500/15">
+            <p className="text-[8px] text-blue-400 uppercase tracking-widest mb-1 font-black">🧠 Postura que instala en la mente</p>
+            <p className="text-xs text-blue-200 font-bold leading-relaxed">{data.postura_impuesta}</p>
+          </div>
+        )}
+        {data.por_que_genera_conversacion && (
+          <div className="bg-[#080808] rounded-xl p-3 border border-purple-500/15">
+            <p className="text-[8px] text-purple-400 uppercase tracking-widest mb-1 font-black">💬 Por qué genera conversación</p>
+            <p className="text-xs text-purple-200 font-bold leading-relaxed">{data.por_que_genera_conversacion}</p>
+          </div>
+        )}
+        {data.tension_no_resuelta && (
+          <div className="bg-[#080808] rounded-xl p-3 border border-orange-500/15">
+            <p className="text-[8px] text-orange-400 uppercase tracking-widest mb-1 font-black">🎣 Tensión que deja abierta</p>
+            <p className="text-xs text-orange-200 font-bold leading-relaxed">{data.tension_no_resuelta}</p>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -577,46 +904,94 @@ const ActivadoresCard = ({ data }: { data: any[] }) => {
 // 📊 SCORE VIRAL ESTRUCTURAL
 // ==================================================================================
 
-const IRProScoreCard = ({ score }: { score: any }) => {
-  if (!score) return (
-    <div className="bg-[#0f1115] border border-purple-500/30 rounded-2xl p-6">
-      <h3 className="text-purple-400 text-[10px] font-black uppercase tracking-widest mb-4 flex items-center gap-2">
-        <Zap size={12} fill="currentColor" /> Score Viral Estructural
-      </h3>
-      <div className="flex items-baseline gap-2 mb-6">
-        <span className="text-5xl font-black text-white">—</span>
-        <span className="text-gray-500 font-bold">/100</span>
+const ScoreRing = ({ value, size = 120 }: { value: number; size?: number }) => {
+  const radius = (size - 16) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const progress = ((value || 0) / 100) * circumference;
+  const color = value >= 80 ? '#22c55e' : value >= 60 ? '#a855f7' : value >= 40 ? '#f59e0b' : '#ef4444';
+  return (
+    <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
+      <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
+        <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#1a1a2e" strokeWidth={8} />
+        <circle
+          cx={size/2} cy={size/2} r={radius} fill="none"
+          stroke={color} strokeWidth={8}
+          strokeDasharray={`${circumference}`}
+          strokeDashoffset={circumference - progress}
+          strokeLinecap="round"
+          style={{ transition: 'stroke-dashoffset 1.5s cubic-bezier(0.4,0,0.2,1)', filter: `drop-shadow(0 0 8px ${color}60)` }}
+        />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className="text-3xl font-black text-white leading-none">{value || 0}</span>
+        <span className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">/100</span>
       </div>
-      <p className="text-gray-600 text-xs">Procesando motores...</p>
     </div>
   );
-  return (
-    <div className="bg-[#0f1115] border border-purple-500/30 rounded-2xl p-6 shadow-[0_0_30px_-10px_rgba(168,85,247,0.2)]">
+};
+
+const IRProScoreCard = ({ score }: { score: any }) => {
+  if (!score) return (
+    <div className="bg-[#0f1115] border border-purple-500/30 rounded-2xl p-6 h-full flex flex-col">
       <h3 className="text-purple-400 text-[10px] font-black uppercase tracking-widest mb-4 flex items-center gap-2">
         <Zap size={12} fill="currentColor" /> Score Viral Estructural
       </h3>
-      <div className="flex items-baseline gap-2 mb-6">
-        <span className="text-5xl font-black text-white">{score?.viralidad_estructural_global || 0}</span>
-        <span className="text-gray-500 font-bold">/100</span>
+      <div className="flex-1 flex flex-col items-center justify-center gap-4">
+        <ScoreRing value={0} size={120} />
+        <div className="flex items-center gap-2 text-gray-600 text-xs">
+          <Loader2 size={12} className="animate-spin" /> Procesando motores...
+        </div>
       </div>
-      <div className="space-y-4">
+    </div>
+  );
+  const global = score?.viralidad_estructural_global || 0;
+  const label = global >= 85 ? '🔥 VIRAL POTENCIAL' : global >= 70 ? '⚡ ALTA VIRALIDAD' : global >= 50 ? '📈 EN DESARROLLO' : '⚠ NECESITA MEJORAS';
+  return (
+    <div className="bg-[#0f1115] border border-purple-500/30 rounded-2xl p-6 shadow-[0_0_30px_-10px_rgba(168,85,247,0.2)] h-full flex flex-col">
+      <h3 className="text-purple-400 text-[10px] font-black uppercase tracking-widest mb-4 flex items-center gap-2">
+        <Zap size={12} fill="currentColor" /> Score Viral Estructural
+      </h3>
+      <div className="flex items-center gap-6 mb-6">
+        <ScoreRing value={global} size={110} />
+        <div>
+          <p className="text-xs font-black text-white mb-1">{label}</p>
+          {score?.recomendacion_express && (
+            <p className="text-[10px] text-gray-500 leading-relaxed line-clamp-3">{score.recomendacion_express}</p>
+          )}
+        </div>
+      </div>
+      <div className="space-y-2.5 flex-1">
         {[
-          { label: 'Retención',   val: score?.retencion_estructural || 0, color: 'bg-blue-500'   },
-          { label: 'Emoción',     val: score?.intensidad_emocional  || 0, color: 'bg-pink-500'   },
-          { label: 'Polarización',val: score?.polarizacion          || 0, color: 'bg-orange-500' },
-          { label: 'Atención',    val: score?.manipulacion_atencion || 0, color: 'bg-purple-500' },
-          { label: 'Valor',       val: score?.densidad_valor        || 0, color: 'bg-green-500'  },
+          { label: 'Retención',    val: score?.retencion_estructural || 0, color: 'bg-blue-500',   peso: '25%' },
+          { label: 'Emoción',      val: score?.intensidad_emocional  || 0, color: 'bg-pink-500',   peso: '20%' },
+          { label: 'Atención',     val: score?.manipulacion_atencion || 0, color: 'bg-purple-500', peso: '20%' },
+          { label: 'Valor',        val: score?.densidad_valor        || 0, color: 'bg-green-500',  peso: '15%' },
+          { label: 'Polarización', val: score?.polarizacion          || 0, color: 'bg-orange-500', peso: '10%' },
         ].map(item => (
-          <div key={item.label} className="space-y-1.5">
-            <div className="flex justify-between text-[10px] font-bold uppercase tracking-tighter">
-              <span className="text-gray-400">{item.label}</span>
-              <span className="text-white">{item.val}%</span>
+          <div key={item.label} className="space-y-1">
+            <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-tighter">
+              <span className="text-gray-500 flex items-center gap-1.5">
+                {item.label}
+                <span className="text-gray-700 font-normal normal-case tracking-normal text-[9px]">({item.peso})</span>
+              </span>
+              <span className={`font-black ${item.val >= 80 ? 'text-green-400' : item.val >= 60 ? 'text-yellow-400' : 'text-red-400'}`}>
+                {item.val}<span className="text-gray-600 font-normal">%</span>
+              </span>
             </div>
-            <div className="h-1 bg-gray-800 rounded-full overflow-hidden">
-              <div style={{ width: `${item.val}%` }} className={`h-full ${item.color} transition-all duration-1000`} />
+            <div className="h-2 bg-gray-800/80 rounded-full overflow-hidden">
+              <div
+                style={{ width: `${item.val}%`, transition: 'width 1.4s cubic-bezier(0.4,0,0.2,1)' }}
+                className={`h-full ${item.color} rounded-full`}
+              />
             </div>
           </div>
         ))}
+        {score?.recomendacion_express && (
+          <div className="pt-2 border-t border-white/5">
+            <p className="text-[9px] text-gray-600 uppercase tracking-widest mb-1">Diagnóstico</p>
+            <p className="text-[10px] text-gray-400 leading-relaxed">{score.recomendacion_express}</p>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -628,27 +1003,80 @@ const IRProScoreCard = ({ score }: { score: any }) => {
 
 const MotoresActivosCard = ({ output }: { output: any }) => {
   const motores = [
-    { num: '01',  nombre: 'Estructura',   dato: output.adn_estructura?.patron_narrativo_detectado },
-    { num: '02',  nombre: 'Emoción',      dato: output.curva_emocional?.emocion_dominante },
-    { num: '03',  nombre: 'Loops',        dato: `${output.micro_loops?.total_loops || 0} loops` },
-    { num: '04',  nombre: 'Polarización', dato: output.polarizacion?.posicionamiento_vs },
-    { num: '07',  nombre: 'Valor',        dato: output.densidad_valor?.tipo_valor_dominante },
-    { num: '09',  nombre: 'Guardado',     dato: `${output.activadores_guardado?.length || 0} triggers` },
-    { num: '12',  nombre: 'Ritmo',        dato: output.ritmo_narrativo?.velocidad_progresion },
-    { num: '14A', nombre: 'Género',       dato: output.adn_profundo?.genero_narrativo },
-    { num: '14B', nombre: 'Idea Nuclear', dato: output.idea_nuclear_ganadora?.que_hace_viral?.substring(0, 40) },
-    { num: '16',  nombre: 'TCA',          dato: output.analisis_tca?.nivel_tca_detectado ? `${output.analisis_tca.nivel_tca_detectado} — ${output.analisis_tca.sector_detectado || ''}` : null },
-    { num: '17',  nombre: 'Posición',     dato: output.posicionamiento_y_proximos_pasos?.posiciona_como },
-    { num: '15',  nombre: 'Blueprint',    dato: output.blueprint_replicable?.nombre_patron },
+    { num: '01',  nombre: 'Estructura',    dato: output.adn_estructura?.patron_narrativo_detectado,                                         icon: '🏗', color: 'green'   },
+    { num: '02',  nombre: 'Emoción',       dato: output.curva_emocional?.emocion_dominante,                                                  icon: '❤️', color: 'pink'    },
+    { num: '03',  nombre: 'Loops',         dato: (output.micro_loops?.total != null ? output.micro_loops.total : output.metricas_micro_loops?.total_loops != null ? output.metricas_micro_loops.total_loops : null) !== null ? `${output.micro_loops?.total ?? output.metricas_micro_loops?.total_loops} loops` : null, icon: '🔄', color: 'blue'    },
+    { num: '04',  nombre: 'Polarización',  dato: output.polarizacion?.nivel_confrontacion != null ? `${output.polarizacion.nivel_confrontacion}/100` : output.polarizacion?.posicionamiento_vs, icon: '⚡', color: 'orange'  },
+    { num: '05',  nombre: 'Identidad',     dato: output.identidad_verbal?.ritmo_sintactico,                                                  icon: '🗣', color: 'violet'  },
+    { num: '06',  nombre: 'Autoridad',     dato: output.status_y_posicionamiento?.tipo_autoridad,                                            icon: '👑', color: 'amber'   },
+    { num: '07',  nombre: 'Valor',         dato: output.densidad_valor?.tipo_valor_dominante,                                                icon: '💎', color: 'cyan'    },
+    { num: '08',  nombre: 'Atención',      dato: output.manipulacion_atencion?.golpes_narrativos?.length != null ? `${output.manipulacion_atencion.golpes_narrativos.length} golpes` : null, icon: '🎯', color: 'fuchsia' },
+    { num: '09',  nombre: 'Guardado',      dato: output.activadores_guardado?.length != null ? `${output.activadores_guardado.length} triggers` : null, icon: '💾', color: 'purple'  },
+    { num: '10',  nombre: 'Adaptación',    dato: output.adaptabilidad_nicho?.sofisticacion_audiencia_target,                                 icon: '🔧', color: 'sky'     },
+    { num: '11',  nombre: 'Anti-Cliché',   dato: output.elementos_cliche_detectados?.length != null ? `${output.elementos_cliche_detectados.length} detectados` : null, icon: '🚫', color: 'red'     },
+    { num: '12',  nombre: 'Ritmo',         dato: output.ritmo_narrativo?.velocidad_progresion,                                               icon: '🎵', color: 'yellow'  },
+    { num: '13',  nombre: 'Score ADN',     dato: output.score_viral_estructural?.viralidad_estructural_global != null ? `${output.score_viral_estructural.viralidad_estructural_global}/100` : null, icon: '📊', color: 'emerald' },
+    { num: '14A', nombre: 'Género',        dato: output.adn_profundo?.genero_narrativo,                                                      icon: '🎭', color: 'rose'    },
+    { num: '14B', nombre: 'Idea Nuclear',  dato: output.idea_nuclear_ganadora?.que_hace_viral?.substring(0, 35),                             icon: '☢️', color: 'orange'  },
+    { num: '14C', nombre: 'Superioridad',  dato: output.sistema_superioridad?.ventaja_de_nicho?.substring(0, 35),                            icon: '🏆', color: 'amber'   },
+    { num: '14D', nombre: 'Conflicto',     dato: output.intensidad_conflictual?.nivel_riesgo_original,                                       icon: '🔥', color: 'red'     },
+    { num: '15',  nombre: 'Blueprint',     dato: output.blueprint_replicable?.nombre_patron,                                                 icon: '📐', color: 'lime'    },
+    { num: '16',  nombre: 'TCA',           dato: output.analisis_tca?.nivel_tca_detectado ? `${output.analisis_tca.nivel_tca_detectado} — ${output.analisis_tca.sector_detectado || ''}` : null, icon: '📡', color: 'teal'    },
+    { num: '17',  nombre: 'Posición',      dato: output.posicionamiento_y_proximos_pasos?.posiciona_como,                                    icon: '🎯', color: 'indigo'  },
+    { num: '18',  nombre: 'Fidelidad',     dato: output.indice_fidelidad?.indice_fidelidad != null ? `${output.indice_fidelidad.indice_fidelidad}/100` : null, icon: '🔬', color: 'violet'  },
   ];
+  const colorMap: Record<string, string> = {
+    green:   'border-green-500/20 hover:border-green-500/40 hover:bg-green-500/5',
+    pink:    'border-pink-500/20 hover:border-pink-500/40 hover:bg-pink-500/5',
+    blue:    'border-blue-500/20 hover:border-blue-500/40 hover:bg-blue-500/5',
+    orange:  'border-orange-500/20 hover:border-orange-500/40 hover:bg-orange-500/5',
+    cyan:    'border-cyan-500/20 hover:border-cyan-500/40 hover:bg-cyan-500/5',
+    purple:  'border-purple-500/20 hover:border-purple-500/40 hover:bg-purple-500/5',
+    yellow:  'border-yellow-500/20 hover:border-yellow-500/40 hover:bg-yellow-500/5',
+    rose:    'border-rose-500/20 hover:border-rose-500/40 hover:bg-rose-500/5',
+    red:     'border-red-500/20 hover:border-red-500/40 hover:bg-red-500/5',
+    teal:    'border-teal-500/20 hover:border-teal-500/40 hover:bg-teal-500/5',
+    indigo:  'border-indigo-500/20 hover:border-indigo-500/40 hover:bg-indigo-500/5',
+    lime:    'border-lime-500/20 hover:border-lime-500/40 hover:bg-lime-500/5',
+    violet:  'border-violet-500/20 hover:border-violet-500/40 hover:bg-violet-500/5',
+    amber:   'border-amber-500/20 hover:border-amber-500/40 hover:bg-amber-500/5',
+    fuchsia: 'border-fuchsia-500/20 hover:border-fuchsia-500/40 hover:bg-fuchsia-500/5',
+    sky:     'border-sky-500/20 hover:border-sky-500/40 hover:bg-sky-500/5',
+    emerald: 'border-emerald-500/20 hover:border-emerald-500/40 hover:bg-emerald-500/5',
+  };
+  const numColor: Record<string, string> = {
+    green:   'text-green-500',   pink:    'text-pink-500',   blue:    'text-blue-500',
+    orange:  'text-orange-500',  cyan:    'text-cyan-500',   purple:  'text-purple-500',
+    yellow:  'text-yellow-500',  rose:    'text-rose-500',   red:     'text-red-500',
+    teal:    'text-teal-500',    indigo:  'text-indigo-400', lime:    'text-lime-500',
+    violet:  'text-violet-400',  amber:   'text-amber-400',  fuchsia: 'text-fuchsia-400',
+    sky:     'text-sky-400',     emerald: 'text-emerald-400',
+  };
+  const completados = motores.filter(m => m.dato && !m.dato.includes('Analizando')).length;
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-      {motores.map(m => (
-        <div key={m.num} className="bg-[#080808] border border-white/5 p-3 rounded-xl hover:border-green-500/20 transition-colors group">
-          <div className="text-[9px] font-black text-gray-600 group-hover:text-green-500/50 mb-1 transition-colors">{m.num} {m.nombre}</div>
-          <div className="text-[11px] text-gray-300 font-bold truncate uppercase tracking-tight">{m.dato || 'Analizando...'}</div>
+    <div>
+      <div className="flex items-center justify-between mb-4">
+        <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">{completados}/{motores.length} motores activos</span>
+        <div className="h-1.5 flex-1 mx-4 bg-gray-800 rounded-full overflow-hidden">
+          <div style={{ width: `${(completados / motores.length) * 100}%`, transition: 'width 1s ease' }} className="h-full bg-gradient-to-r from-green-600 to-emerald-400 rounded-full" />
         </div>
-      ))}
+        <span className="text-[10px] text-green-400 font-black">{Math.round((completados / motores.length) * 100)}%</span>
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+        {motores.map(m => (
+          <div key={m.num} className={`bg-[#080808] border p-3 rounded-xl transition-all group cursor-default ${colorMap[m.color]}`}>
+            <div className="flex items-center gap-1.5 mb-1.5">
+              <span className="text-sm leading-none">{m.icon}</span>
+              <span className={`text-[9px] font-black uppercase tracking-widest ${numColor[m.color]}`}>{m.num}</span>
+              <span className="text-[9px] text-gray-600 font-bold uppercase">{m.nombre}</span>
+            </div>
+            <div className={`text-[11px] font-bold truncate uppercase tracking-tight ${m.dato ? 'text-gray-200' : 'text-gray-700'}`}>
+              {m.dato || 'Analizando...'}
+            </div>
+            {m.dato && <div className={`mt-1.5 h-0.5 w-full rounded-full bg-current opacity-20 ${numColor[m.color]}`} />}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
@@ -657,17 +1085,22 @@ const MotoresActivosCard = ({ output }: { output: any }) => {
 // 🔬 AUDITORÍA CON JUEZ VIRAL
 // ==================================================================================
 
-const OmegaAuditCard = ({ auditData, onAudit, isAuditing }: { auditData: any; onAudit: () => void; isAuditing: boolean }) => {
+const OmegaAuditCard = ({ auditData, onAudit, isAuditing, listoParaAuditoria }: { auditData: any; onAudit: () => void; isAuditing: boolean; listoParaAuditoria?: boolean }) => {
   if (!auditData) {
     return (
-      <div className="flex justify-center">
+      <div className="flex flex-col items-center gap-3">
+        {listoParaAuditoria === false && (
+          <div className="w-full max-w-sm px-4 py-2.5 bg-orange-500/10 border border-orange-500/20 rounded-xl text-[10px] text-orange-300 text-center">
+            ⚠ Pre-análisis indica preparación insuficiente. El resultado del juicio puede ser impreciso.
+          </div>
+        )}
         <button
           onClick={onAudit}
           disabled={isAuditing}
           className="flex items-center gap-2 px-6 py-3 bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/50 rounded-xl text-purple-300 font-black uppercase tracking-widest transition-all hover:scale-105 disabled:opacity-50 disabled:scale-100"
         >
           {isAuditing ? <RefreshCw className="animate-spin" size={18} /> : <Gavel size={18} />}
-          {isAuditing ? 'JUZGANDO...' : 'AUDITAR CALIDAD (2 CR)'}
+          {isAuditing ? 'JUZGANDO...' : listoParaAuditoria === false ? 'AUDITAR DE TODAS FORMAS (2 CR)' : 'AUDITAR CALIDAD (2 CR)'}
         </button>
       </div>
     );
@@ -726,6 +1159,98 @@ const CreditBadge = ({ contentType, urlCount }: { contentType: ContentType; urlC
       {urlCount > 1 && <><span className="text-gray-600">·</span><span className="text-blue-400 font-bold">{urlCount} URLs</span></>}
       <span className="text-gray-600">·</span>
       <span className="text-green-400 font-black">{cost} CR</span>
+    </div>
+  );
+};
+
+// ==================================================================================
+// ⏳ LOADING PROGRESS OVERLAY
+// ==================================================================================
+
+const ETAPAS_LOADING = [
+  { id: 'analizando',  label: 'Descargando & transcribiendo video',   icon: '🎬', pct: 15 },
+  { id: 'extrayendo',  label: 'Extrayendo ADN viral estructural',       icon: '🧬', pct: 35 },
+  { id: 'calculando',  label: 'Calculando motores de ingeniería',       icon: '⚙️', pct: 55 },
+  { id: 'generando',   label: 'Generando guion adaptado al nicho',      icon: '✍️', pct: 75 },
+  { id: 'validando',   label: 'Validando con sistema Olimpo V300',      icon: '🏛', pct: 90 },
+  { id: 'finalizando', label: 'Empaquetando blueprint replicable',      icon: '📐', pct: 98 },
+];
+
+const LoadingOverlay = ({ isLoading, contentType }: { isLoading: boolean; contentType: ContentType }) => {
+  const [etapaIdx, setEtapaIdx] = useState(0);
+  const [dots, setDots] = useState('');
+
+  useEffect(() => {
+    if (!isLoading) { setEtapaIdx(0); return; }
+    const durations = contentType === 'masterclass' ? [4000, 7000, 8000, 10000, 6000, 5000]
+      : contentType === 'long' ? [3000, 5000, 6000, 8000, 5000, 4000]
+      : [2000, 3000, 4000, 6000, 4000, 3000];
+    let idx = 0;
+    const advance = () => {
+      idx++;
+      if (idx < ETAPAS_LOADING.length) {
+        setEtapaIdx(idx);
+        t = setTimeout(advance, durations[idx]);
+      }
+    };
+    let t = setTimeout(advance, durations[0]);
+    return () => clearTimeout(t);
+  }, [isLoading, contentType]);
+
+  useEffect(() => {
+    if (!isLoading) return;
+    const t = setInterval(() => setDots(d => d.length >= 3 ? '' : d + '.'), 400);
+    return () => clearInterval(t);
+  }, [isLoading]);
+
+  if (!isLoading) return null;
+
+  const etapa = ETAPAS_LOADING[etapaIdx];
+  const pct = etapa.pct;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md">
+      <div className="bg-[#0a0a0f] border border-green-500/20 rounded-3xl p-8 md:p-12 max-w-md w-full mx-4 shadow-[0_0_100px_-30px_rgba(34,197,94,0.3)]">
+        {/* Animated brain */}
+        <div className="flex justify-center mb-8">
+          <div className="relative">
+            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-green-900/40 to-emerald-900/20 border border-green-500/30 flex items-center justify-center">
+              <Cpu size={36} className="text-green-400 animate-pulse" />
+            </div>
+            <div className="absolute -inset-2 rounded-3xl border border-green-500/10 animate-ping" style={{ animationDuration: '2s' }} />
+          </div>
+        </div>
+        {/* Title */}
+        <div className="text-center mb-6">
+          <div className="text-[10px] font-black text-green-500 uppercase tracking-[0.4em] mb-2">Titan Engine Omega</div>
+          <h3 className="text-xl font-black text-white tracking-tight">Procesando{dots}</h3>
+        </div>
+        {/* Etapas */}
+        <div className="space-y-2 mb-6">
+          {ETAPAS_LOADING.map((e, i) => (
+            <div key={e.id} className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-500 ${i === etapaIdx ? 'bg-green-500/10 border border-green-500/20' : i < etapaIdx ? 'opacity-40' : 'opacity-20'}`}>
+              <span className="text-base leading-none">{e.icon}</span>
+              <span className={`text-xs font-bold flex-1 ${i === etapaIdx ? 'text-green-300' : 'text-gray-500'}`}>{e.label}</span>
+              {i < etapaIdx && <CheckCircle2 size={14} className="text-green-500 shrink-0" />}
+              {i === etapaIdx && <Loader2 size={14} className="text-green-400 animate-spin shrink-0" />}
+            </div>
+          ))}
+        </div>
+        {/* Progress bar */}
+        <div className="space-y-2">
+          <div className="flex justify-between text-[10px] text-gray-500 font-bold">
+            <span>PROGRESO</span><span className="text-green-400">{pct}%</span>
+          </div>
+          <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
+            <div
+              style={{ width: `${pct}%`, transition: 'width 0.8s cubic-bezier(0.4,0,0.2,1)' }}
+              className="h-full bg-gradient-to-r from-green-600 via-emerald-500 to-green-400 rounded-full relative"
+            >
+              <div className="absolute inset-0 bg-white/20 animate-pulse rounded-full" />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
@@ -806,10 +1331,11 @@ export const TitanViral = () => {
     if (!result?.guion_generado || !userProfile) return;
     if ((userProfile.credits || 0) < 2) { alert('Necesitas 2 créditos para auditar.'); return; }
     setIsAuditing(true);
+    // ✅ FIX BUG #1 — usar campos reales del backend (recreate)
     const scriptText =
-      result.guion_generado?.guion_tecnico_completo ||
-      result.guion_generado?.guion_completo_adaptado ||
-      result.guion_generado?.guion_completo || '';
+      result.guion_generado?.guion_adaptado_espejo ||
+      result.guion_generado?.guion_adaptado_al_nicho ||
+      result.guion_generado?.guion_tecnico_completo || '';
     try {
       const { data, error } = await supabase.functions.invoke('process-url', {
         body: { selectedMode: 'juez_viral', text: scriptText, expertId: selectedExpertId || undefined, avatarId: selectedAvatarId || undefined, estimatedCost: 2 }
@@ -857,15 +1383,22 @@ export const TitanViral = () => {
 
       const { data, error } = await supabase.functions.invoke('process-url', { body: payload });
       if (error) throw error;
+      // ✅ FIX BUG #4 — manejar redirección de avatar específicamente
+      if (!data.success && data.action === 'REDIRECT_TO_AVATAR') {
+        setErrorMsg('⚡ Necesitas configurar tu Avatar antes de generar contenido. Ve a Configuración → Avatar y crea tu perfil.');
+        setIrProState(prev => ({ ...prev, etapa: 'idle', error: null }));
+        return;
+      }
       if (!data.success) throw new Error(data.error || 'Error desconocido.');
 
       const resPro = data.generatedData;
+      // ✅ FIX BUG #7 — scoreActual usa el campo real del backend; guionGenerado eliminado (estado fantasma)
       setIrProState({
         etapa: 'completo',
         iteracion: resPro.iteracion_loop || 0,
-        scoreActual: resPro.score_final_obtenido || 0,
-        output: resPro,
-        guionGenerado: resPro.guion_adaptado_al_nicho,
+        scoreActual: resPro.score_viral_estructural?.viralidad_estructural_global || resPro.score_final_obtenido || 0,
+        output: null,
+        guionGenerado: null,
         veredictoJuez: null,
         error: null,
       });
@@ -886,19 +1419,36 @@ export const TitanViral = () => {
   return (
     <div className="max-w-7xl mx-auto pb-32 px-4 sm:px-6 pt-12 animate-in fade-in duration-700">
 
+      {/* LOADING OVERLAY */}
+      <LoadingOverlay isLoading={loading} contentType={contentType} />
+
       {/* HERO */}
       <div className="text-center mb-16 relative">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[200px] bg-green-500/10 blur-[100px] pointer-events-none rounded-full" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[250px] bg-green-500/8 blur-[120px] pointer-events-none rounded-full" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[150px] bg-emerald-500/12 blur-[80px] pointer-events-none rounded-full" />
         <div className="relative z-10">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#0f1115] border border-green-500/20 rounded-full text-[10px] font-black text-green-400 uppercase tracking-widest mb-6 shadow-lg cursor-default">
-            <Flame size={12} fill="currentColor" /> Titan Engine Omega v3.0
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#0f1115] border border-green-500/25 rounded-full text-[10px] font-black text-green-400 uppercase tracking-widest mb-6 shadow-lg cursor-default">
+            <Flame size={11} fill="currentColor" /> Titan Engine Omega v3.0
+            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse ml-1" />
           </div>
           <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter mb-6">
-            CLONACIÓN <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-500 to-green-600">VIRAL</span>
+            CLONACIÓN <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-green-600">VIRAL</span>
           </h1>
           <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto font-medium leading-relaxed">
             Extrae la arquitectura matemática de 1 a 5 videos virales y replícala en tu nicho con fidelidad quirúrgica.
           </p>
+          {/* Stats row */}
+          <div className="flex items-center justify-center gap-8 mt-8 opacity-50">
+            {[
+              { icon: <Cpu size={14}/>, label: '21 Motores IA' },
+              { icon: <BarChart3 size={14}/>, label: 'Score Estructural' },
+              { icon: <Wand2 size={14}/>, label: 'Blueprint Replicable' },
+            ].map((s, i) => (
+              <div key={i} className="flex items-center gap-1.5 text-[11px] text-gray-500 font-bold">
+                <span className="text-green-600">{s.icon}</span>{s.label}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -1095,11 +1645,12 @@ export const TitanViral = () => {
 
           {/* BOTÓN PRINCIPAL */}
           <button onClick={handleClone} disabled={loading}
-            className={`w-full py-5 rounded-xl text-sm font-black uppercase tracking-widest flex justify-center items-center gap-3 transition-all shadow-lg mt-2 relative overflow-hidden group ${loading ? 'bg-gray-800 text-gray-500 cursor-not-allowed' : 'bg-white hover:bg-gray-100 text-black shadow-white/5 hover:shadow-white/20 transform hover:-translate-y-0.5'}`}>
+            className={`w-full py-5 rounded-xl text-sm font-black uppercase tracking-widest flex justify-center items-center gap-3 transition-all shadow-lg mt-2 relative overflow-hidden group ${loading ? 'bg-gray-800/80 text-gray-600 cursor-not-allowed border border-white/5' : 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 text-black shadow-green-500/20 hover:shadow-green-500/40 transform hover:-translate-y-0.5 border border-green-400/30'}`}>
+            {!loading && <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />}
             {loading ? (
-              <><Loader2 size={20} className="animate-spin text-green-600" /><span className="bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent animate-pulse">EXTRAYENDO ADN VIRAL...</span></>
+              <><Loader2 size={20} className="animate-spin text-green-600" /><span className="text-green-600 animate-pulse">PROCESANDO...</span></>
             ) : (
-              <><Zap size={20} className="group-hover:scale-110 transition-transform" /><span>EJECUTAR CLONACIÓN ({cost} CR)</span></>
+              <><Zap size={20} className="group-hover:scale-110 transition-transform fill-current" /><span>EJECUTAR CLONACIÓN — {cost} CR</span></>
             )}
           </button>
 
@@ -1116,15 +1667,40 @@ export const TitanViral = () => {
       {result && result.guion_generado && (
         <div className="mt-20 space-y-10 animate-in slide-in-from-bottom-10 duration-1000">
 
-          {/* Badge modo */}
-          <div className="flex items-center justify-center gap-6 opacity-60">
-            <div className="h-px bg-gradient-to-r from-transparent via-green-500/50 to-transparent w-40" />
-            <span className="text-[10px] font-black text-green-400 uppercase tracking-[0.3em] flex items-center gap-2">
-              <Sparkles size={12} />
-              {result.modo === 'ingenieria_inversa_pro_hibrida' ? 'ARQUITECTURA HÍBRIDA GENERADA' : 'CLONACIÓN EXITOSA'}
-            </span>
-            <div className="h-px bg-gradient-to-r from-transparent via-green-500/50 to-transparent w-40" />
+          {/* Success header */}
+          <div className="flex items-center justify-center gap-6">
+            <div className="h-px bg-gradient-to-r from-transparent via-green-500/40 to-transparent flex-1" />
+            <div className="flex items-center gap-3 bg-green-500/10 border border-green-500/25 rounded-full px-5 py-2">
+              <CheckCircle2 size={14} className="text-green-400" />
+              <span className="text-[11px] font-black text-green-400 uppercase tracking-[0.25em]">
+                {result.modo === 'ingenieria_inversa_pro_hibrida' ? 'ARQUITECTURA HÍBRIDA GENERADA' : 'CLONACIÓN EXITOSA'}
+              </span>
+              <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+            </div>
+            <div className="h-px bg-gradient-to-r from-transparent via-green-500/40 to-transparent flex-1" />
           </div>
+
+          {/* Stats de proceso */}
+          {result.guion_generado?.loop_info && (
+            <div className="flex items-center justify-center flex-wrap gap-4 text-[10px] text-gray-600 font-bold uppercase tracking-widest">
+              <span className="flex items-center gap-1.5">
+                <span className="w-1 h-1 rounded-full bg-green-500" />
+                📝 {result.guion_generado.loop_info.palabras_guion} palabras
+              </span>
+              <span className="w-px h-3 bg-gray-800" />
+              <span className="flex items-center gap-1.5">
+                🔬 ADN Score: <span className="text-green-400">{result.guion_generado.loop_info.score_adn}/100</span>
+              </span>
+              <span className="w-px h-3 bg-gray-800" />
+              <span className="flex items-center gap-1.5">
+                🪙 {result.guion_generado.loop_info.tokens_totales?.toLocaleString()} tokens
+              </span>
+              <span className="w-px h-3 bg-gray-800" />
+              <span className="flex items-center gap-1.5">
+                ⚙️ {result.guion_generado.loop_info.arquitectura}
+              </span>
+            </div>
+          )}
 
           {/* SCORE + MOTORES */}
           <div className="max-w-6xl mx-auto">
@@ -1152,8 +1728,44 @@ export const TitanViral = () => {
 
           <div className="space-y-8">
 
+            {/* 0 ─── BRIEFING PRE-GRABACIÓN — Lo más importante */}
+            {(result.guion_generado.hook_primeros_3_segundos || result.guion_generado.frase_de_oro || result.guion_generado.como_supera_al_original) && (
+              <div className="bg-gradient-to-br from-[#0a0f0a] to-[#080808] border border-green-500/20 rounded-2xl p-6 shadow-[0_0_40px_-15px_rgba(34,197,94,0.2)]">
+                <div className="flex items-center gap-2 mb-5">
+                  <Flame size={14} fill="currentColor" className="text-green-400" />
+                  <h3 className="text-[11px] font-black text-green-400 uppercase tracking-[0.3em]">Briefing de Grabación — Lee esto primero</h3>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  {result.guion_generado.hook_primeros_3_segundos && (
+                    <div className="bg-green-500/5 border border-green-500/25 rounded-xl p-4">
+                      <p className="text-[8px] text-green-500 font-black uppercase tracking-widest mb-2">🎯 Hook — 3 segundos</p>
+                      <p className="text-sm text-green-100 font-black leading-relaxed italic">"{result.guion_generado.hook_primeros_3_segundos}"</p>
+                    </div>
+                  )}
+                  {result.guion_generado.frase_de_oro && (
+                    <div className="bg-yellow-500/5 border border-yellow-500/25 rounded-xl p-4">
+                      <p className="text-[8px] text-yellow-400 font-black uppercase tracking-widest mb-2">⭐ Frase de Oro</p>
+                      <p className="text-sm text-yellow-100 font-black leading-relaxed italic">"{result.guion_generado.frase_de_oro}"</p>
+                    </div>
+                  )}
+                  {result.guion_generado.punto_de_no_retorno && (
+                    <div className="bg-red-500/5 border border-red-500/25 rounded-xl p-4">
+                      <p className="text-[8px] text-red-400 font-black uppercase tracking-widest mb-2">💥 Punto de No Retorno</p>
+                      <p className="text-sm text-red-100 font-black leading-relaxed italic">"{result.guion_generado.punto_de_no_retorno}"</p>
+                    </div>
+                  )}
+                </div>
+                {result.guion_generado.como_supera_al_original && (
+                  <div className="mt-3 bg-[#080808] rounded-xl px-4 py-3 border border-white/5">
+                    <p className="text-[8px] text-emerald-400 font-black uppercase tracking-widest mb-1">👑 Cómo supera al video original</p>
+                    <p className="text-xs text-gray-300 leading-relaxed">{result.guion_generado.como_supera_al_original}</p>
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* 1 ─── GUION (LO MÁS IMPORTANTE) */}
-            <OmegaScriptView scriptData={result.guion_generado} />
+            <OmegaScriptView scriptData={result.guion_generado} contentType={contentType} />
 
             {/* 2 ─── ADN + IDEA NUCLEAR */}
             <div>
@@ -1168,7 +1780,88 @@ export const TitanViral = () => {
               </div>
             </div>
 
-            {/* 3 ─── TCA (MASIVIDAD) */}
+            {/* 3 ─── INTENSIDAD DEL CONFLICTO ORIGINAL — Motor más valioso sin UI */}
+            {result.guion_generado.intensidad_conflictual && (
+              <div>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="h-px bg-gradient-to-r from-transparent via-red-500/50 to-transparent flex-1" />
+                  <span className="text-[10px] font-black text-red-400 uppercase tracking-[0.3em]">🔥 Intensidad del Conflicto Original</span>
+                  <div className="h-px bg-gradient-to-r from-transparent via-red-500/50 to-transparent flex-1" />
+                </div>
+                <div className="bg-[#0f1115] border border-red-500/20 rounded-2xl p-6">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                    <div className="bg-[#080808] rounded-xl p-3 border border-white/5 text-center">
+                      <p className="text-[9px] text-gray-500 uppercase tracking-widest mb-1">Riesgo Original</p>
+                      <p className="text-3xl font-black text-red-400">{result.guion_generado.intensidad_conflictual.nivel_riesgo_original}<span className="text-base text-gray-600">/10</span></p>
+                    </div>
+                    <div className="bg-[#080808] rounded-xl p-3 border border-white/5 text-center">
+                      <p className="text-[9px] text-gray-500 uppercase tracking-widest mb-1">Incomodidad</p>
+                      <p className="text-3xl font-black text-orange-400">{result.guion_generado.intensidad_conflictual.nivel_incomodidad}<span className="text-base text-gray-600">/10</span></p>
+                    </div>
+                    <div className="col-span-2 bg-[#080808] rounded-xl p-3 border border-white/5">
+                      <p className="text-[9px] text-gray-500 uppercase tracking-widest mb-1">Decisión Impopular</p>
+                      <p className="text-xs text-red-300 font-bold leading-relaxed">{result.guion_generado.intensidad_conflictual.decision_impopular}</p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="bg-[#080808] rounded-xl p-3 border border-white/5">
+                      <p className="text-[9px] text-gray-500 uppercase tracking-widest mb-1">Escena concreta principal</p>
+                      <p className="text-xs text-orange-300 font-bold leading-relaxed">{result.guion_generado.intensidad_conflictual.escena_concreta_principal}</p>
+                    </div>
+                    <div className="bg-[#080808] rounded-xl p-3 border border-white/5">
+                      <p className="text-[9px] text-gray-500 uppercase tracking-widest mb-1">Consecuencia real</p>
+                      <p className="text-xs text-yellow-300 font-bold leading-relaxed">{result.guion_generado.intensidad_conflictual.consecuencia_real}</p>
+                    </div>
+                    <div className="col-span-1 sm:col-span-2 bg-gradient-to-r from-green-900/20 to-emerald-900/10 rounded-xl p-3 border border-green-500/20">
+                      <p className="text-[9px] text-green-400 uppercase tracking-widest mb-1 font-black">✅ Equivalente en tu nicho</p>
+                      <p className="text-xs text-green-200 font-bold leading-relaxed">{result.guion_generado.intensidad_conflictual.equivalente_en_nicho}</p>
+                    </div>
+                    {result.guion_generado.intensidad_conflictual.por_que_incomoda && (
+                      <div className="col-span-1 sm:col-span-2 bg-[#080808] rounded-xl p-3 border border-white/5">
+                        <p className="text-[9px] text-gray-500 uppercase tracking-widest mb-1">Por qué incomoda</p>
+                        <p className="text-xs text-gray-300 leading-relaxed">{result.guion_generado.intensidad_conflictual.por_que_incomoda}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 4 ─── MICRO-LOOPS — Análisis de retención */}
+            {result.guion_generado.metricas_micro_loops && (result.guion_generado.metricas_micro_loops.total_loops > 0) && (
+              <div>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent flex-1" />
+                  <span className="text-[10px] font-black text-blue-400 uppercase tracking-[0.3em]">🔄 Arquitectura de Micro-Loops</span>
+                  <div className="h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent flex-1" />
+                </div>
+                <div className="bg-[#0f1115] border border-blue-500/20 rounded-2xl p-6">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                    {[
+                      { label: 'Total Loops', val: result.guion_generado.metricas_micro_loops.total_loops, c: 'text-blue-400' },
+                      { label: 'Resueltos', val: result.guion_generado.metricas_micro_loops.loops_resueltos, c: 'text-green-400' },
+                      { label: 'Sin resolver', val: result.guion_generado.metricas_micro_loops.sin_resolver, c: 'text-orange-400' },
+                      { label: 'Frecuencia avg', val: result.guion_generado.metricas_micro_loops.frecuencia_promedio_seg ? `${result.guion_generado.metricas_micro_loops.frecuencia_promedio_seg}s` : '—', c: 'text-cyan-400' },
+                    ].map(item => (
+                      <div key={item.label} className="bg-[#080808] rounded-xl p-3 border border-white/5 text-center">
+                        <p className="text-[9px] text-gray-500 uppercase tracking-widest mb-1">{item.label}</p>
+                        <p className={`text-2xl font-black ${item.c}`}>{item.val}</p>
+                      </div>
+                    ))}
+                  </div>
+                  {result.guion_generado.metricas_micro_loops.efectividad_potencial && (
+                    <div className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold mb-3 ${result.guion_generado.metricas_micro_loops.efectividad_potencial === 'alta' ? 'bg-green-500/10 text-green-300 border border-green-500/20' : result.guion_generado.metricas_micro_loops.efectividad_potencial === 'media' ? 'bg-yellow-500/10 text-yellow-300 border border-yellow-500/20' : 'bg-orange-500/10 text-orange-300 border border-orange-500/20'}`}>
+                      <span>Efectividad potencial: {result.guion_generado.metricas_micro_loops.efectividad_potencial?.toUpperCase()}</span>
+                    </div>
+                  )}
+                  {result.guion_generado.metricas_micro_loops.diagnostico_loops && (
+                    <p className="text-[10px] text-gray-400 leading-relaxed">{result.guion_generado.metricas_micro_loops.diagnostico_loops}</p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* 6 ─── TCA (MASIVIDAD) */}
             {result.guion_generado.analisis_tca && (
               <div>
                 <div className="flex items-center gap-3 mb-6">
@@ -1184,7 +1877,7 @@ export const TitanViral = () => {
               </div>
             )}
 
-            {/* 4 ─── SUPERIORIDAD + POSICIONAMIENTO */}
+            {/* 7 ─── SUPERIORIDAD + POSICIONAMIENTO */}
             {(result.guion_generado.sistema_superioridad || result.guion_generado.posicionamiento_y_proximos_pasos) && (
               <div>
                 <div className="flex items-center gap-3 mb-6">
@@ -1199,7 +1892,7 @@ export const TitanViral = () => {
               </div>
             )}
 
-            {/* 5 ─── ACTIVADORES DE GUARDADO */}
+            {/* 8 ─── ACTIVADORES DE GUARDADO */}
             {result.guion_generado.activadores_guardado?.length > 0 && (
               <div>
                 <div className="flex items-center gap-3 mb-6">
@@ -1225,7 +1918,7 @@ export const TitanViral = () => {
                     </p>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
                   {[
                     { key: 'arquitectura_completa', label: 'Arquitectura' },
                     { key: 'loops_detectados', label: 'Loops' },
@@ -1237,6 +1930,12 @@ export const TitanViral = () => {
                     { key: 'equilibrio_ideal_detectado', label: 'Equilibrio' },
                     { key: 'filtro_implicito_extraido', label: 'Filtro' },
                     { key: 'adaptacion_sin_micronicho', label: 'Sin Micronicho' },
+                    { key: 'conflicto_original_preservado', label: 'Conflicto' },
+                    { key: 'riesgo_narrativo_mantenido', label: 'Riesgo' },
+                    { key: 'intensidad_equivalente_o_superior', label: 'Intensidad' },
+                    { key: 'guion_concreto_no_abstracto', label: 'Concreto' },
+                    { key: 'punto_critico_presente', label: 'Punto Crítico' },
+                    { key: 'decision_clara_presente', label: 'Decisión' },
                   ].map(c => {
                     const val = result.guion_generado._validacion_olimpo[c.key];
                     return (
@@ -1254,8 +1953,9 @@ export const TitanViral = () => {
               <div className="bg-orange-500/5 border border-orange-500/20 rounded-xl px-4 py-3 flex items-center gap-3">
                 <AlertCircle size={14} className="text-orange-400 shrink-0" />
                 <div>
+                  {/* ✅ FIX BUG #3 — motor count dinámico */}
                   <p className="text-xs font-black text-orange-400 uppercase tracking-wide">
-                    {result.guion_generado._motores_completos}/21 motores — {result.guion_generado._completitud_pct}% completado
+                    {result.guion_generado._motores_completos}/{(result.guion_generado._motores_completos || 0) + (result.guion_generado._motores_faltantes?.length || 0)} motores — {result.guion_generado._completitud_pct}% completado
                   </p>
                   <p className="text-[10px] text-gray-500 mt-0.5">
                     Incompletos: {result.guion_generado._motores_faltantes?.join(', ')}
@@ -1264,14 +1964,145 @@ export const TitanViral = () => {
               </div>
             )}
 
-            {/* 7 ─── AUDITORÍA JUEZ VIRAL */}
+            {/* 6B ─── EQUIVALENCIA ESTRUCTURAL V1000 */}
+            {result.guion_generado.equivalencia_estructural_v1000 && (
+              <div>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="h-px bg-gradient-to-r from-transparent via-orange-500/50 to-transparent flex-1" />
+                  <span className="text-[10px] font-black text-orange-400 uppercase tracking-[0.3em]">Equivalencia Estructural V1000</span>
+                  <div className="h-px bg-gradient-to-r from-transparent via-orange-500/50 to-transparent flex-1" />
+                </div>
+                <div className="bg-[#0c0c0c] border border-orange-500/20 rounded-xl p-4 space-y-4">
+
+                  {/* Fila 1: Género y Conflicto */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="bg-black/40 rounded-lg p-3 border border-white/5">
+                      <p className="text-[9px] font-black text-gray-500 uppercase tracking-wider mb-1">Género Narrativo</p>
+                      <p className="text-[10px] text-orange-300 font-bold">{result.guion_generado.equivalencia_estructural_v1000.genero_narrativo_original}</p>
+                      <p className="text-[9px] text-gray-600 mt-0.5">→ Adaptado: <span className="text-white">{result.guion_generado.equivalencia_estructural_v1000.genero_narrativo_adaptado}</span></p>
+                    </div>
+                    <div className="bg-black/40 rounded-lg p-3 border border-white/5">
+                      <p className="text-[9px] font-black text-gray-500 uppercase tracking-wider mb-1">Tipo de Conflicto</p>
+                      <p className="text-[10px] text-orange-300 font-bold">{result.guion_generado.equivalencia_estructural_v1000.tipo_conflicto_original}</p>
+                      <p className="text-[9px] text-gray-600 mt-0.5">→ Adaptado: <span className="text-white">{result.guion_generado.equivalencia_estructural_v1000.tipo_conflicto_adaptado}</span></p>
+                    </div>
+                  </div>
+
+                  {/* Fila 2: Riesgo e Intensidad */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div className="bg-black/40 rounded-lg p-3 border border-white/5 text-center">
+                      <p className="text-[9px] font-black text-gray-500 uppercase tracking-wider mb-1">Riesgo Original</p>
+                      <p className="text-lg font-black text-orange-400">{result.guion_generado.equivalencia_estructural_v1000.riesgo_narrativo_original}</p>
+                    </div>
+                    <div className="bg-black/40 rounded-lg p-3 border border-white/5 text-center">
+                      <p className="text-[9px] font-black text-gray-500 uppercase tracking-wider mb-1">Riesgo Adaptado</p>
+                      <p className={`text-lg font-black ${result.guion_generado.equivalencia_estructural_v1000.riesgo_narrativo_adaptado >= result.guion_generado.equivalencia_estructural_v1000.riesgo_narrativo_original ? 'text-green-400' : 'text-red-400'}`}>
+                        {result.guion_generado.equivalencia_estructural_v1000.riesgo_narrativo_adaptado}
+                      </p>
+                    </div>
+                    <div className="bg-black/40 rounded-lg p-3 border border-white/5 text-center">
+                      <p className="text-[9px] font-black text-gray-500 uppercase tracking-wider mb-1">Intensidad Original</p>
+                      <p className="text-[10px] font-black text-orange-300">{result.guion_generado.equivalencia_estructural_v1000.intensidad_emocional_original}</p>
+                    </div>
+                    <div className="bg-black/40 rounded-lg p-3 border border-white/5 text-center">
+                      <p className="text-[9px] font-black text-gray-500 uppercase tracking-wider mb-1">Intensidad Adaptada</p>
+                      <p className="text-[10px] font-black text-green-300">{result.guion_generado.equivalencia_estructural_v1000.intensidad_emocional_adaptada}</p>
+                    </div>
+                  </div>
+
+                  {/* Fila 3: Bandos */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="bg-green-500/5 rounded-lg p-3 border border-green-500/15">
+                      <p className="text-[9px] font-black text-green-500 uppercase tracking-wider mb-1">✓ Bando A (de acuerdo)</p>
+                      <p className="text-[10px] text-gray-300">{result.guion_generado.equivalencia_estructural_v1000.bando_A_adaptado}</p>
+                    </div>
+                    <div className="bg-red-500/5 rounded-lg p-3 border border-red-500/15">
+                      <p className="text-[9px] font-black text-red-400 uppercase tracking-wider mb-1">✗ Bando B (en contra)</p>
+                      <p className="text-[10px] text-gray-300">{result.guion_generado.equivalencia_estructural_v1000.bando_B_adaptado}</p>
+                    </div>
+                  </div>
+
+                  {/* Fila 4: Checks críticos + Score */}
+                  <div className="flex flex-wrap items-center gap-2 pt-1">
+                    {[
+                      { key: 'punto_critico_detectado', label: 'Punto Crítico' },
+                      { key: 'decision_clara_detectada', label: 'Decisión Clara' },
+                      { key: 'abstraccion_detectada', label: 'Sin Abstracción', invert: true },
+                    ].map(c => {
+                      const raw = result.guion_generado.equivalencia_estructural_v1000[c.key];
+                      const val = c.invert ? !raw : raw;
+                      return (
+                        <span key={c.key} className={`text-[9px] font-black px-2 py-1 rounded-lg border uppercase ${val ? 'bg-green-500/10 border-green-500/20 text-green-400' : 'bg-red-500/10 border-red-500/20 text-red-400'}`}>
+                          {val ? '✓' : '✗'} {c.label}
+                        </span>
+                      );
+                    })}
+                    <span className="ml-auto text-[10px] font-black text-orange-300 bg-orange-500/10 border border-orange-500/20 px-3 py-1 rounded-lg">
+                      Fidelidad: {result.guion_generado.equivalencia_estructural_v1000.fidelidad_mecanismo_score}/100
+                    </span>
+                  </div>
+
+                  {/* Alerta si hay suavizamiento */}
+                  {result.guion_generado.equivalencia_estructural_v1000.alerta_suavizamiento &&
+                   result.guion_generado.equivalencia_estructural_v1000.alerta_suavizamiento !== 'null' && (
+                    <div className="flex items-start gap-2 bg-red-500/5 border border-red-500/20 rounded-lg px-3 py-2">
+                      <AlertTriangle size={12} className="text-red-400 shrink-0 mt-0.5" />
+                      <p className="text-[10px] text-red-300">{result.guion_generado.equivalencia_estructural_v1000.alerta_suavizamiento}</p>
+                    </div>
+                  )}
+
+                </div>
+              </div>
+            )}
+
+            {/* 10 ─── PRE-ANÁLISIS JUEZ + AUDITORÍA */}
             <div>
               <div className="flex items-center gap-3 mb-6">
                 <div className="h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent flex-1" />
                 <span className="text-[10px] font-black text-purple-400 uppercase tracking-[0.3em]">Auditoría de Calidad</span>
                 <div className="h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent flex-1" />
               </div>
-              <OmegaAuditCard auditData={auditResult} onAudit={handleRunAudit} isAuditing={isAuditing} />
+
+              {/* Paquete Juez Viral — pre-análisis gratuito */}
+              {result.guion_generado?.paquete_juez_viral && (
+                <div className="mb-4 bg-[#0d0d18] border border-purple-500/20 rounded-xl p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-[10px] font-black text-purple-300 uppercase tracking-widest flex items-center gap-2">
+                      🧠 Pre-análisis del Juez Viral
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <div className="h-1.5 w-20 bg-gray-800 rounded-full overflow-hidden">
+                        <div
+                          style={{ width: `${result.guion_generado.paquete_juez_viral.score_preparacion || 0}%` }}
+                          className={`h-full rounded-full ${(result.guion_generado.paquete_juez_viral.score_preparacion || 0) >= 70 ? 'bg-green-500' : 'bg-orange-500'}`}
+                        />
+                      </div>
+                      <span className={`text-xs font-black ${(result.guion_generado.paquete_juez_viral.score_preparacion || 0) >= 70 ? 'text-green-400' : 'text-orange-400'}`}>
+                        {result.guion_generado.paquete_juez_viral.score_preparacion}%
+                      </span>
+                    </div>
+                  </div>
+                  {result.guion_generado.paquete_juez_viral.resumen_adn?.patron_detectado && (
+                    <p className="text-[10px] text-gray-400 mb-3">
+                      Patrón: <span className="text-purple-300 font-bold">{result.guion_generado.paquete_juez_viral.resumen_adn.patron_detectado}</span>
+                    </p>
+                  )}
+                  {result.guion_generado.paquete_juez_viral.alertas_criticas?.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5">
+                      {result.guion_generado.paquete_juez_viral.alertas_criticas.map((a: string, i: number) => (
+                        <span key={i} className="text-[9px] bg-orange-500/10 border border-orange-500/20 text-orange-300 px-2 py-1 rounded-lg font-bold">⚠ {a}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <OmegaAuditCard
+                auditData={auditResult}
+                onAudit={handleRunAudit}
+                isAuditing={isAuditing}
+                listoParaAuditoria={result.guion_generado?.listo_para_auditoria}
+              />
             </div>
 
           </div>
