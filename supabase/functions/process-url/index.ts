@@ -7096,9 +7096,11 @@ LEY 5 — AUTOEVALUACIÓN ANTES DE ENTREGAR:
   Si no hay punto donde el oyente piense "esto es muy fuerte" → REGENERAR
   Si el cierre no divide opiniones → REGENERAR
 
-LEY 6 — TELEPROMPTER PURO:
+LEY 6 — TELEPROMPTER PURO (HABLANDO A CÁMARA):
+  Este contenido es formato "Talking Head" (un creador hablándole a la cámara).
+  PROHIBIDO escribir guiones teatrales (nada de "escenas", "personajes" o "diálogos").
   SOLO las palabras que el creador dice en voz alta.
-  Sin etiquetas [HOOK] [ESCALADA] [CLIMAX] — ninguna visible.
+  El campo "guion_adaptado_espejo" DEBE ser un SOLO STRING (texto plano). PROHIBIDO usar sub-objetos.
   Frases cortas en tensión. "..." para pausa. Línea en blanco para pausa larga.
   Ritmo: ${ritmoVerbal}. Agresividad: ${agresividad}/100.
 
@@ -7229,6 +7231,12 @@ async function ejecutarIngenieriaInversaPro(
       try { adnForense = JSON.parse(raw); } catch { adnForense = {}; }
       console.warn('[MOTOR PRO V2] ⚠️ JSON FASE 1 reparado tras truncamiento');
     }
+    
+    // 🛡️ SEGURO ANTI-FALLOS: Si FASE 1 colapsa, abortar antes de arruinar FASE 2
+    if (Object.keys(adnForense).length === 0 || !adnForense.score_viral_estructural) {
+        throw new Error("El video es demasiado complejo y el motor falló al extraer el ADN. Por favor, intenta de nuevo.");
+    }
+
     tokensTotal += completionFase1.usage?.total_tokens || 0;
     adnForense._outputLanguage = contexto.outputLanguage || 'es';
     adnForense._outputLanguageFull = contexto.outputLanguageFull || 'español — escribe como hispanohablante nativo';
@@ -7296,21 +7304,34 @@ async function ejecutarIngenieriaInversaPro(
 ADN: Género: ${adnForense.adn_profundo?.genero_narrativo} | Emoción: ${adnForense.adn_profundo?.emocion_nucleo}
 GUION ACTUAL: ${guionTexto}
 NICHO: ${nichoUsuario}
+
+⚠️ REGLA DE ORO ANTI-SUAVIZACIÓN (DINÁMICA):
+El guion actual es demasiado genérico o suave. El video original tenía un nivel de riesgo: ${adnForense.intensidad_conflictual?.nivel_riesgo_original || 'Alto'}.
+El conflicto central del video original era: "${adnForense.intensidad_conflictual?.escena_concreta_principal || adnForense.idea_nuclear_ganadora?.que_hace_viral || 'Tensión emocional y polémica'}".
+DEBES replicar esa MISMA intensidad, riesgo y tipo de conflicto, pero adaptado a tu nicho.
+PROHIBIDO hacer un guion motivacional o un comercial aburrido si el original era crudo o polémico. MANTÉN EL ADN INTACTO.
+
 REESCRIBE completo con MÍNIMO ${minWords} palabras. Mantén plan_audiovisual_profesional, miniatura_dominante, validacion_olimpo.
 ═══════════════════════════════════════════════════
 ⚠️ IDIOMA OBLIGATORIO DEL GUION:
 Escribe "guion_adaptado_espejo" ÚNICAMENTE en: ${adnForense._outputLanguageFull || 'español — escribe como hispanohablante nativo'}
 
+⚠️ REGLA DE FORMATO (HABLANDO A CÁMARA):
+Este es un video de un creador hablándole a su audiencia. PROHIBIDO crear guiones teatrales, personajes o diálogos.
+El campo "guion_adaptado_espejo" DEBE ser un SOLO STRING de texto plano. NADA de sub-objetos.
+
+FORMATO DE SALIDA JSON OBLIGATORIO (NO INVENTES ESTRUCTURAS):
+{
+  "guion_adaptado_espejo": "AQUÍ VA EL TEXTO COMPLETO DEL GUION HABLADO EN UN SOLO STRING.",
+  "guion_adaptado_al_nicho": "AQUÍ VA EL TEXTO COMPLETO DEL GUION HABLADO EN UN SOLO STRING.",
+
 REGLAS:
 - Si el ADN viene de inglés y el guion va en español: NO traduzcas — RECREA.
-  Que suene como si un brillante hispanohablante lo hubiera pensado así desde siempre.
-- Adapta modismos, ejemplos y referencias culturales al idioma destino.
-- Jamás debe sentirse como traducción.
-- Las claves del JSON siempre en snake_case inglés.
 - Solo el contenido del guion va en el idioma seleccionado.
 ═══════════════════════════════════════════════════
 DEVUELVE ÚNICAMENTE JSON válido. Sin markdown. Sin backticks.
 `;
+
 
 
       const completionRef = await openai.chat.completions.create({
