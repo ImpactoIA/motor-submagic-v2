@@ -3813,24 +3813,17 @@ Un proceso con nombre propio o pasos numerados aplicables HOY.
 REGLA: Al menos 1 activador debe ser lo suficientemente poderoso para generar un screenshot o compartir.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎯 MOTOR 8 — CIERRE INTELIGENTE POR OBJETIVO
+🔥 LEY 8 — POTENCIA MÁXIMA DEL GUION (CRITERIOS DE MILLONES DE VISTAS)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-OBJETIVO ACTIVO: ${closingConfig.label}
+Para que este guion domine el algoritmo, DEBE cumplir estos 5 criterios absolutos:
+1. HOOK DE 3 SEGUNDOS: Debe ser visual y verbalmente imposible de ignorar.
+2. DATO QUE NADIE DICE: Una revelación que rompa el consenso de la industria.
+3. PUNTO DE NO RETORNO: Un clímax narrativo en la mitad del video donde la curiosidad es máxima.
+4. CIERRE QUE DEJA CICATRIZ: No solo un CTA, sino una frase que resuene en la mente del espectador horas después.
+5. LA FRASE DE ORO: Una cita de máximo 10 palabras, altamente citable, diseñada explícitamente para ser "screenshot-worthy" (guardada o compartida).
 
-ARQUITECTURA DEL CIERRE:
-1. MICRO-RESOLUCIÓN (2-3 frases): Cierra el arco emocional del guion.
-2. POSICIONAMIENTO (1 frase): Deja al creador en posición de autoridad.
-3. CTA ESTRATÉGICO: "${closingConfig.cta}"
-
-MECÁNICA: ${closingConfig.mecanica}
-
-REGLAS DEL CIERRE:
-✓ NO termines con pregunta genérica ("¿Qué opinas?")
-✓ SÍ termina con una posición clara del creador
-✓ El CTA debe sentirse como invitación, no como orden
-✓ El espectador debe sentir que perdería algo si no actúa
-
+Si el guion no tiene una "Frase de Oro" evidente, NO ESTÁ LISTO. Inyéctala en el Insight o la Resolución.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ✅ MOTOR 9 — VALIDACIÓN INTERNA PRE-ENTREGA
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -4027,6 +4020,30 @@ Responde SOLO con este JSON válido. Sin markdown, sin texto extra, sin explicac
       "audio": "Efecto de sonido / Música de tensión"
     }
   ],
+  "miniatura_dominante": {
+    "idea_visual": "Descripción de la imagen perfecta para portada",
+    "titulo_video": {
+      "tension_maxima": "Título provocador y agresivo",
+      "aspiracional": "Título de deseo y transformación",
+      "autoridad": "Título experto y analítico"
+    },
+    "frases_por_plataforma": {
+      "TikTok": "Texto en pantalla corto, urgente y agresivo",
+      "Reels": "Texto estético, aspiracional y guardable",
+      "YouTube": "Título claro con promesa fuerte para CTR",
+      "LinkedIn": "Afirmación profesional disruptiva",
+      "Facebook": "Pregunta conversacional que genere debate"
+    }
+  },
+  "poder_del_guion": {
+    "hook_primeros_3_segundos": "El gancho exacto escrito",
+    "frase_de_oro": "La frase de oro de 10 palabras extraída del guion",
+    "punto_de_no_retorno": "El momento donde el usuario ya no puede dejar de ver",
+    "por_que_llegara_a_millones": "Explicación psicológica de por qué este guion explotará",
+    "como_supera_al_original": "Por qué esta versión es mejor que el promedio del nicho",
+    "momento_mas_compartible": "Qué segundo exacto es y por qué",
+    "prediccion_comentarios": "Qué van a debatir exactamente en los comentarios"
+  },
   "analisis_viral": {
     "loops_abiertos": ["Loop 1 específico del guion", "Loop 2 específico"],
     "loops_cerrados": ["Cierre del Loop 1", "Cierre del Loop 2"],
@@ -9519,6 +9536,8 @@ NO puedes entregar el guion sin resolver estos puntos.
     _score_verification_report: mejorResultado.score_predictivo?._scores_verificados || null,
     guion_tecnico_completo: mejorResultado.guion_tecnico_completo || mejorResultado.guion_completo,
     plan_visual_director: mejorResultado.plan_visual_director || mejorResultado.plan_visual,
+    miniatura_dominante: mejorResultado.miniatura_dominante || null,
+    poder_del_guion: mejorResultado.poder_del_guion || null,
     analisis_estrategico: {
       ...(mejorResultado.analisis_estrategico || {}),
       razonamiento_interno: `Motor V600 — ${intentoActual} intento(s) | Mejor viral_index: ${mejorScore}`,
@@ -11177,6 +11196,7 @@ if (body.closing_objective) settings.closing_objective = body.closing_objective;
 
       case 'recreate': {
         console.log('[TITAN] 🪞 Modo: INGENIERÍA INVERSA OMEGA 3.0');
+        console.log('[TITAN-STAGE] etapa:analizando');
 
         // ── Multi-URL: el frontend envía body.urls (array) o body.url (string) ──
         const rawUrls: string[] = body.urls || (body.url ? [body.url] : []);
@@ -11239,6 +11259,7 @@ const outputLanguageFull = languageNames[outputLanguage] || languageNames['es'];
               // Análisis individual por URL (solo en modo multi-URL)
               if (rawUrls.length > 1) {
                 console.log(`[RECREATE] 🔬 Analizando ADN del video ${i + 1}...`);
+                console.log('[TITAN-STAGE] etapa:extrayendo');
                 const autopsiaIndividual = await ejecutarAutopsiaViral(
                   videoData.transcript,
                   platName,
@@ -11275,6 +11296,7 @@ const outputLanguageFull = languageNames[outputLanguage] || languageNames['es'];
 
         // ── Autopsia del contenido principal (o contenido combinado) ──
         // 🚀 EJECUCIÓN DEL MOTOR PRO V900 — 21 Motores + Loop de Calidad
+        console.log('[TITAN-STAGE] etapa:calculando');
         
         // CRÍTICO: Inyectar el nicho/tema del usuario en el contexto
         // targetTopic = body.text = lo que el usuario escribió en "Tu nicho / tema"
@@ -11302,12 +11324,14 @@ if (multiAnalysis.length > 1) {
   }));
 }
 
+console.log('[TITAN-STAGE] etapa:generando');
 const motorRes = await ejecutarIngenieriaInversaPro(
   contentToAnalyze, 
   userContext,
   openai,
   videoDescription || platName  // usa la descripción del video como contexto de origen
 );
+        console.log('[TITAN-STAGE] etapa:validando');
         // 📦 ESTRUCTURACIÓN PARA FRONTEND (DOMINANCIA)
         result = {
           guion_generado: motorRes.data, // JSON PRO Completo
@@ -11329,6 +11353,7 @@ const motorRes = await ejecutarIngenieriaInversaPro(
           }
         };
 
+        console.log('[TITAN-STAGE] etapa:finalizando');
         tokensUsed = motorRes.tokens;
 
         // Pasar duración al sistema de costos
