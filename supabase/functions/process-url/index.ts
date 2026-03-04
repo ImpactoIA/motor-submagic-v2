@@ -7220,16 +7220,37 @@ async function ejecutarIngenieriaInversaPro(
 
     // Parseo robusto con reparación de JSON truncado
     let adnForense: any = {};
+    const rawFase1Content = completionFase1.choices[0].message.content || '{}';
+    
     try {
-      adnForense = JSON.parse(completionFase1.choices[0].message.content || '{}');
+      adnForense = JSON.parse(rawFase1Content);
     } catch (jsonErr) {
-      let raw = completionFase1.choices[0].message.content || '{}';
+      console.warn('[MOTOR PRO V2] ⚠️ JSON FASE 1 falló el parseo inicial. Intentando reparar...');
+      
+      // 👇 AQUÍ ESTÁ EL TRUCO: ESTO IMPRIMIRÁ EL ERROR REAL EN SUPABASE
+      console.log('--- RAW OUTPUT DESDE OPENAI ---');
+      console.log(rawFase1Content.substring(0, 1000) + '...[truncado]');
+      console.log('-------------------------------');
+
+      let raw = rawFase1Content;
       const openBraces = (raw.match(/\{/g) || []).length;
       const closeBraces = (raw.match(/\}/g) || []).length;
       const missing = openBraces - closeBraces;
+      
       if (missing > 0) raw = raw + '}'.repeat(missing);
-      try { adnForense = JSON.parse(raw); } catch { adnForense = {}; }
-      console.warn('[MOTOR PRO V2] ⚠️ JSON FASE 1 reparado tras truncamiento');
+      
+      try { 
+          adnForense = JSON.parse(raw); 
+          console.log('[MOTOR PRO V2] ✅ JSON FASE 1 reparado exitosamente.');
+      } catch (secondErr: any) { 
+          console.error('[MOTOR PRO V2] ❌ Fallo total al reparar JSON FASE 1:', secondErr.message);
+          adnForense = {}; 
+      }
+    }
+    
+    // 🛡️ SEGURO ANTI-FALLOS: Si FASE 1 colapsa, abortar antes de arruinar FASE 2
+    if (Object.keys(adnForense).length === 0 || !adnForense.score_viral_estructural) {
+        throw new Error("El video es demasiado complejo y el motor falló al extraer el ADN. Por favor, intenta de nuevo.");
     }
     
     // 🛡️ SEGURO ANTI-FALLOS: Si FASE 1 colapsa, abortar antes de arruinar FASE 2
