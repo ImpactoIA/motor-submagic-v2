@@ -7422,9 +7422,14 @@ async function ejecutarIngenieriaInversaPro(
     const outputGuion = JSON.parse(completionFase2.choices[0].message.content || '{}');
     tokensTotal += completionFase2.usage?.total_tokens || 0;
 
-    const guionTexto = outputGuion.guion_adaptado_espejo || outputGuion.guion_adaptado_al_nicho || '';
+    const guionTexto = outputGuion.guion_adaptado_espejo || outputGuion.guion_adaptado_al_nicho || outputGuion.guion || outputGuion.script || outputGuion.contenido || '';
     const palabrasFase2 = guionTexto.trim().split(/\s+/).filter(Boolean).length;
-    console.log(`[MOTOR PRO V2] 📝 Palabras guion fase 2: ${palabrasFase2} (mínimo: ${minWords})`);
+    console.log(`[MOTOR PRO V2] 📝 Palabras guion fase 2: ${palabrasFase2} (mínimo: ${minWords}) | Claves FASE2: ${Object.keys(outputGuion).join(', ')}`);
+    // Normalizar clave si GPT usó nombre diferente
+    if (!outputGuion.guion_adaptado_espejo && guionTexto) {
+      outputGuion.guion_adaptado_espejo = guionTexto;
+      outputGuion.guion_adaptado_al_nicho = guionTexto;
+    }
 
     let guionFinalData = outputGuion;
 
@@ -7478,11 +7483,18 @@ DEVUELVE ÚNICAMENTE JSON válido. Sin markdown. Sin backticks.
 
       const outputRef = JSON.parse(completionRef.choices[0].message.content || '{}');
       tokensTotal += completionRef.usage?.total_tokens || 0;
-      const guionRefRaw = outputRef.guion_adaptado_espejo || outputRef.guion_adaptado_al_nicho || '';
+      const guionRefRaw = outputRef.guion_adaptado_espejo || outputRef.guion_adaptado_al_nicho || outputRef.guion || outputRef.script || outputRef.contenido || '';
       const guionRefStr = typeof guionRefRaw === 'string' ? guionRefRaw : JSON.stringify(guionRefRaw);
       const palabrasRef = guionRefStr.trim().split(/\s+/).filter(Boolean).length;
-      console.log(`[MOTOR PRO V2] 📝 Post-refinamiento: ${palabrasRef} palabras`);
-      if (palabrasRef > palabrasFase2) guionFinalData = outputRef;
+      console.log(`[MOTOR PRO V2] 📝 Post-refinamiento: ${palabrasRef} palabras | Claves: ${Object.keys(outputRef).join(', ')}`);
+      if (palabrasRef > palabrasFase2) {
+        // Normalizar: forzar el guion al campo correcto antes de guardar
+        if (!outputRef.guion_adaptado_espejo && guionRefStr) {
+          outputRef.guion_adaptado_espejo = guionRefStr;
+          outputRef.guion_adaptado_al_nicho = guionRefStr;
+        }
+        guionFinalData = outputRef;
+      }
     }
 
     outputActual = {
