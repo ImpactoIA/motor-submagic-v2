@@ -10299,14 +10299,14 @@ async function scrapeTikTok(url: string): Promise<{
       const run = await client.actor('clockworks/tiktok-scraper').call({
   postURLs: [url],
   resultsPerPage: 1,
-  shouldDownloadVideos: true,
+  shouldDownloadVideos: false,
   shouldDownloadCovers: false,
   shouldDownloadSubtitles: true,
   subtitlesLanguage: 'es',
   subtitlesLanguage2: 'en',
   subtitlesLanguage3: 'pt',
   subtitlesLanguage4: 'fr',
-});
+}, { timeoutSecs: 60, memoryMbytes: 512 });
 
       const { items } = await client.dataset(run.defaultDatasetId).listItems();
       
