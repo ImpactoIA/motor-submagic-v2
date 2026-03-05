@@ -7207,13 +7207,16 @@ async function ejecutarIngenieriaInversaPro(
   { detectedSourceLanguage: contexto.detectedSourceLanguage, outputLanguageFull: contexto.outputLanguageFull }
 );
 
-    const TOKENS_FASE1 = esMasterclass ? 7000 : contentType === 'long' ? 6000 : 5500;
+    const TOKENS_FASE1 = esMasterclass ? 9000 : contentType === 'long' ? 8000 : 7000;
 
 // Comprimir prompt FASE 1 — preserva todos los motores completos
     const promptFase1Truncado = promptFase1
-      .replace(/\n{3,}/g, '\n\n')
+      .replace(/\n{3,}/g, '\n')
       .replace(/[ \t]{2,}/g, ' ')
-      .slice(0, 22000);
+      .replace(/━+/g, '---')
+      .replace(/═+/g, '---')
+      .replace(/🔴|🟠|🟡|🟤|🟢|🔵|⚪|🟣|🔶|🟦|⚫|🔷|🏆|🧬|🔺|🔥|🔗|🌐|🎯/g, '')
+      .slice(0, 14000);
 
     const completionFase1 = await openai.chat.completions.create({
       model: 'gpt-4o',
@@ -7228,9 +7231,26 @@ async function ejecutarIngenieriaInversaPro(
 
     // Parseo robusto con reparación de JSON truncado
     let adnForense: any = {};
-    const rawFase1Content = completionFase1.choices[0].message.content || '{}';
+    let rawFase1Content = completionFase1.choices[0].message.content || '{}';
     
-    // 👇 NUEVO CHISMOSO: Imprimir SIEMPRE lo que hace la IA, sin excusas
+    // 🔁 RETRY si GPT devolvió vacío o '{}'
+    if (!rawFase1Content || rawFase1Content.trim() === '{}' || rawFase1Content.trim().length < 50) {
+      console.warn('[MOTOR PRO V2] ⚠️ GPT devolvió vacío en FASE 1 — reintentando en 3s...');
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      const retryFase1 = await openai.chat.completions.create({
+        model: 'gpt-4o',
+        response_format: { type: 'json_object' },
+        messages: [
+          { role: 'system', content: 'Eres un analizador de videos virales. Analiza el transcript y devuelve JSON con las claves: adn_estructura, curva_emocional, micro_loops, polarizacion, identidad_verbal, status_y_posicionamiento, densidad_valor, manipulacion_atencion, activadores_guardado, adaptabilidad_nicho, elementos_cliche_detectados, ritmo_narrativo, score_viral_estructural, adn_profundo, idea_nuclear_ganadora, sistema_superioridad, intensidad_conflictual, blueprint_replicable, analisis_tca, mapa_de_adaptacion, posicionamiento_y_proximos_pasos. SOLO JSON válido.' },
+          { role: 'user', content: promptFase1Truncado.slice(0, 10000) }
+        ],
+        temperature: 0.1,
+        max_tokens: TOKENS_FASE1
+      });
+      rawFase1Content = retryFase1.choices[0].message.content || '{}';
+      console.log('[MOTOR PRO V2] 🔁 Retry FASE 1 completado. Tamaño:', rawFase1Content.length);
+    }
+
     console.log('--- RAW OUTPUT DESDE OPENAI (FASE 1) ---');
     console.log(rawFase1Content.substring(0, 1000) + '...[truncado]');
     console.log('-------------------------------');
@@ -7328,6 +7348,30 @@ async function ejecutarIngenieriaInversaPro(
     adnForense._outputLanguage = contexto.outputLanguage || 'es';
     adnForense._outputLanguageFull = contexto.outputLanguageFull || 'español — escribe como hispanohablante nativo';
 
+    // 🛡️ Reconstruir motores críticos si llegaron vacíos por truncado
+    if (!adnForense.adn_profundo || !adnForense.adn_profundo.genero_narrativo) {
+      console.warn('[MOTOR PRO V2] ⚠️ adn_profundo ausente — construyendo desde adn_estructura');
+      adnForense.adn_profundo = {
+        genero_narrativo: adnForense.adn_estructura?.patron_narrativo_detectado ? 'Autoridad estratégica' : 'Confesional crudo',
+        emocion_nucleo: adnForense.curva_emocional?.emocion_dominante || 'Indignación',
+        tipo_tension: 'Profesional',
+        frame_dominante: { creencia_que_ataca: '', nuevo_marco: '', frase_nucleo: '' },
+        polarizacion_implicita: { bando_A: '', bando_B: '', tension_irresuelta: '' }
+      };
+    }
+    if (!adnForense.idea_nuclear_ganadora) {
+      adnForense.idea_nuclear_ganadora = {
+        que_hace_viral: 'Decisión impopular que divide opiniones en el nicho',
+        creencia_rota: '', postura_impuesta: '', por_que_genera_conversacion: '', tension_no_resuelta: ''
+      };
+    }
+    if (!adnForense.intensidad_conflictual) {
+      adnForense.intensidad_conflictual = {
+        nivel_riesgo_original: 'alto', nivel_incomodidad: 70,
+        escena_concreta_principal: '', decision_impopular: '', consecuencia_real: '',
+        por_que_incomoda: '', elemento_peligroso: '', equivalente_en_nicho: {}
+      };
+    }
     const scoreAdn = adnForense.score_viral_estructural?.viralidad_estructural_global || 0;
     console.log(`[MOTOR PRO V2] ✅ FASE 1 completa. Score ADN: ${scoreAdn}/100`);
     // ✅ Delay anti-TPM reducido para evitar Timeout
