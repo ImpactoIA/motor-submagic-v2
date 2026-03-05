@@ -515,7 +515,22 @@ const OmegaScriptView = ({ scriptData, contentType = 'reel' }: { scriptData: any
         <div className="lg:col-span-8 bg-[#080808] p-8 flex flex-col">
           <div className="prose prose-invert max-w-none flex-1">
             <div className="whitespace-pre-wrap font-mono text-base md:text-lg leading-loose text-gray-200 selection:bg-green-500/30">
-              {scriptText}
+              {scriptText || (
+                <div className="text-center py-12">
+                  <p className="text-orange-400 font-black text-sm mb-2">⚠ El guion llegó vacío</p>
+                  <p className="text-gray-600 text-xs">El motor procesó el ADN pero el guion no se generó. Intenta de nuevo — el análisis ya está completo.</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* PODER DEL GUION — Las 3 frases que lo harán viral */}
+          {(scriptData.hook_primeros_3_segundos || scriptData.frase_de_oro || scriptData.punto_de_no_retorno || scriptData.por_que_llegara_a_millones) && (
+                <div className="text-center py-12">
+                  <p className="text-orange-400 font-black text-sm mb-2">⚠ El guion llegó vacío</p>
+                  <p className="text-gray-600 text-xs">El motor procesó el ADN pero el guion no se generó. Intenta de nuevo — el análisis ya está completo.</p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -1391,7 +1406,8 @@ export const TitanViral = () => {
       }
       if (!data.success) throw new Error(data.error || 'Error desconocido.');
 
-      const resPro = data.generatedData;
+      const raw = data.generatedData;
+      const resPro = raw?.guion_generado ? raw : { guion_generado: raw, autopsia: raw, modo: raw?.modo || 'ingenieria_inversa_pro', metadata_video: raw?.metadata_video || {} };
       // ✅ FIX BUG #7 — scoreActual usa el campo real del backend; guionGenerado eliminado (estado fantasma)
       setIrProState({
         etapa: 'completo',
@@ -1664,7 +1680,7 @@ export const TitanViral = () => {
       </div>
 
       {/* ─── ZONA DE RESULTADOS ─── */}
-      {result && result.guion_generado && (
+      {result && result.guion_generado && (result.guion_generado.guion_adaptado_espejo || result.guion_generado.guion_adaptado_al_nicho || result.guion_generado.guion_tecnico_completo) && (
         <div className="mt-20 space-y-10 animate-in slide-in-from-bottom-10 duration-1000">
 
           {/* Success header */}
