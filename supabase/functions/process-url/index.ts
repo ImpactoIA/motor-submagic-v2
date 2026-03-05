@@ -7116,6 +7116,8 @@ LEY 7 — LONGITUD: MÍNIMO ${minWords} palabras. IDEAL ${idealWords} palabras.
   Menos de ${minWords} = fallo. No entregar.
 
 ═══════════════════════════════════════════════════
+⚠️ PRIORIDAD ABSOLUTA: El campo "guion_adaptado_espejo" es el MÁS IMPORTANTE. Escríbelo PRIMERO y COMPLETO antes de cualquier otro campo.
+
 DEVUELVE ÚNICAMENTE ESTE JSON (sin markdown, sin backticks):
 {
   "guion_adaptado_espejo": "GUION COMPLETO MÍNIMO ${minWords} PALABRAS — SOLO VOZ, CERO ETIQUETAS, MÁXIMA INTENSIDAD",
@@ -7397,7 +7399,7 @@ async function ejecutarIngenieriaInversaPro(
       expertProfileFase2
     );
 
-    const TOKENS_FASE2 = esMasterclass ? 6000 : contentType === 'long' ? 5000 : 4000;
+    const TOKENS_FASE2 = esMasterclass ? 8000 : contentType === 'long' ? 7000 : 6000;
 
     // Esperar reducido para evitar Timeout
     console.log('[MOTOR PRO V2] ⏳ Limpiando ventana TPM...');
