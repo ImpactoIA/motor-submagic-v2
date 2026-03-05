@@ -7207,7 +7207,7 @@ async function ejecutarIngenieriaInversaPro(
   { detectedSourceLanguage: contexto.detectedSourceLanguage, outputLanguageFull: contexto.outputLanguageFull }
 );
 
-    const TOKENS_FASE1 = esMasterclass ? 5000 : 4500;
+    const TOKENS_FASE1 = esMasterclass ? 7000 : contentType === 'long' ? 6000 : 5500;
 
 // Comprimir prompt FASE 1 — preserva todos los motores completos
     const promptFase1Truncado = promptFase1
@@ -7304,9 +7304,24 @@ async function ejecutarIngenieriaInversaPro(
         }
       }
     }
-    if (Object.keys(adnForense).length === 0 || !adnForense.score_viral_estructural) {
-        console.error('[MOTOR PRO V2] ❌ FASE 1 sin score_viral_estructural. Claves recibidas:', Object.keys(adnForense).join(', '));
+    const motorosMinimos = ['adn_estructura', 'adn_profundo', 'idea_nuclear_ganadora'];
+    const tieneMinimoViable = motorosMinimos.some(m => adnForense[m]);
+    if (Object.keys(adnForense).length === 0 || !tieneMinimoViable) {
+        console.error('[MOTOR PRO V2] ❌ FASE 1 sin motores mínimos. Claves recibidas:', Object.keys(adnForense).join(', '));
         throw new Error("El video es demasiado complejo y el motor falló al extraer el ADN. Por favor, intenta de nuevo.");
+    }
+    // Si falta score_viral_estructural, construir uno mínimo para no bloquear FASE 2
+    if (!adnForense.score_viral_estructural) {
+        console.warn('[MOTOR PRO V2] ⚠️ score_viral_estructural ausente — construyendo mínimo de emergencia');
+        adnForense.score_viral_estructural = {
+            viralidad_estructural_global: 65,
+            retencion_estructural: 65,
+            intensidad_emocional: 65,
+            polarizacion: 60,
+            manipulacion_atencion: 60,
+            densidad_valor: 60,
+            recomendacion_express: 'Análisis parcial — score estimado'
+        };
     }
 
     tokensTotal += completionFase1.usage?.total_tokens || 0;
