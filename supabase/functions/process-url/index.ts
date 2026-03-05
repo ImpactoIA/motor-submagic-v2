@@ -7222,16 +7222,16 @@ async function ejecutarIngenieriaInversaPro(
     let adnForense: any = {};
     const rawFase1Content = completionFase1.choices[0].message.content || '{}';
     
+    // 👇 NUEVO CHISMOSO: Imprimir SIEMPRE lo que hace la IA, sin excusas
+    console.log('--- RAW OUTPUT DESDE OPENAI (FASE 1) ---');
+    console.log(rawFase1Content.substring(0, 1000) + '...[truncado]');
+    console.log('-------------------------------');
+
     try {
       adnForense = JSON.parse(rawFase1Content);
     } catch (jsonErr) {
       console.warn('[MOTOR PRO V2] ⚠️ JSON FASE 1 falló el parseo inicial. Intentando reparar...');
       
-      // 👇 AQUÍ ESTÁ EL TRUCO: ESTO IMPRIMIRÁ EL ERROR REAL EN SUPABASE
-      console.log('--- RAW OUTPUT DESDE OPENAI ---');
-      console.log(rawFase1Content.substring(0, 1000) + '...[truncado]');
-      console.log('-------------------------------');
-
       let raw = rawFase1Content;
       const openBraces = (raw.match(/\{/g) || []).length;
       const closeBraces = (raw.match(/\}/g) || []).length;
