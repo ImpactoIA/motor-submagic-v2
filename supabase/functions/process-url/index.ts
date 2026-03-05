@@ -2189,7 +2189,7 @@ Si el video original usa tácticas que violan sus límites, ADAPTA esa táctica 
 EJECUTA LOS 16 MOTORES EN SECUENCIA. SIN EXCEPCIONES. SIN SIMPLIFICACIONES.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔴 MOTOR 1 — DESCOMPOSICIÓN ESTRUCTURAL PROFUNDA
+🔴 MOTOR 1 — DESCOMPOSICIÓN ESTRUCTURAL → clave JSON: "adn_estructura"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Identifica y mapea CADA bloque narrativo con:
 - tipo: EXACTAMENTE uno de [hook, setup, escalada, giro, climax, resolucion, cierre_estrategico]
@@ -2208,7 +2208,7 @@ LUEGO determina:
 - complejidad estructural 0-100
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🟠 MOTOR 2 — CURVA EMOCIONAL CUANTIFICABLE
+🟠 MOTOR 2 — CURVA EMOCIONAL → clave JSON: "curva_emocional"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Mapea el recorrido emocional completo:
 - emocion_dominante, emocion_secundaria, emocion_final
@@ -2221,7 +2221,7 @@ Mapea el recorrido emocional completo:
 NO aceptes emociones genéricas. Sé específico: "curiosidad ansiosa", "indignación justificada", "alivio sorpresivo".
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🟡 MOTOR 3 — MICRO-LOOPS Y TENSIÓN
+🟡 MOTOR 3 — MICRO-LOOPS Y TENSIÓN → clave JSON: "micro_loops"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Detecta CADA loop de tensión con:
 - tipo: [promesa_abierta, cliffhanger, pregunta_pendiente, anticipacion, gancho_diferido]
@@ -2231,33 +2231,33 @@ LUEGO calcula:
 - total de loops, intervalo promedio entre loops, densidad_anticipacion 0-100, loops_sin_resolver, estrategia_tension
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🟤 MOTOR 4 — POLARIZACIÓN
+🟤 MOTOR 4 — POLARIZACIÓN → clave JSON: "polarizacion"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Extrae: nivel_confrontacion 0-100, ruptura_creencia_detectada, enemigo_implicito, nivel_friccion_narrativa 0-100, mecanismo_polarizacion, afirmaciones_divisivas, posicionamiento_vs.
 Si no hay polarización significativa, score 0-20 con análisis honesto.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🟢 MOTOR 5 — IDENTIDAD VERBAL
+🟢 MOTOR 5 — IDENTIDAD VERBAL → clave JSON: "identidad_verbal"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Analiza: longitud_promedio_frases, ritmo_sintactico [staccato/fluido/mixto/explosivo], proporcion_frases_cortas_pct, proporcion_frases_largas_pct, uso_metaforas 0-100, uso_imperativos 0-100, sofisticacion_lexica 0-100, nivel_agresividad_verbal 0-100, firma_linguistica, palabras_poder_detectadas.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔵 MOTOR 6 — STATUS Y POSICIONAMIENTO
+🔵 MOTOR 6 — STATUS Y POSICIONAMIENTO → clave JSON: "status_y_posicionamiento"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Detecta: tipo_autoridad [mentor/rebelde/experto_tecnico/disruptor/insider/testigo/transformado], experiencia_proyectada [implicita/explicita/mixta], rol_narrativo, nivel_confianza_percibida 0-100, distancia_con_audiencia [cercana/media/distante], prueba_social_detectada bool, mecanismos_autoridad lista.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚪ MOTOR 7 — DENSIDAD DE VALOR
+⚪ MOTOR 7 — DENSIDAD DE VALOR → clave JSON: "densidad_valor"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Mide: valor_por_minuto 0-100, porcentaje_contenido_abierto, porcentaje_contenido_cerrado, profundidad_insight 0-100, micro_aprendizajes lista, ratio_promesa_entrega, tipo_valor_dominante [educativo/inspiracional/entretenimiento/provocacion/solucion].
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🟣 MOTOR 8 — MANIPULACIÓN DE ATENCIÓN
+🟣 MOTOR 8 — MANIPULACIÓN DE ATENCIÓN → clave JSON: "manipulacion_atencion"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Identifica: cambios_ritmo array {segundo, tipo, descripcion}, interrupciones_patron count, reencuadres_mentales lista, golpes_narrativos array {segundo, descripcion, impacto 0-100}, reactivaciones_atencion count, tecnicas_detalladas lista, frecuencia_estimulacion 0-100.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔶 MOTOR 9 — ACTIVADORES DE GUARDADO
+🔶 MOTOR 9 — ACTIVADORES DE GUARDADO → clave JSON: "activadores_guardado"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Detecta CADA elemento que hace al usuario guardar:
 - tipo: [frase_memorable, reencuadre, dato_contraintuitivo, formula_repetible, revelacion]
@@ -2265,7 +2265,7 @@ Detecta CADA elemento que hace al usuario guardar:
 Mínimo 3 activadores.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🟦 MOTOR 10 — ADAPTABILIDAD AL NICHO
+🟦 MOTOR 10 — ADAPTABILIDAD AL NICHO → clave JSON: "adaptabilidad_nicho"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Traduce el ADN al nicho del usuario (${nichoUsuario}):
 - contexto_usuario, sofisticacion_audiencia_target [basica/intermedia/avanzada/experta]
@@ -2273,18 +2273,18 @@ Traduce el ADN al nicho del usuario (${nichoUsuario}):
 - ajustes_necesarios lista, riesgos_adaptacion lista
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚫ MOTOR 11 — ANTI-SATURACIÓN
+⚫ MOTOR 11 — ANTI-SATURACIÓN → clave JSON: "elementos_cliche_detectados"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Detecta: tipo [frase_cliche/hook_generico/formula_repetida/plantilla_obvia], contenido, nivel_saturacion 0-100, alternativa_sugerida.
 Si originalidad es alta, lista pocos o ninguno y explica por qué.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔷 MOTOR 12 — RITMO NARRATIVO
+🔷 MOTOR 12 — RITMO NARRATIVO → clave JSON: "ritmo_narrativo"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Mide: velocidad_progresion [lenta/media/rapida/variable], intervalo_promedio_entre_estimulos_seg, variacion_intensidad 0-100, fluidez_estructural 0-100, momentos_pausa count, aceleraciones array {segundo, causa}.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🏆 MOTOR 13 — SCORE VIRAL ESTRUCTURAL
+🏆 MOTOR 13 — SCORE VIRAL ESTRUCTURAL → clave JSON: "score_viral_estructural"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Calcula con base en los 12 motores anteriores:
 {
@@ -2311,7 +2311,7 @@ Calcula con base en los 12 motores anteriores:
 Pesos: retencion(25%) + emocional(20%) + atencion(20%) + valor(15%) + polarizacion(10%) + resto(10%)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧬 MOTOR 14 — EXTRACCIÓN ADN PROFUNDO V1000
+🧬 MOTOR 14A — ADN PROFUNDO → clave JSON: "adn_profundo"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 AXIOMA CENTRAL: No adaptes el tema. Replica el mecanismo emocional.
@@ -2401,7 +2401,7 @@ La adaptación debe replicar esta estructura de dos bandos en el nicho del usuar
 No eliminar la fricción. Amplificarla con equivalencia estructural.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🏆 MOTOR 14B — IDEA NUCLEAR GANADORA
+🏆 MOTOR 14B — IDEA NUCLEAR GANADORA → clave JSON: "idea_nuclear_ganadora"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Declara la idea nuclear que hace viral al contenido:
@@ -2412,7 +2412,7 @@ Declara la idea nuclear que hace viral al contenido:
 - tension_no_resuelta: qué pregunta deja abierta que obliga a comentar
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔺 MOTOR 14C — SISTEMA DE SUPERIORIDAD
+🔺 MOTOR 14C — SISTEMA DE SUPERIORIDAD → clave JSON: "sistema_superioridad"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Declara cómo el guion adaptado SUPERA al original en:
@@ -6849,7 +6849,7 @@ Cómo la adaptación PUEDE superar al original:
 mayor_claridad, mayor_intensidad, mayor_polarizacion, mejor_estructura_emocional, mejor_cierre, ventaja_de_nicho.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔥 MOTOR 14D — INTENSIDAD CONFLICTUAL (ANTI-SUAVIZACIÓN)
+🔥 MOTOR 14D — INTENSIDAD CONFLICTUAL (ANTI-SUAVIZACIÓN) → clave JSON: "intensidad_conflictual"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 CRÍTICO: Este motor previene que el guion se vuelva abstracto y sin fuerza.
 Sin este motor, la adaptación se convierte en "reflexión" en lugar de "conflicto real".
@@ -6879,7 +6879,7 @@ equivalente_en_nicho:
   elemento_peligroso_equivalente: elemento que genera la misma polarización en el nicho del usuario
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔗 MOTOR 15 — BLUEPRINT REPLICABLE
+🔗 MOTOR 15 — BLUEPRINT REPLICABLE → clave JSON: "blueprint_replicable"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 nombre_patron, formula_base, pasos_estructurales.
 equivalencias_estructurales: {hook_type, escalation_pattern, giro_type, closure_type}.
@@ -6887,13 +6887,13 @@ equivalencias_psicologicas: {emocion_entrada, emocion_escalada, emocion_salida, 
 equivalencias_verbales: {ritmo, agresividad, sofisticacion}.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🌐 MOTOR 16 — ANÁLISIS TCA
+🌐 MOTOR 16 — ANÁLISIS TCA → clave JSON: "analisis_tca"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 PARTE A: nivel_tca_detectado (N0-N4), sector_detectado, mass_appeal_score, equilibrio_masividad_calificacion, diagnostico_tca, capa_visible, capa_estrategica, filtro_audiencia_implicito, tipo_trafico_que_atrae, nivel_conversion_probable, esta_muy_tecnico, esta_muy_mainstream.
 PARTE B (mapa para ${nichoUsuario}): nivel_tca_recomendado, sector_recomendado, nuevo_hook_sectorial, nueva_capa_visible, estructura_espejo, version_equilibrio_ideal, advertencia_micronicho.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎯 MOTOR 17 — POSICIONAMIENTO Y PRÓXIMOS PASOS
+🎯 MOTOR 17 — POSICIONAMIENTO Y PRÓXIMOS PASOS → clave JSON: "posicionamiento_y_proximos_pasos"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 posiciona_como: Mentor firme|Líder estratégico|Autoridad ética|Visionario|Analista frío|Testigo honesto.
 razon_posicionamiento.
@@ -6910,6 +6910,14 @@ Campos críticos obligatorios:
 - micro_loops: incluye total y estrategia_tension
 - activadores_guardado: mínimo 3 items con tipo y contenido
 - intensidad_conflictual: incluye nivel_riesgo_original, escena_concreta_principal, decision_impopular, consecuencia_real, nivel_incomodidad, por_que_incomoda, elemento_peligroso, equivalente_en_nicho
+MAPEO OBLIGATORIO DE CLAVES — USA EXACTAMENTE ESTOS NOMBRES:
+MOTOR 1 → "adn_estructura" | MOTOR 2 → "curva_emocional" | MOTOR 3 → "micro_loops"
+MOTOR 4 → "polarizacion" | MOTOR 5 → "identidad_verbal" | MOTOR 6 → "status_y_posicionamiento"
+MOTOR 7 → "densidad_valor" | MOTOR 8 → "manipulacion_atencion" | MOTOR 9 → "activadores_guardado"
+MOTOR 10 → "adaptabilidad_nicho" | MOTOR 11 → "elementos_cliche_detectados" | MOTOR 12 → "ritmo_narrativo"
+MOTOR 13 → "score_viral_estructural" | MOTOR 14A → "adn_profundo" | MOTOR 14B → "idea_nuclear_ganadora"
+MOTOR 14C → "sistema_superioridad" | MOTOR 14D → "intensidad_conflictual" | MOTOR 15 → "blueprint_replicable"
+MOTOR 16 → "analisis_tca" | MOTOR 16B → "mapa_de_adaptacion" | MOTOR 17 → "posicionamiento_y_proximos_pasos"
 DEVUELVE ÚNICAMENTE JSON VÁLIDO. Sin markdown. Sin backticks.
 `;
 
@@ -7248,8 +7256,28 @@ async function ejecutarIngenieriaInversaPro(
       }
     }
     
-    // 🛡️ SEGURO ANTI-FALLOS: Si FASE 1 colapsa, abortar antes de arruinar FASE 2
+     // 🛡️ SEGURO ANTI-FALLOS: Normalizar claves si GPT devolvió MOTOR_N en lugar de nombres reales
+    const MOTOR_KEY_MAP: Record<string, string> = {
+      MOTOR_1: 'adn_estructura', MOTOR_2: 'curva_emocional', MOTOR_3: 'micro_loops',
+      MOTOR_4: 'polarizacion', MOTOR_5: 'identidad_verbal', MOTOR_6: 'status_y_posicionamiento',
+      MOTOR_7: 'densidad_valor', MOTOR_8: 'manipulacion_atencion', MOTOR_9: 'activadores_guardado',
+      MOTOR_10: 'adaptabilidad_nicho', MOTOR_11: 'elementos_cliche_detectados', MOTOR_12: 'ritmo_narrativo',
+      MOTOR_13: 'score_viral_estructural', MOTOR_14A: 'adn_profundo', MOTOR_14B: 'idea_nuclear_ganadora',
+      MOTOR_14C: 'sistema_superioridad', MOTOR_14D: 'intensidad_conflictual', MOTOR_15: 'blueprint_replicable',
+      MOTOR_16: 'analisis_tca', MOTOR_17: 'posicionamiento_y_proximos_pasos',
+    };
+    const hasMotorKeys = Object.keys(adnForense).some(k => k.startsWith('MOTOR_'));
+    if (hasMotorKeys) {
+      console.warn('[MOTOR PRO V2] ⚠️ GPT devolvió claves MOTOR_N — normalizando automáticamente...');
+      for (const [motorKey, realKey] of Object.entries(MOTOR_KEY_MAP)) {
+        if (adnForense[motorKey] !== undefined) {
+          adnForense[realKey] = adnForense[motorKey];
+          delete adnForense[motorKey];
+        }
+      }
+    }
     if (Object.keys(adnForense).length === 0 || !adnForense.score_viral_estructural) {
+        console.error('[MOTOR PRO V2] ❌ FASE 1 sin score_viral_estructural. Claves recibidas:', Object.keys(adnForense).join(', '));
         throw new Error("El video es demasiado complejo y el motor falló al extraer el ADN. Por favor, intenta de nuevo.");
     }
 
