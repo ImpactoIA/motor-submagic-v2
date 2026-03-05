@@ -7266,13 +7266,41 @@ async function ejecutarIngenieriaInversaPro(
       MOTOR_14C: 'sistema_superioridad', MOTOR_14D: 'intensidad_conflictual', MOTOR_15: 'blueprint_replicable',
       MOTOR_16: 'analisis_tca', MOTOR_17: 'posicionamiento_y_proximos_pasos',
     };
-    const hasMotorKeys = Object.keys(adnForense).some(k => k.startsWith('MOTOR_'));
+    // Caso 1: GPT envolvió todo en "motores_forenses" u otro objeto padre
+    if (adnForense.motores_forenses && typeof adnForense.motores_forenses === 'object') {
+      console.warn('[MOTOR PRO V2] ⚠️ GPT usó wrapper "motores_forenses" — aplanando...');
+      const wrapped = adnForense.motores_forenses;
+      adnForense = { ...adnForense, ...wrapped };
+      delete adnForense.motores_forenses;
+    }
+
+    // Caso 2: GPT devolvió claves MOTOR_N o motor_N
+    const hasMotorKeys = Object.keys(adnForense).some(k => /^MOTOR_\d|^motor_\d/i.test(k));
     if (hasMotorKeys) {
       console.warn('[MOTOR PRO V2] ⚠️ GPT devolvió claves MOTOR_N — normalizando automáticamente...');
       for (const [motorKey, realKey] of Object.entries(MOTOR_KEY_MAP)) {
         if (adnForense[motorKey] !== undefined) {
           adnForense[realKey] = adnForense[motorKey];
           delete adnForense[motorKey];
+        }
+        // También manejar lowercase: motor_1, motor_2...
+        const lowerKey = motorKey.toLowerCase();
+        if (adnForense[lowerKey] !== undefined) {
+          adnForense[realKey] = adnForense[lowerKey];
+          delete adnForense[lowerKey];
+        }
+      }
+    }
+
+    // Caso 3: Los motores están anidados dentro de motor_N como subobjetos
+    // Ej: { motor_1: { descomposicion_estructural: [...] } } → extraer al nivel raíz
+    for (const key of Object.keys(adnForense)) {
+      if (/^motor_\d/i.test(key) && typeof adnForense[key] === 'object') {
+        const subObj = adnForense[key];
+        // Si tiene descomposicion_estructural, es adn_estructura
+        if (subObj.descomposicion_estructural || subObj.bloques || subObj.patron_narrativo_detectado) {
+          adnForense.adn_estructura = subObj;
+          delete adnForense[key];
         }
       }
     }
