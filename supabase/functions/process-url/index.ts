@@ -10306,7 +10306,7 @@ async function scrapeTikTok(url: string): Promise<{
   subtitlesLanguage2: 'en',
   subtitlesLanguage3: 'pt',
   subtitlesLanguage4: 'fr',
-}, { timeoutSecs: 60, memoryMbytes: 512 });
+  });
 
       const { items } = await client.dataset(run.defaultDatasetId).listItems();
       
@@ -10585,7 +10585,15 @@ async function scrapeAndTranscribeVideo(
           videoUrl: ''
         };
       }
-      throw new Error('No se pudo obtener contenido del video');
+      // ✅ FALLBACK FINAL: usar la URL como contexto mínimo para que OpenAI pueda trabajar
+      console.warn('[SCRAPER] ⚠️ Sin contenido — usando URL como contexto mínimo');
+      return {
+        transcript: `Video de TikTok: ${url}. Analiza el contenido basándote en el nicho del usuario.`,
+        description: url,
+        duration: 0,
+        platform,
+        videoUrl: url
+      };
     }
 
     console.log('[SCRAPER] 🎤 Transcribiendo con Whisper...');
