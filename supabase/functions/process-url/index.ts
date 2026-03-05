@@ -7412,7 +7412,7 @@ async function ejecutarIngenieriaInversaPro(
       model: 'gpt-4o',                   // ✅ FULL gpt-4o — sin compromiso
       response_format: { type: 'json_object' },
       messages: [
-        { role: 'system', content: `Eres el escritor de guiones virales #1 del mundo. ÚNICA función: guion poderoso y completo. MÍNIMO ${minWords} palabras. Más corto = fallo crítico. JSON válido únicamente.` },
+        { role: 'system', content: `Eres un escritor de guiones virales. Tu ÚNICA tarea es escribir el guion hablado. DEBES devolver JSON con exactamente estas dos claves: "guion_adaptado_espejo" (string con el guion completo, MÍNIMO ${minWords} palabras) y "guion_adaptado_al_nicho" (mismo texto). PROHIBIDO devolver análisis, bloques, ni ninguna otra clave. SOLO el guion hablado en texto plano.` },
         { role: 'user', content: promptFase2Final }
       ],
       temperature: 0.75,
@@ -7474,7 +7474,7 @@ DEVUELVE ÚNICAMENTE JSON válido. Sin markdown. Sin backticks.
         model: 'gpt-4o',
         response_format: { type: 'json_object' },
         messages: [
-          { role: 'system', content: `Escritor viral. MÍNIMO ${minWords} palabras en el guion. JSON válido.` },
+          { role: 'system', content: `Escritor de guiones virales. Devuelve JSON con SOLO dos claves: "guion_adaptado_espejo" (string del guion hablado completo, MÍNIMO ${minWords} palabras) y "guion_adaptado_al_nicho" (mismo texto). CERO análisis. CERO bloques. Solo el texto que el creador dice en cámara.` },
           { role: 'user', content: promptRef }
         ],
         temperature: 0.8,
