@@ -1980,6 +1980,7 @@ export const ScriptGenerator = () => {
 )}
                             
                                 {(() => { if (!result.plan_audiovisual_profesional && result.guion_completo_data?.plan_audiovisual_profesional) { result.plan_audiovisual_profesional = result.guion_completo_data.plan_audiovisual_profesional; } if (!result.miniatura_dominante && result.guion_completo_data?.miniatura_dominante) { result.miniatura_dominante = result.guion_completo_data.miniatura_dominante; } return null; })()}
+                                {result.plan_audiovisual_profesional ? (
                                 <div className="border-t border-gray-800 pt-6 mt-6">
                                     <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-5 flex items-center gap-2">
                                         <Video size={14}/> Plan Audiovisual Profesional
@@ -2077,7 +2078,7 @@ export const ScriptGenerator = () => {
                                         )}
                                     </div>
                                 </div>
-                            ) : ((result.plan_produccion_visual || result.plan_visual) ?? []).length > 0 && (
+                            ) : ((result.plan_produccion_visual || result.plan_visual) || []).length > 0 ? (
                                 <div className="border-t border-gray-800 pt-6 mt-6">
                                     <label className="text-xs font-black text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
                                         <Video size={14}/> Plan de Producción Visual
