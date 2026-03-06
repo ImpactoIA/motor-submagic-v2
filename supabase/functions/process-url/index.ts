@@ -4086,21 +4086,6 @@ Responde SOLO con este JSON válido. Sin markdown, sin texto extra, sin explicac
       "audio": "Efecto de sonido / Música de tensión"
     }
   ],
-  "miniatura_dominante": {
-    "idea_visual": "Descripción de la imagen perfecta para portada",
-    "titulo_video": {
-      "tension_maxima": "Título provocador y agresivo",
-      "aspiracional": "Título de deseo y transformación",
-      "autoridad": "Título experto y analítico"
-    },
-    "frases_por_plataforma": {
-      "TikTok": "Texto en pantalla corto, urgente y agresivo",
-      "Reels": "Texto estético, aspiracional y guardable",
-      "YouTube": "Título claro con promesa fuerte para CTR",
-      "LinkedIn": "Afirmación profesional disruptiva",
-      "Facebook": "Pregunta conversacional que genere debate"
-    }
-  },
   "poder_del_guion": {
     "hook_primeros_3_segundos": "El gancho exacto escrito",
     "frase_de_oro": "La frase de oro de 10 palabras extraída del guion",
@@ -4142,44 +4127,6 @@ Responde SOLO con este JSON válido. Sin markdown, sin texto extra, sin explicac
     "umbral_dominancia_superado": true,
     "razonamiento": "Explicación de cómo se calculó cada score y qué ajustes se hicieron para superar viral_index ≥ 85, disrupcion ≥ 75, control_frame ≥ 75 y diferenciacion ≥ 75"
   },
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🖼️ MOTOR FDM-X 2.0 — FRASE DOMINANTE DE MINIATURA
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Genera la frase de miniatura DESPUÉS de tener el guion completo.
-La frase debe conectar con el hook, el TCA y la intensidad.
-
-THUMBNAIL DNA POR PLATAFORMA:
-
-TikTok → 2-4 palabras | Alta confrontación | Ataque directo | Sin explicación
-  Patrones: "Te mintieron" / "Hazlo al revés" / "Estás perdiendo dinero" / "Esto te arruina"
-  NUNCA: frases largas, conceptos abstractos, educativas
-
-YouTube → 3-6 palabras | Gap informativo | Promesa implícita | Conecta con título
-  Patrones: "La verdad incómoda" / "Nadie te dijo esto" / "El error invisible" / "Por eso no creces"
-  NUNCA: spoiler del contenido, repite el título
-
-Instagram Reels → Aspiracional o tribal | Compartible | Elegante pero disruptiva
-  Patrones: "No es para todos" / "Los que entienden esto" / "Mentalidad diferente" / "Disciplina real"
-  NUNCA: agresividad excesiva, jerga técnica
-
-Facebook → Postura clara | Provoca comentario | No agresiva
-  Patrones: "Esto está mal" / "Nos enseñaron mal" / "Nadie habla de esto" / "Esto no funciona"
-  NUNCA: polarización extrema, lenguaje divisivo
-
-FILTRO OBLIGATORIO antes de entregar:
-✔ Activa sector TCA (Dinero/Salud/Relaciones/Desarrollo)
-✔ Rompe expectativa del nicho
-✔ Genera tensión cognitiva
-✔ Compatible con intensidad del experto: ${intensityConfig.label}
-✔ No es genérica ni educativa ni cliché
-✔ No suena a IA
-✔ No repite el título
-✔ Cumple ADN de ${platLabel}
-Si falla uno → regenerar frase.
-
-Si ctr_score < 75 → regenerar frase con mayor disrupción.
-
   "teleprompter_script": "⚠️ MOTOR TCA V700 — EMBUDO NARRATIVO HORIZONTAL OBLIGATORIO\\n\\nEste teleprompter ejecuta el ciclo TCA completo: MASIVO → FILTRADO PSICOLÓGICO → AUTORIDAD → CONVERSIÓN\\n\\nREGLA DE ORO DE LONGITUD: EXACTAMENTE 140 a 170 palabras habladas. No menos. No más. Cuenta las palabras antes de entregar. Un video de 60 segundos a ritmo normal = 140-170 palabras. Si generas menos de 140 → REESCRIBE añadiendo densidad narrativa. Si superas 170 → comprime sin perder impacto.\\n\\n━━━ ARQUITECTURA TCA OBLIGATORIA ━━━\\n\\n[CAPA 1 — MASIVO: 0-3s → Hook que llega a MILLONES]\\nEscribe aquí 10-15 palabras. Hook en sector masivo N2-N3. PROHIBIDO: jerga técnica, presentaciones, contexto. El hook conecta con Dinero / Salud / Relaciones / Libertad / Tiempo — NO con el micronicho técnico. Este es el momento que decide si el algoritmo distribuye a millones o a nadie.\\n\\n[CAPA 2 — FILTRADO PSICOLÓGICO: 3-15s → Agita y califica]\\nEscribe aquí 25-35 palabras. Aquí el guion filtra: atrae a los que SÍ son tu audiencia y repele a los que no. Activa el dolor específico. Nombra el enemigo. Rompe la creencia falsa. Este bloque determina quién se queda.\\n\\n[CAPA 3 — HISTORIA / CONFLICTO: 15-35s → Tensión narrativa máxima]\\nEscribe aquí 45-55 palabras. El conflicto real. La historia. La tensión que no puede resolverse todavía. Inserta aquí el LOOP 1 (pregunta abierta que no se responde aún). El avatar no puede irse porque todavía no sabe el final.\\n\\n[CAPA 4 — AUTORIDAD: 35-50s → Revelación + posicionamiento experto]\\nEscribe aquí 35-45 palabras. La revelación. El giro. El insight que nadie más da. Aquí el experto demuestra por qué es la única fuente válida. Inserta aquí el LOOP 2 cerrado. Frase de oro de máximo 10 palabras diseñada para ser guardada o compartida.\\n\\n[CAPA 5 — CONVERSIÓN: 50-60s → CTA de identidad tribal]\\nEscribe aquí 15-20 palabras. PROHIBIDO: 'dale like', 'suscríbete', 'no olvides'. OBLIGATORIO: CTA que construye tribu, deseo de pertenecer, o acción de bajo umbral. Conecta con el objetivo de cierre: ${closingConfig.label}. Mecánica: ${closingConfig.mecanica}\\n\\n━━━ REGLAS ABSOLUTAS DEL TELEPROMPTER ━━━\\n✓ SOLO palabras habladas — PROHIBIDO: [Texto en pantalla], [Zoom], [Corte], [Música], [B-roll] o cualquier indicación técnica\\n✓ Usa saltos de línea para marcar el ritmo natural del habla\\n✓ Usa ... para pausa corta (1-2 segundos)\\n✓ Usa línea en blanco para pausa larga (3+ segundos)\\n✓ El creador lee esto directamente a cámara sin ninguna interpretación adicional\\n✓ Las etiquetas [CAPA X] son referencia de producción — NO se leen en voz alta\\n✓ VERIFICACIÓN FINAL: cuenta las palabras. Si no está entre 140-170 → reescribe antes de entregar",
   "plan_audiovisual_profesional": {
     "secuencia_temporal": [
@@ -9659,7 +9606,7 @@ ${retroalimentacionLoop}
         { role: 'user', content: finalPrompt }
       ],
       temperature: intentoActual === 1 ? 0.75 : Math.min(0.75 + (intentoActual * 0.1), 0.95),
-      max_tokens: 4500
+      max_tokens: 8000
     });
 
     tokensTotal += completion.usage?.total_tokens || 0;
