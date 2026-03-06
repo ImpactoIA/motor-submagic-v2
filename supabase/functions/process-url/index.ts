@@ -11669,7 +11669,7 @@ El guion DEBE estar 100% basado en el tema escrito por el usuario: "${temaTexto 
 La imagen es inspiración estratégica — NO es el tema. El tema es lo que el usuario escribió.
 Si el usuario no escribió nada, extrae el tema central de la imagen y úsalo como tema del guion.
 PROHIBIDO: generar un guion sobre marketing digital o IA si el usuario escribió otro tema.
-PROHIBIDO: ignorar el tema del usuario.${avatarDir ? `\n\n[PERSONALIDAD DEL EXPERTO]:\n${avatarDir}` : ''}`;
+PROHIBIDO: ignorar el tema del usuario.`;
       
       // Pre-análisis del concepto visual extraído (ya viene personalizado)
       preAnalisis = await preAnalizarInput(conceptoVisual, 'imagen', openai);
