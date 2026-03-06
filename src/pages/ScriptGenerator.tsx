@@ -624,7 +624,7 @@ export const ScriptGenerator = () => {
     const handleGenerate = async () => {
         // 1. Validaciones básicas
         if (!topic.trim() && !uploadedImage) {
-            setError("Por favor escribe un tema o sube una imagen para el guion.");
+            setError("Por favor escribe un tema o sube una imagen.");
             return;
         }
         
@@ -650,8 +650,8 @@ export const ScriptGenerator = () => {
             const { data, error: apiError } = await supabase.functions.invoke('process-url', {
                 body: {
                     selectedMode: 'generador_guiones',
-                    userInput: topic.trim(),
-                    topic: topic.trim(),
+                    userInput: topic.trim() || '',
+                    topic: topic.trim() || '',
                     image: selectedImage,   // ← COMA CORREGIDA
                     settings: {
                         platform: selectedPlatform.label,
