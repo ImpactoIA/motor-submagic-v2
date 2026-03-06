@@ -1168,7 +1168,7 @@ export const ScriptGenerator = () => {
                         {isGenerating ? (
                             <>
                                 <RefreshCw className="animate-spin" size={20}/>
-                                MOTOR V500 PROCESANDO...
+                                MOTOR V700 PROCESANDO...
                             </>
                         ) : (
                             <>
@@ -1726,43 +1726,109 @@ export const ScriptGenerator = () => {
                                 </div>
                             )}
 
-                            {/* Ganchos Alternativos */}
+                            {/* 🔥 5 HOOKS TCA V700 — TEORÍA CIRCULAR DE ALCANCE */}
                             {result.ganchos_opcionales && result.ganchos_opcionales.length > 0 && (
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                                    {result.ganchos_opcionales.map((hook, idx) => (
-                                        <div 
-                                            key={idx} 
-                                            className="bg-gray-900/40 p-4 rounded-2xl border border-gray-800 hover:border-indigo-500/30 transition-colors group"
+                                <div className="mb-8">
+                                    <div className="flex items-center justify-between mb-3">
+                                        <label className="text-xs font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                                            <Zap size={14}/> 5 Hooks TCA — Teoría Circular de Alcance
+                                        </label>
+                                        <span className="text-[9px] font-black bg-gradient-to-r from-pink-600 to-purple-600 text-white px-2 py-0.5 rounded-full">V700</span>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-5 gap-2">
+                                        {result.ganchos_opcionales.map((hook: any, idx: number) => {
+                                            const hookMeta: Record<string, any> = {
+                                                CONTROVERSIAL: { border: 'border-red-500/40', bg: 'bg-red-950/30', label: 'text-red-400', badge: 'bg-red-500/15 text-red-400', emoji: '🔥' },
+                                                EMOCIONAL:     { border: 'border-pink-500/40', bg: 'bg-pink-950/30', label: 'text-pink-400', badge: 'bg-pink-500/15 text-pink-400', emoji: '💔' },
+                                                CURIOSIDAD:    { border: 'border-cyan-500/40', bg: 'bg-cyan-950/30', label: 'text-cyan-400', badge: 'bg-cyan-500/15 text-cyan-400', emoji: '🧠' },
+                                                AUTORIDAD:     { border: 'border-yellow-500/40', bg: 'bg-yellow-950/30', label: 'text-yellow-400', badge: 'bg-yellow-500/15 text-yellow-400', emoji: '👑' },
+                                                POLARIZACION:  { border: 'border-purple-500/40', bg: 'bg-purple-950/30', label: 'text-purple-400', badge: 'bg-purple-500/15 text-purple-400', emoji: '⚡' },
+                                            };
+                                            const meta = hookMeta[hook.tipo] || { border: 'border-gray-700', bg: 'bg-gray-900/30', label: 'text-indigo-400', badge: 'bg-indigo-500/10 text-indigo-400', emoji: '🎯' };
+                                            return (
+                                                <div key={idx} className={`${meta.bg} ${meta.border} border rounded-2xl p-3 flex flex-col gap-2 hover:scale-[1.02] transition-transform`}>
+                                                    <div className="flex items-center justify-between">
+                                                        <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${meta.badge}`}>
+                                                            {meta.emoji} {hook.tipo}
+                                                        </span>
+                                                        <span className="text-[9px] font-black text-green-400">{hook.retencion_predicha}%</span>
+                                                    </div>
+                                                    <p className={`text-xs font-bold leading-snug ${meta.label}`}>
+                                                        "{hook.texto}"
+                                                    </p>
+                                                    {hook.tca_sector && (
+                                                        <span className="text-[9px] text-gray-500 leading-tight">
+                                                            🌀 TCA: {hook.tca_sector}
+                                                        </span>
+                                                    )}
+                                                    {hook.mecanismo && (
+                                                        <span className="text-[9px] text-gray-400 bg-black/40 px-2 py-1 rounded-lg leading-tight block">
+                                                            ⚙️ {hook.mecanismo}
+                                                        </span>
+                                                    )}
+                                                    <button
+                                                        onClick={() => navigator.clipboard.writeText(hook.texto || '')}
+                                                        className={`text-[9px] font-black uppercase tracking-widest ${meta.label} opacity-60 hover:opacity-100 transition-opacity text-left mt-auto`}
+                                                    >
+                                                        📋 Copiar
+                                                    </button>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                    <p className="text-[9px] text-gray-600 mt-2 italic">
+                                        🌀 Cada hook está calibrado para un nivel distinto del embudo TCA — usa el que corresponda a tu objetivo de alcance
+                                    </p>
+                                </div>
+                            )}
+                            {/* 🎤 TELEPROMPTER TCA LIMPIO — SOLO TEXTO HABLADO */}
+                            {result.teleprompter_script && (
+                                <div className="flex-1 space-y-3 mb-6">
+                                    <div className="flex items-center justify-between">
+                                        <label className="text-xs font-black text-green-400 uppercase tracking-widest flex items-center gap-2">
+                                            <AlignLeft size={14}/> 🎤 Teleprompter TCA
+                                            <span className="text-[9px] font-black bg-green-500/15 text-green-400 border border-green-500/20 px-2 py-0.5 rounded-full">
+                                                140-170 palabras · Solo texto hablado
+                                            </span>
+                                        </label>
+                                        <button
+                                            onClick={() => {
+                                                const clean = (result.teleprompter_script || '')
+                                                    .split('\n')
+                                                    .filter((l: string) => !l.startsWith('[CAPA') && !l.startsWith('⚠️') && !l.startsWith('━') && !l.startsWith('REGLA') && !l.startsWith('✓') && !l.startsWith('TCA =') && !l.startsWith('CAPA ') && !l.startsWith('→') && l.trim() !== '')
+                                                    .join('\n');
+                                                navigator.clipboard.writeText(clean);
+                                            }}
+                                            className="text-[10px] font-black text-green-400 bg-green-500/10 border border-green-500/20 px-3 py-1.5 rounded-xl hover:bg-green-500/20 transition-colors flex items-center gap-1"
                                         >
-                                            <div className="flex justify-between mb-2">
-                                                <span className="text-[10px] font-bold text-indigo-400 uppercase bg-indigo-500/10 px-2 py-0.5 rounded">
-                                                    {hook.tipo}
-                                                </span>
-                                                <span className="text-[10px] font-bold text-green-400 flex items-center gap-1">
-                                                    <Target size={10}/> {hook.retencion_predicha}% Ret.
-                                                </span>
-                                            </div>
-                                            <p className="text-sm text-gray-300 italic group-hover:text-white transition-colors mb-2">
-                                                "{hook.texto}"
-                                            </p>
-                                            {/* 🔥 NUEVO: Mostrar mecanismo */}
-                                            {hook.mecanismo && (
-                                                <span className="text-[9px] text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded">
-                                                    Mecánica: {hook.mecanismo}
-                                                </span>
-                                            )}
-                                        </div>
-                                    ))}
+                                            <Copy size={10}/> Copiar Teleprompter
+                                        </button>
+                                    </div>
+                                    <div className="bg-black/80 p-8 rounded-2xl border border-green-500/20 text-green-100 text-xl leading-relaxed font-medium whitespace-pre-wrap shadow-inner max-h-[500px] overflow-y-auto font-mono selection:bg-green-500 selection:text-black">
+                                        {(result.teleprompter_script || '')
+                                            .split('\n')
+                                            .filter((l: string) => !l.startsWith('[CAPA') && !l.startsWith('⚠️') && !l.startsWith('━') && !l.startsWith('REGLA') && !l.startsWith('✓') && !l.startsWith('TCA =') && !l.startsWith('CAPA ') && !l.startsWith('→') && l.trim() !== '')
+                                            .join('\n')
+                                        }
+                                    </div>
                                 </div>
                             )}
 
-                            {/* GUION COMPLETO */}
+                            {/* GUION COMPLETO CON INDICACIONES DE PRODUCCIÓN */}
                             <div className="flex-1 space-y-3 mb-8">
-                                <label className="text-xs font-black text-gray-500 uppercase tracking-widest flex items-center gap-2">
-                                    <AlignLeft size={14}/> Modo Teleprompter
-                                </label>
+                                <div className="flex items-center justify-between">
+                                    <label className="text-xs font-black text-gray-500 uppercase tracking-widest flex items-center gap-2">
+                                        <AlignLeft size={14}/> Guion Completo + Producción
+                                    </label>
+                                    <button
+                                        onClick={() => navigator.clipboard.writeText(result.guion_completo || '')}
+                                        className="text-[10px] font-black text-gray-400 bg-gray-800 border border-gray-700 px-3 py-1.5 rounded-xl hover:bg-gray-700 transition-colors flex items-center gap-1"
+                                    >
+                                        <Copy size={10}/> Copiar Guion
+                                    </button>
+                                </div>
                                 <div className="bg-black/60 p-8 rounded-2xl border border-gray-800 text-gray-200 text-lg leading-relaxed font-medium whitespace-pre-wrap shadow-inner max-h-[600px] overflow-y-auto font-mono selection:bg-pink-500 selection:text-white">
-                                    {result.teleprompter_script || result.guion_completo}
+                                    {result.guion_completo}
                                 </div>
                             </div>
 

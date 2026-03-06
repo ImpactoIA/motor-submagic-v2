@@ -3513,16 +3513,49 @@ REGLAS DE POSTURA DOMINANTE:
 Si el guion disuena con el posicionamiento del experto → RECHAZA y reescribe con la postura correcta.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🌀 VALIDACIÓN TCA — DOMINIO EN CAPA MASIVA
+🌀 MOTOR TCA V700 — EMBUDO NARRATIVO HORIZONTAL COMPLETO
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Antes de escribir el guion, valida internamente:
-□ ¿El hook está en N2–N3 (sector masivo)? Si está en micronicho técnico → PENALIZAR y reescribir
-□ ¿El conflicto conecta con Dinero / Salud / Relaciones / Desarrollo Personal? Si no → expandir
-□ ¿El insight conecta de vuelta con el nicho específico del experto? Si no → ajustar
+TCA = Teoría Circular de Alcance
+El guion NO es una pieza de contenido lineal. Es un embudo narrativo horizontal que ejecuta 4 capas:
 
-Sectores masivos válidos (N2-N3): Dinero, Tiempo, Libertad, Reconocimiento, Salud, Relaciones, Crecimiento
-Micronicho técnico (N1) PROHIBIDO en hook: jerga técnica específica, acrónimos del sector, términos de experto
+CAPA 1 — MASIVO (Hook N2-N3)
+→ El hook conecta con un deseo o dolor UNIVERSAL, no con el micronicho técnico
+→ Sectores válidos: Dinero, Tiempo, Libertad, Reconocimiento, Salud, Relaciones, Crecimiento
+→ El algoritmo distribuye a MILLONES porque el hook no requiere contexto previo
+→ PROHIBIDO en el hook: jerga técnica, acrónimos, términos de experto, micronicho N1
+
+CAPA 2 — FILTRADO PSICOLÓGICO (Desarrollo)
+→ El conflicto filtra: atrae a los que SÍ son el avatar ideal y repele a los demás
+→ Aquí aparece el ENEMIGO COMÚN — el sistema, la creencia falsa, la industria
+→ El avatar siente: "esto lo escribieron exactamente para mí"
+→ Este filtrado activa comentarios, guardados y compartidos
+
+CAPA 3 — AUTORIDAD (Revelación + Insight)
+→ El experto entrega el insight que solo ÉL puede dar con credibilidad
+→ Aquí conecta el tema masivo (N2-N3) con el nicho específico del experto (N1)
+→ La frase de oro: máximo 10 palabras, diseñada para ser screenshoteable
+→ El avatar piensa: "esto no lo escuché en ningún otro lado"
+
+CAPA 4 — CONVERSIÓN (CTA Tribal)
+→ NO es un CTA genérico — es una invitación a pertenecer a una tribu
+→ El avatar no siente que le venden — siente que fue elegido
+→ Objetivo de cierre activo: ${closingConfig.label}
+→ Mecánica de conversión: ${closingConfig.mecanica}
+
+VALIDACIÓN TCA OBLIGATORIA ANTES DE ESCRIBIR:
+□ ¿El hook está en N2–N3? Si está en micronicho técnico → REESCRIBE OBLIGATORIAMENTE
+□ ¿El conflicto activa Dinero / Salud / Relaciones / Desarrollo Personal? Si no → expande
+□ ¿El insight conecta el sector masivo con el nicho del experto? Si no → ajusta
+□ ¿El CTA construye tribu o identidad? Si dice "dale like" → REESCRIBE
+□ ¿El guion completo sigue el ciclo MASIVO → FILTRADO → AUTORIDAD → CONVERSIÓN? Si no → reestructura
+
+PENALIZACIONES AUTOMÁTICAS:
+→ Hook con jerga técnica de micronicho → -30 en mass_appeal_score
+→ Sin enemigo común identificado → -20 en nivel_de_polarizacion
+→ Frase de oro ausente → -25 en save_score
+→ CTA genérico ("dale like") → -30 en authority_score
+→ Sin filtrado psicológico en el desarrollo → -20 en viral_index
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ⚡ MOTOR DE ENEMIGO NARRATIVO CLARO
@@ -3949,16 +3982,49 @@ Responde SOLO con este JSON válido. Sin markdown, sin texto extra, sin explicac
   },
   "ganchos_opcionales": [
     {
-      "tipo": "Hook de Dominio",
-      "texto": "Variante agresiva del gancho para ${platLabel}",
+      "tipo": "CONTROVERSIAL",
+      "descripcion": "Ataca una creencia dominante — la mitad odia, la otra ama",
+      "texto": "Hook polémico que divide y activa al instante. Sin suavizadores. Máxima disrupción.",
       "retencion_predicha": 95,
-      "mecanismo": "${viralObjective.gatillos[0]}"
+      "mecanismo": "Ruptura de creencia + activación tribal",
+      "tca_nivel": "N2-N3",
+      "tca_sector": "Dinero / Estatus / Libertad"
     },
     {
-      "tipo": "Hook Aspiracional",
-      "texto": "Variante aspiracional del gancho",
-      "retencion_predicha": 88,
-      "mecanismo": "${viralObjective.gatillos[1]}"
+      "tipo": "EMOCIONAL",
+      "descripcion": "Conecta con el dolor más profundo del avatar — identificación total",
+      "texto": "Hook que activa espejo emocional. El avatar siente que fue escrito exactamente para él.",
+      "retencion_predicha": 90,
+      "mecanismo": "Validación emocional + espejo del dolor + FOMO identitario",
+      "tca_nivel": "N2-N3",
+      "tca_sector": "Salud / Relaciones / Desarrollo Personal"
+    },
+    {
+      "tipo": "CURIOSIDAD",
+      "descripcion": "Abre un loop cognitivo que el cerebro no puede cerrar solo",
+      "texto": "Hook que genera gap informativo irresistible. Promesa implícita de revelación prohibida.",
+      "retencion_predicha": 92,
+      "mecanismo": "Gap cognitivo + anticipación de revelación + loop abierto",
+      "tca_nivel": "N2-N3",
+      "tca_sector": "Dinero / Tiempo / Reconocimiento"
+    },
+    {
+      "tipo": "AUTORIDAD",
+      "descripcion": "Establece dominio experto desde el segundo 0 — sin presentación",
+      "texto": "Hook de posicionamiento de poder. Solo este experto puede decir esto con credibilidad.",
+      "retencion_predicha": 85,
+      "mecanismo": "Credibilidad implícita + posicionamiento de poder + prueba social",
+      "tca_nivel": "N2",
+      "tca_sector": "Todos los sectores masivos"
+    },
+    {
+      "tipo": "POLARIZACION",
+      "descripcion": "Divide a la audiencia en dos bandos — imposible quedar neutral",
+      "texto": "Hook que obliga a tomar posición. Genera debate masivo y comentarios desde el segundo 1.",
+      "retencion_predicha": 94,
+      "mecanismo": "Tribalismo + identidad amenazada + debate explosivo",
+      "tca_nivel": "N3",
+      "tca_sector": "Dinero / Estatus / Libertad / Relaciones"
     }
   ],
   "guion_completo": "GUION COMPLETO AQUÍ. Usa saltos de línea (\\n) para el ritmo. Indica [TEXTO EN PANTALLA] donde corresponda. Refleja tono '${lensData.label}', intensidad '${intensityConfig.label}', y ritmo de '${platLabel}'.",
@@ -4114,7 +4180,7 @@ Si falla uno → regenerar frase.
 
 Si ctr_score < 75 → regenerar frase con mayor disrupción.
 
-  "teleprompter_script": "TEXTO EXCLUSIVAMENTE HABLADO. Este campo contiene SOLO lo que el creador dice en voz alta. PROHIBIDO ABSOLUTAMENTE: [Texto en pantalla], [Gráficos], [Zoom], [Música], [Corte], [B-roll], ni ninguna indicación técnica de ningún tipo. SOLO palabras habladas, fluidas, naturales, grabables sin edición. Usa saltos de línea para respirar. Usa ... para pausa corta. Usa línea en blanco para pausa larga. El creador debe poder leer este texto directamente en cámara sin ninguna interpretación adicional.",
+  "teleprompter_script": "⚠️ MOTOR TCA V700 — EMBUDO NARRATIVO HORIZONTAL OBLIGATORIO\\n\\nEste teleprompter ejecuta el ciclo TCA completo: MASIVO → FILTRADO PSICOLÓGICO → AUTORIDAD → CONVERSIÓN\\n\\nREGLA DE ORO DE LONGITUD: EXACTAMENTE 140 a 170 palabras habladas. No menos. No más. Cuenta las palabras antes de entregar. Un video de 60 segundos a ritmo normal = 140-170 palabras. Si generas menos de 140 → REESCRIBE añadiendo densidad narrativa. Si superas 170 → comprime sin perder impacto.\\n\\n━━━ ARQUITECTURA TCA OBLIGATORIA ━━━\\n\\n[CAPA 1 — MASIVO: 0-3s → Hook que llega a MILLONES]\\nEscribe aquí 10-15 palabras. Hook en sector masivo N2-N3. PROHIBIDO: jerga técnica, presentaciones, contexto. El hook conecta con Dinero / Salud / Relaciones / Libertad / Tiempo — NO con el micronicho técnico. Este es el momento que decide si el algoritmo distribuye a millones o a nadie.\\n\\n[CAPA 2 — FILTRADO PSICOLÓGICO: 3-15s → Agita y califica]\\nEscribe aquí 25-35 palabras. Aquí el guion filtra: atrae a los que SÍ son tu audiencia y repele a los que no. Activa el dolor específico. Nombra el enemigo. Rompe la creencia falsa. Este bloque determina quién se queda.\\n\\n[CAPA 3 — HISTORIA / CONFLICTO: 15-35s → Tensión narrativa máxima]\\nEscribe aquí 45-55 palabras. El conflicto real. La historia. La tensión que no puede resolverse todavía. Inserta aquí el LOOP 1 (pregunta abierta que no se responde aún). El avatar no puede irse porque todavía no sabe el final.\\n\\n[CAPA 4 — AUTORIDAD: 35-50s → Revelación + posicionamiento experto]\\nEscribe aquí 35-45 palabras. La revelación. El giro. El insight que nadie más da. Aquí el experto demuestra por qué es la única fuente válida. Inserta aquí el LOOP 2 cerrado. Frase de oro de máximo 10 palabras diseñada para ser guardada o compartida.\\n\\n[CAPA 5 — CONVERSIÓN: 50-60s → CTA de identidad tribal]\\nEscribe aquí 15-20 palabras. PROHIBIDO: 'dale like', 'suscríbete', 'no olvides'. OBLIGATORIO: CTA que construye tribu, deseo de pertenecer, o acción de bajo umbral. Conecta con el objetivo de cierre: ${closingConfig.label}. Mecánica: ${closingConfig.mecanica}\\n\\n━━━ REGLAS ABSOLUTAS DEL TELEPROMPTER ━━━\\n✓ SOLO palabras habladas — PROHIBIDO: [Texto en pantalla], [Zoom], [Corte], [Música], [B-roll] o cualquier indicación técnica\\n✓ Usa saltos de línea para marcar el ritmo natural del habla\\n✓ Usa ... para pausa corta (1-2 segundos)\\n✓ Usa línea en blanco para pausa larga (3+ segundos)\\n✓ El creador lee esto directamente a cámara sin ninguna interpretación adicional\\n✓ Las etiquetas [CAPA X] son referencia de producción — NO se leen en voz alta\\n✓ VERIFICACIÓN FINAL: cuenta las palabras. Si no está entre 140-170 → reescribe antes de entregar",
   "plan_audiovisual_profesional": {
     "secuencia_temporal": [
       {
