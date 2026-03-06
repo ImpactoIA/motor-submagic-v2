@@ -11603,24 +11603,26 @@ case 'generador_guiones': {
       });
       const contextoAdicional = body.text || body.userInput || "";
       const temaTexto = contextoAdicional?.trim();
-      const avatarDir = (userContext as any).avatarDirectives || "";
+      // Si el usuario no escribió nada, usar el concepto visual como tema
+      const temaFinal = temaTexto || conceptoVisual;
 
-      temaUsuario = `[TEMA PRINCIPAL DEL USUARIO]: ${temaTexto || 'Extraer de la imagen'}
+      // Pre-análisis también sobre el texto del usuario si existe
+      const inputParaPreAnalisis = temaTexto || conceptoVisual;
 
-[ANÁLISIS ESTRATÉGICO DE LA IMAGEN — V700]:
-${conceptoVisual}
+      temaUsuario = `[TEMA PRINCIPAL DEL USUARIO]: ${temaFinal}
 
 [INSTRUCCIÓN OBLIGATORIA PARA EL MOTOR]:
-El usuario subió una imagen que contiene conceptos visuales sobre su nicho.
-El guion DEBE estar 100% basado en el tema escrito por el usuario: "${temaTexto || 'el tema de la imagen'}".
-La imagen es inspiración estratégica — NO es el tema. El tema es lo que el usuario escribió.
-Si el usuario no escribió nada, extrae el tema central de la imagen y úsalo como tema del guion.
-PROHIBIDO: generar un guion sobre marketing digital o IA si el usuario escribió otro tema.
-PROHIBIDO: ignorar el tema del usuario.`;
-      
-      // Pre-análisis del concepto visual extraído (ya viene personalizado)
-      preAnalisis = await preAnalizarInput(conceptoVisual, 'imagen', openai);
+El guion DEBE hablar específicamente sobre: "${temaFinal}".
+${temaTexto 
+  ? `El usuario escribió este tema: "${temaTexto}". La imagen complementa visualmente.` 
+  : `Tema extraído de la imagen. Úsalo como eje central. Menciona los elementos específicos de la imagen.`}
+PROHIBIDO: guion genérico. OBLIGATORIO: mencionar detalles concretos del tema.`;
+
+      // Pre-análisis sobre el input real (no solo la imagen)
+      preAnalisis = await preAnalizarInput(inputParaPreAnalisis, 'imagen', openai);
       console.log('[MOTOR V700] 🧬 Fusión Visual Contextualizada + Pre-análisis completados.');
+      
+      // Pre-análisis ejecutado arriba con inputParaPreAnalisis
     } catch (imgError: any) {
       console.error('[ERROR VISION]', imgError);
       throw new Error("Error analizando la imagen. Asegúrate de que sea JPG/PNG válido.");
@@ -11716,7 +11718,13 @@ ${instruccionEstructura}
       throw new Error("⚠️ Debes ingresar un tema, texto o imagen para generar el guion.");
     }
     
-    console.log(`[MOTOR V600] 💡 Modo idea: "${temaUsuario.substring(0, 80)}"`);
+    // P1 para ideas cortas — detecta conflicto potencial y tensión
+    try {
+      preAnalisis = await preAnalizarInput(temaUsuario, 'idea', openai);
+      console.log(`[MOTOR V600] 💡 Idea pre-analizada | Tensión: ${preAnalisis.tension_detectada}/100 | Conflicto: ${preAnalisis.conflicto_central?.substring(0, 60)}`);
+    } catch (e) {
+      console.warn('[MOTOR V600] ⚠️ Pre-análisis de idea falló — continúa sin él');
+    }
   }
 
   // ══════════════════════════════════════════════════════════════════
