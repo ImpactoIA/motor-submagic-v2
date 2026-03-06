@@ -2077,13 +2077,13 @@ export const ScriptGenerator = () => {
                                         )}
                                     </div>
                                 </div>
-                            ) : (result.plan_produccion_visual || result.plan_visual) && (result.plan_produccion_visual || result.plan_visual)!.length > 0 && (
+                            ) : ((result.plan_produccion_visual || result.plan_visual) ?? []).length > 0 && (
                                 <div className="border-t border-gray-800 pt-6 mt-6">
                                     <label className="text-xs font-black text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
                                         <Video size={14}/> Plan de Producción Visual
                                     </label>
                                     <div className="space-y-3">
-                                        {(result.plan_produccion_visual || result.plan_visual)!.map((scene: any, idx: number) => (
+                                        {((result.plan_produccion_visual || result.plan_visual) ?? []).map((scene: any, idx: number) => (
                                             <div 
                                                 key={idx} 
                                                 className="flex gap-4 p-4 bg-gray-900/30 rounded-xl border border-gray-800/50 hover:bg-gray-900 transition-colors"
