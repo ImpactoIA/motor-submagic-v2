@@ -10351,7 +10351,7 @@ function withTimeout<T>(promise: Promise<T>, ms: number, fallback: T): Promise<T
   const timeout = new Promise<T>((resolve) => setTimeout(() => resolve(fallback), ms));
   return Promise.race([promise, timeout]);
 }
-
+  function detectPlatform(url: string): string {
   if (url.includes('tiktok.com') || url.includes('vm.tiktok.com') || url.includes('vt.tiktok.com')) return 'tiktok';
   if (url.includes('instagram.com') || url.includes('instagr.am')) return 'instagram';
   if (url.includes('youtube.com') || url.includes('youtu.be') || url.includes('youtube.com/shorts')) return 'youtube';
