@@ -3956,6 +3956,24 @@ La meta NO es cumplir un checklist. La meta es dominar la percepción.
 📤 FORMATO DE SALIDA JSON OBLIGATORIO (V600)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠️ INSTRUCCIÓN CRÍTICA — CAMPO teleprompter_script
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+El campo "teleprompter_script" debe contener ÚNICAMENTE el texto que el creador dice en voz alta.
+PROHIBIDO: instrucciones, etiquetas técnicas, explicaciones, "[TEXTO EN PANTALLA]", "[Zoom]", "[B-roll]".
+OBLIGATORIO: texto hablado real, 140-170 palabras, embudo TCA:
+  CAPA 1 (0-3s): 10-15 palabras — hook masivo N2-N3, sector Dinero/Salud/Relaciones/Libertad
+  CAPA 2 (3-15s): 25-35 palabras — filtra avatar, activa dolor, nombra enemigo
+  CAPA 3 (15-35s): 45-55 palabras — conflicto real, loop abierto sin resolver
+  CAPA 4 (35-50s): 35-45 palabras — revelación, insight único, frase de oro ≤10 palabras
+  CAPA 5 (50-60s): 15-20 palabras — CTA tribal, objetivo: ${closingConfig.label}
+VERIFICACIÓN: cuenta las palabras. Si < 140 → reescribe. Si > 170 → comprime.
+EJEMPLO CORRECTO: "¿Cuánto dinero estás dejando sobre la mesa sin saberlo?\\nLa mayoría de emprendedores trabaja más horas cada año...\\n[sigue el guion hablado real]"
+EJEMPLO INCORRECTO: "Escribe aquí 10-15 palabras. Hook en sector masivo..."
+
+El campo "guion_completo" debe contener el guion con indicaciones de producción [TEXTO EN PANTALLA], pero el teleprompter_script SOLO texto hablado.
+
 Responde SOLO con este JSON válido. Sin markdown, sin texto extra, sin explicaciones.
 
 {
@@ -4127,7 +4145,7 @@ Responde SOLO con este JSON válido. Sin markdown, sin texto extra, sin explicac
     "umbral_dominancia_superado": true,
     "razonamiento": "Explicación de cómo se calculó cada score y qué ajustes se hicieron para superar viral_index ≥ 85, disrupcion ≥ 75, control_frame ≥ 75 y diferenciacion ≥ 75"
   },
-  "teleprompter_script": "⚠️ MOTOR TCA V700 — EMBUDO NARRATIVO HORIZONTAL OBLIGATORIO\\n\\nEste teleprompter ejecuta el ciclo TCA completo: MASIVO → FILTRADO PSICOLÓGICO → AUTORIDAD → CONVERSIÓN\\n\\nREGLA DE ORO DE LONGITUD: EXACTAMENTE 140 a 170 palabras habladas. No menos. No más. Cuenta las palabras antes de entregar. Un video de 60 segundos a ritmo normal = 140-170 palabras. Si generas menos de 140 → REESCRIBE añadiendo densidad narrativa. Si superas 170 → comprime sin perder impacto.\\n\\n━━━ ARQUITECTURA TCA OBLIGATORIA ━━━\\n\\n[CAPA 1 — MASIVO: 0-3s → Hook que llega a MILLONES]\\nEscribe aquí 10-15 palabras. Hook en sector masivo N2-N3. PROHIBIDO: jerga técnica, presentaciones, contexto. El hook conecta con Dinero / Salud / Relaciones / Libertad / Tiempo — NO con el micronicho técnico. Este es el momento que decide si el algoritmo distribuye a millones o a nadie.\\n\\n[CAPA 2 — FILTRADO PSICOLÓGICO: 3-15s → Agita y califica]\\nEscribe aquí 25-35 palabras. Aquí el guion filtra: atrae a los que SÍ son tu audiencia y repele a los que no. Activa el dolor específico. Nombra el enemigo. Rompe la creencia falsa. Este bloque determina quién se queda.\\n\\n[CAPA 3 — HISTORIA / CONFLICTO: 15-35s → Tensión narrativa máxima]\\nEscribe aquí 45-55 palabras. El conflicto real. La historia. La tensión que no puede resolverse todavía. Inserta aquí el LOOP 1 (pregunta abierta que no se responde aún). El avatar no puede irse porque todavía no sabe el final.\\n\\n[CAPA 4 — AUTORIDAD: 35-50s → Revelación + posicionamiento experto]\\nEscribe aquí 35-45 palabras. La revelación. El giro. El insight que nadie más da. Aquí el experto demuestra por qué es la única fuente válida. Inserta aquí el LOOP 2 cerrado. Frase de oro de máximo 10 palabras diseñada para ser guardada o compartida.\\n\\n[CAPA 5 — CONVERSIÓN: 50-60s → CTA de identidad tribal]\\nEscribe aquí 15-20 palabras. PROHIBIDO: 'dale like', 'suscríbete', 'no olvides'. OBLIGATORIO: CTA que construye tribu, deseo de pertenecer, o acción de bajo umbral. Conecta con el objetivo de cierre: ${closingConfig.label}. Mecánica: ${closingConfig.mecanica}\\n\\n━━━ REGLAS ABSOLUTAS DEL TELEPROMPTER ━━━\\n✓ SOLO palabras habladas — PROHIBIDO: [Texto en pantalla], [Zoom], [Corte], [Música], [B-roll] o cualquier indicación técnica\\n✓ Usa saltos de línea para marcar el ritmo natural del habla\\n✓ Usa ... para pausa corta (1-2 segundos)\\n✓ Usa línea en blanco para pausa larga (3+ segundos)\\n✓ El creador lee esto directamente a cámara sin ninguna interpretación adicional\\n✓ Las etiquetas [CAPA X] son referencia de producción — NO se leen en voz alta\\n✓ VERIFICACIÓN FINAL: cuenta las palabras. Si no está entre 140-170 → reescribe antes de entregar",
+  "teleprompter_script": "ESCRIBE AQUÍ EL GUION HABLADO COMPLETO. EXACTAMENTE 140-170 PALABRAS. SOLO LO QUE EL CREADOR DICE EN VOZ ALTA. SIN ETIQUETAS. SIN INSTRUCCIONES. EJECUTA EL EMBUDO: [CAPA 1] hook masivo 10-15 palabras → [CAPA 2] filtrado 25-35 palabras → [CAPA 3] conflicto 45-55 palabras → [CAPA 4] revelación 35-45 palabras → [CAPA 5] CTA tribal 15-20 palabras. TOTAL OBLIGATORIO: 140-170 palabras habladas.",
   "plan_audiovisual_profesional": {
     "secuencia_temporal": [
       {
