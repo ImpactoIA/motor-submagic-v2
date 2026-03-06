@@ -1808,15 +1808,15 @@ export const TitanViral = () => {
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
                     <div className="bg-[#080808] rounded-xl p-3 border border-white/5 text-center">
                       <p className="text-[9px] text-gray-500 uppercase tracking-widest mb-1">Riesgo Original</p>
-                      <p className="text-3xl font-black text-red-400">{result.guion_generado.intensidad_conflictual.nivel_riesgo_original}<span className="text-base text-gray-600">/10</span></p>
+                      <p className="text-3xl font-black text-orange-400">{result.guion_generado.intensidad_conflictual?.nivel_incomodidad}<span
                     </div>
                     <div className="bg-[#080808] rounded-xl p-3 border border-white/5 text-center">
                       <p className="text-[9px] text-gray-500 uppercase tracking-widest mb-1">Incomodidad</p>
-                      <p className="text-3xl font-black text-orange-400">{result.guion_generado.intensidad_conflictual.nivel_incomodidad}<span className="text-base text-gray-600">/10</span></p>
+                      <p className="text-3xl font-black text-orange-400">{result.guion_generado.intensidad_conflictual?.nivel_incomodidad}<span
                     </div>
                     <div className="col-span-2 bg-[#080808] rounded-xl p-3 border border-white/5">
                       <p className="text-[9px] text-gray-500 uppercase tracking-widest mb-1">Decisión Impopular</p>
-                      <p className="text-xs text-red-300 font-bold leading-relaxed">{result.guion_generado.intensidad_conflictual.decision_impopular}</p>
+                      <p className="text-xs text-red-300 font-bold leading-relaxed">{result.guion_generado.intensidad_conflictual?.decision_imp
                     </div>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -1922,7 +1922,7 @@ export const TitanViral = () => {
 
             {/* 6 ─── VALIDACIÓN OLIMPO */}
             {result.guion_generado._validacion_olimpo && (
-              <div className={`rounded-xl border p-4 ${result.guion_generado._validacion_olimpo.score_validacion >= 7 ? 'bg-green-500/5 border-green-500/20' : result.guion_generado._validacion_olimpo.score_validacion >= 5 ? 'bg-yellow-500/5 border-yellow-500/20' : 'bg-orange-500/5 border-orange-500/20'}`}>
+              <div className={`rounded-xl border p-4 ${(result.guion_generado._validacion_olimpo?.score_validacion || 0) >= 7 ? 'bg-green-500/5 border-green-500/20' : (result.guion_generado._validacion_olimpo?.score_validacion || 0) >= 5 ? 'bg-yellow-500/5 border-yellow-500/20' : 'bg-orange-500/5 border-orange-500/20'}`}>
                 <div className="flex items-center gap-3 mb-3">
                   <Sparkles size={14} className={result.guion_generado._validacion_olimpo.score_validacion >= 7 ? 'text-green-400' : result.guion_generado._validacion_olimpo.score_validacion >= 5 ? 'text-yellow-400' : 'text-orange-400'} />
                   <div>
