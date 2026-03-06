@@ -1808,15 +1808,15 @@ export const TitanViral = () => {
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
                     <div className="bg-[#080808] rounded-xl p-3 border border-white/5 text-center">
                       <p className="text-[9px] text-gray-500 uppercase tracking-widest mb-1">Riesgo Original</p>
-                      <p className="text-3xl font-black text-orange-400">{result.guion_generado.intensidad_conflictual?.nivel_incomodidad}<span
+                      <p className="text-3xl font-black text-red-400">{result.guion_generado.intensidad_conflictual?.nivel_riesgo_original}</p>
                     </div>
                     <div className="bg-[#080808] rounded-xl p-3 border border-white/5 text-center">
                       <p className="text-[9px] text-gray-500 uppercase tracking-widest mb-1">Incomodidad</p>
-                      <p className="text-3xl font-black text-orange-400">{result.guion_generado.intensidad_conflictual?.nivel_incomodidad}<span
+                      <p className="text-3xl font-black text-orange-400">{result.guion_generado.intensidad_conflictual?.nivel_incomodidad}</p>
                     </div>
                     <div className="col-span-2 bg-[#080808] rounded-xl p-3 border border-white/5">
                       <p className="text-[9px] text-gray-500 uppercase tracking-widest mb-1">Decisión Impopular</p>
-                      <p className="text-xs text-red-300 font-bold leading-relaxed">{result.guion_generado.intensidad_conflictual?.decision_imp
+                      <p className="text-xs text-red-300 font-bold leading-relaxed">{result.guion_generado.intensidad_conflictual?.decision_impopular}</p>
                     </div>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
