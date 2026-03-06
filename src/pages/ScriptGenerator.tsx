@@ -623,10 +623,10 @@ export const ScriptGenerator = () => {
 
     const handleGenerate = async () => {
         // 1. Validaciones básicas
-        if (!topic.trim() && !uploadedImage) {
+        if (!topic.trim() && !selectedImage) {
             setError("Por favor escribe un tema o sube una imagen.");
             return;
-        }
+        }}
         
         // 2. Verificación de Créditos
         if (userProfile?.tier !== 'admin' && (userProfile?.credits || 0) < cost) {
@@ -1162,7 +1162,7 @@ export const ScriptGenerator = () => {
                     {/* BOTÓN PRINCIPAL */}
                     <button 
                         onClick={handleGenerate} 
-                        disabled={(!topic.trim() && !uploadedImage) || isGenerating} 
+                        disabled={(!topic.trim() && !selectedImage) || isGenerating} 
                         className="w-full py-4 bg-gradient-to-r from-pink-600 to-purple-600 text-white font-black rounded-2xl flex justify-center items-center gap-2 hover:shadow-2xl hover:shadow-pink-500/20 transition-all active:scale-95 shadow-lg group disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {isGenerating ? (
@@ -1612,7 +1612,9 @@ export const ScriptGenerator = () => {
                             )}
 
                          {/* 🖼️ MINIATURA DOMINANTE */}
-                            {(result.miniatura_dominante || result.guion_completo_data?.miniatura_dominante) && (
+                            {(result.miniatura_dominante || result.guion_completo_data?.miniatura_dominante) && (() => {
+                                const min = result.miniatura_dominante || result.guion_completo_data?.miniatura_dominante;
+                                return (
                                 <div className="mb-6 rounded-2xl overflow-hidden border border-yellow-500/30"
                                     style={{ background: 'linear-gradient(135deg, rgba(20,15,0,0.95) 0%, rgba(30,20,0,0.95) 100%)' }}>
                                     {/* Header */}
@@ -1621,7 +1623,7 @@ export const ScriptGenerator = () => {
                                             🖼️ Frase para Miniatura
                                         </span>
                                         <span className="text-[10px] font-bold text-yellow-600 bg-yellow-500/10 px-2 py-0.5 rounded-full">
-                                            {result.miniatura_dominante.plataforma_optimizada}
+                                            {min?.plataforma_optimizada}
                                         </span>
                                     </div>
                                     <div className="p-5 space-y-4">
@@ -1629,29 +1631,29 @@ export const ScriptGenerator = () => {
                                         <div className="text-center py-4 px-6 bg-black/60 rounded-xl border border-yellow-400/20">
                                             <p className="text-[10px] font-black text-yellow-600 uppercase tracking-widest mb-2">Frase Principal</p>
                                             <p className="text-2xl font-black text-white leading-tight tracking-tight">
-                                                "{result.miniatura_dominante.frase_principal}"
+                                                "{min?.frase_principal}"
                                             </p>
                                         </div>
                         {/* Variantes A/B legado / V700 */}
                                         {/* V700: variante_agresiva + variante_aspiracional */}
-                                        {(result.miniatura_dominante.variante_agresiva || result.miniatura_dominante.variante_aspiracional) ? (
+                                        {(min?.variante_agresiva || min?.variante_aspiracional) ? (
                                             <div className="grid grid-cols-2 gap-3">
-                                                {result.miniatura_dominante.variante_agresiva && (
+                                                {min?.variante_agresiva && (
                                                     <div className="bg-black/40 rounded-xl p-3 border border-red-500/20 text-center">
                                                         <span className="text-[9px] font-black text-red-400 uppercase block mb-1">⚡ Versión Agresiva</span>
-                                                        <p className="text-sm font-black text-gray-200">"{result.miniatura_dominante.variante_agresiva}"</p>
+                                                        <p className="text-sm font-black text-gray-200">"{min?.variante_agresiva}"</p>
                                                     </div>
                                                 )}
-                                                {result.miniatura_dominante.variante_aspiracional && (
+                                                {min?.variante_aspiracional && (
                                                     <div className="bg-black/40 rounded-xl p-3 border border-emerald-500/20 text-center">
                                                         <span className="text-[9px] font-black text-emerald-400 uppercase block mb-1">✨ Versión Aspiracional</span>
-                                                        <p className="text-sm font-black text-gray-200">"{result.miniatura_dominante.variante_aspiracional}"</p>
+                                                        <p className="text-sm font-black text-gray-200">"{min?.variante_aspiracional}"</p>
                                                     </div>
                                                 )}
                                             </div>
-                                        ) : result.miniatura_dominante.variantes_ab && result.miniatura_dominante.variantes_ab.length > 0 && (
+                                        ) : min?.variantes_ab && min?.variantes_ab.length > 0 && (
                                             <div className="grid grid-cols-2 gap-3">
-                                                {result.miniatura_dominante.variantes_ab.map((v: string, i: number) => (
+                                                {min?.variantes_ab.map((v: string, i: number) => (
                                                     <div key={i} className="bg-black/40 rounded-xl p-3 border border-yellow-500/10 text-center">
                                                         <span className="text-[9px] font-black text-yellow-600 uppercase block mb-1">
                                                             {i === 0 ? '⚡ Más Agresiva' : '✨ Más Aspiracional'}
@@ -1664,11 +1666,11 @@ export const ScriptGenerator = () => {
                                         {/* Scores CTR */}
                                         <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
                                             {[
-                                                { label: 'CTR Score', value: result.miniatura_dominante.ctr_score, color: '#facc15' },
-                                                { label: 'Disrupción', value: result.miniatura_dominante.nivel_disrupcion, color: '#f87171' },
-                                                { label: 'Gap Curiosidad', value: result.miniatura_dominante.nivel_gap_curiosidad, color: '#60a5fa' },
-                                                { label: 'Polarización', value: result.miniatura_dominante.nivel_polarizacion, color: '#f472b6' },
-                                                { label: 'Algoritmo', value: result.miniatura_dominante.compatibilidad_algoritmica, color: '#34d399' },
+                                                { label: 'CTR Score', value: min?.ctr_score, color: '#facc15' },
+                                                { label: 'Disrupción', value: min?.nivel_disrupcion, color: '#f87171' },
+                                                { label: 'Gap Curiosidad', value: min?.nivel_gap_curiosidad, color: '#60a5fa' },
+                                                { label: 'Polarización', value: min?.nivel_polarizacion, color: '#f472b6' },
+                                                { label: 'Algoritmo', value: min?.compatibilidad_algoritmica, color: '#34d399' },
                                             ].map(({ label, value, color }) => (
                                                 <div key={label} className="bg-black/40 rounded-xl p-2 text-center border border-white/5">
                                                     <p className="text-[9px] text-gray-500 uppercase tracking-wide mb-1">{label}</p>
@@ -1678,38 +1680,38 @@ export const ScriptGenerator = () => {
                                         </div>
                                         {/* Meta info */}
                                         <div className="flex flex-wrap gap-2">
-                                            {result.miniatura_dominante.sector_tca_activado && (
+                                            {min?.sector_tca_activado && (
                                                 <span className="text-[10px] bg-yellow-500/10 text-yellow-400 px-2 py-1 rounded-full font-bold">
-                                                    🎯 {result.miniatura_dominante.sector_tca_activado}
+                                                    🎯 {min?.sector_tca_activado}
                                                 </span>
                                             )}
-                                            {result.miniatura_dominante.mecanismo_psicologico && (
+                                            {min?.mecanismo_psicologico && (
                                                 <span className="text-[10px] bg-purple-500/10 text-purple-400 px-2 py-1 rounded-full font-bold">
-                                                    🧠 {result.miniatura_dominante.mecanismo_psicologico}
+                                                    🧠 {min?.mecanismo_psicologico}
                                                 </span>
                                             )}
-                                            {result.miniatura_dominante.coherencia_con_hook && (
+                                            {min?.coherencia_con_hook && (
                                                 <span className="text-[10px] bg-green-500/10 text-green-400 px-2 py-1 rounded-full font-bold">
                                                     ✅ Coherente con Hook
                                                 </span>
                                             )}
-                                            {result.miniatura_dominante.emocion_dominante_activada && (
+                                            {min?.emocion_dominante_activada && (
                                                 <span className="text-[10px] bg-pink-500/10 text-pink-400 px-2 py-1 rounded-full font-bold">
-                                                    💥 {result.miniatura_dominante.emocion_dominante_activada}
+                                                    💥 {min?.emocion_dominante_activada}
                                                 </span>
                                             )}
                                         </div>
                                         {/* ✅ V700: Gap de Curiosidad */}
-                                        {result.miniatura_dominante.gap_curiosidad && (
+                                        {min?.gap_curiosidad && (
                                             <div className="bg-blue-950/40 border border-blue-500/20 rounded-xl p-3">
                                                 <span className="text-[9px] font-black text-blue-400 uppercase tracking-widest block mb-1">🕳️ Gap de Curiosidad</span>
-                                                <p className="text-xs text-gray-300">{result.miniatura_dominante.gap_curiosidad}</p>
+                                                <p className="text-xs text-gray-300">{min?.gap_curiosidad}</p>
                                             </div>
                                         )}
                                         {/* ✅ V700: Compatibilidad por Plataforma */}
-                                        {result.miniatura_dominante.compatibilidad_plataformas && (
+                                        {min?.compatibilidad_plataformas && (
                                             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                                                {Object.entries(result.miniatura_dominante.compatibilidad_plataformas).map(([plat, desc]) => (
+                                                {Object.entries(min?.compatibilidad_plataformas).map(([plat, desc]) => (
                                                     <div key={plat} className="bg-black/40 rounded-xl p-2 border border-white/5 text-center">
                                                         <span className="text-[9px] font-black text-gray-400 uppercase block mb-1">{plat}</span>
                                                         <p className="text-[10px] text-gray-300 leading-tight">{desc as string}</p>
@@ -1717,14 +1719,15 @@ export const ScriptGenerator = () => {
                                                 ))}
                                             </div>
                                         )}
-                                        {(result.miniatura_dominante.razon_estrategica || result.miniatura_dominante.justificacion_estrategica) && (
+                                        {(min?.razon_estrategica || min?.justificacion_estrategica) && (
                                             <p className="text-xs text-gray-500 italic border-t border-yellow-500/10 pt-3">
-                                                💭 {result.miniatura_dominante.justificacion_estrategica || result.miniatura_dominante.razon_estrategica}
+                                                💭 {min?.justificacion_estrategica || min?.razon_estrategica}
                                             </p>
                                         )}
                                     </div>
                                 </div>
-                            )}
+                                );
+                            })()}
 
                             {/* 🔥 5 HOOKS TCA V700 — TEORÍA CIRCULAR DE ALCANCE */}
                             {result.ganchos_opcionales && result.ganchos_opcionales.length > 0 && (
@@ -1979,8 +1982,8 @@ export const ScriptGenerator = () => {
     </div>
 )}
                             
-                                {(() => { if (!result.plan_audiovisual_profesional && result.guion_completo_data?.plan_audiovisual_profesional) { result.plan_audiovisual_profesional = result.guion_completo_data.plan_audiovisual_profesional; } if (!result.miniatura_dominante && result.guion_completo_data?.miniatura_dominante) { result.miniatura_dominante = result.guion_completo_data.miniatura_dominante; } return null; })()}
-                                {result.plan_audiovisual_profesional ? (
+                                {result && (() => { if (!result.plan_audiovisual_profesional && result.guion_completo_data?.plan_audiovisual_profesional) { result.plan_audiovisual_profesional = result.guion_completo_data.plan_audiovisual_profesional; } return null; })()}
+                                {result?.plan_audiovisual_profesional ? (
                                 <div className="border-t border-gray-800 pt-6 mt-6">
                                     <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-5 flex items-center gap-2">
                                         <Video size={14}/> Plan Audiovisual Profesional
