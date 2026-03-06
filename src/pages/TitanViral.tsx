@@ -526,16 +526,6 @@ const OmegaScriptView = ({ scriptData, contentType = 'reel' }: { scriptData: any
 
           {/* PODER DEL GUION — Las 3 frases que lo harán viral */}
           {(scriptData.hook_primeros_3_segundos || scriptData.frase_de_oro || scriptData.punto_de_no_retorno || scriptData.por_que_llegara_a_millones) && (
-                <div className="text-center py-12">
-                  <p className="text-orange-400 font-black text-sm mb-2">⚠ El guion llegó vacío</p>
-                  <p className="text-gray-600 text-xs">El motor procesó el ADN pero el guion no se generó. Intenta de nuevo — el análisis ya está completo.</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* PODER DEL GUION — Las 3 frases que lo harán viral */}
-          {(scriptData.hook_primeros_3_segundos || scriptData.frase_de_oro || scriptData.punto_de_no_retorno || scriptData.por_que_llegara_a_millones) && (
             <div className="mt-8 pt-6 border-t border-white/5 space-y-3">
               <p className="text-[9px] font-black text-green-400 uppercase tracking-widest mb-3 flex items-center gap-2">
                 <Flame size={11} fill="currentColor" /> Poder del Guion — Las frases que lo harán viral
