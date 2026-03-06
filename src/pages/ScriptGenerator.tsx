@@ -623,8 +623,8 @@ export const ScriptGenerator = () => {
 
     const handleGenerate = async () => {
         // 1. Validaciones básicas
-        if (!topic.trim()) {
-            setError("Por favor escribe un tema para el guion.");
+        if (!topic.trim() && !uploadedImage) {
+            setError("Por favor escribe un tema o sube una imagen para el guion.");
             return;
         }
         
@@ -1162,7 +1162,7 @@ export const ScriptGenerator = () => {
                     {/* BOTÓN PRINCIPAL */}
                     <button 
                         onClick={handleGenerate} 
-                        disabled={!topic.trim() || isGenerating} 
+                        disabled={(!topic.trim() && !uploadedImage) || isGenerating} 
                         className="w-full py-4 bg-gradient-to-r from-pink-600 to-purple-600 text-white font-black rounded-2xl flex justify-center items-center gap-2 hover:shadow-2xl hover:shadow-pink-500/20 transition-all active:scale-95 shadow-lg group disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {isGenerating ? (
