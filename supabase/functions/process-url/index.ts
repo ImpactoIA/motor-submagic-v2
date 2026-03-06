@@ -11242,7 +11242,12 @@ if (body.closing_objective) settings.closing_objective = body.closing_objective;
         avatarDirectives = avatarMw.buildPromptWithAvatar("", activeAvatar, selectedMode);
 
         // Inyectamos en el contexto para que TODAS las funciones (Ideas, Guiones, etc.) lo lean
-        processedContext = processedContext + `\n\n[SISTEMA: INSTRUCCIONES DE PERSONALIDAD OBLIGATORIAS DEL AVATAR]:\n${avatarDirectives}`;
+        // Solo inyectar en processedContext si hay texto real del usuario — nunca contaminar si está vacío
+        if (processedContext.trim().length > 0) {
+          processedContext = processedContext + `\n\n[SISTEMA: INSTRUCCIONES DE PERSONALIDAD OBLIGATORIAS DEL AVATAR]:\n${avatarDirectives}`;
+        }
+        // Guardar directivas separadas para inyección limpia en rutas de imagen
+        (userContext as any).avatarDirectives = avatarDirectives;
         
         // También inyectamos en userContext para funciones complejas
         (userContext as any).knowledge_base_content = ((userContext as any).knowledge_base_content || "") + `\n\n[PERSONALIDAD AVATAR]: ${avatarDirectives}`;
@@ -11649,14 +11654,9 @@ case 'generador_guiones': {
         formato_narrativo: settings.formato_narrativo           || 'EDUCATIVO_AUTORIDAD',
         expertProfile:     (userContext as any).expertProfile   || null,
       });
-      const contextoAdicional = body.text || body.userInput || processedContext || "";
+      const contextoAdicional = body.text || body.userInput || "";
       const temaTexto = contextoAdicional?.trim();
-      const expertProfileStr = (userContext as any).expertProfile
-        ? `\n\n[PERFIL DEL EXPERTO]: ${JSON.stringify((userContext as any).expertProfile).substring(0, 600)}`
-        : '';
-      const avatarStr = (userContext as any).avatar_description
-        ? `\n\n[AVATAR IDEAL DEL EXPERTO]: ${(userContext as any).avatar_description}`
-        : '';
+      const avatarDir = (userContext as any).avatarDirectives || "";
 
       temaUsuario = `[TEMA PRINCIPAL DEL USUARIO]: ${temaTexto || 'Extraer de la imagen'}
 
@@ -11679,12 +11679,13 @@ PROHIBIDO: ignorar el tema del usuario.${expertProfileStr}${avatarStr}`;
       throw new Error("Error analizando la imagen. Asegúrate de que sea JPG/PNG válido.");
     }
 
-  // ── RUTA B: TEXTO LARGO (>150 chars = texto pegado) ──
+  // ── RUTA B: TEXTO LARGO (>150 chars) — SOLO si no hay imagen ──
   } else if (
+    !body.image &&
     (body.text || body.userInput || processedContext) &&
     (body.text || body.userInput || processedContext || "").length > 150
   ) {
-    const inputTexto = body.text || body.userInput || processedContext || "";
+    const inputTexto = body.text || body.userInput || (body.text || body.userInput ? "" : processedContext) || "";
     console.log('[MOTOR V600] 📝 Texto largo detectado. Ejecutando análisis completo P1+P6...');
     modoGeneracion = 'texto';
 
@@ -11761,7 +11762,7 @@ ${instruccionEstructura}
 
   // ── RUTA C: IDEA CORTA ──
   } else {
-    temaUsuario = body.text || body.userInput || processedContext || settings.topic || userContext.nicho || "Tema General";
+    temaUsuario = body.text || body.userInput || settings.topic || userContext.nicho || "Tema General";
     modoGeneracion = 'idea';
     
     if (!temaUsuario || temaUsuario === "Tema General") {
