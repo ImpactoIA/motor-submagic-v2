@@ -626,7 +626,7 @@ export const ScriptGenerator = () => {
         if (!topic.trim() && !selectedImage) {
             setError("Por favor escribe un tema o sube una imagen.");
             return;
-        }}
+        }
         
         // 2. Verificación de Créditos
         if (userProfile?.tier !== 'admin' && (userProfile?.credits || 0) < cost) {
