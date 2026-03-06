@@ -6240,7 +6240,7 @@ function getCopyStrategy(objetivo: string): string {
   return strategies['Educar / Valor'];
 }
 
-// ✅ FACEBOOK SCRAPER V2 — Video URL + Whisper fallback
+// ✅ FACEBOOK SCRAPER V2 — timeout seguro + videoUrl + Whisper fallback
 async function scrapeFacebook(url: string): Promise<{
   videoUrl: string;
   description: string;
@@ -6256,25 +6256,22 @@ async function scrapeFacebook(url: string): Promise<{
   try {
     console.log('[SCRAPER] 👍 Iniciando scraping de Facebook:', url);
     const client = new ApifyClient({ token: apifyToken });
-    const run = await client.actor('apify/facebook-video-scraper').call({
-      startUrls: [{ url }],
-      resultsLimit: 1,
-    }, { waitSecs: 90 });
-    const { items } = await client.dataset(run.defaultDatasetId).listItems();
-    if (!items || items.length === 0) {
-      // Fallback al posts scraper
-      console.warn('[SCRAPER] ⚠️ Facebook video scraper falló, probando posts...');
-      const run2 = await client.actor('apify/facebook-posts-scraper').call({
+    const fbRun = await withTimeout(
+      client.actor('apify/facebook-posts-scraper').call({
         startUrls: [{ url }],
         resultsLimit: 1,
-      }, { waitSecs: 60 });
-      const { items: items2 } = await client.dataset(run2.defaultDatasetId).listItems();
-      if (!items2 || items2.length === 0) {
-        return { videoUrl: url, description: '', duration: 0 };
-      }
-      const p = items2[0] as any;
-      const transcript2 = p.text || p.message || p.description || '';
-      return { videoUrl: p.videoUrl || url, description: transcript2, transcript: transcript2, duration: p.videoDuration || 0 };
+      }, { waitSecs: 50 }),
+      50000,
+      null
+    );
+    if (!fbRun) {
+      console.warn('[SCRAPER] ⚠️ Facebook timeout 50s');
+      return { videoUrl: url, description: '', duration: 0 };
+    }
+    const { items } = await client.dataset(fbRun.defaultDatasetId).listItems();
+    if (!items || items.length === 0) {
+      console.warn('[SCRAPER] ⚠️ Facebook no devolvió items');
+      return { videoUrl: url, description: '', duration: 0 };
     }
     const v = items[0] as any;
     const bestVideoUrl = v.videoUrl || v.videoHdUrl || v.videoSdUrl || url;
@@ -10350,7 +10347,11 @@ async function scrapeYouTubeComments(url: string): Promise<{
 // 🎬 FUNCIONES DE SCRAPING Y WHISPER (100% PRESERVADAS)
 // ==================================================================================
 
-function detectPlatform(url: string): string {
+function withTimeout<T>(promise: Promise<T>, ms: number, fallback: T): Promise<T> {
+  const timeout = new Promise<T>((resolve) => setTimeout(() => resolve(fallback), ms));
+  return Promise.race([promise, timeout]);
+}
+
   if (url.includes('tiktok.com') || url.includes('vm.tiktok.com') || url.includes('vt.tiktok.com')) return 'tiktok';
   if (url.includes('instagram.com') || url.includes('instagr.am')) return 'instagram';
   if (url.includes('youtube.com') || url.includes('youtu.be') || url.includes('youtube.com/shorts')) return 'youtube';
@@ -10373,18 +10374,25 @@ async function scrapeTikTok(url: string): Promise<{
   try {
     console.log('[SCRAPER] 🎵 Iniciando scraping de TikTok:', url);
     const client = new ApifyClient({ token: apifyToken });
-    const run = await client.actor('clockworks/tiktok-scraper').call({
-      postURLs: [url],
-      resultsPerPage: 1,
-      shouldDownloadVideos: false,
-      shouldDownloadCovers: false,
-      shouldDownloadSubtitles: true,
-      subtitlesLanguage: 'es',
-      subtitlesLanguage2: 'en',
-      subtitlesLanguage3: 'pt',
-      subtitlesLanguage4: 'fr',
-      proxyConfiguration: { useApifyProxy: true },
-    }, { waitSecs: 90 });
+    const runResult = await withTimeout(
+      client.actor('clockworks/tiktok-scraper').call({
+        postURLs: [url],
+        resultsPerPage: 1,
+        shouldDownloadVideos: false,
+        shouldDownloadCovers: false,
+        shouldDownloadSubtitles: true,
+        subtitlesLanguage: 'es',
+        subtitlesLanguage2: 'en',
+        proxyConfiguration: { useApifyProxy: true },
+      }, { waitSecs: 55 }),
+      55000,
+      null
+    );
+    if (!runResult) {
+      console.warn('[SCRAPER] ⚠️ TikTok timeout 55s — continuando sin scraper');
+      return { videoUrl: url, description: '', transcript: '', duration: 0 };
+    }
+    const run = runResult;
     const { items } = await client.dataset(run.defaultDatasetId).listItems();
     if (!items || items.length === 0) {
       console.warn('[SCRAPER] ⚠️ TikTok no devolvió items');
@@ -10442,12 +10450,20 @@ async function scrapeInstagram(url: string): Promise<{
   try {
     console.log('[SCRAPER] 📸 Iniciando scraping de Instagram:', url);
     const client = new ApifyClient({ token: apifyToken });
-    const run = await client.actor('apify/instagram-scraper').call({
-      directUrls: [url],
-      resultsType: 'posts',
-      resultsLimit: 1,
-    }, { waitSecs: 90 });
-    const { items } = await client.dataset(run.defaultDatasetId).listItems();
+    const igRun = await withTimeout(
+      client.actor('apify/instagram-scraper').call({
+        directUrls: [url],
+        resultsType: 'posts',
+        resultsLimit: 1,
+      }, { waitSecs: 55 }),
+      55000,
+      null
+    );
+    if (!igRun) {
+      console.warn('[SCRAPER] ⚠️ Instagram timeout 55s');
+      return { videoUrl: url, description: '', duration: 0 };
+    }
+    const { items } = await client.dataset(igRun.defaultDatasetId).listItems();
     if (!items || items.length === 0) {
       console.warn('[SCRAPER] ⚠️ Instagram no devolvió items');
       return { videoUrl: url, description: '', duration: 0 };
@@ -10487,15 +10503,23 @@ async function scrapeYouTube(url: string): Promise<{
   try {
     console.log('[SCRAPER] 🎥 Iniciando scraping de YouTube:', url);
     const client = new ApifyClient({ token: apifyToken });
-    const run = await client.actor('streamers/youtube-scraper').call({
-      startUrls: [{ url }],
-      maxResults: 1,
-      subtitlesLanguage: 'es',
-      subtitlesLanguage2: 'en',
-      downloadSubtitles: true,
-      subtitlesFormat: 'plaintext',
-    }, { waitSecs: 90 });
-    const { items } = await client.dataset(run.defaultDatasetId).listItems();
+    const ytRun = await withTimeout(
+      client.actor('streamers/youtube-scraper').call({
+        startUrls: [{ url }],
+        maxResults: 1,
+        subtitlesLanguage: 'es',
+        subtitlesLanguage2: 'en',
+        downloadSubtitles: true,
+        subtitlesFormat: 'plaintext',
+      }, { waitSecs: 55 }),
+      55000,
+      null
+    );
+    if (!ytRun) {
+      console.warn('[SCRAPER] ⚠️ YouTube timeout 55s');
+      return { videoUrl: url, description: '', transcript: '', duration: 0 };
+    }
+    const { items } = await client.dataset(ytRun.defaultDatasetId).listItems();
     if (!items || items.length === 0) {
       console.warn('[SCRAPER] ⚠️ YouTube streamers falló, probando bernardo...');
       const run2 = await client.actor('bernardo/youtube-scraper').call({
