@@ -888,7 +888,7 @@ export const ScriptGenerator = () => {
                         <textarea 
                             value={topic}
                             onChange={(e) => setTopic(e.target.value)}
-                            placeholder="Ej: Cómo crear contenido viral en TikTok sin mostrar la cara..."
+                            placeholder={uploadedImage ? "Opcional: ¿Qué aspecto de la imagen te interesa? (ej: el punto 3, la parte del cierre...)" : "Ej: Por qué el 90% de emprendedores fracasan en su primer año..."}
                             className="w-full bg-gray-900 border border-gray-800 rounded-xl p-3 text-white text-sm focus:border-indigo-500 outline-none h-24 resize-none transition-all focus:ring-1 focus:ring-indigo-500/50"
                         />
                         
