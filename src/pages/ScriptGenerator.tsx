@@ -2133,7 +2133,7 @@ export const ScriptGenerator = () => {
                                         ))}
                                     </div>
                                 </div>
-                            )}
+                            ) : null}
                         </div>
                     ) : (
                         <div className="h-full border-2 border-dashed border-gray-800 rounded-3xl flex flex-col items-center justify-center text-center p-12 bg-gray-900/20 min-h-[600px]">
