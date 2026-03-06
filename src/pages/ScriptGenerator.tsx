@@ -1612,7 +1612,7 @@ export const ScriptGenerator = () => {
                             )}
 
                          {/* 🖼️ MINIATURA DOMINANTE */}
-                            {result.miniatura_dominante && (
+                            {(result.miniatura_dominante || result.guion_completo_data?.miniatura_dominante) && (
                                 <div className="mb-6 rounded-2xl overflow-hidden border border-yellow-500/30"
                                     style={{ background: 'linear-gradient(135deg, rgba(20,15,0,0.95) 0%, rgba(30,20,0,0.95) 100%)' }}>
                                     {/* Header */}
@@ -1978,8 +1978,8 @@ export const ScriptGenerator = () => {
         )}
     </div>
 )}
-                            {/* ✅ V700 — PLAN AUDIOVISUAL PROFESIONAL */}
-                            {result.plan_audiovisual_profesional ? (
+                            
+                                {(() => { if (!result.plan_audiovisual_profesional && result.guion_completo_data?.plan_audiovisual_profesional) { result.plan_audiovisual_profesional = result.guion_completo_data.plan_audiovisual_profesional; } if (!result.miniatura_dominante && result.guion_completo_data?.miniatura_dominante) { result.miniatura_dominante = result.guion_completo_data.miniatura_dominante; } return null; })()}
                                 <div className="border-t border-gray-800 pt-6 mt-6">
                                     <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-5 flex items-center gap-2">
                                         <Video size={14}/> Plan Audiovisual Profesional
@@ -1987,10 +1987,10 @@ export const ScriptGenerator = () => {
                                     </label>
 
                                     {/* Secuencia Temporal */}
-                                    {result.plan_audiovisual_profesional.secuencia_temporal?.length > 0 && (
+                                    {result.plan_audiovisual_profesional?.secuencia_temporal?.length > 0 && (
                                         <div className="mb-4 space-y-2">
                                             <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2">🎬 Secuencia Temporal</p>
-                                            {result.plan_audiovisual_profesional.secuencia_temporal.map((seg: any, idx: number) => (
+                                            {result.plan_audiovisual_profesional?.secuencia_temporal.map((seg: any, idx: number) => (
                                                 <div key={idx} className="flex gap-3 p-3 bg-gray-900/30 rounded-xl border border-gray-800/50 hover:bg-gray-900 transition-colors">
                                                     <span className="text-xs font-black text-violet-400 w-14 text-right font-mono shrink-0">{seg.tiempo}</span>
                                                     <div className="flex-1 space-y-1">
@@ -2009,11 +2009,11 @@ export const ScriptGenerator = () => {
                                     )}
 
                                     {/* B-Rolls Estratégicos */}
-                                    {result.plan_audiovisual_profesional.b_rolls_estrategicos?.length > 0 && (
+                                    {result.plan_audiovisual_profesional?.b_rolls_estrategicos?.length > 0 && (
                                         <div className="mb-4">
                                             <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2">🎞️ B-Rolls Estratégicos</p>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                                {result.plan_audiovisual_profesional.b_rolls_estrategicos.map((br: any, idx: number) => (
+                                                {result.plan_audiovisual_profesional?.b_rolls_estrategicos.map((br: any, idx: number) => (
                                                     <div key={idx} className="bg-green-950/20 border border-green-500/15 rounded-xl p-3">
                                                         <div className="flex justify-between items-center mb-1">
                                                             <span className="text-[9px] font-black text-green-400 uppercase">{br.momento}</span>
@@ -2030,7 +2030,7 @@ export const ScriptGenerator = () => {
                                     {/* Ritmo + Música + Efectos en grid */}
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                                         {/* Ritmo de Cortes */}
-                                        {result.plan_audiovisual_profesional.ritmo_de_cortes && (
+                                        {result.plan_audiovisual_profesional?.ritmo_de_cortes && (
                                             <div className="bg-indigo-950/20 border border-indigo-500/20 rounded-xl p-3">
                                                 <p className="text-[9px] font-black text-indigo-400 uppercase tracking-widest mb-2">✂️ Ritmo de Cortes</p>
                                                 <p className="text-sm font-black text-white">{result.plan_audiovisual_profesional.ritmo_de_cortes.patron_general}</p>
@@ -2044,7 +2044,7 @@ export const ScriptGenerator = () => {
                                             </div>
                                         )}
                                         {/* Música */}
-                                        {result.plan_audiovisual_profesional.musica && (
+                                        {result.plan_audiovisual_profesional?.musica && (
                                             <div className="bg-pink-950/20 border border-pink-500/20 rounded-xl p-3">
                                                 <p className="text-[9px] font-black text-pink-400 uppercase tracking-widest mb-2">🎵 Música</p>
                                                 <p className="text-sm font-black text-white">{result.plan_audiovisual_profesional.musica.tipo}</p>
@@ -2058,7 +2058,7 @@ export const ScriptGenerator = () => {
                                             </div>
                                         )}
                                         {/* Efectos de Retención */}
-                                        {result.plan_audiovisual_profesional.efectos_de_retencion && (
+                                        {result.plan_audiovisual_profesional?.efectos_de_retencion && (
                                             <div className="bg-orange-950/20 border border-orange-500/20 rounded-xl p-3">
                                                 <p className="text-[9px] font-black text-orange-400 uppercase tracking-widest mb-2">⚡ Retención</p>
                                                 {result.plan_audiovisual_profesional.efectos_de_retencion.sonido_transicion && (
