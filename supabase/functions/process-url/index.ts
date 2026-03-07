@@ -3956,80 +3956,12 @@ La meta NO es cumplir un checklist. La meta es dominar la percepción.
 📤 FORMATO DE SALIDA JSON OBLIGATORIO (V600)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+📝 CAMPO teleprompter_script = EL GUION FINAL
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔥 AHORA ESCRIBE EL GUION. CAMPO: teleprompter_script
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Eres el mejor escritor de guiones virales del mundo hispano.
-Has estudiado cada video que llegó a 10M+ de vistas. Sabes exactamente por qué la gente para el scroll, por qué se queda, por qué guarda y por qué comparte.
-No escribes "contenido". Escribes momentos que cambian cómo la gente piensa.
-Este guion lo graba una vez. Lo puede ver un millón de personas.
-
-REGLA #0 — LO MÁS IMPORTANTE:
-El teleprompter_script es TEXTO HABLADO PURO. Solo lo que el creador dice en voz alta.
-CERO etiquetas: sin [CAPA], sin [TEXTO EN PANTALLA], sin [Zoom], sin instrucciones.
-Entre 140 y 170 palabras exactas. Ni una más. Ni una menos.
-Saltos de línea donde el creador respira. "..." para pausa de 1-2s. Línea en blanco para pausa de impacto.
-
-REGLA #1 — EL HOOK ES TODO:
-Las primeras 10 palabras deciden si el algoritmo distribuye a 1.000 personas o a 1.000.000.
-El hook NO presenta al experto. NO da contexto. NO menciona el nicho técnico.
-El hook golpea directo al ego, al miedo, al dinero, al tiempo, a las relaciones o a la libertad.
-Si alguien puede predecir la segunda frase después de leer la primera → el hook es débil. Reescríbelo.
-HOOKS QUE LLEGAN A MILLONES (aprende el patrón):
-— "Estás trabajando el doble para ganar la mitad. Y tienes la culpa."
-— "El consejo que más te repiten es exactamente lo que te tiene estancado."
-— "Hay un error que cometen el 94% de los que no logran escalar. Lo cometí yo también."
-— "Nadie te dice esto porque a ellos les conviene que no lo sepas."
-HOOKS QUE MUEREN EN 300 VISTAS:
-— "Hoy quiero hablarte de algo muy importante..."
-— "¿Sabías que la desconexión espiritual afecta tus negocios?"
-— "Si eres emprendedor, esto te va a interesar..."
-
-REGLA #2 — EL CONFLICTO DEBE HACER DAÑO:
-No describas el problema. Haz que el avatar lo SIENTA en el estómago.
-Nombra al culpable real y específico — no "el sistema" genérico.
-El culpable es una creencia concreta, una narrativa específica, una industria que los engañó.
-El avatar debe pensar: "Esto es exactamente lo que me pasó. ¿Cómo lo saben?"
-
-REGLA #3 — LA TENSIÓN ES LA RETENCIÓN:
-En el segundo 20-30 debe haber una pregunta abierta, una contradicción sin resolver, o una historia a la mitad.
-El avatar no puede irse porque si se va no sabe cómo termina.
-Este loop abierto es lo que hace que la gente vea hasta el final.
-
-REGLA #4 — LA FRASE DE ORO ES OBLIGATORIA:
-Una frase de máximo 10 palabras que el avatar guarda en su teléfono, manda por WhatsApp, o postea en sus stories.
-No explica. No informa. REENCUADRA. Hace que el mundo se vea diferente después de leerla.
-FRASES DE ORO REALES (aprende la estructura):
-— "No fracasas por falta de talento. Fracasas por falta de claridad."
-— "El problema no es tu audiencia. El problema es tu mensaje."
-— "Más trabajo no es más dinero. Es más cansancio disfrazado de progreso."
-— "No te falta motivación. Te falta un sistema que no dependa de ella."
-Si la frase de oro no es digna de ser guardada → no está lista. Crea otra.
-
-REGLA #5 — EL CTA ELIGE, NO PIDE:
-PROHIBIDO ABSOLUTO: "dale like", "suscríbete", "sígueme si te gustó", "no olvides compartir".
-El avatar no siente que le piden algo. Siente que fue seleccionado para una tribu exclusiva.
-CTA QUE CONSTRUYE TRIBU:
-— "Si ves el dinero diferente a como te lo enseñaron, este es tu lugar."
-— "Esto es para los que deciden, no para los que esperan que algo cambie solo."
-— "Si ya no crees en los atajos, aquí pensamos igual."
-Objetivo de cierre: ${closingConfig.label} — mecánica: ${closingConfig.mecanica}
-
-CONTEXTO DEL EXPERTO:
-Posicionamiento: ${contexto?.expertProfile?.unique_positioning || 'autoridad que piensa diferente al consenso'}
-Enemigo del avatar: ${contexto?.expertProfile?.enemy || 'la narrativa dominante de la industria'}
-Transformación: ${contexto?.expertProfile?.transformation_promise || 'del punto A al punto B por el camino real'}
-Intensidad: ${intensityConfig.label} — ${intensityConfig.instruccion}
-Plataforma: ${platLabel}
-
-ANTES DE ESCRIBIR EL VALOR FINAL RESPONDE INTERNAMENTE:
-□ ¿Las primeras 10 palabras harían que alguien detenga el scroll a las 2am? Si no → reescribe
-□ ¿El conflicto menciona algo tan específico que el avatar siente que lo espiaron? Si no → añade especificidad
-□ ¿Hay algo sin resolver en el segundo 20-30 que obliga a quedarse? Si no → inserta el loop
-□ ¿La frase de oro es digna de un screenshot? Si no → crea una mejor
-□ ¿El CTA selecciona una tribu sin pedir nada? Si no → reescríbelo
-□ ¿Cuenta entre 140-170 palabras? Si no → ajusta
+Escribe el guion completo aplicando TODO lo que procesaron los motores anteriores.
+El guion debe reflejar: el formato narrativo elegido, la intensidad, la plataforma, el perfil del experto, el sector TCA, el conflicto del pre-análisis P1.
+Solo texto hablado. Sin etiquetas. Sin corchetes. Entre 140 y 170 palabras.
 
 Responde SOLO con este JSON válido. Sin markdown, sin texto extra, sin explicaciones.
 
@@ -4102,7 +4034,7 @@ Responde SOLO con este JSON válido. Sin markdown, sin texto extra, sin explicac
       "tca_sector": "Dinero / Estatus / Libertad / Relaciones"
     }
   ],
-  "guion_completo": "",
+  "guion_completo": "NO_GENERAR",
   "micro_loops_detectados": [
     {
       "tipo": "apertura",
@@ -4202,7 +4134,7 @@ Responde SOLO con este JSON válido. Sin markdown, sin texto extra, sin explicac
     "umbral_dominancia_superado": true,
     "razonamiento": "Explicación de cómo se calculó cada score y qué ajustes se hicieron para superar viral_index ≥ 85, disrupcion ≥ 75, control_frame ≥ 75 y diferenciacion ≥ 75"
   },
-  "teleprompter_script": "ESCRIBE AQUÍ EL GUION. SOLO TEXTO HABLADO. 140-170 PALABRAS. Hook que detiene el scroll en sector universal, conflicto que duele, loop que obliga a quedarse, frase de oro screenshoteable, CTA que selecciona tribu. SIN etiquetas. SOLO lo que el creador lee a cámara.",
+  "teleprompter_script": "",
   "plan_audiovisual_profesional": {
     "secuencia_temporal": [
       {
