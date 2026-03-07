@@ -7214,11 +7214,11 @@ async function ejecutarIngenieriaInversaPro(
   let tokensTotal = 0;
   let outputActual: any = null;
 
-  console.log("[MOTOR PRO V2] Tipo: " + contentType.toUpperCase() + " | Nicho: " + nichoUsuario.substring(0, 60));
-  console.log("[MOTOR PRO V2]  Guion minimo: " + minWords + " palabras");
+  console.log("MOTOR_PRO_V2 Tipo: " + contentType.toUpperCase() + " | Nicho: " + nichoUsuario.substring(0, 60));
+  console.log("MOTOR_PRO_V2  Guion minimo: " + minWords + " palabras");
 
   try {
-    console.log("[MOTOR PRO V2]  FASE 1: Extrayendo ADN forense...");
+    console.log("MOTOR_PRO_V2  FASE 1: Extrayendo ADN forense...");
 
   // Recortar expertProfile para FASE 1 - solo campos clave, sin bases de conocimiento enormes
   const expertProfileFase1 = contexto.expertProfile ? {
@@ -7278,7 +7278,7 @@ async function ejecutarIngenieriaInversaPro(
     
     //  RETRY si GPT devolvio vacio o '{}'
     if (!rawFase1Content || rawFase1Content.trim() === '{}' || rawFase1Content.trim().length < 50) {
-      console.warn('[MOTOR PRO V2]  GPT devolvio vacio en FASE 1 - reintentando en 3s...');
+      console.warn('MOTOR_PRO_V2  GPT devolvio vacio en FASE 1 - reintentando en 3s...');
       await new Promise(resolve => setTimeout(resolve, 3000));
       const retryFase1 = await openai.chat.completions.create({
         model: 'gpt-4o',
@@ -7291,7 +7291,7 @@ async function ejecutarIngenieriaInversaPro(
         max_tokens: TOKENS_FASE1
       });
       rawFase1Content = retryFase1.choices[0].message.content || '{}';
-      console.log('[MOTOR PRO V2]  Retry FASE 1 completado. Tamano:', rawFase1Content.length);
+      console.log('MOTOR_PRO_V2  Retry FASE 1 completado. Tamano:', rawFase1Content.length);
     }
 
     console.log('--- RAW OUTPUT DESDE OPENAI (FASE 1) ---');
@@ -7301,7 +7301,7 @@ async function ejecutarIngenieriaInversaPro(
     try {
       adnForense = JSON.parse(rawFase1Content);
     } catch (jsonErr) {
-      console.warn('[MOTOR PRO V2]  JSON FASE 1 fallo el parseo inicial. Intentando reparar...');
+      console.warn('MOTOR_PRO_V2  JSON FASE 1 fallo el parseo inicial. Intentando reparar...');
       
       let raw = rawFase1Content;
       const openBraces = (raw.match(/\{/g) || []).length;
@@ -7312,9 +7312,9 @@ async function ejecutarIngenieriaInversaPro(
       
       try { 
           adnForense = JSON.parse(raw); 
-          console.log('[MOTOR PRO V2]  JSON FASE 1 reparado exitosamente.');
+          console.log('MOTOR_PRO_V2  JSON FASE 1 reparado exitosamente.');
       } catch (secondErr: any) { 
-          console.error('[MOTOR PRO V2]  Fallo total al reparar JSON FASE 1:', secondErr.message);
+          console.error('MOTOR_PRO_V2  Fallo total al reparar JSON FASE 1:', secondErr.message);
           adnForense = {}; 
       }
     }
@@ -7331,7 +7331,7 @@ async function ejecutarIngenieriaInversaPro(
     };
     // Caso 1: GPT envolvio todo en "motores_forenses" u otro objeto padre
     if (adnForense.motores_forenses && typeof adnForense.motores_forenses === 'object') {
-      console.warn('[MOTOR PRO V2]  GPT uso wrapper "motores_forenses" - aplanando...');
+      console.warn('MOTOR_PRO_V2  GPT uso wrapper "motores_forenses" - aplanando...');
       const wrapped = adnForense.motores_forenses;
       adnForense = { ...adnForense, ...wrapped };
       delete adnForense.motores_forenses;
@@ -7340,7 +7340,7 @@ async function ejecutarIngenieriaInversaPro(
     // Caso 2: GPT devolvio claves MOTOR_N o motor_N
     const hasMotorKeys = Object.keys(adnForense).some(k => /^MOTOR_\d|^motor_\d/i.test(k));
     if (hasMotorKeys) {
-      console.warn('[MOTOR PRO V2]  GPT devolvio claves MOTOR_N - normalizando automaticamente...');
+      console.warn('MOTOR_PRO_V2  GPT devolvio claves MOTOR_N - normalizando automaticamente...');
       for (const [motorKey, realKey] of Object.entries(MOTOR_KEY_MAP)) {
         if (adnForense[motorKey] !== undefined) {
           adnForense[realKey] = adnForense[motorKey];
@@ -7370,12 +7370,12 @@ async function ejecutarIngenieriaInversaPro(
     const motorosMinimos = ['adn_estructura', 'adn_profundo', 'idea_nuclear_ganadora'];
     const tieneMinimoViable = motorosMinimos.some(m => adnForense[m]);
     if (Object.keys(adnForense).length === 0 || !tieneMinimoViable) {
-        console.error('[MOTOR PRO V2]  FASE 1 sin motores minimos. Claves recibidas:', Object.keys(adnForense).join(', '));
+        console.error('MOTOR_PRO_V2  FASE 1 sin motores minimos. Claves recibidas:', Object.keys(adnForense).join(', '));
         throw new Error("El video es demasiado complejo y el motor fallo al extraer el ADN. Por favor, intenta de nuevo.");
     }
     // Si falta score_viral_estructural, construir uno minimo para no bloquear FASE 2
     if (!adnForense.score_viral_estructural) {
-        console.warn('[MOTOR PRO V2]  score_viral_estructural ausente - construyendo minimo de emergencia');
+        console.warn('MOTOR_PRO_V2  score_viral_estructural ausente - construyendo minimo de emergencia');
         adnForense.score_viral_estructural = {
             viralidad_estructural_global: 65,
             retencion_estructural: 65,
@@ -7393,7 +7393,7 @@ async function ejecutarIngenieriaInversaPro(
 
     //  Reconstruir motores criticos si llegaron vacios por truncado
     if (!adnForense.adn_profundo || !adnForense.adn_profundo.genero_narrativo) {
-      console.warn('[MOTOR PRO V2]  adn_profundo ausente - construyendo desde adn_estructura');
+      console.warn('MOTOR_PRO_V2  adn_profundo ausente - construyendo desde adn_estructura');
       adnForense.adn_profundo = {
         genero_narrativo: adnForense.adn_estructura?.patron_narrativo_detectado ? 'Autoridad estrategica' : 'Confesional crudo',
         emocion_nucleo: adnForense.curva_emocional?.emocion_dominante || 'Indignacion',
@@ -7419,9 +7419,9 @@ async function ejecutarIngenieriaInversaPro(
     
     //  Delay anti-TPM reducido para evitar Timeout
     await new Promise(resolve => setTimeout(resolve, 500))
-    console.log(`[MOTOR PRO V2]  Genero: ${adnForense.adn_profundo?.genero_narrativo} | Emocion: ${adnForense.adn_profundo?.emocion_nucleo}`);
+    console.log(`MOTOR_PRO_V2  Genero: ${adnForense.adn_profundo?.genero_narrativo} | Emocion: ${adnForense.adn_profundo?.emocion_nucleo}`);
 
-    console.log(`[MOTOR PRO V2]  FASE 2: Generando guion elite...`);
+    console.log(`MOTOR_PRO_V2  FASE 2: Generando guion elite...`);
 
     const expertProfileFase2 = contexto.expertProfile ? {
       mechanism_name: contexto.expertProfile.mechanism_name,
@@ -7443,7 +7443,7 @@ async function ejecutarIngenieriaInversaPro(
     const TOKENS_FASE2 = esMasterclass ? 7500 : contentType === 'long' ? 6500 : 5500;
 
     // Esperar reducido para evitar Timeout
-    console.log('[MOTOR PRO V2]  Limpiando ventana TPM...');
+    console.log('MOTOR_PRO_V2  Limpiando ventana TPM...');
     await new Promise(resolve => setTimeout(resolve, 100));
 
     // Comprimir prompt FASE 2: maximo 18000 chars -> seguro con 30k TPM limpio
@@ -7467,7 +7467,7 @@ async function ejecutarIngenieriaInversaPro(
 
     const guionTexto = outputGuion.guion_adaptado_espejo || outputGuion.guion_adaptado_al_nicho || outputGuion.guion || outputGuion.script || outputGuion.contenido || '';
     const palabrasFase2 = guionTexto.trim().split(/\s+/).filter(Boolean).length;
-    console.log(`[MOTOR PRO V2]  Palabras guion fase 2: ${palabrasFase2} (minimo: ${minWords}) | Claves FASE2: ${Object.keys(outputGuion).join(', ')}`);
+    console.log(`MOTOR_PRO_V2  Palabras guion fase 2: ${palabrasFase2} (minimo: ${minWords}) | Claves FASE2: ${Object.keys(outputGuion).join(', ')}`);
     // Normalizar clave si GPT uso nombre diferente
     if (!outputGuion.guion_adaptado_espejo && guionTexto) {
       outputGuion.guion_adaptado_espejo = guionTexto;
@@ -7477,7 +7477,7 @@ async function ejecutarIngenieriaInversaPro(
     let guionFinalData = outputGuion;
 
     if (palabrasFase2 < minWords) {
-      console.warn(`[MOTOR PRO V2]  Guion corto (${palabrasFase2}/${minWords}). Refinando...`);
+      console.warn(`MOTOR_PRO_V2  Guion corto (${palabrasFase2}/${minWords}). Refinando...`);
 
       const promptRef = `Escritor de guiones virales. El guion tiene solo ${palabrasFase2} palabras. Necesitas MINIMO ${minWords} palabras.
 ADN: Genero: ${adnForense.adn_profundo?.genero_narrativo} | Emocion: ${adnForense.adn_profundo?.emocion_nucleo}
@@ -7530,7 +7530,7 @@ DEVUELVE UNICAMENTE JSON valido. Sin markdown. Sin backticks.
       const guionRefRaw = outputRef.guion_adaptado_espejo || outputRef.guion_adaptado_al_nicho || outputRef.guion || outputRef.script || outputRef.contenido || '';
       const guionRefStr = typeof guionRefRaw === 'string' ? guionRefRaw : JSON.stringify(guionRefRaw);
       const palabrasRef = guionRefStr.trim().split(/\s+/).filter(Boolean).length;
-      console.log(`[MOTOR PRO V2]  Post-refinamiento: ${palabrasRef} palabras | Claves: ${Object.keys(outputRef).join(', ')}`);
+      console.log(`MOTOR_PRO_V2  Post-refinamiento: ${palabrasRef} palabras | Claves: ${Object.keys(outputRef).join(', ')}`);
       if (palabrasRef > palabrasFase2) {
         // Normalizar: forzar el guion al campo correcto antes de guardar
         if (!outputRef.guion_adaptado_espejo && guionRefStr) {
@@ -7572,7 +7572,7 @@ DEVUELVE UNICAMENTE JSON valido. Sin markdown. Sin backticks.
     );
 
     if (motoresFaltantes.length > 0) {
-      console.warn(`[MOTOR PRO V2]  Motores incompletos: ${motoresFaltantes.join(", ")}`);
+      console.warn(`MOTOR_PRO_V2  Motores incompletos: ${motoresFaltantes.join(", ")}`);
     }
 
     outputActual._motores_faltantes  = motoresFaltantes;
@@ -7614,15 +7614,15 @@ DEVUELVE UNICAMENTE JSON valido. Sin markdown. Sin backticks.
       nivel_fidelidad:   `${scoreActual}%`
     };
 
-    console.log(`[MOTOR PRO V2]  PROCESO COMPLETO`);
-    console.log(`[MOTOR PRO V2]  Score ADN: ${scoreActual}/100 | Palabras guion: ${palabrasFinales} | Tokens: ${tokensTotal}`);
+    console.log(`MOTOR_PRO_V2  PROCESO COMPLETO`);
+    console.log(`MOTOR_PRO_V2  Score ADN: ${scoreActual}/100 | Palabras guion: ${palabrasFinales} | Tokens: ${tokensTotal}`);
 
     return { data: outputActual, tokens: tokensTotal };
 
   } catch (error: any) {
-    console.error("[MOTOR PRO V2]  Error Critico:", error);
+    console.error("MOTOR_PRO_V2  Error Critico:", error);
     if (outputActual && outputActual.adn_estructura) {
-      console.warn("[MOTOR PRO V2]  Recuperando resultado parcial.");
+      console.warn("MOTOR_PRO_V2  Recuperando resultado parcial.");
       return { data: outputActual, tokens: tokensTotal };
     }
     throw new Error("Fallo critico en Ingenieria Inversa Pro: " + error.message);
@@ -8464,7 +8464,7 @@ let resultadoFase2: any = {};
 try {
   resultadoFase2 = JSON.parse(rawFase2);
 } catch (jsonErr) {
-  console.warn('[MOTOR PRO V2]  JSON truncado - intentando reparar...');
+  console.warn('MOTOR_PRO_V2  JSON truncado - intentando reparar...');
   // Reparar JSON cortado: cerrar strings y objetos abiertos
   let reparado = rawFase2.trimEnd();
   // Cerrar string abierta si termina sin comilla
@@ -8479,9 +8479,9 @@ try {
   while (abiertasLlave-- > 0)  reparado += '}';
   try {
     resultadoFase2 = JSON.parse(reparado);
-    console.log('[MOTOR PRO V2]  JSON reparado exitosamente');
+    console.log('MOTOR_PRO_V2  JSON reparado exitosamente');
   } catch (e2) {
-    console.error('[MOTOR PRO V2]  JSON irreparable - usando fallback minimo');
+    console.error('MOTOR_PRO_V2  JSON irreparable - usando fallback minimo');
     resultadoFase2 = {
       guion_adaptado_al_nicho: rawFase2.substring(0, 3000),
       guion_tecnico_completo:  rawFase2.substring(0, 3000),
