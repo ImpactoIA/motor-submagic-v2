@@ -7236,7 +7236,6 @@ async function ejecutarIngenieriaInversaPro(
   // ✅ NORMALIZACIÓN DE DATOS (Plan Estratégico — Paso 2)
   const contentNormalizado = content
     .replace(/#\w+/g, '')
-    .replace(/(.{20,}?)\1+/g, '$1')
     .replace(/\s{3,}/g, '\n\n')
     .trim()
     .slice(0, 3000);
