@@ -566,17 +566,17 @@ const MEMORIA_SISTEMA: SystemMemory = {
 // ==================================================================================
 
 const VIDEO_FORMATS_STR = `12 FORMATOS VISUALES WINNER ROCKET:
-1.Hablando a cámara 2.Entrevista/Podcast 3.POV 4.Storytelling Cinemático 5.Demo/Tutorial 6.Testimonio 7.Gancho-Corte-Solución 8.Texto+Música 9.Vlog 10.Sketch 11.Micro-Clase 60s 12.Mito vs Realidad`;
+1.Hablando a camara 2.Entrevista/Podcast 3.POV 4.Storytelling Cinematico 5.Demo/Tutorial 6.Testimonio 7.Gancho-Corte-Solucion 8.Texto+Musica 9.Vlog 10.Sketch 11.Micro-Clase 60s 12.Mito vs Realidad`;
 
 const MASTER_HOOKS_STR = `40 GANCHOS MAESTROS WINNER ROCKET:
-1.Frame Break 2.Objeto Mágico 3.Antes-Después 4.En Movimiento 5.Sneak Peek 6.Chasquido 7.Pantalla Verde 8.Stop Scroll 9.Mito-Verdad 10.Enemigo Común 11.Negativo 12.Ridículo 13.Arrepentimiento 14.Advertencia 15.Verdad Dura 16.Miedo 17.Paradoja 18.Secreto 19.Pieza Faltante 20.Pregunta Provocadora 21.Detective 22.Acceso Denegado 23.ADN 24.What If 25.Loop 26.Comparación 27.Regla de 3 28.Dato Impactante 29.Ahorro 30.Autoridad Prestada 31.Autoridad Propia 32.Francotirador 33.Historia Personal 34.Promesa 35.Nuevo 36.Única Cosa 37.Tutorial 38.Regalo 39.Identidad 40.Reto`;
+1.Frame Break 2.Objeto Magico 3.Antes-Despues 4.En Movimiento 5.Sneak Peek 6.Chasquido 7.Pantalla Verde 8.Stop Scroll 9.Mito-Verdad 10.Enemigo Comun 11.Negativo 12.Ridiculo 13.Arrepentimiento 14.Advertencia 15.Verdad Dura 16.Miedo 17.Paradoja 18.Secreto 19.Pieza Faltante 20.Pregunta Provocadora 21.Detective 22.Acceso Denegado 23.ADN 24.What If 25.Loop 26.Comparacion 27.Regla de 3 28.Dato Impactante 29.Ahorro 30.Autoridad Prestada 31.Autoridad Propia 32.Francotirador 33.Historia Personal 34.Promesa 35.Nuevo 36.Unica Cosa 37.Tutorial 38.Regalo 39.Identidad 40.Reto`;
 
-const WINNER_ROCKET_TIMELINE = `ESTRUCTURA 60s: 0-3s HOOK | 4-10s CONTEXTO | 11-20s CONFLICTO | 21-23s LOOP | 24-35s INSIGHT | 36-50s RESOLUCIÓN | 51-60s CTA`;
+const WINNER_ROCKET_TIMELINE = `ESTRUCTURA 60s: 0-3s HOOK | 4-10s CONTEXTO | 11-20s CONFLICTO | 21-23s LOOP | 24-35s INSIGHT | 36-50s RESOLUCION | 51-60s CTA`;
 
 const ALGORITHM_SECRETS_STR = `SECRETOS ALGORITMOS:
 TIKTOK: 3s iniciales=80% alcance | Texto frame 1 +40% retención | Sonidos trending x5
 INSTAGRAM: Carousels 3x alcance | Reels loop +60% shares | 3 hashtags grandes + 2 nicho
-YOUTUBE: Títulos números mejor | Loop endscreen | Subtítulos +35% retención`;
+YOUTUBE: Titulos numeros mejor | Loop endscreen | Subtitulos +35% retencion`;
 
 // ==================================================================================
 // 🏛️ MATRIZ TITAN V500: DEFINICIÓN DE ESTRUCTURAS Y MODOS INTERNOS
@@ -781,7 +781,7 @@ function checkRateLimit(userId: string): boolean {
   }
   
   if (limit.count >= SECURITY_CONFIG.MAX_REQUESTS_PER_MINUTE) {
-    console.log(`[RATE_LIMIT]  Usuario ${userId} excedió límite`);
+    console.log(`[RATE_LIMIT]  Usuario ${userId} excedio limite`);
     return false;
   }
   
@@ -1045,7 +1045,7 @@ Si una idea no llega a 75 → reformular antes de incluirla.
 Cada idea debe cruzar estos 3 elementos simultáneamente:
 
 ELEMENTO A — DOLOR DEL AVATAR:
-${contexto.dolor_principal ? `"${contexto.dolor_principal}"` : 'Miedo a quedarse atrás, fracasar o perder lo logrado'}
+${contexto.dolor_principal ? `"${contexto.dolor_principal}"` : 'Miedo a quedarse atras, fracasar o perder lo logrado'}
 
 ELEMENTO B — TRANSFORMACIÓN DEL EXPERTO:
 ${contexto.expertProfile?.transformation_promise || contexto.posicionamiento || 'Lograr el resultado deseado por el camino correcto'}
@@ -1690,7 +1690,7 @@ Si una idea no llega a 70 → reformular antes de incluirla.
 Cada idea debe cruzar estos 3 elementos simultáneamente:
 
 ELEMENTO A — DOLOR DEL AVATAR:
-${contexto.dolor_principal ? `"${contexto.dolor_principal}"` : 'Miedo a quedarse atrás, fracasar o perder lo logrado'}
+${contexto.dolor_principal ? `"${contexto.dolor_principal}"` : 'Miedo a quedarse atras, fracasar o perder lo logrado'}
 
 ELEMENTO B — TRANSFORMACIÓN DEL EXPERTO:
 ${contexto.expertProfile?.transformation_promise || contexto.posicionamiento || 'Lograr el resultado deseado por el camino correcto'}
@@ -1881,7 +1881,7 @@ AVATAR:
 
 ${contexto.knowledge_base_content ? `BASE DE CONOCIMIENTO:
 "${contexto.knowledge_base_content.substring(0, 800)}..."
- Usa ESTE conocimiento. No inventes contenido genérico.` : ''}
+ Usa ESTE conocimiento. No inventes contenido generico.` : ''}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📤 OUTPUT JSON OBLIGATORIO
@@ -2174,13 +2174,13 @@ Al extraer el ADN viral y generar la adaptación, DEBES respetar estas restricci
 - Objetivo de Contenido: ${expertProfile.main_objective || 'autoridad'}
 - Confrontación Máxima: ${expertProfile.confrontation_level || 3}/5
 - Polémica Máxima: ${expertProfile.max_controversy || 3}/5
-${expertProfile.mechanism_name ? `- Mecanismo Propietario: "${expertProfile.mechanism_name}" -> intégralo en la adaptación` : ''}
+${expertProfile.mechanism_name ? `- Mecanismo Propietario: "${expertProfile.mechanism_name}" -> integralo en la adaptacion` : ''}
 ${expertProfile.point_a ? `- Punto A del Avatar: "${expertProfile.point_a}"` : ''}
 ${expertProfile.point_b ? `- Punto B (destino): "${expertProfile.point_b}"` : ''}
-${expertProfile.mental_territory ? `- Territorio MentalTM: "${expertProfile.mental_territory}" -> refuérzalo` : ''}
-${expertProfile.enemy ? `- Enemigo Común: "${expertProfile.enemy}"` : ''}
+${expertProfile.mental_territory ? `- Territorio MentalTM: "${expertProfile.mental_territory}" -> refuerzalo` : ''}
+${expertProfile.enemy ? `- Enemigo Comun: "${expertProfile.enemy}"` : ''}
 ${expertProfile.narrative_rhythm ? `- Ritmo Narrativo Configurado: ${expertProfile.narrative_rhythm}` : ''}
-${expertProfile.market_sophistication ? `- Sofisticación del Mercado: ${expertProfile.market_sophistication}` : ''}
+${expertProfile.market_sophistication ? `- Sofisticacion del Mercado: ${expertProfile.market_sophistication}` : ''}
 
 ⚠️ REGLA CRÍTICA: La adaptación NUNCA puede contradecir el posicionamiento del experto.
 Si el video original usa tácticas que violan sus límites, ADAPTA esa táctica a una versión compatible con su identidad.
@@ -3007,7 +3007,7 @@ const PROMPT_GENERADOR_GUIONES = (contexto: any, viralDNA: any, settings: any = 
   
   const temaEspecifico = contexto.tema_especifico || contexto.nicho || 'General';
   const avatarIdeal = contexto.avatar_ideal || "Personas que buscan crecer y destacar en su área";
-  const dolorPrincipal = contexto.dolor_principal || `Frustración por no obtener los resultados deseados en ${temaEspecifico}`;
+  const dolorPrincipal = contexto.dolor_principal || `Frustracion por no obtener los resultados deseados en ${temaEspecifico}`;
   const deseoPrincipal = contexto.deseo_principal || `Dominar ${temaEspecifico} y obtener reconocimiento`;
   const enemigoComun = contexto.enemigo_comun || "Los consejos genéricos y la información superficial que no funciona";
   const nicho = contexto.nicho || temaEspecifico;
@@ -4343,8 +4343,8 @@ ${contexto.expertProfile?.point_b ? `PUNTO B (destino prometido): "${contexto.ex
 ${contexto.expertProfile?.transformation_promise ? `PROMESA DIFERENCIAL: "${contexto.expertProfile.transformation_promise}"` : ''}
 ${contexto.expertProfile?.mechanism_name ? `MECANISMO PROPIETARIO: "${contexto.expertProfile.mechanism_name}"` : ''}
 ${contexto.expertProfile?.mental_territory ? `TERRITORIO MENTALTM: "${contexto.expertProfile.mental_territory}"` : ''}
-${contexto.expertProfile?.max_controversy ? `LÍMITE MÁXIMO DE POLÉMICA: ${contexto.expertProfile.max_controversy}/5` : ''}
-${contexto.expertProfile?.confrontation_level ? `NIVEL DE CONFRONTACIÓN: ${contexto.expertProfile.confrontation_level}/5` : ''}
+${contexto.expertProfile?.max_controversy ? `LIMITE MAXIMO DE POLEMICA: ${contexto.expertProfile.max_controversy}/5` : ''}
+${contexto.expertProfile?.confrontation_level ? `NIVEL DE CONFRONTACION: ${contexto.expertProfile.confrontation_level}/5` : ''}
 
 ⚠️ VALIDACIÓN OLIMPO: El guion debe ser coherente con el Mapa de Transformación (Punto A → B), respetar el límite de polémica y reforzar el mecanismo propietario si existe.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -5467,7 +5467,7 @@ ${cfg.close_type !== 'auto' ? `- Tipo de cierre: ${cfg.close_type}` : ''}`;
     } catch {}
   }
 
-  return `ACTÚA COMO: Estratega de contenido OLIMPO para ${plataforma}.
+  return `ACTUA COMO: Estratega de contenido OLIMPO para ${plataforma}.
 
 OBJETIVO: Calendario estratégico de ${dias} días alineado al perfil del experto.
 
@@ -5487,7 +5487,7 @@ ${ep ? `
 ${ep.mechanism_name ? `- Mecanismo Propietario: "${ep.mechanism_name}"` : ''}
 ${ep.point_a ? `- Punto A del Avatar: "${ep.point_a}"` : ''}
 ${ep.point_b ? `- Punto B (destino): "${ep.point_b}"` : ''}
-${ep.enemy ? `- Enemigo Común: "${ep.enemy}"` : ''}
+${ep.enemy ? `- Enemigo Comun: "${ep.enemy}"` : ''}
 ${ep.mental_territory ? `- Territorio MentalTM: "${ep.mental_territory}"` : ''}
 ` : ''}
 ${netOverride}
@@ -5792,7 +5792,7 @@ EXPERTO (Desde qué posición hablas):
 - Agresividad Verbal: ${contexto.expertProfile?.verbal_aggressiveness ?? 2}/5
 - Sofisticación Léxica: ${contexto.expertProfile?.lexical_sophistication ?? 3}/5
 - Ratio Storytelling: ${contexto.expertProfile?.storytelling_ratio ?? 50}% narrativa / ${100 - (contexto.expertProfile?.storytelling_ratio ?? 50)}% enseñanza directa
-${contexto.expertProfile?.enemy ? `* Enemigo Común: "${contexto.expertProfile.enemy}"` : ''}
+${contexto.expertProfile?.enemy ? `* Enemigo Comun: "${contexto.expertProfile.enemy}"` : ''}
 ${contexto.expertProfile?.transformation_promise ? `* Promesa Diferencial: "${contexto.expertProfile.transformation_promise}"` : ''}
 ${contexto.expertProfile?.mechanism_name ? `* Mecanismo Propietario: "${contexto.expertProfile.mechanism_name}"` : ''}
 
@@ -5805,11 +5805,11 @@ ${(() => {
     const override = nc[redKey];
     if (override && Object.values(override).some((v: any) => v !== 'auto')) {
       return ` OVERRIDE PARA ${redSocial.toUpperCase()}:
-${override.tone !== 'auto' ? `* Tono específico: ${override.tone}` : ''}
-${override.depth !== 'auto' ? `* Profundidad específica: ${override.depth}` : ''}
-${override.aggressiveness !== 'auto' ? `* Agresividad específica: ${override.aggressiveness}` : ''}
+${override.tone !== 'auto' ? `* Tono especifico: ${override.tone}` : ''}
+${override.depth !== 'auto' ? `* Profundidad especifica: ${override.depth}` : ''}
+${override.aggressiveness !== 'auto' ? `* Agresividad especifica: ${override.aggressiveness}` : ''}
 ${override.close_type !== 'auto' ? `* Tipo de cierre: ${override.close_type}` : ''}
- Esta configuración de red PREVALECE sobre los defaults del experto.`;
+ Esta configuracion de red PREVALECE sobre los defaults del experto.`;
     }
   } catch {}
   return '';
@@ -6042,7 +6042,7 @@ ESTRATEGIA DE VIRALIDAD:
 → FORMATO: Hooks disruptivos, opiniones polémicas, datos impactantes.
 → MÉTRICA OBJETIVO: Shares y comentarios > Guardados.
 → TÁCTICA: "Si no me sigo, me pierdo algo" — curiosidad + FOMO.
--> TONO: Energético, directo, sin pausas. Cada segundo compite contra el scroll.`,
+-> TONO: Energetico, directo, sin pausas. Cada segundo compite contra el scroll.`,
 
     'autoridad': `
 ESTRATEGIA DE AUTORIDAD:
@@ -6050,7 +6050,7 @@ ESTRATEGIA DE AUTORIDAD:
 → FORMATO: Insights de segundo nivel, marcos mentales únicos, datos de industria.
 → MÉTRICA OBJETIVO: Guardados + Comentarios de calidad > Shares virales.
 → TÁCTICA: "Este creador sabe algo que otros no" — credibilidad instantánea.
--> TONO: Seguro, preciso, sin exageración. Demuestra antes de afirmar.`,
+-> TONO: Seguro, preciso, sin exageracion. Demuestra antes de afirmar.`,
 
     'venta': `
 ESTRATEGIA DE VENTA:
@@ -6058,7 +6058,7 @@ ESTRATEGIA DE VENTA:
 → FORMATO: Testimonios, casos de éxito, objeciones destruidas, urgencia real.
 → MÉTRICA OBJETIVO: Clics en bio / DMs / Conversiones > Métricas de vanidad.
 → TÁCTICA: "Vende la transformación, no el producto" — deseo antes que oferta.
--> TONO: Empático con el dolor, firme con la solución. Sin hype vacío.`,
+-> TONO: Empatico con el dolor, firme con la solucion. Sin hype vacio.`,
 
     'comunidad': `
 ESTRATEGIA DE COMUNIDAD:
@@ -6066,7 +6066,7 @@ ESTRATEGIA DE COMUNIDAD:
 → FORMATO: Preguntas, retos, "¿te identificas?", contenido de identidad.
 → MÉTRICA OBJETIVO: Comentarios de tribu + Seguidores fieles > Alcance masivo.
 → TÁCTICA: "Nosotros vs ellos" — crea un in-group exclusivo.
--> TONO: Cercano, inclusivo, como un líder de movimiento.`,
+-> TONO: Cercano, inclusivo, como un lider de movimiento.`,
 
     'posicionamiento': `
 ESTRATEGIA DE POSICIONAMIENTO:
@@ -6074,7 +6074,7 @@ ESTRATEGIA DE POSICIONAMIENTO:
 → FORMATO: Opiniones contrastantes, nuevos marcos de referencia, conceptos propios.
 → MÉTRICA OBJETIVO: Reconocimiento de marca + Búsquedas directas.
 → TÁCTICA: "Ocupa un espacio mental que nadie más tiene" — sé el primero en algo.
--> TONO: Distintivo, con voz única. Diferente por diseño, no por accidente.`,
+-> TONO: Distintivo, con voz unica. Diferente por diseno, no por accidente.`,
   };
 
   return strategies[objetivo?.toLowerCase()] || strategies['viralidad'];
@@ -6093,28 +6093,28 @@ TIMING EVERGREEN (Sin fecha de caducidad):
 → Contenido que funciona hoy, en 6 meses y en 2 años.
 → Temáticas: Dolores eternos del nicho, principios fundamentales, verdades profundas.
 → Ventaja: Acumula vistas a lo largo del tiempo (efecto bola de nieve).
--> Señal: No incluyas referencias a fechas, eventos o tendencias actuales.`,
+-> Senal: No incluyas referencias a fechas, eventos o tendencias actuales.`,
 
     'trending': `
 TIMING TRENDING (Ahora o nunca):
 → Capitaliza una conversación que YA está activa en la cultura pop o el nicho.
 → URGENCIA: Este contenido tiene ventana de 48-72 horas máximo.
 → Táctica: Conecta el trending con el nicho del usuario de forma inesperada.
--> Señal: Incluye la tendencia en el hook para activar el algoritmo ahora.`,
+-> Senal: Incluye la tendencia en el hook para activar el algoritmo ahora.`,
 
     'seasonal': `
 TIMING ESTACIONAL (Evento o temporada específica):
 → Contenido diseñado para un momento predecible del año (Q1, verano, navidad, etc.).
 → Ventaja: Alta intención de búsqueda y consumo en ese período.
 → Táctica: Publicar 1-2 semanas ANTES del pico para capturar el ascenso.
--> Señal: El hook debe incluir la referencia temporal como gancho de relevancia.`,
+-> Senal: El hook debe incluir la referencia temporal como gancho de relevancia.`,
 
     'launch': `
 TIMING DE LANZAMIENTO (Producto/Servicio/Evento propio):
 → Contenido que caliente a la audiencia ANTES de la oferta principal.
 → Secuencia: Problema → Solución parcial → Presentación de la solución completa.
 → Táctica: El contenido de hoy planta la semilla para la venta de mañana.
--> Señal: No hagas venta directa. Genera deseo y anticipación primero.`,
+-> Senal: No hagas venta directa. Genera deseo y anticipacion primero.`,
 
     'tendencia': `
 TIMING TENDENCIA ACTUAL (Ahora o nunca):
@@ -6122,7 +6122,7 @@ TIMING TENDENCIA ACTUAL (Ahora o nunca):
 → URGENCIA: Este contenido tiene ventana de 48-72 horas máximo.
 → Táctica: Conecta el trending con el nicho del usuario de forma inesperada.
 → El hook debe mencionar o implicar la tendencia para activar el algoritmo ahora.
--> Señal: Sin referencias a la tendencia en el hook = perder la ventana.`,
+-> Senal: Sin referencias a la tendencia en el hook = perder la ventana.`,
 
     'reaccion': `
 TIMING REACCIÓN RÁPIDA (Respuesta a evento reciente):
@@ -6130,7 +6130,7 @@ TIMING REACCIÓN RÁPIDA (Respuesta a evento reciente):
 → URGENCIA EXTREMA: Ventana de 24 horas antes de que todos hablen de lo mismo.
 → Táctica: Ser el primero en dar el ángulo correcto al evento.
 → El formato ideal: "Lo que nadie está diciendo sobre [evento reciente]".
--> Señal: Posicionarse como el experto que interpreta los eventos del sector.`,
+-> Senal: Posicionarse como el experto que interpreta los eventos del sector.`,
 
     'momentum': `
 TIMING MOMENTUM PERSONAL (Capitalizar crecimiento propio):
@@ -6138,14 +6138,14 @@ TIMING MOMENTUM PERSONAL (Capitalizar crecimiento propio):
 → La audiencia nueva necesita contenido que explique quién eres y por qué seguirte.
 → Táctica: Contenido que convierta visitantes ocasionales en seguidores leales.
 → Formatos ideales: origen + transformación, errores del pasado, detrás de cámaras.
--> Señal: Alta autenticidad. La audiencia nueva conecta con historias reales.`,
+-> Senal: Alta autenticidad. La audiencia nueva conecta con historias reales.`,
 
     'estacional': `
 TIMING ESTACIONAL (Evento o temporada específica):
 → Contenido diseñado para un momento predecible del año.
 → Ventaja: Alta intención de búsqueda y consumo en ese período.
 → Táctica: Publicar 1-2 semanas ANTES del pico para capturar el ascenso.
--> Señal: El hook debe incluir la referencia temporal como gancho de relevancia.`,
+-> Senal: El hook debe incluir la referencia temporal como gancho de relevancia.`,
   };
 
   return strategies[timing?.toLowerCase()] || strategies['evergreen'];
@@ -6544,11 +6544,11 @@ async function ejecutarUnaIdeaMultiplatforma(
 
   const puntoA   = contexto.expertProfile?.point_a   ? `- Punto A: "${contexto.expertProfile.point_a}"`   : '';
   const puntoB   = contexto.expertProfile?.point_b   ? `- Punto B: "${contexto.expertProfile.point_b}"`   : '';
-  const kbText   = contexto.knowledge_base_content   ? `BASE DE CONOCIMIENTO: "${contexto.knowledge_base_content.substring(0, 500)}..."\n Usa ESTE conocimiento. No inventes contenido genérico.` : '';
+  const kbText   = contexto.knowledge_base_content   ? `BASE DE CONOCIMIENTO: "${contexto.knowledge_base_content.substring(0, 500)}..."\n Usa ESTE conocimiento. No inventes contenido generico.` : '';
 
   const promptUnica = [
     '═══════════════════════════════════════════════════════════════════════════',
-    ` IDEA MULTIPLATAFORMA ${ideaIndex + 1} DE ${totalIdeas} - DOMINACIÓN TOTAL`,
+    ` IDEA MULTIPLATAFORMA ${ideaIndex + 1} DE ${totalIdeas} - DOMINACION TOTAL`,
     '═══════════════════════════════════════════════════════════════════════════',
     '',
     '⚠️ TU IDENTIDAD:',
@@ -6557,7 +6557,7 @@ async function ejecutarUnaIdeaMultiplatforma(
     'de cada red social de forma radicalmente distinta.',
     '',
     `FRAME OBLIGATORIO: ${frameAsignado}`,
-    `ÁNGULO ESTRATÉGICO OBLIGATORIO: ${anguloAsignado}`,
+    `ANGULO ESTRATEGICO OBLIGATORIO: ${anguloAsignado}`,
     '',
     '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
     '🧠 REGLA #1 — COHERENCIA TEMÁTICA ESTRICTA',
@@ -6660,8 +6660,8 @@ async function ejecutarUnaIdeaMultiplatforma(
     '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
     '',
     'EXPERTO:',
-    `- Posicionamiento: ${contexto.expertProfile?.unique_positioning || contexto.posicionamiento || 'Experto práctico'}`,
-    `- Transformación: ${contexto.expertProfile?.transformation_promise || 'Del punto A al punto B'}`,
+    `- Posicionamiento: ${contexto.expertProfile?.unique_positioning || contexto.posicionamiento || 'Experto practico'}`,
+    `- Transformacion: ${contexto.expertProfile?.transformation_promise || 'Del punto A al punto B'}`,
     `- Enemigo: ${contexto.expertProfile?.enemy || 'No definido'}`,
     puntoA,
     puntoB,
@@ -6682,7 +6682,7 @@ async function ejecutarUnaIdeaMultiplatforma(
     '📤 OUTPUT JSON — ESTRUCTURA EXACTA. SIN MARKDOWN. SIN TRUNCAR.',
     '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
     '',
-    `{"id":${ideaIndex + 1},"titulo":"Título que SOLO este experto diría - sin clichés","concepto":"Por qué esta idea conecta el tema con las 5 plataformas","idea_expandida_tca":"Tema expandido listo para Generador V600","tca":{"nivel_tca":"N2","sector_utilizado":"sector masivo","interseccion_detectada":"dolor + transformacion + sector","mass_appeal_score":0,"potencial_millonario":true,"nivel_polarizacion":0,"razonamiento_estrategico":"por qué llega a millones"},"frame_usado":"${frameAsignado}","angulo_estrategico":"${anguloAsignado}","postura_dominante":{"creencia_atacada":"creencia falsa del nicho","enemigo_implicito":"quién concreto tiene la culpa","nuevo_marco_mental":"visión superior del experto","solo_este_experto_puede_decirlo":true},"riesgo_emocional_activado":"Pérdida","originalidad_score":0,"diferenciacion_score":0,"formato_ganador":"DECLARACION_DISRUPTIVA","estructura_sugerida":"PAS","disparador_principal":"Miedo","emocion_objetivo":"emoción principal","objetivo_principal":"${objective}","contexto_temporal":"${timing}","potencial_viral":0,"razon_potencia":"por qué es poderoso","validacion_guru":{"eleva_autoridad":true,"posiciona_como_lider":true,"rompe_consenso":true,"potencial_viral_real":true,"suena_diferente_al_mercado":true,"funciona_en_5_plataformas":true},"adaptaciones":{"TikTok":{"hook":"MAX 4 PALABRAS shock","gancho_completo":"primera línea TikTok agresiva","caption_sugerido":"caption TikTok con debate","miniatura_frase":"2-3 palabras overlay","emocion_objetivo":"emoción cruda","ctr_score":0,"nivel_polarizacion":0,"retencion_score":0,"mejor_horario":"7-9pm","duracion_ideal":"15-45s","formato_visual":"plano frontal cortes 2s","mecanismo_retencion":"primeros 3 segundos"},"Reels":{"hook":"hook aspiracional elegante","gancho_completo":"primera línea Reels","caption_sugerido":"caption Reels guardado","miniatura_frase":"frase elegante portada","emocion_objetivo":"aspiracional","ctr_score":0,"nivel_polarizacion":0,"retencion_score":0,"mejor_horario":"6-9pm","duracion_ideal":"30-60s","formato_visual":"alta calidad visual","mecanismo_retencion":"guardar y compartir"},"YouTube":{"hook":"gap informativo fuerte","gancho_completo":"primera línea YouTube","caption_sugerido":"descripción con keywords","miniatura_frase":"4-6 palabras alto CTR","emocion_objetivo":"curiosidad","ctr_score":0,"nivel_polarizacion":0,"retencion_score":0,"mejor_horario":"viernes 3-6pm","duracion_ideal":"60s o 8-15min","formato_visual":"cambios ángulo b-roll","mecanismo_retencion":"70 porciento completado"},"LinkedIn":{"hook":"tesis profesional provocadora","gancho_completo":"primera línea LinkedIn","caption_sugerido":"caption con repost CTA","miniatura_frase":"frase autoridad","emocion_objetivo":"ambición profesional","ctr_score":0,"nivel_polarizacion":0,"retencion_score":0,"mejor_horario":"martes-jueves 8-10am","duracion_ideal":"45-90s","formato_visual":"plano limpio subtítulos","mecanismo_retencion":"compartir red profesional"},"Facebook":{"hook":"pregunta relatable comunidad","gancho_completo":"primera línea Facebook conversacional","caption_sugerido":"caption pregunta 50 comentarios","miniatura_frase":"frase conversacional clara","emocion_objetivo":"identificación comunidad","ctr_score":0,"nivel_polarizacion":0,"retencion_score":0,"mejor_horario":"7-10pm domingo","duracion_ideal":"60s-3min","formato_visual":"subtítulos grandes pausado","mecanismo_retencion":"comentarios primeros 30min"}},"plan_produccion":{"video_base":"descripción exacta video base único","duracion_grabacion":"duración óptima","subtitulos_obligatorios":true,"elementos_clave":["elemento 1","elemento 2"],"orden_publicacion":["1. plataforma 1","2. plataforma 2","3. plataforma 3","4. plataforma 4","5. plataforma 5"],"razon_orden":"justificación estratégica del orden"}}`,
+    `{"id":${ideaIndex + 1},"titulo":"Titulo que SOLO este experto diria - sin cliches","concepto":"Por que esta idea conecta el tema con las 5 plataformas","idea_expandida_tca":"Tema expandido listo para Generador V600","tca":{"nivel_tca":"N2","sector_utilizado":"sector masivo","interseccion_detectada":"dolor + transformacion + sector","mass_appeal_score":0,"potencial_millonario":true,"nivel_polarizacion":0,"razonamiento_estrategico":"por que llega a millones"},"frame_usado":"${frameAsignado}","angulo_estrategico":"${anguloAsignado}","postura_dominante":{"creencia_atacada":"creencia falsa del nicho","enemigo_implicito":"quien concreto tiene la culpa","nuevo_marco_mental":"vision superior del experto","solo_este_experto_puede_decirlo":true},"riesgo_emocional_activado":"Perdida","originalidad_score":0,"diferenciacion_score":0,"formato_ganador":"DECLARACION_DISRUPTIVA","estructura_sugerida":"PAS","disparador_principal":"Miedo","emocion_objetivo":"emocion principal","objetivo_principal":"${objective}","contexto_temporal":"${timing}","potencial_viral":0,"razon_potencia":"por que es poderoso","validacion_guru":{"eleva_autoridad":true,"posiciona_como_lider":true,"rompe_consenso":true,"potencial_viral_real":true,"suena_diferente_al_mercado":true,"funciona_en_5_plataformas":true},"adaptaciones":{"TikTok":{"hook":"MAX 4 PALABRAS shock","gancho_completo":"primera linea TikTok agresiva","caption_sugerido":"caption TikTok con debate","miniatura_frase":"2-3 palabras overlay","emocion_objetivo":"emocion cruda","ctr_score":0,"nivel_polarizacion":0,"retencion_score":0,"mejor_horario":"7-9pm","duracion_ideal":"15-45s","formato_visual":"plano frontal cortes 2s","mecanismo_retencion":"primeros 3 segundos"},"Reels":{"hook":"hook aspiracional elegante","gancho_completo":"primera linea Reels","caption_sugerido":"caption Reels guardado","miniatura_frase":"frase elegante portada","emocion_objetivo":"aspiracional","ctr_score":0,"nivel_polarizacion":0,"retencion_score":0,"mejor_horario":"6-9pm","duracion_ideal":"30-60s","formato_visual":"alta calidad visual","mecanismo_retencion":"guardar y compartir"},"YouTube":{"hook":"gap informativo fuerte","gancho_completo":"primera linea YouTube","caption_sugerido":"descripcion con keywords","miniatura_frase":"4-6 palabras alto CTR","emocion_objetivo":"curiosidad","ctr_score":0,"nivel_polarizacion":0,"retencion_score":0,"mejor_horario":"viernes 3-6pm","duracion_ideal":"60s o 8-15min","formato_visual":"cambios angulo b-roll","mecanismo_retencion":"70 porciento completado"},"LinkedIn":{"hook":"tesis profesional provocadora","gancho_completo":"primera linea LinkedIn","caption_sugerido":"caption con repost CTA","miniatura_frase":"frase autoridad","emocion_objetivo":"ambicion profesional","ctr_score":0,"nivel_polarizacion":0,"retencion_score":0,"mejor_horario":"martes-jueves 8-10am","duracion_ideal":"45-90s","formato_visual":"plano limpio subtitulos","mecanismo_retencion":"compartir red profesional"},"Facebook":{"hook":"pregunta relatable comunidad","gancho_completo":"primera linea Facebook conversacional","caption_sugerido":"caption pregunta 50 comentarios","miniatura_frase":"frase conversacional clara","emocion_objetivo":"identificacion comunidad","ctr_score":0,"nivel_polarizacion":0,"retencion_score":0,"mejor_horario":"7-10pm domingo","duracion_ideal":"60s-3min","formato_visual":"subtitulos grandes pausado","mecanismo_retencion":"comentarios primeros 30min"}},"plan_produccion":{"video_base":"descripcion exacta video base unico","duracion_grabacion":"duracion optima","subtitulos_obligatorios":true,"elementos_clave":["elemento 1","elemento 2"],"orden_publicacion":["1. plataforma 1","2. plataforma 2","3. plataforma 3","4. plataforma 4","5. plataforma 5"],"razon_orden":"justificacion estrategica del orden"}}`,
     '',
     'REGLAS FINALES:',
     'OK mass_appeal_score >= 75 | originalidad_score > 75 | diferenciacion_score > 70',
@@ -7051,9 +7051,9 @@ ELEMENTO PELIGROSO (lo que genera comentarios en contra): "${elementoPeligroso}"
 🎯 EQUIVALENCIA ESTRUCTURAL PARA ${nichoUsuario.toUpperCase()}:
 ═══════════════════════════════════════════════════
 ${escenaEquiv ? `ESCENA EQUIVALENTE EN TU NICHO: "${escenaEquiv}"` : `CREA UNA ESCENA CONCRETA en ${nichoUsuario} con la misma carga emocional que: "${escenaConcreta}"`}
-${decisionEquiv ? `DECISIÓN EQUIVALENTE: "${decisionEquiv}"` : `CREA UNA DECISIÓN IMPOPULAR equivalente en ${nichoUsuario}`}
-${consecuenciaEquiv ? `CONSECUENCIA EQUIVALENTE: "${consecuenciaEquiv}"` : `CREA UNA CONSECUENCIA REAL con costo concreto (dinero, relación, reputación)`}
-${elementoPeligrosoEquiv ? `ELEMENTO PELIGROSO EQUIVALENTE: "${elementoPeligrosoEquiv}"` : `CREA EL ELEMENTO que más va a dividir opiniones en ${nichoUsuario}`}
+${decisionEquiv ? `DECISION EQUIVALENTE: "${decisionEquiv}"` : `CREA UNA DECISION IMPOPULAR equivalente en ${nichoUsuario}`}
+${consecuenciaEquiv ? `CONSECUENCIA EQUIVALENTE: "${consecuenciaEquiv}"` : `CREA UNA CONSECUENCIA REAL con costo concreto (dinero, relacion, reputacion)`}
+${elementoPeligrosoEquiv ? `ELEMENTO PELIGROSO EQUIVALENTE: "${elementoPeligrosoEquiv}"` : `CREA EL ELEMENTO que mas va a dividir opiniones en ${nichoUsuario}`}
 
 ⚠️ REGLA DE ORO: Si el original tiene escena → tu guion tiene escena. Si tiene consecuencia → tiene consecuencia.
 PROHIBIDO ABSOLUTO: Convertir escenas concretas en conceptos abstractos o metáforas bonitas.
@@ -7092,7 +7092,7 @@ LEY 1 — EQUIVALENCIA ESTRUCTURAL (la más importante):
 Cada elemento del original tiene su equivalente en el guion:
   Original: ${escenaConcreta ? `"${escenaConcreta.substring(0,80)}..."` : 'escena concreta'}
   Tu guion: escena concreta equivalente en ${nichoUsuario}
-  Original: ${decisionImpopular ? `"${decisionImpopular.substring(0,80)}..."` : 'decisión impopular'}
+  Original: ${decisionImpopular ? `"${decisionImpopular.substring(0,80)}..."` : 'decision impopular'}
   Tu guion: decisión impopular equivalente en ${nichoUsuario}
   Original: ${consecuenciaReal ? `"${consecuenciaReal.substring(0,80)}..."` : 'consecuencia real'}
   Tu guion: consecuencia real con costo concreto en ${nichoUsuario}
@@ -7419,9 +7419,9 @@ async function ejecutarIngenieriaInversaPro(
     
     // ✅ Delay anti-TPM reducido para evitar Timeout
     await new Promise(resolve => setTimeout(resolve, 500))
-    console.log(`[MOTOR PRO V2]  Género: ${adnForense.adn_profundo?.genero_narrativo} | Emoción: ${adnForense.adn_profundo?.emocion_nucleo}`);
+    console.log(`[MOTOR PRO V2]  Genero: ${adnForense.adn_profundo?.genero_narrativo} | Emocion: ${adnForense.adn_profundo?.emocion_nucleo}`);
 
-    console.log(`[MOTOR PRO V2]  FASE 2: Generando guion élite...`);
+    console.log(`[MOTOR PRO V2]  FASE 2: Generando guion elite...`);
 
     const expertProfileFase2 = contexto.expertProfile ? {
       mechanism_name: contexto.expertProfile.mechanism_name,
@@ -7455,7 +7455,7 @@ async function ejecutarIngenieriaInversaPro(
       model: 'gpt-4o',                   // ✅ FULL gpt-4o — sin compromiso
       response_format: { type: 'json_object' },
       messages: [
-        { role: 'system', content: `Eres un escritor de guiones virales. Tu ÚNICA tarea es escribir el guion hablado. DEBES devolver JSON con exactamente estas dos claves: "guion_adaptado_espejo" (string con el guion completo, MÍNIMO ${minWords} palabras) y "guion_adaptado_al_nicho" (mismo texto). PROHIBIDO devolver análisis, bloques, ni ninguna otra clave. SOLO el guion hablado en texto plano.` },
+        { role: 'system', content: `Eres un escritor de guiones virales. Tu UNICA tarea es escribir el guion hablado. DEBES devolver JSON con exactamente estas dos claves: "guion_adaptado_espejo" (string con el guion completo, MINIMO ${minWords} palabras) y "guion_adaptado_al_nicho" (mismo texto). PROHIBIDO devolver analisis, bloques, ni ninguna otra clave. SOLO el guion hablado en texto plano.` },
         { role: 'user', content: promptFase2Final }
       ],
       temperature: 0.75,
@@ -7467,7 +7467,7 @@ async function ejecutarIngenieriaInversaPro(
 
     const guionTexto = outputGuion.guion_adaptado_espejo || outputGuion.guion_adaptado_al_nicho || outputGuion.guion || outputGuion.script || outputGuion.contenido || '';
     const palabrasFase2 = guionTexto.trim().split(/\s+/).filter(Boolean).length;
-    console.log(`[MOTOR PRO V2]  Palabras guion fase 2: ${palabrasFase2} (mínimo: ${minWords}) | Claves FASE2: ${Object.keys(outputGuion).join(', ')}`);
+    console.log(`[MOTOR PRO V2]  Palabras guion fase 2: ${palabrasFase2} (minimo: ${minWords}) | Claves FASE2: ${Object.keys(outputGuion).join(', ')}`);
     // Normalizar clave si GPT usó nombre diferente
     if (!outputGuion.guion_adaptado_espejo && guionTexto) {
       outputGuion.guion_adaptado_espejo = guionTexto;
@@ -7479,7 +7479,7 @@ async function ejecutarIngenieriaInversaPro(
     if (palabrasFase2 < minWords) {
       console.warn(`[MOTOR PRO V2]  Guion corto (${palabrasFase2}/${minWords}). Refinando...`);
 
-      const promptRef = `Escritor de guiones virales. El guion tiene solo ${palabrasFase2} palabras. Necesitas MÍNIMO ${minWords} palabras.
+      const promptRef = `Escritor de guiones virales. El guion tiene solo ${palabrasFase2} palabras. Necesitas MINIMO ${minWords} palabras.
 ADN: Género: ${adnForense.adn_profundo?.genero_narrativo} | Emoción: ${adnForense.adn_profundo?.emocion_nucleo}
 GUION ACTUAL: ${guionTexto}
 NICHO: ${nichoUsuario}
@@ -7520,7 +7520,7 @@ DEVUELVE ÚNICAMENTE JSON válido. Sin markdown. Sin backticks.
         model: 'gpt-4o',
         response_format: { type: 'json_object' },
         messages: [
-          { role: 'system', content: `Escritor de guiones virales. Devuelve JSON con SOLO dos claves: "guion_adaptado_espejo" (string del guion hablado completo, MÍNIMO ${minWords} palabras) y "guion_adaptado_al_nicho" (mismo texto). CERO análisis. CERO bloques. Solo el texto que el creador dice en cámara.` },
+          { role: 'system', content: `Escritor de guiones virales. Devuelve JSON con SOLO dos claves: "guion_adaptado_espejo" (string del guion hablado completo, MINIMO ${minWords} palabras) y "guion_adaptado_al_nicho" (mismo texto). CERO analisis. CERO bloques. Solo el texto que el creador dice en camara.` },
           { role: 'user', content: promptRef }
         ],
         temperature: 0.8,
@@ -7696,7 +7696,7 @@ function prepararPaqueteParaJuezViral(outputMotores: any): any {
       2. Fórmula base: ${blueprint.formula_base || "no disponible"}
       3. Equivalencia emocional: entrada=${psicologia.emocion_dominante}, salida=${psicologia.emocion_final}
       4. Tipo de tensión replicada: ${psicologia.tipo_tension}
-      5. Loops mínimos requeridos: ${loopsMetricas.total_loops}`;
+      5. Loops minimos requeridos: ${loopsMetricas.total_loops}`;
 
     // Alertas para el Juez
     const alertas: string[] = [];
@@ -7704,7 +7704,7 @@ function prepararPaqueteParaJuezViral(outputMotores: any): any {
       alertas.push("ALERTA: Sin escalada emocional detectada — verificar progresión");
     }
     if (loopsMetricas.loops_sin_resolver > 2) {
-      alertas.push(`ALERTA: ${loopsMetricas.loops_sin_resolver} loops sin resolver - puede generar frustración`);
+      alertas.push(`ALERTA: ${loopsMetricas.loops_sin_resolver} loops sin resolver - puede generar frustracion`);
     }
     if (progresion.riesgo_monotonia === "Alto") {
       alertas.push("ALERTA: Riesgo alto de monotonía — curva emocional plana");
@@ -8317,7 +8317,7 @@ async function ejecutarAutopsiaViral(
           // ✅ ÉXITO TOTAL
           console.log('[AUTOPSIA V2] ✅ Análisis completado exitosamente');
           console.log(`[AUTOPSIA V2]  Score viral: ${data.score_viral?.potencial_total || 'N/A'}`);
-          console.log(`[AUTOPSIA V2]  Patrón detectado: ${data.patron_replicable?.nombre_patron || 'N/A'}`);
+          console.log(`[AUTOPSIA V2]  Patron detectado: ${data.patron_replicable?.nombre_patron || 'N/A'}`);
           console.log(`[AUTOPSIA V2]  Puntos temporales: ${data.desglose_temporal?.length || 0}`);
           
           return {
@@ -8408,7 +8408,7 @@ async function escanearYLimpiarCliches(
     return { output, clichesEliminados: 0, limpioDesdeInicio: true };
   }
 
-  console.log(`[SCANNER]  ${clichesEncontrados.length} clichés detectados: "${clichesEncontrados.slice(0, 3).join('", "')}"`);
+  console.log(`[SCANNER]  ${clichesEncontrados.length} cliches detectados: "${clichesEncontrados.slice(0, 3).join('", "')}"`);
   console.log('[SCANNER] 🔧 Ejecutando reescritura quirúrgica...');
 
   const promptLimpieza = `
@@ -8656,7 +8656,7 @@ function recalcularScoreCoherente(output: any): {
   };
 
   if (fueAjustado) {
-    console.log(`[SCORE P5]  Score ajustado por verificación estructural:`);
+    console.log(`[SCORE P5]  Score ajustado por verificacion estructural:`);
     ajustes.forEach(a => console.log(`[SCORE P5]   -> ${a}`));
   } else {
     console.log(`[SCORE P5]  Score coherente con estructura real`);
@@ -8687,7 +8687,7 @@ function validarOutputGenerador(output: any, preAnalisis?: any): ResultadoValida
   // También verificar guion_completo no vacío
   const guionCompleto = output.guion_completo || output.guion || "";
   if (guionCompleto.length < 200) {
-    fallos.push(`Guion demasiado corto: ${guionCompleto.length} chars (mínimo 200)`);
+    fallos.push(`Guion demasiado corto: ${guionCompleto.length} chars (minimo 200)`);
   }
 
   // ── 2. MICRO-LOOPS ──
@@ -8715,7 +8715,7 @@ function validarOutputGenerador(output: any, preAnalisis?: any): ResultadoValida
   );
   const curvaValidaFinal = curvaValida || !!tieneEsquemaAlternativo;
   if (!curvaValidaFinal) {
-    fallos.push(`Curva emocional vacía o sin campos reconocibles`);
+    fallos.push(`Curva emocional vacia o sin campos reconocibles`);
   }
 
   // ── 4. ACTIVADORES PSICOLÓGICOS ──
@@ -8732,7 +8732,7 @@ function validarOutputGenerador(output: any, preAnalisis?: any): ResultadoValida
   );
   const sinCliches = clichesEncontrados.length === 0;
   if (!sinCliches) {
-    fallos.push(`Clichés detectados (${clichesEncontrados.length}): "${clichesEncontrados.slice(0,2).join('", "')}"`);
+    fallos.push(`Cliches detectados (${clichesEncontrados.length}): "${clichesEncontrados.slice(0,2).join('", "')}"`);
   }
 
   // ── 6. IDENTIDAD VERBAL ──
@@ -8851,7 +8851,7 @@ async function analizarEstructuraImplicita(
     };
   }
 
-  console.log(`[P6]  Analizando estructura implícita (${texto.length} chars)...`);
+  console.log(`[P6]  Analizando estructura implicita (${texto.length} chars)...`);
 
   const prompt = `
 Eres un Arquitecto Narrativo. Tu trabajo es detectar si un texto tiene estructura narrativa propia.
@@ -8917,8 +8917,8 @@ DEVUELVE SOLO ESTE JSON:
     });
 
     const resultado = JSON.parse(completion.choices[0].message.content || '{}');
-    console.log(`[P6]  Estructura: ${resultado.tipo_estructura} | Instrucción: ${resultado.instruccion}`);
-    console.log(`[P6]  Elementos fuertes: ${resultado.elementos_fuertes?.length || 0} | Débiles: ${resultado.elementos_debiles?.length || 0}`);
+    console.log(`[P6]  Estructura: ${resultado.tipo_estructura} | Instruccion: ${resultado.instruccion}`);
+    console.log(`[P6]  Elementos fuertes: ${resultado.elementos_fuertes?.length || 0} | Debiles: ${resultado.elementos_debiles?.length || 0}`);
 
     return resultado;
 
@@ -8970,7 +8970,7 @@ async function preAnalizarInput(
     };
   }
 
-  console.log(`[PRE-ANÁLISIS]  Analizando input tipo: ${tipoInput} (${input.length} chars)`);
+  console.log(`[PRE-ANALISIS]  Analizando input tipo: ${tipoInput} (${input.length} chars)`);
 
   const prompt = `
 Eres el Detector de ADN Narrativo más preciso del mundo.
@@ -9041,8 +9041,8 @@ DEVUELVE SOLO ESTE JSON:
     });
 
     const resultado = JSON.parse(completion.choices[0].message.content || '{}');
-    console.log(`[PRE-ANÁLISIS]  Conflicto: "${resultado.conflicto_central?.substring(0, 60)}..."`);
-    console.log(`[PRE-ANÁLISIS]  Tensión detectada: ${resultado.tension_detectada}/100`);
+    console.log(`[PRE-ANALISIS]  Conflicto: "${resultado.conflicto_central?.substring(0, 60)}..."`);
+    console.log(`[PRE-ANALISIS]  Tension detectada: ${resultado.tension_detectada}/100`);
     
     return resultado;
 
@@ -9401,7 +9401,7 @@ Responde SOLO con este JSON válido. Sin markdown, sin texto extra:
 
     console.log(`[TCA IMPERIO]  Mass Appeal Score V2: ${score}/100 (calibrado para ${platform})`);
     console.log(`[TCA IMPERIO]  Cultural Tension Index: ${cti}/100 - ${tcaData.cultural_tension_index?.descripcion_tension || ''}`);
-    console.log(`[TCA IMPERIO]  Ángulo seleccionado: ${angulo} - "${formulacionAngulo.substring(0, 60)}"`);
+    console.log(`[TCA IMPERIO]  Angulo seleccionado: ${angulo} - "${formulacionAngulo.substring(0, 60)}"`);
     console.log(`[TCA IMPERIO]  Nivel: ${tcaData.nivel_original} -> N2-N3`);
     console.log(`[TCA IMPERIO]  Tema expandido: "${(tcaData.tema_expandido || '').substring(0, 80)}"`);
 
@@ -9409,7 +9409,7 @@ Responde SOLO con este JSON válido. Sin markdown, sin texto extra:
     let temaFinal = tcaData.tema_expandido || temaOriginal;
     if (score < 70 && tcaData.reformulaciones_alternativas?.length > 0) {
       temaFinal = tcaData.reformulaciones_alternativas[0];
-      console.log(`[TCA IMPERIO]  Score bajo (${score}/100). Usando reformulación con mayor alcance.`);
+      console.log(`[TCA IMPERIO]  Score bajo (${score}/100). Usando reformulacion con mayor alcance.`);
     }
 
     // Construir instrucción de doble capa para inyectar al generador
@@ -9448,15 +9448,15 @@ Responde SOLO con este JSON válido. Sin markdown, sin texto extra:
   ✗ NO usar ángulo neutro ("cómo hacer X") — usar ángulo de ${angulo}
   ✗ NO sonar atemporal — conectar con tensión del momento presente
   ✗ NO vender directamente en este contenido de alcance masivo
-`; //  ¡ESTA COMILLA INVERTIDA Y EL PUNTO Y COMA ERAN LOS CULPABLES!
+`; //  ESTA COMILLA INVERTIDA Y EL PUNTO Y COMA ERAN LOS CULPABLES!
 
     // ==============================================================================
     // ✅ VERIFICACIÓN — Qué ver en consola con V2 activo
     // ==============================================================================
     console.log('\n[TCA IMPERIO] 🌀 Iniciando análisis de posicionamiento masivo...');
     console.log(`[TCA IMPERIO]  Mass Appeal Score V2: ${score}/100 (calibrado para ${platform})`);
-    console.log(`[TCA IMPERIO]  Cultural Tension Index: ${cti}/100 - ${tcaData.cultural_tension_index?.descripcion_tension || 'Tensión detectada'}`);
-    console.log(`[TCA IMPERIO]  Ángulo seleccionado: ${angulo ? angulo.toUpperCase() : 'AMENAZA'} - "${formulacionAngulo ? formulacionAngulo.substring(0, 50) : ''}..."`);
+    console.log(`[TCA IMPERIO]  Cultural Tension Index: ${cti}/100 - ${tcaData.cultural_tension_index?.descripcion_tension || 'Tension detectada'}`);
+    console.log(`[TCA IMPERIO]  Angulo seleccionado: ${angulo ? angulo.toUpperCase() : 'AMENAZA'} - "${formulacionAngulo ? formulacionAngulo.substring(0, 50) : ''}..."`);
     console.log(`[TCA IMPERIO]  Nivel: ${tcaData.nivel_original || 'N1'} -> N2-N3`);
     console.log(`[TCA IMPERIO]  Tema expandido: "${temaFinal ? temaFinal.substring(0, 60) : ''}..."`);
     console.log(`[TCA IMPERIO]  Tema expandido al sector masivo\n`);
@@ -9513,7 +9513,7 @@ async function ejecutarGeneradorGuiones(
   console.log(`[MOTOR V600]  Plataforma: ${settings.platform || 'TikTok'}`);
   console.log(`[MOTOR V600]  Estructura: ${settings.structure || 'winner_rocket'}`);
   console.log(`[MOTOR V600]  Tema: ${contexto.tema_especifico || contexto.nicho}`);
-  console.log(`[MOTOR V600]  Umbral mínimo: ${MIN_VIRAL_SCORE} | Máx intentos: ${MAX_RETRIES}`);
+  console.log(`[MOTOR V600]  Umbral minimo: ${MIN_VIRAL_SCORE} | Max intentos: ${MAX_RETRIES}`);
 
   let tokensTotal = 0;
   let mejorResultado: any = null;
@@ -9624,7 +9624,7 @@ ${retroalimentacionLoop}
 
 ` : '';
 
-    const finalPrompt = systemPrompt + refinamientoExtra + `\n\n PLAN ESTRATÉGICO:\n${planEstrategico}`;
+    const finalPrompt = systemPrompt + refinamientoExtra + `\n\n PLAN ESTRATEGICO:\n${planEstrategico}`;
 
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o',
@@ -9660,7 +9660,7 @@ ${retroalimentacionLoop}
     const viralIndex = scorePredictivo.viral_index;
 
     if (typeof viralIndex !== 'number' || isNaN(viralIndex)) {
-      console.warn(`[MOTOR V600]  Intento ${intentoActual}: viral_index no es numérico (${viralIndex}) - rechazando`);
+      console.warn(`[MOTOR V600]  Intento ${intentoActual}: viral_index no es numerico (${viralIndex}) - rechazando`);
       if (!mejorResultado) mejorResultado = parsedData;
       continue;
     }
@@ -9670,7 +9670,7 @@ ${retroalimentacionLoop}
     // ── P4: SCANNER ANTI-CLICHÉS ACTIVO (PRIMERO — antes de guardar nada) ──
     const scannerResult = await escanearYLimpiarCliches(parsedData, openai);
     if (!scannerResult.limpioDesdeInicio) {
-      console.log(`[MOTOR V600]  Clichés eliminados: ${scannerResult.clichesEliminados}`);
+      console.log(`[MOTOR V600]  Cliches eliminados: ${scannerResult.clichesEliminados}`);
       parsedData = scannerResult.output; // Versión limpia garantizada
     }
 
@@ -9713,7 +9713,7 @@ ${retroalimentacionLoop}
     
     // En último intento aceptar lo mejor disponible
     if (intentoActual === MAX_RETRIES) {
-      console.log(`[MOTOR V600]  MAX_RETRIES alcanzado. Usando mejor versión disponible.`);
+      console.log(`[MOTOR V600]  MAX_RETRIES alcanzado. Usando mejor version disponible.`);
       if (mejorResultado) {
         (mejorResultado as any)._advertencia_calidad = `Fallos pendientes: ${validacion.fallos.join('; ')}`;
       }
@@ -9728,7 +9728,7 @@ ${validacion.fallos.map(f => `- ${f}`).join('\n')}
 NO puedes entregar el guion sin resolver estos puntos.
 `;
 
-    console.log(`[MOTOR V600]  Reintentando con correcciones específicas...`);
+    console.log(`[MOTOR V600]  Reintentando con correcciones especificas...`);
 
   } // ← CIERRE DEL WHILE (faltaba esta llave)
 
@@ -9862,7 +9862,7 @@ async function ejecutarJuezViralV500(
   const modo = settings.mode || 'viral';
   const plataforma = settings.platform || 'TikTok';
 
-  console.log(`[JUEZ V500]  Iniciando análisis supremo...`);
+  console.log(`[JUEZ V500]  Iniciando analisis supremo...`);
   console.log(`[JUEZ V500]  Modo: ${modo} | Plataforma: ${plataforma}`);
   console.log(`[JUEZ V500]  Longitud contenido: ${contenido.length} caracteres`);
 
@@ -9907,7 +9907,7 @@ async function ejecutarJuezViralV500(
     );
 
     if (modulosFaltantes.length > 0) {
-      console.warn(`[JUEZ V500]  Módulos incompletos: ${modulosFaltantes.join(', ')}`);
+      console.warn(`[JUEZ V500]  Modulos incompletos: ${modulosFaltantes.join(', ')}`);
       // Agregar módulos de emergencia
       modulosFaltantes.forEach(modulo => {
         if (!result.modulos) result.modulos = {};
@@ -9918,9 +9918,9 @@ async function ejecutarJuezViralV500(
       });
     }
 
-    console.log(`[JUEZ V500]  Análisis completado`);
+    console.log(`[JUEZ V500]  Analisis completado`);
     console.log(`[JUEZ V500]  Score Global: ${result.veredicto_final?.score_total || 'N/A'}/100`);
-    console.log(`[JUEZ V500]  Clasificación: ${result.veredicto_final?.clasificacion || 'N/A'}`);
+    console.log(`[JUEZ V500]  Clasificacion: ${result.veredicto_final?.clasificacion || 'N/A'}`);
 
     // 4. [Guardado manejado por el servidor principal - no duplicar aquí]
     // El save lo hace el serve() después del switch.
@@ -10304,7 +10304,7 @@ async function scrapeYouTubeComments(url: string): Promise<{
       .sort((a: any, b: any) => b.likes - a.likes)
       .slice(0, 80);
 
-    console.log(`[COMMENTS]  ${comments.length} comentarios útiles extraídos`);
+    console.log(`[COMMENTS]  ${comments.length} comentarios utiles extraidos`);
 
     return {
       comments,
@@ -10575,7 +10575,7 @@ async function transcribeVideoWithWhisper(videoUrl: string, openai: any): Promis
 
   // Whisper tiene límite de 25MB — rechazar antes de que falle
   if (sizeMB > 24) {
-    throw new Error(`Video demasiado grande para Whisper: ${sizeMB.toFixed(1)}MB (máximo 24MB)`);
+    throw new Error(`Video demasiado grande para Whisper: ${sizeMB.toFixed(1)}MB (maximo 24MB)`);
   }
 
   const videoFile = new File([videoBuffer], 'video.mp4', { type: 'video/mp4' });
@@ -10706,7 +10706,7 @@ async function scrapeAndTranscribeVideo(
 
     console.warn('[SCRAPER] ⚠️ Sin contenido — usando URL como contexto');
     return {
-      transcript: `Video de ${platform}: ${url}. Analiza basándote en el nicho del usuario.`,
+      transcript: `Video de ${platform}: ${url}. Analiza basandote en el nicho del usuario.`,
       description: url,
       duration: 0,
       platform,
@@ -10772,7 +10772,7 @@ async function processUploadedVideo(
 
     const sizeMB = videoBuffer.byteLength / 1024 / 1024;
     if (sizeMB > 24) {
-      throw new Error(`Video demasiado grande: ${sizeMB.toFixed(1)}MB. Máximo permitido: 24MB. Comprime el video antes de subirlo.`);
+      throw new Error(`Video demasiado grande: ${sizeMB.toFixed(1)}MB. Maximo permitido: 24MB. Comprime el video antes de subirlo.`);
     }
 
     const videoFile = new File([videoBuffer], fileName, { type: mimeType });
@@ -10905,7 +10905,7 @@ async function analizarImagenEstrategica(
 
   const plataformaGuia = plataformaContext[plataforma] || plataformaContext['TikTok'];
 
-  const systemPrompt = `Eres el Extractor de ADN Viral más preciso del mundo.
+  const systemPrompt = `Eres el Extractor de ADN Viral mas preciso del mundo.
 Tu trabajo NO es describir imágenes. Es convertirlas en ARMAS NARRATIVAS personalizadas.
 
 CONTEXTO DEL CREADOR (usa esto para personalizar cada parte del análisis):
@@ -10915,9 +10915,9 @@ CONTEXTO DEL CREADOR (usa esto para personalizar cada parte del análisis):
 - Deseo principal del avatar: ${deseo}
 - Plataforma destino: ${plataforma}
 - Formato narrativo activo: ${formato}
-${mecanismo      ? `- Mecanismo propietario del experto: "${mecanismo}" -> intégralo si encaja` : ''}
-${transformacion ? `- Promesa de transformación: "${transformacion}" -> conéctala con la imagen`  : ''}
-${enemigo        ? `- Enemigo común del experto: "${enemigo}" -> úsalo si potencia la tensión`    : ''}
+${mecanismo      ? `- Mecanismo propietario del experto: "${mecanismo}" -> integralo si encaja` : ''}
+${transformacion ? `- Promesa de transformacion: "${transformacion}" -> conectala con la imagen`  : ''}
+${enemigo        ? `- Enemigo comun del experto: "${enemigo}" -> usalo si potencia la tension`    : ''}
 
 ADN DEL FORMATO ACTIVO (${formato}):
 ${adnFormato}
@@ -10944,7 +10944,7 @@ Escribe UN párrafo potente (80-120 palabras) que sirva como semilla exacta para
 Debe contener: la tensión, el ángulo para ${formato}, el dolor de ${avatar}, y el insight.
 Este párrafo es el input que usará el Motor V700 para generar el guion completo.
 
-RESPONDE SOLO con el párrafo del DETECTOR 4. Sin títulos, sin explicaciones adicionales.`;
+RESPONDE SOLO con el parrafo del DETECTOR 4. Sin titulos, sin explicaciones adicionales.`;
 
   const response = await openai.chat.completions.create({
     model: "gpt-4o",
@@ -10974,7 +10974,7 @@ RESPONDE SOLO con el párrafo del DETECTOR 4. Sin títulos, sin explicaciones ad
   });
 
   const analisis = response.choices[0].message.content;
-  console.log(`[VISION V700]  Concepto extraído para ${nicho} | ${plataforma} | ${formato}:`, analisis?.substring(0, 100) + '...');
+  console.log(`[VISION V700]  Concepto extraido para ${nicho} | ${plataforma} | ${formato}:`, analisis?.substring(0, 100) + '...');
   return analisis || '';
 }
 
@@ -11114,7 +11114,7 @@ function calculateTitanCost(
     else if (urlCount <= 3) totalCost = tabla[1];
     else                    totalCost = tabla[2]; // 4-5 URLs
 
-    console.log(`[COSTOS V3]  Tipo: ${baseCostPerUrl===15?'Reel':baseCostPerUrl===45?'Video Largo':'Masterclass'} | URLs: ${urlCount} | TOTAL: ${totalCost} créditos`);
+    console.log(`[COSTOS V3]  Tipo: ${baseCostPerUrl===15?'Reel':baseCostPerUrl===45?'Video Largo':'Masterclass'} | URLs: ${urlCount} | TOTAL: ${totalCost} creditos`);
     return totalCost;
   }
 
@@ -11212,7 +11212,7 @@ if (body.closing_objective) settings.closing_objective = body.closing_objective;
     if (estimatedCost > 0) {
       const { data: p } = await supabase.from('profiles').select('credits, tier').eq('id', userId).single();
       if (p?.tier !== 'admin' && (p?.credits || 0) < estimatedCost) {
-        throw new Error(`Saldo insuficiente. Tienes ${p?.credits || 0} créditos, se requieren ${estimatedCost}.`);
+        throw new Error(`Saldo insuficiente. Tienes ${p?.credits || 0} creditos, se requieren ${estimatedCost}.`);
       }
     }
 
@@ -11315,12 +11315,12 @@ if (body.closing_objective) settings.closing_objective = body.closing_objective;
         const isMultiplatformRequest = settings?.multiplatform === true;
         // Multiplataforma tiene costo mayor — se valida antes del proceso
         if (isMultiplatformRequest) {
-          console.log(`[MULTI]  Modo multiplataforma: ${quantity} ideas × 5 plataformas`);
+          console.log(`[MULTI]  Modo multiplataforma: ${quantity} ideas  5 plataformas`);
         }
 
         if (isMultiplatformRequest) {
           // 🌐 MODO MULTIPLATAFORMA: 1 request por idea — anti-truncado
-          console.log(`[MULTI]  Iniciando generación secuencial: ${quantity} ideas × 5 plataformas`);
+          console.log(`[MULTI]  Iniciando generacion secuencial: ${quantity} ideas  5 plataformas`);
 
           const objective  = settings?.objective || 'viralidad';
           const timing     = settings?.timing_context || 'evergreen';
@@ -11706,9 +11706,9 @@ case 'generador_guiones': {
 [INSTRUCCIÓN OBLIGATORIA PARA EL MOTOR]:
 El guion DEBE hablar específicamente sobre: "${temaFinal}".
 ${temaTexto 
-  ? `El usuario escribió este tema: "${temaTexto}". La imagen complementa visualmente.` 
-  : `Tema extraído de la imagen. Úsalo como eje central. Menciona los elementos específicos de la imagen.`}
-PROHIBIDO: guion genérico. OBLIGATORIO: mencionar detalles concretos del tema.`;
+  ? `El usuario escribio este tema: "${temaTexto}". La imagen complementa visualmente.` 
+  : `Tema extraido de la imagen. Usalo como eje central. Menciona los elementos especificos de la imagen.`}
+PROHIBIDO: guion generico. OBLIGATORIO: mencionar detalles concretos del tema.`;
 
       // Pre-análisis sobre el input real (no solo la imagen)
       preAnalisis = await preAnalizarInput(inputParaPreAnalisis, 'imagen', openai);
@@ -11736,7 +11736,7 @@ PROHIBIDO: guion genérico. OBLIGATORIO: mencionar detalles concretos del tema.`
     // P6: Detectar si el texto ya tiene estructura narrativa propia
     const estructuraImplicita = await analizarEstructuraImplicita(inputTexto, openai);
 
-    console.log(`[MOTOR V600]  Estructura implícita: ${estructuraImplicita.tipo_estructura} -> ${estructuraImplicita.instruccion}`);
+    console.log(`[MOTOR V600]  Estructura implicita: ${estructuraImplicita.tipo_estructura} -> ${estructuraImplicita.instruccion}`);
 
     // Construir instrucción para el generador según estructura detectada
     let instruccionEstructura = '';
@@ -11790,7 +11790,7 @@ ${preAnalisis.instrucciones_para_generador}
 ${instruccionEstructura}
     `.trim();
 
-    console.log(`[MOTOR V600]  Análisis P1+P6 completado | Tensión: ${preAnalisis.tension_detectada}/100 | Estructura: ${estructuraImplicita.instruccion}`);
+    console.log(`[MOTOR V600]  Analisis P1+P6 completado | Tension: ${preAnalisis.tension_detectada}/100 | Estructura: ${estructuraImplicita.instruccion}`);
 
     // Agregar al preAnalisis para el output final
     preAnalisis._estructura_implicita = {
@@ -11813,7 +11813,7 @@ ${instruccionEstructura}
     // P1 para ideas cortas — detecta conflicto potencial y tensión
     try {
       preAnalisis = await preAnalizarInput(temaUsuario, 'idea', openai);
-      console.log(`[MOTOR V600]  Idea pre-analizada | Tensión: ${preAnalisis.tension_detectada}/100 | Conflicto: ${preAnalisis.conflicto_central?.substring(0, 60)}`);
+      console.log(`[MOTOR V600]  Idea pre-analizada | Tension: ${preAnalisis.tension_detectada}/100 | Conflicto: ${preAnalisis.conflicto_central?.substring(0, 60)}`);
     } catch (e) {
       console.warn('[MOTOR V600] ⚠️ Pre-análisis de idea falló — continúa sin él');
     }
@@ -11847,7 +11847,7 @@ ${instruccionEstructura}
       }
       console.log(`[TCA IMPERIO]  Tema expandido al sector masivo`);
       console.log(`[TCA IMPERIO]  Mass Appeal Score: ${estrategiaTCA?.mass_appeal_score || 0}/100`);
-      console.log(`[TCA IMPERIO]  Nivel: ${estrategiaTCA?.nivel_original} -> Intersección N2-N3`);
+      console.log(`[TCA IMPERIO]  Nivel: ${estrategiaTCA?.nivel_original} -> Interseccion N2-N3`);
     } else {
       console.log('[TCA IMPERIO] ✅ Tema ya en posición óptima — sin expansión necesaria');
     }
@@ -12178,7 +12178,7 @@ ${Object.entries(avatarData.prohibitions || {})
 
     if (todosLosComentarios.length > 0) {
       comentariosExtraidos = todosLosComentarios.join('\n\n');
-      console.log(`[AUDIT]  Comentarios extraídos correctamente`);
+      console.log(`[AUDIT]  Comentarios extraidos correctamente`);
     }
   }
 
@@ -12299,7 +12299,7 @@ ${Object.entries(avatarData.prohibitions || {})
         tipo_contenido: body.settings?.tipo_contenido || undefined
     };
 
-    console.log(`[COPY EXPERT]  Configuración:`);
+    console.log(`[COPY EXPERT]  Configuracion:`);
     console.log(`  - Red Social: ${copySettings.red_social}`);
     console.log(`  - Formato: ${copySettings.formato}`);
     console.log(`  - Objetivo: ${copySettings.objetivo}`);
@@ -12362,7 +12362,7 @@ ${Object.entries(avatarData.prohibitions || {})
       
       if (profile?.tier !== 'admin') {
          if ((profile?.credits || 0) < finalCost) {
-            throw new Error(`Saldo insuficiente. Costo: ${finalCost} créditos.`);
+            throw new Error(`Saldo insuficiente. Costo: ${finalCost} creditos.`);
          }
          
          const { error: creditError } = await supabase.rpc('decrement_credits', { user_uuid: userId, amount: finalCost });
@@ -12410,7 +12410,7 @@ ${Object.entries(avatarData.prohibitions || {})
     );
 
   } catch (error: any) {
-    console.error(`[ERROR CRÍTICO]: ${error.message}`);
+    console.error(`[ERROR CRITICO]: ${error.message}`);
     return new Response(
       JSON.stringify({ success: false, error: error.message }), 
       { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
