@@ -7214,11 +7214,11 @@ async function ejecutarIngenieriaInversaPro(
   let tokensTotal = 0;
   let outputActual: any = null;
 
-  console.log(`[MOTOR PRO V2] 🎬 Tipo: ${contentType.toUpperCase()} | Nicho: ${nichoUsuario.substring(0, 60)}`);
-  console.log(`[MOTOR PRO V2] 📝 Guion mínimo: ${minWords} palabras`);
+  console.log("[MOTOR PRO V2] Tipo: " + contentType.toUpperCase() + " | Nicho: " + nichoUsuario.substring(0, 60));
+  console.log("[MOTOR PRO V2] 📝 Guion mínimo: " + minWords + " palabras");
 
   try {
-    console.log(`[MOTOR PRO V2] 🔬 FASE 1: Extrayendo ADN forense...`);
+    console.log("[MOTOR PRO V2] 🔬 FASE 1: Extrayendo ADN forense...");
 
   // Recortar expertProfile para FASE 1 — solo campos clave, sin bases de conocimiento enormes
   const expertProfileFase1 = contexto.expertProfile ? {
