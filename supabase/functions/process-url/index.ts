@@ -3957,7 +3957,16 @@ La meta NO es cumplir un checklist. La meta es dominar la percepción.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚠️ INSTRUCCIÓN CRÍTICA — CAMPO teleprompter_script
+⚠️ INSTRUCCIÓN CRÍTICA — CAMPO teleprompter_script:
+El campo "teleprompter_script" es EL GUION DEFINITIVO. Debe integrar TODO lo que procesaste arriba:
+✓ La VOZ y POSTURA del experto definida en Motor 0 — no es texto genérico, es la voz de ESTE experto
+✓ La ARQUITECTURA del formato narrativo activo (Motor 1) — ejecutada en texto hablado real
+✓ El HOOK en N2-N3 que el TCA expandió — el sector masivo, no el micronicho
+✓ El CONFLICTO y TENSIÓN detectados en el pre-análisis P1 — úsalos como motor emocional
+✓ La FRASE DE ORO del Motor 7 — screenshoteable, máx 10 palabras
+✓ El CTA calibrado al objetivo de cierre (Motor 9)
+PROHIBIDO: texto genérico motivacional que podría haber escrito cualquier IA sin leer el perfil del experto.
+OBLIGATORIO: que al leer el teleprompter se note QUIÉN es el experto, CUÁL es su postura y A QUIÉN habla.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 El campo "teleprompter_script" debe contener ÚNICAMENTE el texto que el creador dice en voz alta.
@@ -4145,7 +4154,7 @@ Responde SOLO con este JSON válido. Sin markdown, sin texto extra, sin explicac
     "umbral_dominancia_superado": true,
     "razonamiento": "Explicación de cómo se calculó cada score y qué ajustes se hicieron para superar viral_index ≥ 85, disrupcion ≥ 75, control_frame ≥ 75 y diferenciacion ≥ 75"
   },
-  "teleprompter_script": "ESCRIBE AQUÍ SOLO EL TEXTO HABLADO REAL. SIN ETIQUETAS. SIN CORCHETES. SIN INSTRUCCIONES. EJECUTA LA TCA COMPLETA EN TEXTO HABLADO:\\n\\nCAPAS A EJECUTAR EN ORDEN:\\nCapa 1 (0-3s): Hook masivo N2-N3 — 10-15 palabras. Sector universal. Sin jerga.\\nCapa 2 (3-15s): Filtrado psicológico — 25-35 palabras. Dolor específico. Enemigo nombrado.\\nCapa 3 (15-35s): Conflicto real — 45-55 palabras. Loop abierto. Tensión máxima.\\nCapa 4 (35-50s): Revelación + autoridad — 35-45 palabras. Insight único. Frase de oro ≤10 palabras.\\nCapa 5 (50-60s): CTA tribal — 15-20 palabras. Tribu. Identidad. Objetivo: ${closingConfig.label}.\\n\\nTOTAL: 140-170 palabras habladas. Cuenta antes de entregar.\\nEJEMPLO DE FORMATO CORRECTO:\\n'¿Cuánto dinero estás dejando sobre la mesa cada mes sin saberlo?\\n\\nLa mayoría de emprendedores trabaja más horas que nunca...\\ny cada año gana menos. No es tu culpa.\\n\\nTe enseñaron que la clave es la técnica perfecta...\\npero lo que nadie te dijo es que el sistema está diseñado para que sigas comprando cursos.\\n\\nYo lo viví. Tres años ejecutando todo perfecto...\\nsin resultados. Hasta que entendí algo que cambió todo:\\n[frase de oro aquí]\\n\\nSi esto resuena contigo, aquí se piensa distinto.'",
+  "teleprompter_script": "GENERA AQUÍ EL GUION HABLADO REAL. ES EL ÚNICO GUION QUE SE ENTREGA AL CREADOR. TEXTO PURO QUE SE LEE A CÁMARA.\\n\\nREGLAS ABSOLUTAS:\\n✓ 140-170 palabras habladas exactas — cuenta antes de entregar\\n✓ CERO etiquetas: PROHIBIDO escribir [TEXTO EN PANTALLA] [Zoom] [Corte] [B-roll] [CAPA X]\\n✓ SOLO lo que el creador dice en voz alta\\n✓ Saltos de línea para ritmo natural del habla\\n✓ ... para pausa corta | línea en blanco para pausa larga\\n\\nEMBUDO TCA — EJECUTA CAPA POR CAPA EN TEXTO HABLADO REAL:\\n\\nCAPA 1 (0-3s) — HOOK N2-N3 MASIVO — primeras 10-15 palabras:\\nConecta con Dinero / Salud / Relaciones / Libertad / Tiempo.\\nPROHIBIDO: mencionar el nicho técnico, presentarte, dar contexto previo.\\nEL ALGORITMO DECIDE AQUÍ si llega a miles o a MILLONES.\\nEJEMPLO CORRECTO: '¿Cuánto dinero perdiste este año por un error que ni sabías que cometías?'\\nEJEMPLO INCORRECTO: '¿Sabías que la desconexión espiritual afecta tus ingresos digitales?'\\n\\nCAPA 2 (3-15s) — FILTRADO PSICOLÓGICO — 25-35 palabras:\\nActiva el dolor específico del avatar. Nombra al ENEMIGO (sistema, creencia falsa, industria).\\nEl avatar siente: esto lo escribieron exactamente para mí.\\n\\nCAPA 3 (15-35s) — CONFLICTO Y TENSIÓN MÁXIMA — 45-55 palabras:\\nHistoria real. Tensión que no se resuelve todavía.\\nAbre LOOP 1: pregunta o afirmación que el avatar NECESITA ver resuelta. PROHIBIDO cerrarlo aquí.\\n\\nCAPA 4 (35-50s) — AUTORIDAD Y REVELACIÓN — 35-45 palabras:\\nEl insight que SOLO este experto puede dar. Cierra LOOP 1.\\nFRASE DE ORO OBLIGATORIA: máximo 10 palabras screenshoteable y guardable.\\nEjemplo de frase de oro: 'No fracasas por falta de técnica. Fracasas por falta de secuencia.'\\n\\nCAPA 5 (50-60s) — CTA TRIBAL — 15-20 palabras:\\nConstruye tribu, NO vende. PROHIBIDO: 'dale like' 'suscríbete' 'no olvides'.\\nEl avatar siente que fue ELEGIDO. Objetivo: ${closingConfig.label}. Mecánica: ${closingConfig.mecanica}\\n\\nVERIFICACIÓN FINAL OBLIGATORIA ANTES DE ESCRIBIR EL VALOR:\\n□ ¿Hook en N2-N3 sin jerga de micronicho? Si no → REESCRIBE\\n□ ¿Enemigo nombrado explícitamente? Si no → INSERTA\\n□ ¿Loop abierto en CAPA 3 sin resolver? Si no → INSERTA\\n□ ¿Frase de oro de máx 10 palabras en CAPA 4? Si no → CREA\\n□ ¿CTA tribal sin pedir like ni sub? Si no → REESCRIBE\\n□ ¿Total entre 140-170 palabras? Si no → AJUSTA",
   "plan_audiovisual_profesional": {
     "secuencia_temporal": [
       {
