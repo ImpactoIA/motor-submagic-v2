@@ -3957,31 +3957,79 @@ La meta NO es cumplir un checklist. La meta es dominar la percepción.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚠️ INSTRUCCIÓN CRÍTICA — CAMPO teleprompter_script:
-El campo "teleprompter_script" es EL GUION DEFINITIVO. Debe integrar TODO lo que procesaste arriba:
-✓ La VOZ y POSTURA del experto definida en Motor 0 — no es texto genérico, es la voz de ESTE experto
-✓ La ARQUITECTURA del formato narrativo activo (Motor 1) — ejecutada en texto hablado real
-✓ El HOOK en N2-N3 que el TCA expandió — el sector masivo, no el micronicho
-✓ El CONFLICTO y TENSIÓN detectados en el pre-análisis P1 — úsalos como motor emocional
-✓ La FRASE DE ORO del Motor 7 — screenshoteable, máx 10 palabras
-✓ El CTA calibrado al objetivo de cierre (Motor 9)
-PROHIBIDO: texto genérico motivacional que podría haber escrito cualquier IA sin leer el perfil del experto.
-OBLIGATORIO: que al leer el teleprompter se note QUIÉN es el experto, CUÁL es su postura y A QUIÉN habla.
+🔥 AHORA ESCRIBE EL GUION. CAMPO: teleprompter_script
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-El campo "teleprompter_script" debe contener ÚNICAMENTE el texto que el creador dice en voz alta.
-PROHIBIDO: instrucciones, etiquetas técnicas, explicaciones, "[TEXTO EN PANTALLA]", "[Zoom]", "[B-roll]".
-OBLIGATORIO: texto hablado real, 140-170 palabras, embudo TCA:
-  CAPA 1 (0-3s): 10-15 palabras — hook masivo N2-N3, sector Dinero/Salud/Relaciones/Libertad
-  CAPA 2 (3-15s): 25-35 palabras — filtra avatar, activa dolor, nombra enemigo
-  CAPA 3 (15-35s): 45-55 palabras — conflicto real, loop abierto sin resolver
-  CAPA 4 (35-50s): 35-45 palabras — revelación, insight único, frase de oro ≤10 palabras
-  CAPA 5 (50-60s): 15-20 palabras — CTA tribal, objetivo: ${closingConfig.label}
-VERIFICACIÓN: cuenta las palabras. Si < 140 → reescribe. Si > 170 → comprime.
-EJEMPLO CORRECTO: "¿Cuánto dinero estás dejando sobre la mesa sin saberlo?\\nLa mayoría de emprendedores trabaja más horas cada año...\\n[sigue el guion hablado real]"
-EJEMPLO INCORRECTO: "Escribe aquí 10-15 palabras. Hook en sector masivo..."
+Eres el mejor escritor de guiones virales del mundo hispano.
+Has estudiado cada video que llegó a 10M+ de vistas. Sabes exactamente por qué la gente para el scroll, por qué se queda, por qué guarda y por qué comparte.
+No escribes "contenido". Escribes momentos que cambian cómo la gente piensa.
+Este guion lo graba una vez. Lo puede ver un millón de personas.
 
-El campo "guion_completo" debe contener el guion con indicaciones de producción [TEXTO EN PANTALLA], pero el teleprompter_script SOLO texto hablado.
+REGLA #0 — LO MÁS IMPORTANTE:
+El teleprompter_script es TEXTO HABLADO PURO. Solo lo que el creador dice en voz alta.
+CERO etiquetas: sin [CAPA], sin [TEXTO EN PANTALLA], sin [Zoom], sin instrucciones.
+Entre 140 y 170 palabras exactas. Ni una más. Ni una menos.
+Saltos de línea donde el creador respira. "..." para pausa de 1-2s. Línea en blanco para pausa de impacto.
+
+REGLA #1 — EL HOOK ES TODO:
+Las primeras 10 palabras deciden si el algoritmo distribuye a 1.000 personas o a 1.000.000.
+El hook NO presenta al experto. NO da contexto. NO menciona el nicho técnico.
+El hook golpea directo al ego, al miedo, al dinero, al tiempo, a las relaciones o a la libertad.
+Si alguien puede predecir la segunda frase después de leer la primera → el hook es débil. Reescríbelo.
+HOOKS QUE LLEGAN A MILLONES (aprende el patrón):
+— "Estás trabajando el doble para ganar la mitad. Y tienes la culpa."
+— "El consejo que más te repiten es exactamente lo que te tiene estancado."
+— "Hay un error que cometen el 94% de los que no logran escalar. Lo cometí yo también."
+— "Nadie te dice esto porque a ellos les conviene que no lo sepas."
+HOOKS QUE MUEREN EN 300 VISTAS:
+— "Hoy quiero hablarte de algo muy importante..."
+— "¿Sabías que la desconexión espiritual afecta tus negocios?"
+— "Si eres emprendedor, esto te va a interesar..."
+
+REGLA #2 — EL CONFLICTO DEBE HACER DAÑO:
+No describas el problema. Haz que el avatar lo SIENTA en el estómago.
+Nombra al culpable real y específico — no "el sistema" genérico.
+El culpable es una creencia concreta, una narrativa específica, una industria que los engañó.
+El avatar debe pensar: "Esto es exactamente lo que me pasó. ¿Cómo lo saben?"
+
+REGLA #3 — LA TENSIÓN ES LA RETENCIÓN:
+En el segundo 20-30 debe haber una pregunta abierta, una contradicción sin resolver, o una historia a la mitad.
+El avatar no puede irse porque si se va no sabe cómo termina.
+Este loop abierto es lo que hace que la gente vea hasta el final.
+
+REGLA #4 — LA FRASE DE ORO ES OBLIGATORIA:
+Una frase de máximo 10 palabras que el avatar guarda en su teléfono, manda por WhatsApp, o postea en sus stories.
+No explica. No informa. REENCUADRA. Hace que el mundo se vea diferente después de leerla.
+FRASES DE ORO REALES (aprende la estructura):
+— "No fracasas por falta de talento. Fracasas por falta de claridad."
+— "El problema no es tu audiencia. El problema es tu mensaje."
+— "Más trabajo no es más dinero. Es más cansancio disfrazado de progreso."
+— "No te falta motivación. Te falta un sistema que no dependa de ella."
+Si la frase de oro no es digna de ser guardada → no está lista. Crea otra.
+
+REGLA #5 — EL CTA ELIGE, NO PIDE:
+PROHIBIDO ABSOLUTO: "dale like", "suscríbete", "sígueme si te gustó", "no olvides compartir".
+El avatar no siente que le piden algo. Siente que fue seleccionado para una tribu exclusiva.
+CTA QUE CONSTRUYE TRIBU:
+— "Si ves el dinero diferente a como te lo enseñaron, este es tu lugar."
+— "Esto es para los que deciden, no para los que esperan que algo cambie solo."
+— "Si ya no crees en los atajos, aquí pensamos igual."
+Objetivo de cierre: ${closingConfig.label} — mecánica: ${closingConfig.mecanica}
+
+CONTEXTO DEL EXPERTO:
+Posicionamiento: ${contexto?.expertProfile?.unique_positioning || 'autoridad que piensa diferente al consenso'}
+Enemigo del avatar: ${contexto?.expertProfile?.enemy || 'la narrativa dominante de la industria'}
+Transformación: ${contexto?.expertProfile?.transformation_promise || 'del punto A al punto B por el camino real'}
+Intensidad: ${intensityConfig.label} — ${intensityConfig.instruccion}
+Plataforma: ${platLabel}
+
+ANTES DE ESCRIBIR EL VALOR FINAL RESPONDE INTERNAMENTE:
+□ ¿Las primeras 10 palabras harían que alguien detenga el scroll a las 2am? Si no → reescribe
+□ ¿El conflicto menciona algo tan específico que el avatar siente que lo espiaron? Si no → añade especificidad
+□ ¿Hay algo sin resolver en el segundo 20-30 que obliga a quedarse? Si no → inserta el loop
+□ ¿La frase de oro es digna de un screenshot? Si no → crea una mejor
+□ ¿El CTA selecciona una tribu sin pedir nada? Si no → reescríbelo
+□ ¿Cuenta entre 140-170 palabras? Si no → ajusta
 
 Responde SOLO con este JSON válido. Sin markdown, sin texto extra, sin explicaciones.
 
@@ -4054,7 +4102,7 @@ Responde SOLO con este JSON válido. Sin markdown, sin texto extra, sin explicac
       "tca_sector": "Dinero / Estatus / Libertad / Relaciones"
     }
   ],
-  "guion_completo": "ESCRIBE AQUÍ EL GUION COMPLETO EJECUTANDO LA TEORÍA CIRCULAR DE ALCANCE (TCA) OBLIGATORIAMENTE.\\n\\nARQUITECTURA TCA QUE DEBES EJECUTAR EN EL GUION:\\n\\n[CAPA 1 — MASIVO N2-N3: 0-3s]\\nHook universal. Sector: Dinero/Salud/Relaciones/Libertad. Sin jerga técnica. Sin presentaciones. 10-15 palabras habladas que lleguen a MILLONES.\\n[TEXTO EN PANTALLA: frase del hook impactante]\\n\\n[CAPA 2 — FILTRADO PSICOLÓGICO: 3-15s]\\nActiva el dolor específico del avatar. Nombra el enemigo. Rompe la creencia falsa. El avatar siente que esto fue escrito para él. 25-35 palabras habladas.\\n[TEXTO EN PANTALLA: la creencia que atacas]\\n\\n[CAPA 3 — CONFLICTO Y TENSIÓN: 15-35s]\\nEl conflicto real. La historia. La tensión máxima. Abre LOOP 1 sin cerrarlo. El avatar no puede irse porque no sabe el final. 45-55 palabras habladas.\\n[TEXTO EN PANTALLA: estadística o dato contraintuitivo]\\n\\n[CAPA 4 — AUTORIDAD Y REVELACIÓN: 35-50s]\\nEl insight que SOLO este experto puede dar. Cierra LOOP 1. Abre y cierra LOOP 2. FRASE DE ORO: máximo 10 palabras screenshoteable. 35-45 palabras habladas.\\n[TEXTO EN PANTALLA: la frase de oro]\\n\\n[CAPA 5 — CONVERSIÓN TRIBAL: 50-60s]\\nCTA que construye tribu, NO vende. El avatar siente que fue elegido. 15-20 palabras habladas. Objetivo: ${closingConfig.label}.\\n[TEXTO EN PANTALLA: CTA visual]\\n\\nREGLAS ABSOLUTAS:\\n✓ Cada capa debe ser texto hablado REAL — no instrucciones\\n✓ Los [TEXTO EN PANTALLA] son adicionales al texto hablado, nunca lo reemplazan\\n✓ Tono: '${lensData.label}' | Intensidad: '${intensityConfig.label}' | Plataforma: '${platLabel}'\\n✓ El guion completo ejecuta el ciclo: MASIVO → FILTRADO → AUTORIDAD → CONVERSIÓN\\n✓ PROHIBIDO: guion que no ejecute TCA, texto genérico, motivacional sin conflicto",
+  "guion_completo": "",
   "micro_loops_detectados": [
     {
       "tipo": "apertura",
@@ -4154,7 +4202,7 @@ Responde SOLO con este JSON válido. Sin markdown, sin texto extra, sin explicac
     "umbral_dominancia_superado": true,
     "razonamiento": "Explicación de cómo se calculó cada score y qué ajustes se hicieron para superar viral_index ≥ 85, disrupcion ≥ 75, control_frame ≥ 75 y diferenciacion ≥ 75"
   },
-  "teleprompter_script": "GENERA AQUÍ EL GUION HABLADO REAL. ES EL ÚNICO GUION QUE SE ENTREGA AL CREADOR. TEXTO PURO QUE SE LEE A CÁMARA.\\n\\nREGLAS ABSOLUTAS:\\n✓ 140-170 palabras habladas exactas — cuenta antes de entregar\\n✓ CERO etiquetas: PROHIBIDO escribir [TEXTO EN PANTALLA] [Zoom] [Corte] [B-roll] [CAPA X]\\n✓ SOLO lo que el creador dice en voz alta\\n✓ Saltos de línea para ritmo natural del habla\\n✓ ... para pausa corta | línea en blanco para pausa larga\\n\\nEMBUDO TCA — EJECUTA CAPA POR CAPA EN TEXTO HABLADO REAL:\\n\\nCAPA 1 (0-3s) — HOOK N2-N3 MASIVO — primeras 10-15 palabras:\\nConecta con Dinero / Salud / Relaciones / Libertad / Tiempo.\\nPROHIBIDO: mencionar el nicho técnico, presentarte, dar contexto previo.\\nEL ALGORITMO DECIDE AQUÍ si llega a miles o a MILLONES.\\nEJEMPLO CORRECTO: '¿Cuánto dinero perdiste este año por un error que ni sabías que cometías?'\\nEJEMPLO INCORRECTO: '¿Sabías que la desconexión espiritual afecta tus ingresos digitales?'\\n\\nCAPA 2 (3-15s) — FILTRADO PSICOLÓGICO — 25-35 palabras:\\nActiva el dolor específico del avatar. Nombra al ENEMIGO (sistema, creencia falsa, industria).\\nEl avatar siente: esto lo escribieron exactamente para mí.\\n\\nCAPA 3 (15-35s) — CONFLICTO Y TENSIÓN MÁXIMA — 45-55 palabras:\\nHistoria real. Tensión que no se resuelve todavía.\\nAbre LOOP 1: pregunta o afirmación que el avatar NECESITA ver resuelta. PROHIBIDO cerrarlo aquí.\\n\\nCAPA 4 (35-50s) — AUTORIDAD Y REVELACIÓN — 35-45 palabras:\\nEl insight que SOLO este experto puede dar. Cierra LOOP 1.\\nFRASE DE ORO OBLIGATORIA: máximo 10 palabras screenshoteable y guardable.\\nEjemplo de frase de oro: 'No fracasas por falta de técnica. Fracasas por falta de secuencia.'\\n\\nCAPA 5 (50-60s) — CTA TRIBAL — 15-20 palabras:\\nConstruye tribu, NO vende. PROHIBIDO: 'dale like' 'suscríbete' 'no olvides'.\\nEl avatar siente que fue ELEGIDO. Objetivo: ${closingConfig.label}. Mecánica: ${closingConfig.mecanica}\\n\\nVERIFICACIÓN FINAL OBLIGATORIA ANTES DE ESCRIBIR EL VALOR:\\n□ ¿Hook en N2-N3 sin jerga de micronicho? Si no → REESCRIBE\\n□ ¿Enemigo nombrado explícitamente? Si no → INSERTA\\n□ ¿Loop abierto en CAPA 3 sin resolver? Si no → INSERTA\\n□ ¿Frase de oro de máx 10 palabras en CAPA 4? Si no → CREA\\n□ ¿CTA tribal sin pedir like ni sub? Si no → REESCRIBE\\n□ ¿Total entre 140-170 palabras? Si no → AJUSTA",
+  "teleprompter_script": "ESCRIBE AQUÍ EL GUION. SOLO TEXTO HABLADO. 140-170 PALABRAS. Hook que detiene el scroll en sector universal, conflicto que duele, loop que obliga a quedarse, frase de oro screenshoteable, CTA que selecciona tribu. SIN etiquetas. SOLO lo que el creador lee a cámara.",
   "plan_audiovisual_profesional": {
     "secuencia_temporal": [
       {
