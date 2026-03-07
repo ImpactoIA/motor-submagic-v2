@@ -6201,6 +6201,11 @@ async function scrapeFacebook(url: string): Promise<{
   transcript?: string;
   detectedLanguage?: string;
   duration?: number;
+  likes?: number;
+  views?: number;
+  comments?: number;
+  shares?: number;
+  author?: string;
 }> {
   const apifyToken = Deno.env.get('APIFY_API_TOKEN');
   if (!apifyToken) {
@@ -7156,28 +7161,39 @@ DEVUELVE ÚNICAMENTE ESTE JSON (sin markdown, sin backticks):
     "checklist_produccion": ["iluminación","fondo","apariencia","equipo","apps edición"]
   },
   "miniatura_dominante": {"frase_principal":"","variante_agresiva":"","variante_aspiracional":"","justificacion_estrategica":"","emocion_dominante_activada":"","gap_curiosidad":"","mecanismo_psicologico":"","ctr_score":0,"nivel_disrupcion":0,"nivel_gap_curiosidad":0,"nivel_polarizacion":0},
-  "validacion_olimpo": {
-    "arquitectura_completa": true,
-    "loops_detectados": true,
-    "tca_identificado": true,
-    "equilibrio_ideal_detectado": true,
-    "filtro_implicito_extraido": true,
-    "adaptacion_sin_micronicho": true,
-    "adn_estructural_mantenido": true,
-    "genero_narrativo_respetado": true,
-    "emocion_nucleo_presente": true,
-    "teleprompter_sin_etiquetas": true,
-    "conflicto_original_preservado": true,
-    "riesgo_narrativo_mantenido": true,
-    "intensidad_equivalente_o_superior": true,
-    "guion_concreto_no_abstracto": true,
-    "punto_critico_presente": true,
-    "decision_clara_presente": true,
-    "score_validacion": 0
+  \"hooks_alternativos\": [
+    {\"tipo\": \"curiosidad\",    \"hook\": \"ESCRIBE UN HOOK DE CURIOSIDAD — pregunta o dato que genere intriga\"},
+    {\"tipo\": \"polemica\",      \"hook\": \"ESCRIBE UN HOOK POLÉMICO — afirmación que divide opiniones inmediatamente\"},
+    {\"tipo\": \"autoridad\",     \"hook\": \"ESCRIBE UN HOOK DE AUTORIDAD — postura experta que impone credibilidad\"},
+    {\"tipo\": \"descubrimiento\",\"hook\": \"ESCRIBE UN HOOK DE DESCUBRIMIENTO — revelación o dato contraintuitivo\"},
+    {\"tipo\": \"advertencia\",   \"hook\": \"ESCRIBE UN HOOK DE ADVERTENCIA — alerta urgente que paraliza el scroll\"}
+  ],
+  \"estructura_narrativa_detectada\": \"Nombre de la estructura usada: Storytelling / Shock / Confesión / Transformación / Error-Aprendizaje / Lista educativa / Autoridad / Debate / Comparación / Tutorial\",
+  \"gatillos_psicologicos\": [
+    {\"gatillo\": \"nombre del gatillo 1\", \"donde_aparece\": \"segundo o momento del guion\", \"efecto\": \"qué provoca en el espectador\"},
+    {\"gatillo\": \"nombre del gatillo 2\", \"donde_aparece\": \"segundo o momento del guion\", \"efecto\": \"qué provoca en el espectador\"},
+    {\"gatillo\": \"nombre del gatillo 3\", \"donde_aparece\": \"segundo o momento del guion\", \"efecto\": \"qué provoca en el espectador\"}
+  ],
+  \"validacion_olimpo\": {
+    \"arquitectura_completa\": true,
+    \"loops_detectados\": true,
+    \"tca_identificado\": true,
+    \"equilibrio_ideal_detectado\": true,
+    \"filtro_implicito_extraido\": true,
+    \"adaptacion_sin_micronicho\": true,
+    \"adn_estructural_mantenido\": true,
+    \"genero_narrativo_respetado\": true,
+    \"emocion_nucleo_presente\": true,
+    \"teleprompter_sin_etiquetas\": true,
+    \"conflicto_original_preservado\": true,
+    \"riesgo_narrativo_mantenido\": true,
+    \"intensidad_equivalente_o_superior\": true,
+    \"guion_concreto_no_abstracto\": true,
+    \"punto_critico_presente\": true,
+    \"decision_clara_presente\": true,
+    \"score_validacion\": 0
   },
 }
-`;
-};
 
 async function ejecutarIngenieriaInversaPro(
   content: string,
@@ -7217,8 +7233,16 @@ async function ejecutarIngenieriaInversaPro(
     point_b: contexto.expertProfile.point_b,
   } : undefined;
 
-  // ✅ Truncar transcript ANTES del prompt — preserva instrucciones completas
-  const contentTruncado = content.slice(0, 4000);
+  // ✅ NORMALIZACIÓN DE DATOS (Plan Estratégico — Paso 2)
+  // Limpia emojis excesivos, hashtags, duplicados y limita a 3000 chars
+  const contentNormalizado = content
+    .replace(/[\u{1F300}-\u{1FFFF}]/gu, '')          // elimina emojis
+    .replace(/#\w+/g, '')                              // elimina hashtags
+    .replace(/(.{20,}?)\1+/g, '$1')                   // elimina duplicados largos
+    .replace(/\s{3,}/g, '\n\n')                        // colapsa espacios
+    .trim()
+    .slice(0, 3000);                                   // máximo 3000 chars
+  const contentTruncado = contentNormalizado.length > 50 ? contentNormalizado : content.slice(0, 3000);
 
   const promptFase1 = PROMPT_ADN_FORENSE(
   contentTruncado,
@@ -7419,7 +7443,7 @@ async function ejecutarIngenieriaInversaPro(
       expertProfileFase2
     );
 
-    const TOKENS_FASE2 = esMasterclass ? 6000 : contentType === 'long' ? 5000 : 4000;
+    const TOKENS_FASE2 = esMasterclass ? 7500 : contentType === 'long' ? 6500 : 5500;
 
     // Esperar reducido para evitar Timeout
     console.log('[MOTOR PRO V2] ⏳ Limpiando ventana TPM...');
@@ -10319,6 +10343,11 @@ async function scrapeTikTok(url: string): Promise<{
     description: string; 
     transcript?: string;
     duration?: number;
+    likes?: number;
+    views?: number;
+    comments?: number;
+    shares?: number;
+    author?: string;
 }> {
   const apifyToken = Deno.env.get('APIFY_API_TOKEN');
   if (!apifyToken) {
@@ -10380,7 +10409,12 @@ async function scrapeTikTok(url: string): Promise<{
       videoUrl: bestVideoUrl || url,
       description,
       transcript: transcriptFinal,
-      duration: v.videoMeta?.duration || v.duration || 0
+      duration: v.videoMeta?.duration || v.duration || 0,
+      likes: v.diggCount || v.likeCount || v.likes || 0,
+      views: v.playCount || v.viewCount || v.views || 0,
+      comments: v.commentCount || v.comments || 0,
+      shares: v.shareCount || v.shares || 0,
+      author: v.authorMeta?.name || v.author?.uniqueId || '',
     };
   } catch (error: any) {
     console.error('[SCRAPER] ❌ Error TikTok:', error.message);
@@ -10395,6 +10429,10 @@ async function scrapeInstagram(url: string): Promise<{
     transcript?: string;
     detectedLanguage?: string;
     duration?: number;
+    likes?: number;
+    views?: number;
+    comments?: number;
+    author?: string;
 }> {
   const apifyToken = Deno.env.get('APIFY_API_TOKEN');
   if (!apifyToken) {
@@ -10434,7 +10472,11 @@ async function scrapeInstagram(url: string): Promise<{
       description: transcript,
       transcript,
       detectedLanguage: v.language || 'auto',
-      duration: v.videoDuration || v.duration || 0
+      duration: v.videoDuration || v.duration || 0,
+      likes: v.likesCount || v.likes || 0,
+      views: v.videoViewCount || v.views || 0,
+      comments: v.commentsCount || v.comments || 0,
+      author: v.ownerUsername || v.username || '',
     };
   } catch (error: any) {
     console.error('[SCRAPER] ❌ Error Instagram:', error.message);
@@ -10568,6 +10610,11 @@ async function scrapeAndTranscribeVideo(
   duration: number; 
   platform: string;
   videoUrl?: string;
+  likes?: number;
+  views?: number;
+  comments?: number;
+  shares?: number;
+  author?: string;
 }> {
   const platform = detectPlatform(url);
   console.log(`[SCRAPER] 🎯 Plataforma detectada: ${platform.toUpperCase()}`);
@@ -10609,7 +10656,12 @@ async function scrapeAndTranscribeVideo(
         duration: (videoData as any).duration || 0,
         platform,
         videoUrl: videoData.videoUrl,
-        detectedLanguage: (videoData as any).detectedLanguage || 'auto'
+        detectedLanguage: (videoData as any).detectedLanguage || 'auto',
+        likes:    (videoData as any).likes    || 0,
+        views:    (videoData as any).views    || 0,
+        comments: (videoData as any).comments || 0,
+        shares:   (videoData as any).shares   || 0,
+        author:   (videoData as any).author   || '',
       };
     }
 
@@ -10625,7 +10677,12 @@ async function scrapeAndTranscribeVideo(
             duration: whisperResult.duration,
             platform,
             videoUrl: videoData.videoUrl,
-            detectedLanguage: (whisperResult as any).language || 'auto'
+            detectedLanguage: (whisperResult as any).language || 'auto',
+            likes:    (videoData as any).likes    || 0,
+            views:    (videoData as any).views    || 0,
+            comments: (videoData as any).comments || 0,
+            shares:   (videoData as any).shares   || 0,
+            author:   (videoData as any).author   || '',
           };
         }
       } catch (whisperErr: any) {
@@ -10641,7 +10698,12 @@ async function scrapeAndTranscribeVideo(
         description: videoData.description,
         duration: (videoData as any).duration || 0,
         platform,
-        videoUrl: videoData.videoUrl || ''
+        videoUrl: videoData.videoUrl || '',
+        likes:    (videoData as any).likes    || 0,
+        views:    (videoData as any).views    || 0,
+        comments: (videoData as any).comments || 0,
+        shares:   (videoData as any).shares   || 0,
+        author:   (videoData as any).author   || '',
       };
     }
 
@@ -10711,10 +10773,14 @@ async function processUploadedVideo(
       fileExtension === 'webm' ? 'video/webm' :
       'video/mp4';
 
+    const sizeMB = videoBuffer.byteLength / 1024 / 1024;
+    if (sizeMB > 24) {
+      throw new Error(`Video demasiado grande: ${sizeMB.toFixed(1)}MB. Máximo permitido: 24MB. Comprime el video antes de subirlo.`);
+    }
+
     const videoFile = new File([videoBuffer], fileName, { type: mimeType });
 
     console.log('[UPLOAD] 🎙️ Enviando a Whisper...');
-
     const transcription = await openai.audio.transcriptions.create({
       file: videoFile,
       model: 'whisper-1',
@@ -10747,6 +10813,11 @@ async function getVideoContent(
   duration: number;
   platform: string;
   source: 'url' | 'upload';
+  likes?: number;
+  views?: number;
+  comments?: number;
+  shares?: number;
+  author?: string;
 }> {
   
   if (uploadedFile && fileName) {
@@ -10754,6 +10825,7 @@ async function getVideoContent(
     
     const result = await processUploadedVideo(uploadedFile, fileName, openai);
     
+    // ✅ Video subido: no hay engagement disponible — flujo protegido
     return {
       transcript: result.transcript,
       description: `Video subido: ${fileName}`,
@@ -10773,7 +10845,12 @@ async function getVideoContent(
       description: result.description,
       duration: result.duration,
       platform: result.platform,
-      source: 'url'
+      source: 'url',
+      likes:    (result as any).likes    || 0,
+      views:    (result as any).views    || 0,
+      comments: (result as any).comments || 0,
+      shares:   (result as any).shares   || 0,
+      author:   (result as any).author   || '',
     };
   }
   
@@ -11536,6 +11613,17 @@ const outputLanguageFull = languageNames[outputLanguage] || languageNames['es'];
         
         // Inyectar duración del video original para adaptar umbrales
         userContext._videoDurationSecs = videoDurationSecs;
+
+        // ✅ INYECTAR ENGAGEMENT (Plan Estratégico — Paso 3)
+        if ((videoData as any)?.likes !== undefined) {
+          userContext._engagement = {
+            likes:    (videoData as any).likes    || 0,
+            views:    (videoData as any).views    || 0,
+            comments: (videoData as any).comments || 0,
+            shares:   (videoData as any).shares   || 0,
+            author:   (videoData as any).author   || '',
+          };
+        }
 
         // ✅ Inyectar ADN de todos los videos analizados individualmente
 if (multiAnalysis.length > 1) {

@@ -1325,7 +1325,7 @@ export const TitanViral = () => {
     if (!file) return;
     const validTypes = ['video/mp4', 'video/quicktime', 'video/webm', 'video/x-msvideo'];
     if (!validTypes.includes(file.type)) { setErrorMsg('Tipo no soportado. Usa MP4, MOV, WEBM o AVI.'); return; }
-    if (file.size > 100 * 1024 * 1024) { setErrorMsg('Archivo demasiado grande. Máximo 100MB.'); return; }
+    if (file.size > 24 * 1024 * 1024) { setErrorMsg('Video demasiado grande. Máximo 24MB para procesamiento con IA. Comprime el video con HandBrake o similar.'); return; }
     const reader = new FileReader();
     reader.onloadend = () => { setUploadedVideoFile(reader.result as string); setUploadedFileName(file.name); };
     reader.readAsDataURL(file);
@@ -1772,6 +1772,74 @@ export const TitanViral = () => {
 
             {/* 1 ─── GUION (LO MÁS IMPORTANTE) */}
             <OmegaScriptView scriptData={result.guion_generado} contentType={contentType} />
+
+            {/* 1B ─── 5 HOOKS ALTERNATIVOS */}
+            {result.guion_generado.hooks_alternativos?.length > 0 && (
+              <div>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="h-px bg-gradient-to-r from-transparent via-yellow-500/50 to-transparent flex-1" />
+                  <span className="text-[10px] font-black text-yellow-400 uppercase tracking-[0.3em]">🎯 5 Hooks Alternativos</span>
+                  <div className="h-px bg-gradient-to-r from-transparent via-yellow-500/50 to-transparent flex-1" />
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {result.guion_generado.hooks_alternativos.map((h: any, i: number) => {
+                    const colors: Record<string, string> = {
+                      curiosidad:     'border-blue-500/30 bg-blue-500/5 text-blue-400',
+                      polemica:       'border-red-500/30 bg-red-500/5 text-red-400',
+                      autoridad:      'border-yellow-500/30 bg-yellow-500/5 text-yellow-400',
+                      descubrimiento: 'border-purple-500/30 bg-purple-500/5 text-purple-400',
+                      advertencia:    'border-orange-500/30 bg-orange-500/5 text-orange-400',
+                    };
+                    const c = colors[h.tipo] || 'border-white/10 bg-white/5 text-gray-400';
+                    return (
+                      <div key={i} className={`rounded-xl border p-4 ${c.split(' ').slice(0,2).join(' ')}`}>
+                        <p className={`text-[9px] font-black uppercase tracking-widest mb-2 ${c.split(' ')[2]}`}>{h.tipo}</p>
+                        <p className="text-xs text-white font-bold leading-relaxed italic">"{h.hook}"</p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* 1C ─── ESTRUCTURA NARRATIVA + GATILLOS PSICOLÓGICOS */}
+            {(result.guion_generado.estructura_narrativa_detectada || result.guion_generado.gatillos_psicologicos?.length > 0) && (
+              <div>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="h-px bg-gradient-to-r from-transparent via-pink-500/50 to-transparent flex-1" />
+                  <span className="text-[10px] font-black text-pink-400 uppercase tracking-[0.3em]">🧠 Estructura & Gatillos Psicológicos</span>
+                  <div className="h-px bg-gradient-to-r from-transparent via-pink-500/50 to-transparent flex-1" />
+                </div>
+                <div className="bg-[#0f1115] border border-pink-500/20 rounded-2xl p-6 space-y-4">
+                  {result.guion_generado.estructura_narrativa_detectada && (
+                    <div className="bg-[#080808] rounded-xl px-4 py-3 border border-white/5">
+                      <p className="text-[9px] text-gray-500 uppercase tracking-widest mb-1">Estructura Narrativa Detectada</p>
+                      <p className="text-sm font-black text-pink-300">{result.guion_generado.estructura_narrativa_detectada}</p>
+                    </div>
+                  )}
+                  {result.guion_generado.gatillos_psicologicos?.length > 0 && (
+                    <div className="space-y-2">
+                      {result.guion_generado.gatillos_psicologicos.map((g: any, i: number) => (
+                        <div key={i} className="bg-[#080808] rounded-xl px-4 py-3 border border-white/5 grid grid-cols-3 gap-3">
+                          <div>
+                            <p className="text-[9px] text-gray-500 uppercase tracking-widest mb-1">Gatillo</p>
+                            <p className="text-xs font-black text-pink-300">{g.gatillo}</p>
+                          </div>
+                          <div>
+                            <p className="text-[9px] text-gray-500 uppercase tracking-widest mb-1">Dónde aparece</p>
+                            <p className="text-xs text-gray-300">{g.donde_aparece}</p>
+                          </div>
+                          <div>
+                            <p className="text-[9px] text-gray-500 uppercase tracking-widest mb-1">Efecto</p>
+                            <p className="text-xs text-gray-300">{g.efecto}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* 2 ─── ADN + IDEA NUCLEAR */}
             <div>
