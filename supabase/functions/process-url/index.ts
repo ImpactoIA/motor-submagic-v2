@@ -7234,14 +7234,12 @@ async function ejecutarIngenieriaInversaPro(
   } : undefined;
 
   // ✅ NORMALIZACIÓN DE DATOS (Plan Estratégico — Paso 2)
-  // Limpia emojis excesivos, hashtags, duplicados y limita a 3000 chars
   const contentNormalizado = content
-    .replace(/[\u{1F300}-\u{1FFFF}]/gu, '')          // elimina emojis
-    .replace(/#\w+/g, '')                              // elimina hashtags
-    .replace(/(.{20,}?)\1+/g, '$1')                   // elimina duplicados largos
-    .replace(/\s{3,}/g, '\n\n')                        // colapsa espacios
+    .replace(/#\w+/g, '')
+    .replace(/(.{20,}?)\1+/g, '$1')
+    .replace(/\s{3,}/g, '\n\n')
     .trim()
-    .slice(0, 3000);                                   // máximo 3000 chars
+    .slice(0, 3000);
   const contentTruncado = contentNormalizado.length > 50 ? contentNormalizado : content.slice(0, 3000);
 
   const promptFase1 = PROMPT_ADN_FORENSE(
