@@ -3222,204 +3222,281 @@ const PROMPT_GENERADOR_GUIONES = (contexto: any, viralDNA: any, settings: any = 
 
   const curvaPlataforma = EMOTIONAL_CURVES_BY_PLATFORM[platLabel] || EMOTIONAL_CURVES_BY_PLATFORM['TikTok'];
 
-  // ==================================================================================
-  // 🧬 DNA POR PLATAFORMA (ADAPTACIÓN OBLIGATORIA)
-  // ==================================================================================
-  
   const PLATFORM_DNA_LOCAL: Record<string, any> = {
-    
+
     'TikTok': {
-      comportamiento: 'Exploración caótica - Scroll frenético cada 1.5 segundos',
-      porque_se_va: 'Aburrimiento inmediato (primeros 3 segundos)',
-      que_retiene: 'Shock + Curiosidad extrema + Identificación tribal',
-      
+      comportamiento: 'Exploración caótica — scroll frenético cada 1.5 segundos. Algoritmo basado en completion rate y replays.',
+      porque_se_va: 'Aburrimiento en segundos 3, 15 o 45 — el algoritmo mide retención en esos 3 puntos exactos.',
+      que_retiene: 'Shock inicial + loop cognitivo abierto + re-enganche en segundo 15 + pregunta que obliga a comentar.',
+
       estructura_obligatoria: `
 ═══════════════════════════════════════════════════════════════════════════
-🎵 ESTRUCTURA TIKTOK ÉLITE (RETENCIÓN AGRESIVA - 60s)
+🎵 ESTRUCTURA TIKTOK V800 — ALGORITMO-FIRST (3 Exámenes de Retención)
 ═══════════════════════════════════════════════════════════════════════════
 
-⚠️ REGLA DE ORO: TikTok NO premia calidad educativa. Premia TIEMPO RETENIDO.
-
-ARQUITECTURA MANDATORIA (cada segundo cuenta):
+⚠️ REGLA SUPREMA: TikTok mide retención en segundos 3, 15 y 45. Cada uno es un examen. Si fallas uno, el algoritmo deja de distribuir.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-1. HOOK VIOLENTO (0-2s) ⚡ [OBLIGATORIO]
+EXAMEN 1 — HOOK VIOLENTO (0-3s) ⚡ [PASA O MUERE]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-FUNCIÓN: Ataque directo a identidad/creencia del avatar.
-
-FÓRMULAS PROBADAS:
-• "Esto te está haciendo invisible en ${temaEspecifico} y nadie te lo dice"
-• "Si haces esto en ${temaEspecifico}, nunca vas a crecer"
-• "El error #1 que arruina tu ${temaEspecifico} (y ni te das cuenta)"
-• "Por qué el 97% falla en ${temaEspecifico}"
-
-REGLAS:
-✓ CERO introducción ("Hola, soy..." = MUERTE)
-✓ Máximo 6-8 palabras
-✓ Genera: sorpresa, miedo, o curiosidad extrema
+FUNCIÓN: Detener el pulgar en 1.5s. Ataque directo a identidad o creencia.
+FÓRMULAS: "Esto te está costando ${temaEspecifico} y nadie te lo dice" / "El error #1 que arruina tu ${temaEspecifico}"
+REGLAS: ✓ CERO introducción ✓ Máximo 6-8 palabras ✓ Sorpresa, miedo o curiosidad extrema
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-2. IDENTIFICACIÓN EXTREMA (3-6s) 🎯
+IDENTIFICACIÓN (3-6s) 🎯
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-• "Sé exactamente lo que sientes porque yo también ${dolorPrincipal}"
-• "Si esto resuena contigo, no estás solo..."
+"Sé exactamente cómo se siente porque yo también estuve en ${dolorPrincipal}"
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-3. ERROR INVISIBLE (7-12s) 🔍
+ERROR INVISIBLE (7-12s) 🔍
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-• "El problema no eres tú. Es que te enseñaron ${temaEspecifico} al revés"
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-4. LOOP VIRAL 1 (13-15s) 🔄
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-• "Pero lo que casi nadie ve es..." (NO dar respuesta todavía)
+"El problema no eres tú. Es que te enseñaron ${temaEspecifico} completamente al revés."
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-5. INSIGHT RÁPIDO (16-30s) 💡
+EXAMEN 2 — RE-ENGANCHE (13-15s) 🔄 [SEGUNDO EXAMEN DEL ALGORITMO]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-✓ NO tips genéricos — SÍ marco mental o sistema específico con números
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-6. LOOP VIRAL 2 (31-40s) 🔄
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-• "Y lo que descubrí después fue aún más loco..."
+FUNCIÓN: Reactivar atención antes de que el scroll gane. Abrir loop que no puede cerrarse solo.
+"Pero lo que casi nadie descubre es..." (NO dar respuesta todavía — el cerebro no puede irse)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-7. MINI RESOLUCIÓN (41-55s) ✅
+INSIGHT RÁPIDO (16-30s) 💡
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-• "Cuando apliqué esto en ${temaEspecifico}, pasé de X a Y"
+✓ NO tips genéricos — SÍ marco mental con números concretos. Frases máximo 8 palabras.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-8. CTA IMPLÍCITO (56-60s) 👑
+EXAMEN 3 — RE-ENGANCHE PROFUNDO (31-35s) 🔄 [TERCER EXAMEN DEL ALGORITMO]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FUNCIÓN: El algoritmo mide si la gente sigue aquí. Segunda inyección de tensión obligatoria.
+"Y lo que descubrí después fue aún más inesperado..." (escalar la promesa, no resolverla)
 
-• "Sígueme porque aquí se piensa distinto sobre ${temaEspecifico}"
-✓ NO "dale like y suscríbete" — SÍ crear identidad y comunidad
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MINI RESOLUCIÓN (36-52s) ✅
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+"Cuando apliqué esto en ${temaEspecifico}, pasé de [situación antes] a [resultado concreto con número]"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CTA QUE GENERA SEÑAL ALGORÍTMICA (53-60s) 👑
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FUNCIÓN: El comentario es la señal más poderosa para distribución masiva en TikTok.
+✓ "Comenta SI o NO: ¿Esto te estaba pasando?" — obliga respuesta binaria inmediata
+✓ "¿Cuántos años llevas haciendo esto sin saberlo? Ponlo en comentarios."
+❌ NUNCA "dale like y suscríbete"
 
 ⚠️ PROHIBIDO EN TIKTOK:
-❌ Frases largas (>12 palabras) ❌ Contexto histórico ❌ Lenguaje corporativo
+❌ Frases largas (>10 palabras) ❌ Contexto histórico ❌ Lenguaje corporativo ❌ Múltiples ideas por bloque
 `,
       tono: 'Urgente, directo, sin filtros, energético, tribal',
-      ritmo: 'Frenético - Micro-gancho cada 2-3 seg',
-      longitud_frase: 'Ultra corta (5-8 palabras max)',
-      prohibiciones: ['Introducciones largas', 'Contexto extenso', 'Lenguaje formal']
+      ritmo: 'Frenético — micro-gancho cada 2-3 segundos',
+      longitud_frase: 'Ultra corta (5-8 palabras max por frase)',
+      prohibiciones: ['Introducciones largas', 'Contexto extenso', 'Lenguaje formal', 'Más de una idea por bloque']
     },
-    
+
     'Reels': {
-      comportamiento: 'Identidad/Estatus - Búsqueda de pertenencia y aspiración',
-      porque_se_va: 'No conecta conmigo / No me representa / No es guardable',
-      que_retiene: 'Estética + Afinidad + Frases compartibles + Identidad tribal',
-      
+      comportamiento: 'Identidad y estatus — búsqueda de pertenencia, aspiración y contenido guardable.',
+      porque_se_va: 'No me representa / No es estético / No es guardable / No genera identidad.',
+      que_retiene: 'Estética + Afinidad + Frases de screenshot + Pausa visual que obliga a leer + Identidad tribal.',
+
       estructura_obligatoria: `
 ═══════════════════════════════════════════════════════════════════════════
-📸 ESTRUCTURA REELS INFLUENCIA (IDENTIDAD + ASPIRACIÓN - 60s)
+📸 ESTRUCTURA REELS V800 — GUARDADO + IDENTIDAD (Algorithm-First)
 ═══════════════════════════════════════════════════════════════════════════
 
-⚠️ REGLA DE ORO: Instagram NO busca aprender. Busca PERTENECER y ASPIRAR.
+⚠️ REGLA SUPREMA: Instagram no busca aprender. Busca PERTENECER, ASPIRAR y GUARDAR. Los GUARDADOS valen 5x más que likes para el algoritmo.
 
-1. HOOK ELEGANTE O DISRUPTIVO (0-3s) — Estético pero poderoso. Guardable.
-2. IDENTIFICACIÓN ASPIRACIONAL (4-10s) — Tribu élite. "Los que realmente dominan ${temaEspecifico}..."
-3. CONFLICTO EMOCIONAL (11-25s) — Historia relatable. Vulnerabilidad controlada.
-4. INSIGHT CON ESTÉTICA MENTAL (26-40s) — Idea compartible. Frase de screenshot.
-5. FRASE PODEROSA COMPARTIBLE (41-50s) — Quote-worthy. Filosofía de vida.
-6. RESOLUCIÓN ASPIRACIONAL (51-57s) — Visión de futuro atractiva.
-7. CTA EMOCIONAL (58-60s) — Comunidad exclusiva.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+HOOK DE PAUSA VISUAL (0-3s) 🛑 [LOS PRIMEROS 7s SON EL EXAMEN DEL ALGORITMO]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FUNCIÓN: Detener el scroll con identidad inmediata. Texto sobreimpreso + frase tribal.
+"Las personas que realmente dominan ${temaEspecifico} nunca hacen esto."
+"Si entiendes esto sobre ${temaEspecifico}, ya estás en el 3% superior."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+IDENTIFICACIÓN ASPIRACIONAL (4-10s) ✨
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Tribu élite. Exclusividad accesible. "Los que realmente entienden ${temaEspecifico}..."
+✓ Aspiracional pero no inalcanzable — tiene que sentirse alcanzable para el avatar
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CONFLICTO EMOCIONAL RELATABLE (11-25s) 💭
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Historia corta y relatable. Vulnerabilidad controlada. "Yo también estuve ahí..."
+✓ Este es el bloque que genera SHARES — debe hacer sentir "esto soy yo"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+INSIGHT GUARDABLE (26-42s) 💾 [DISEÑADO PARA EL BOTÓN GUARDAR]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FUNCIÓN: Este bloque DEBE contener la frase que la gente guarda para releer después.
+Dato contraintuitivo con estética mental. Filosofía de vida sobre ${temaEspecifico}.
+"Guarda esto porque lo vas a necesitar cuando ${dolorPrincipal}"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FRASE DE SCREENSHOT (43-52s) 📸 [SEÑAL DE SHARE A STORIES]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Quote-worthy. Máximo 12 palabras. Funciona sola fuera de contexto.
+Filosofía de vida sobre ${temaEspecifico} que la gente quiere compartir en su historia.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CTA DE COMUNIDAD EXCLUSIVA (53-60s) 🏆
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ "Sígueme si eres de los que entienden esto sobre ${temaEspecifico}"
+✓ "Guarda esto — lo vas a necesitar" (activa la señal de guardado)
+❌ NUNCA "sigue mi cuenta" genérico
 
 ⚠️ PROHIBIDO EN REELS:
-❌ Agresividad excesiva ❌ Clickbait burdo ❌ Tono frío/corporativo
+❌ Agresividad excesiva ❌ Clickbait burdo ❌ Tono frío/corporativo ❌ Ritmo frenético de TikTok
 `,
-      tono: 'Humano, aspiracional, elegante pero accesible',
-      ritmo: 'Medio - Pausas estratégicas para reflexión',
+      tono: 'Humano, aspiracional, elegante pero accesible, cercano',
+      ritmo: 'Medio — pausas estratégicas para reflexión y lectura de texto sobreimpreso',
       longitud_frase: 'Media (10-15 palabras)',
       prohibiciones: ['Agresividad excesiva', 'Clickbait burdo', 'Tono frío/corporativo']
     },
-    
+
     'YouTube': {
-      comportamiento: 'Intención clara - Vino a aprender algo ESPECÍFICO',
-      porque_se_va: 'No cumple la promesa del título/thumbnail',
-      que_retiene: 'Profundidad real + Claridad brutal + Cumplir promesa EXACTA',
-      
+      comportamiento: 'Intención declarada — vino a aprender algo ESPECÍFICO. Mayor tolerancia al tiempo si se cumple la promesa.',
+      porque_se_va: 'No cumple la promesa del título / Es superficial / Pierde el hilo después del primer minuto.',
+      que_retiene: 'Cumplir la promesa EXACTA + Profundidad real + Claridad + Final que invita al replay.',
+
       estructura_obligatoria: `
 ═══════════════════════════════════════════════════════════════════════════
-📺 ESTRUCTURA YOUTUBE ÉLITE (PROMESA + PROFUNDIDAD - 60s SHORTS)
+📺 ESTRUCTURA YOUTUBE SHORTS V800 — PROMESA + REPLAY LOOP
 ═══════════════════════════════════════════════════════════════════════════
 
-⚠️ REGLA DE ORO: YouTube castiga el ENGAÑO y premia la ENTREGA REAL.
+⚠️ REGLA SUPREMA: YouTube castiga el ENGAÑO y premia la ENTREGA REAL. Los Shorts se reproducen en bucle — el final debe conectar con el inicio para activar el replay.
 
-1. PROMESA CLARA (0-5s) — Exactamente lo que promete el título. Específico.
-2. CONTEXTO MÍNIMO (6-15s) — Credibilidad rápida. Por qué importa AHORA.
-3. INSIGHT PRINCIPAL (16-45s) — Paso a paso concreto. Profundidad real. Ejemplos.
-4. RESOLUCIÓN CLARA (46-55s) — Qué hacer con esta información.
-5. CTA LÓGICO (56-60s) — CTA específico y relacionado al contenido.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PROMESA CLARA Y ESPECÍFICA (0-5s) 🎯
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Exactamente lo que promete el título. Con número o resultado concreto.
+"En los próximos 60 segundos vas a entender por qué ${temaEspecifico} no funciona como crees."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CREDIBILIDAD RÁPIDA (6-15s) 🏆
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Por qué importa ahora. Dato verificable o resultado propio.
+La autoridad se demuestra con evidencia — no se declara con palabras.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DESARROLLO PROFUNDO (16-48s) 🧠
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Paso a paso concreto con ejemplos específicos. Máximo 3 ideas clave.
+✓ Explica el "por qué detrás del qué" — YouTube premia comprensión, no solo información.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CIERRE CON REPLAY LOOP (49-60s) 🔄 [ACTIVA EL BUCLE AUTOMÁTICO]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FUNCIÓN: El final conecta con el inicio para que el algoritmo cuente el replay como nueva vista.
+✓ "¿Ya lo entendiste? Vuelve al inicio y aplícalo ahora mismo."
+✓ CTA de comentario que genere debate: "¿Ya sabías esto? Comenta abajo."
+❌ NUNCA links externos en descripción — YouTube penaliza salidas de la plataforma.
 
 ⚠️ PROHIBIDO EN YOUTUBE:
-❌ Clickbait engañoso ❌ Promesas sin cumplir ❌ Contenido superficial
+❌ Clickbait engañoso ❌ Promesas sin cumplir ❌ Contenido superficial ❌ Links externos
 `,
-      tono: 'Profesional, claro, educativo pero humano',
-      ritmo: 'Pausado pero no aburrido - Desarrollo lógico',
-      longitud_frase: 'Larga (15-25 palabras)',
+      tono: 'Profesional, claro, educativo pero humano, directo',
+      ritmo: 'Pausado pero no aburrido — desarrollo lógico con énfasis en puntos clave',
+      longitud_frase: 'Media-larga (15-25 palabras)',
       prohibiciones: ['Clickbait engañoso', 'Promesas sin cumplir', 'Contenido superficial']
     },
-    
+
     'LinkedIn': {
-      comportamiento: 'Autoridad profesional - Búsqueda de ideas que suenan CARAS',
-      porque_se_va: 'Parece humo / No aporta valor profesional real',
-      que_retiene: 'Ideas intelectuales + Pensamiento de segundo nivel + Credibilidad',
-      
+      comportamiento: 'Autoridad profesional — busca ideas que suenen caras, frameworks reutilizables y debate intelectual.',
+      porque_se_va: 'Parece humo / No aporta valor profesional real / Lenguaje demasiado coloquial.',
+      que_retiene: 'Tesis controversial fundamentada + Framework propio + Pregunta que genera debate en los primeros 60 minutos.',
+
       estructura_obligatoria: `
 ═══════════════════════════════════════════════════════════════════════════
-💼 ESTRUCTURA LINKEDIN EXPERTO (AUTORIDAD INTELECTUAL - 60s)
+💼 ESTRUCTURA LINKEDIN V800 — AUTORIDAD INTELECTUAL + DEBATE
 ═══════════════════════════════════════════════════════════════════════════
 
-⚠️ REGLA DE ORO: LinkedIn NO quiere viralidad vacía. Quiere IDEAS que suenen CARAS.
+⚠️ REGLA SUPREMA: LinkedIn premia COMENTARIOS en los primeros 60 minutos. Son la señal más poderosa del algoritmo. El CTA debe generar respuesta inmediata.
 
-1. AFIRMACIÓN FUERTE (0-10s) — Tesis controversial pero fundamentada. Divide profesionalmente.
-2. CONTEXTO PROFESIONAL (11-20s) — Credibilidad con datos de industria verificables.
-3. INSIGHT CONTRAINTUITIVO (21-35s) — Lo que la mayoría NO ve. Pensamiento de 2do nivel.
-4. MARCO MENTAL (36-50s) — Framework propietario. Sistema reutilizable.
-5. CONCLUSIÓN SOBRIA (51-58s) — Sin exageración emocional.
-6. CTA REFLEXIVO (59-60s) — Invitar al debate profesional.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TESIS CONTROVERSIAL FUNDAMENTADA (0-10s) 🎯
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Afirmación fuerte que divide profesionalmente. Controversial pero fundamentable.
+"La mayoría de los profesionales de ${temaEspecifico} están optimizando lo equivocado."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CONTEXTO CON CREDIBILIDAD VERIFICABLE (11-20s) 📊
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Dato de industria o resultado propio comprobable. Sin autopromoción vacía.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+INSIGHT CONTRAINTUITIVO (21-38s) 💡
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Lo que la mayoría no ve. Pensamiento de segundo nivel.
+"Lo que nadie menciona sobre ${temaEspecifico} es que..."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FRAMEWORK PROPIO CON NOMBRE (39-52s) 🏗️
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Sistema reutilizable con nombre propio que la gente pueda citar.
+"Mi sistema para ${temaEspecifico}: [NOMBRE DEL FRAMEWORK] — 3 pasos concretos:"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CTA QUE ACTIVA COMENTARIOS EN LOS PRIMEROS 60 MIN (53-60s) ⚡
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FUNCIÓN: El comentario en la primera hora es la señal más poderosa del algoritmo LinkedIn.
+✓ "¿Tu empresa ya aplica esto? Sí o No en comentarios." — fácil de responder
+✓ "¿Estás de acuerdo o crees que me equivoco? Debate abajo."
+❌ NUNCA links en el post — LinkedIn penaliza salidas de la plataforma.
 
 ⚠️ PROHIBIDO EN LINKEDIN:
-❌ Lenguaje coloquial ❌ Clickbait emocional ❌ Humor forzado ❌ Autopromoción
+❌ Lenguaje coloquial ❌ Emojis excesivos ❌ Autopromoción directa ❌ Links en el post
 `,
-      tono: 'Ejecutivo, seguro, intelectual, sobrio',
-      ritmo: 'Reflexivo - Pausas para procesar ideas complejas',
+      tono: 'Ejecutivo, seguro, intelectual, sobrio, sin exageraciones',
+      ritmo: 'Reflexivo — pausas para procesar ideas complejas',
       longitud_frase: 'Larga y estructurada (20-30 palabras)',
-      prohibiciones: ['Lenguaje coloquial', 'Clickbait emocional', 'Humor forzado']
+      prohibiciones: ['Lenguaje coloquial', 'Clickbait emocional', 'Humor forzado', 'Links en el post']
     },
 
     'Facebook': {
-      comportamiento: 'Comunidad y conversación - Busca conexión emocional y debate',
-      porque_se_va: 'No conecta emocionalmente / No invita a opinar / Parece publicidad',
-      que_retiene: 'Historias humanas + Preguntas + Opiniones que generan debate',
+      comportamiento: 'Comunidad y conversación — busca conexión emocional, debate familiar y contenido que etiqueta amigos.',
+      porque_se_va: 'No conecta emocionalmente / No invita a opinar / Parece publicidad / Ritmo demasiado agresivo.',
+      que_retiene: 'Historias humanas + Pregunta polarizante segura + Opiniones que generan debate de más de 5 comentarios.',
 
       estructura_obligatoria: `
 ═══════════════════════════════════════════════════════════════════════════
-📘 ESTRUCTURA FACEBOOK (COMUNIDAD + CONVERSACIÓN - 60-90s)
+📘 ESTRUCTURA FACEBOOK V800 — COMUNIDAD + DEBATE + CONVERSACIÓN
 ═══════════════════════════════════════════════════════════════════════════
 
-⚠️ REGLA DE ORO: Facebook NO es TikTok. La gente viene a CONECTAR, no a consumir rápido.
+⚠️ REGLA SUPREMA: Facebook premia debates con más de 5 comentarios. El CTA final debe generar conversación encadenada — no likes. Videos con subtítulos tienen 85% más retención (70% ve sin audio).
 
-1. HOOK NARRATIVO (0-5s) — "¿Alguna vez te pasó que ${dolorPrincipal}?" Tono cálido.
-2. CONTEXTO HUMANO (6-20s) — Vulnerabilidad o aprendizaje personal. Facebook tolera más contexto.
-3. INSIGHT CLARO (21-50s) — Sin tecnicismos. Máximo 2-3 puntos. Explica el "por qué".
-4. PREGUNTA DEBATE (51-60s) — UNA sola pregunta. Comentarios = alcance orgánico.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+HOOK NARRATIVO CÁLIDO (0-5s) 🤝
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Pregunta o situación relatable. Tono cálido — como hablar con un amigo de confianza.
+"¿Alguna vez te pasó que ${dolorPrincipal}? A mí me pasó durante años."
+✓ Facebook permite 5 segundos de hook — no necesita ser tan violento como TikTok.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CONTEXTO HUMANO CON VULNERABILIDAD (6-20s) 💬
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Historia personal o aprendizaje real. Facebook tolera más contexto que TikTok.
+Vulnerabilidad o error propio que genera empatía inmediata.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+INSIGHT CLARO SIN TECNICISMOS (21-50s) 💡
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Máximo 2-3 puntos. Lenguaje de conversación real. Explica el "por qué" de forma humana.
+✓ Subtítulos obligatorios — 70% ve sin audio en Facebook.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PREGUNTA DE DEBATE QUE ACTIVA EL ALGORITMO (51-60s) 🔥
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FUNCIÓN: UNA sola pregunta que divide opiniones. El debate encadenado = distribución orgánica masiva.
+✓ "¿Estás de acuerdo o crees que me equivoco? Dímelo en los comentarios."
+✓ "¿Conoces a alguien que necesita escuchar esto? Etiquétalo abajo."
+❌ NUNCA "Comenta SI para recibir el PDF" — Facebook penaliza engagement bait explícito.
 
 ⚠️ PROHIBIDO EN FACEBOOK:
-❌ Ritmo agresivo de TikTok ❌ Hype vacío ❌ Venta directa ❌ Múltiples CTAs
+❌ Ritmo agresivo de TikTok ❌ Hype vacío ❌ Venta directa ❌ Múltiples CTAs ❌ Engagement bait
 `,
-      tono: 'Cálido, cercano, conversacional, auténtico',
-      ritmo: 'Pausado y natural - Respira entre ideas',
+      tono: 'Cálido, cercano, conversacional, auténtico, como un amigo que enseña',
+      ritmo: 'Pausado y natural — respira entre ideas',
       longitud_frase: 'Media (12-20 palabras)',
-      prohibiciones: ['Ritmo agresivo', 'Hype', 'Venta directa', 'Múltiples CTAs']
+      prohibiciones: ['Ritmo agresivo', 'Hype', 'Venta directa', 'Múltiples CTAs', 'Engagement bait explícito']
     }
   };
   
@@ -8586,8 +8663,10 @@ function validarOutputGenerador(output: any, preAnalisis?: any): ResultadoValida
     fallos.push(`teleprompter_script vacío o demasiado corto: ${teleprompterWords} palabras`);
   }
 
-  // También verificar guion_completo no vacío
-  const guionCompleto = output.guion_completo || output.teleprompter_script || output.guion || "";
+  // V700: guion_completo = "NO_GENERAR" — el guion real está en teleprompter_script
+  const guionCompleto = (!output.guion_completo || output.guion_completo === 'NO_GENERAR')
+    ? (output.teleprompter_script || output.guion || "")
+    : output.guion_completo;
   if (guionCompleto.length < 100) {
     fallos.push(`Guion demasiado corto: ${guionCompleto.length} chars (mínimo 100)`);
   }
