@@ -11396,7 +11396,10 @@ if (body.closing_objective) settings.closing_objective = body.closing_objective;
 
         // Costo dinámico autopsia (Reel=10 | Largo=30 | Masterclass=45)
         // calculateTitanCost lo maneja con videoDurationSecs
-       case 'recreate': {
+        break;
+      }
+
+      case 'recreate': {
         console.log('[TITAN] MOTOR: INGENIERIA INVERSA OMEGA 3.0');
         console.log('[TITAN-STAGE] etapa:analizando');
 
