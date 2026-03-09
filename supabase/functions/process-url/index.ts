@@ -9510,6 +9510,7 @@ async function ejecutarGeneradorGuiones(
   while (intentoActual < MAX_RETRIES) {
     intentoActual++;
     console.log(`[MOTOR V600] 🔄 Intento ${intentoActual}/${MAX_RETRIES}...`);
+    try {
 
     // ── Activar modo refinamiento a partir del intento 2 ──
     const settingsIntento = {
@@ -9605,7 +9606,7 @@ ${retroalimentacionLoop}
 
 ` : '';
 
-    const finalPrompt = systemPrompt + refinamientoExtra + `\n\n🛡️ PLAN ESTRATÉGICO:\n${planEstrategico}`;
+    console.log(`[MOTOR V600] 📏 Prompt: ${Math.round(finalPrompt.length / 1000)}k chars | ~${Math.round(finalPrompt.length / 4)} tokens`);
 
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o',
@@ -9723,7 +9724,12 @@ NO puedes entregar el guion sin resolver estos puntos.
 
     console.log(`[MOTOR V600] 🔁 Reintentando con correcciones específicas...`);
 
-  } // ← CIERRE DEL WHILE (faltaba esta llave)
+  } catch (loopError: any) {
+      console.error(`[MOTOR V600] 💥 Error en intento ${intentoActual}: ${loopError?.message || loopError}`);
+      if (!mejorResultado) continue;
+      break;
+    }
+  } // ← CIERRE DEL WHILE
 
   // ── PASO 4: Usar el mejor resultado obtenido ──
   if (!mejorResultado) {
