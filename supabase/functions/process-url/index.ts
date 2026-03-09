@@ -11804,36 +11804,34 @@ ${instruccionEstructura}
   const temaParaTCA = temaUsuario; // guardar tema original antes de expansión TCA
 
   // Si el tema ya viene pre-expandido desde Ideas Rápidas — no reexpandir
-  if (settings?.tca_preexpandido) {
-    console.log('[TCA IMPERIO] ⚡ Tema pre-expandido por Ideas Rápidas — CAPA 0 en bypass');
-  } else {
+  if (!settings?.tca_preexpandido) {
+    try {
+      console.log('[TCA IMPERIO] 🌀 Ejecutando Sistema de Alcance Masivo...');
+      const tcaResult = await ejecutarSistemaTCA(temaUsuario, settings, openai);
 
-  try {
-    console.log('[TCA IMPERIO] 🌀 Ejecutando Sistema de Alcance Masivo...');
-    const tcaResult = await ejecutarSistemaTCA(temaUsuario, settings, openai);
+      estrategiaTCA = tcaResult.estrategia_tca;
 
-    estrategiaTCA = tcaResult.estrategia_tca;
-
-    // Solo reemplazar el tema si TCA lo expandió exitosamente
-    if (tcaResult.aprobado && tcaResult.tema_expandido && tcaResult.tema_expandido !== temaParaTCA) {
-      temaUsuario = tcaResult.tema_expandido;
-      // Guardar instrucción TCA separada para el contexto
-      if (tcaResult.instruccion_tca) {
-        (settings as any)._tca_instruccion = tcaResult.instruccion_tca;
+      if (tcaResult.aprobado && tcaResult.tema_expandido && tcaResult.tema_expandido !== temaParaTCA) {
+        temaUsuario = tcaResult.tema_expandido;
+        if (tcaResult.instruccion_tca) {
+          (settings as any)._tca_instruccion = tcaResult.instruccion_tca;
+        }
+        console.log(`[TCA IMPERIO] ✅ Tema expandido al sector masivo`);
+        console.log(`[TCA IMPERIO] 📊 Mass Appeal Score: ${estrategiaTCA?.mass_appeal_score || 0}/100`);
+        console.log(`[TCA IMPERIO] 🎯 Nivel: ${estrategiaTCA?.nivel_original} → Intersección N2-N3`);
+      } else {
+        console.log('[TCA IMPERIO] ✅ Tema ya en posición óptima — sin expansión necesaria');
       }
-      console.log(`[TCA IMPERIO] ✅ Tema expandido al sector masivo`);
-      console.log(`[TCA IMPERIO] 📊 Mass Appeal Score: ${estrategiaTCA?.mass_appeal_score || 0}/100`);
-      console.log(`[TCA IMPERIO] 🎯 Nivel: ${estrategiaTCA?.nivel_original} → Intersección N2-N3`);
-    } else {
-      console.log('[TCA IMPERIO] ✅ Tema ya en posición óptima — sin expansión necesaria');
-    }
 
-    if (tcaResult.advertencias?.length > 0) {
-      console.warn('[TCA IMPERIO] ⚠️ Advertencias TCA:', tcaResult.advertencias.join(' | '));
-    }
+      if (tcaResult.advertencias?.length > 0) {
+        console.warn('[TCA IMPERIO] ⚠️ Advertencias TCA:', tcaResult.advertencias.join(' | '));
+      }
 
-  } catch (tcaError: any) {
-    console.warn('[TCA IMPERIO] ⚠️ Bypass total — Motor V600 continúa sin modificación.', tcaError.message);
+    } catch (tcaError: any) {
+      console.warn('[TCA IMPERIO] ⚠️ Bypass total — Motor V600 continúa sin modificación.', tcaError.message);
+    }
+  } else {
+    console.log('[TCA IMPERIO] ⚡ Tema pre-expandido por Ideas Rápidas — CAPA 0 en bypass');
   }
 
   } // cierre del if (!settings?.tca_preexpandido)
