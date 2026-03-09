@@ -168,6 +168,14 @@ teleprompter_script?: string;
     nuevo_frame_propuesto?: string;
     postura_dominante?: string;
   };
+  poder_del_guion?: {
+    hook_primeros_3_segundos?: string;
+    frase_de_oro?: string;
+    punto_de_no_retorno?: string;
+    por_que_llegara_a_millones?: string;
+    momento_mas_compartible?: string;
+    prediccion_comentarios?: string;
+  };
   metadata_guion?: {
     tema_tratado?: string;
     plataforma?: string;
@@ -467,10 +475,10 @@ const MASTER_HOOKS = [
 ];
 
 const DURATIONS = [
-    { id: 'short', label: 'Flash (30s)', cost: 5 },
-    { id: 'medium', label: 'Estándar (60s)', cost: 7 },
-    { id: 'long', label: 'Profundo (90s)', cost: 8 },
-    { id: 'masterclass', label: 'Masterclass (+5m)', cost: 30 },
+    { id: 'short', label: 'Flash (30s)', cost: 5, words: '~75 palabras', color: 'text-gray-400' },
+    { id: 'medium', label: 'Estándar (60s)', cost: 7, words: '~150 palabras', color: 'text-indigo-400' },
+    { id: 'long', label: 'Profundo (90s)', cost: 8, words: '~210 palabras', color: 'text-purple-400' },
+    { id: 'masterclass', label: 'Masterclass (+5m)', cost: 30, words: '~900 palabras', color: 'text-yellow-400' },
 ];
 
 const PLATFORMS = [
@@ -683,8 +691,8 @@ export const ScriptGenerator = () => {
             // 6. Procesar Resultado
             const finalResult = data.generatedData || data;
             
-            if (!finalResult.guion_completo) {
-                throw new Error('El backend no devolvió un guion completo. Intenta de nuevo.');
+            if (!finalResult.guion_completo && !finalResult.teleprompter_script) {
+                throw new Error('El backend no devolvió un guion. Intenta de nuevo.');
             }
 
             setResult(finalResult);
@@ -829,7 +837,7 @@ export const ScriptGenerator = () => {
                         MOTOR VIRAL V700 ÉLITE
                     </h1>
                     <p className="text-gray-400 text-sm mt-1">
-                        10 Formatos Narrativos + Plan Audiovisual Profesional + Miniatura Top Mundial
+                        10 Formatos Narrativos · Plan Audiovisual · TCA Imperio · Duración Dinámica
                     </p>
                 </div>
                 <div className="bg-gray-900 px-4 py-2 rounded-lg border border-gray-800 flex items-center gap-2">
@@ -1072,19 +1080,24 @@ export const ScriptGenerator = () => {
                 <button 
                     key={d.id} 
                     onClick={() => setDurationId(d.id)} 
-                    className={`p-2.5 rounded-xl border flex justify-between items-center transition-all ${
+                    className={`p-2.5 rounded-xl border flex flex-col gap-1 transition-all ${
                         durationId === d.id 
                             ? 'bg-indigo-600/20 border-indigo-500 shadow-md shadow-indigo-900/20' 
                             : 'bg-gray-900/50 border-gray-800 text-gray-500 hover:bg-gray-800'
                     }`}
                 >
-                    <span className="text-[10px] font-bold text-white">{d.label}</span>
-                    <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
-                        durationId === d.id 
-                            ? 'bg-indigo-500 text-white' 
-                            : 'bg-gray-800 text-gray-500'
-                    }`}>
-                        {d.cost}CR
+                    <div className="flex justify-between items-center w-full">
+                        <span className="text-[10px] font-bold text-white">{d.label}</span>
+                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
+                            durationId === d.id 
+                                ? 'bg-indigo-500 text-white' 
+                                : 'bg-gray-800 text-gray-500'
+                        }`}>
+                            {d.cost}CR
+                        </span>
+                    </div>
+                    <span className={`text-[9px] ${durationId === d.id ? 'text-indigo-300' : 'text-gray-600'}`}>
+                        {d.id === 'short' ? '~75 palabras' : d.id === 'medium' ? '~150 palabras' : d.id === 'long' ? '~210 palabras' : '~900 palabras'}
                     </span>
                 </button>
             ))}
@@ -1611,6 +1624,73 @@ export const ScriptGenerator = () => {
                                 </div>
                             )}
 
+                         {/* ⭐ FRASE DE ORO */}
+                            {result.poder_del_guion?.frase_de_oro && (
+                                <div className="mb-4 bg-gradient-to-r from-yellow-500/10 to-amber-500/8 border border-yellow-500/25 rounded-2xl p-4">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-yellow-400 flex items-center gap-1.5">
+                                            ⭐ Frase de Oro
+                                        </span>
+                                        <button
+                                            onClick={(e) => {
+                                                navigator.clipboard.writeText(result.poder_del_guion!.frase_de_oro!);
+                                                const btn = e.currentTarget;
+                                                btn.textContent = '✅ Copiada';
+                                                setTimeout(() => { btn.textContent = '📋 Copiar'; }, 2000);
+                                            }}
+                                            className="text-[9px] font-black text-yellow-400/60 hover:text-yellow-400 bg-yellow-500/10 border border-yellow-500/20 px-2 py-1 rounded-lg transition-colors"
+                                        >
+                                            📋 Copiar
+                                        </button>
+                                    </div>
+                                    <p className="text-white font-black text-lg leading-tight mb-1">
+                                        "{result.poder_del_guion.frase_de_oro}"
+                                    </p>
+                                    <p className="text-yellow-500/50 text-[9px]">Screenshoteable · el insight central del guion</p>
+                                </div>
+                            )}
+
+                            {/* 🔁 MICRO-LOOPS */}
+                            {result.micro_loops_detectados && result.micro_loops_detectados.length > 0 && (
+                                <div className="mb-4 bg-blue-900/8 border border-blue-500/15 rounded-2xl p-4">
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-3 block">
+                                        🔁 Micro-loops de Retención ({result.micro_loops_detectados.length})
+                                    </span>
+                                    <div className="space-y-2">
+                                        {result.micro_loops_detectados.map((loop: any, i: number) => (
+                                            <div key={i} className="flex items-start gap-2 bg-black/20 rounded-xl p-2.5">
+                                                <span className={`text-[8px] font-black px-1.5 py-0.5 rounded shrink-0 mt-0.5 ${loop.tipo === 'apertura' ? 'bg-orange-500/20 text-orange-400' : 'bg-blue-500/20 text-blue-400'}`}>
+                                                    {loop.tipo === 'apertura' ? '⬆ ABRE' : '⬇ CIERRA'}
+                                                </span>
+                                                <div className="flex-1">
+                                                    <p className="text-[10px] text-gray-300 italic">"{loop.frase}"</p>
+                                                    <p className="text-[9px] text-gray-600 mt-0.5">⏱ {loop.tiempo_aproximado}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* 🧠 ACTIVADORES PSICOLÓGICOS */}
+                            {result.activadores_psicologicos && result.activadores_psicologicos.length > 0 && (
+                                <div className="mb-4 bg-purple-900/8 border border-purple-500/15 rounded-2xl p-4">
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-purple-400 mb-3 block">
+                                        🧠 Activadores Psicológicos
+                                    </span>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {result.activadores_psicologicos.map((act: any, i: number) => (
+                                            <div key={i} className="bg-black/20 rounded-xl p-2.5 border border-purple-500/10">
+                                                <span className="text-[8px] font-black text-purple-400 uppercase block mb-1">
+                                                    {act.tipo === 'guardado' ? '💾 Guardado' : act.tipo === 'compartido' ? '🔁 Compartido' : act.tipo === 'comentario' ? '💬 Comentario' : '👁 Follow'}
+                                                </span>
+                                                <p className="text-[10px] text-gray-300 italic leading-tight">"{act.frase || act.contenido}"</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
                          {/* 🖼️ MINIATURA DOMINANTE */}
                             {(result.miniatura_dominante || result.guion_completo_data?.miniatura_dominante) && (() => {
                                 const min = result.miniatura_dominante || result.guion_completo_data?.miniatura_dominante;
@@ -1770,7 +1850,12 @@ export const ScriptGenerator = () => {
                                                         </span>
                                                     )}
                                                     <button
-                                                        onClick={() => navigator.clipboard.writeText(hook.texto || '')}
+                                                        onClick={(e) => {
+                                                            navigator.clipboard.writeText(hook.texto || '');
+                                                            const btn = e.currentTarget;
+                                                            btn.textContent = '✅ Copiado';
+                                                            setTimeout(() => { btn.textContent = '📋 Copiar'; }, 2000);
+                                                        }}
                                                         className={`text-[9px] font-black uppercase tracking-widest ${meta.label} opacity-60 hover:opacity-100 transition-opacity text-left mt-auto`}
                                                     >
                                                         📋 Copiar
@@ -1791,7 +1876,11 @@ export const ScriptGenerator = () => {
                                         <label className="text-xs font-black text-green-400 uppercase tracking-widest flex items-center gap-2">
                                             <AlignLeft size={14}/> 🎤 Teleprompter TCA
                                             <span className="text-[9px] font-black bg-green-500/15 text-green-400 border border-green-500/20 px-2 py-0.5 rounded-full">
-                                                140-170 palabras · Solo texto hablado
+                                                {(() => {
+                                                    const words = (result.teleprompter_script || '').replace(/\[.*?\]/g,'').trim().split(/\s+/).filter(Boolean).length;
+                                                    const min = durationId === 'short' ? 70 : durationId === 'long' ? 200 : durationId === 'masterclass' ? 700 : 140;
+                                                    return `${words} palabras ${words < min ? '⚠️ corto' : '✅'} · Solo texto hablado`;
+                                                })()}
                                             </span>
                                         </label>
                                         <button
@@ -1800,8 +1889,12 @@ export const ScriptGenerator = () => {
                                                     .split('\n')
                                                     .filter((l: string) => !l.startsWith('[CAPA') && !l.startsWith('⚠️') && !l.startsWith('━') && !l.startsWith('REGLA') && !l.startsWith('✓') && !l.startsWith('TCA =') && !l.startsWith('CAPA ') && !l.startsWith('→') && l.trim() !== '')
                                                     .join('\n');
-                                                navigator.clipboard.writeText(clean);
+                                                navigator.clipboard.writeText(clean).then(() => {
+                                                    const btn = document.getElementById('btn-copy-teleprompter');
+                                                    if (btn) { btn.textContent = '✅ Copiado'; setTimeout(() => { btn.textContent = '📋 Copiar Teleprompter'; }, 2000); }
+                                                });
                                             }}
+                                            id="btn-copy-teleprompter"
                                             className="text-[10px] font-black text-green-400 bg-green-500/10 border border-green-500/20 px-3 py-1.5 rounded-xl hover:bg-green-500/20 transition-colors flex items-center gap-1"
                                         >
                                             <Copy size={10}/> Copiar Teleprompter
@@ -1817,23 +1910,7 @@ export const ScriptGenerator = () => {
                                 </div>
                             )}
 
-                            {/* GUION COMPLETO CON INDICACIONES DE PRODUCCIÓN */}
-                            <div className="flex-1 space-y-3 mb-8">
-                                <div className="flex items-center justify-between">
-                                    <label className="text-xs font-black text-gray-500 uppercase tracking-widest flex items-center gap-2">
-                                        <AlignLeft size={14}/> Guion Completo + Producción
-                                    </label>
-                                    <button
-                                        onClick={() => navigator.clipboard.writeText(result.guion_completo || '')}
-                                        className="text-[10px] font-black text-gray-400 bg-gray-800 border border-gray-700 px-3 py-1.5 rounded-xl hover:bg-gray-700 transition-colors flex items-center gap-1"
-                                    >
-                                        <Copy size={10}/> Copiar Guion
-                                    </button>
-                                </div>
-                                <div className="bg-black/60 p-8 rounded-2xl border border-gray-800 text-gray-200 text-lg leading-relaxed font-medium whitespace-pre-wrap shadow-inner max-h-[600px] overflow-y-auto font-mono selection:bg-pink-500 selection:text-white">
-                                    {result.guion_completo}
-                                </div>
-                            </div>
+                            {/* GUION COMPLETO ELIMINADO — el teleprompter es el guion definitivo */}
 
                             {/* AUDITORÍA */}
 {showAudit && (
