@@ -11834,8 +11834,6 @@ ${instruccionEstructura}
     console.log('[TCA IMPERIO] ⚡ Tema pre-expandido por Ideas Rápidas — CAPA 0 en bypass');
   }
 
-  } // cierre del if (!settings?.tca_preexpandido)
-
   // ══════════════════════════════════════════════════════════════════
   // FIN CAPA 0 TCA — Motor V600 activándose a continuación
   // ══════════════════════════════════════════════════════════════════
