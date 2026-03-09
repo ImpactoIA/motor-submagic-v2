@@ -8321,7 +8321,7 @@ async function ejecutarAutopsiaViral(
 }
 
 const MIN_VIRAL_SCORE = 85;
-const MAX_RETRIES = 3;
+const MAX_RETRIES = 1;
 
 // ==================================================================================
 // 🔬 VALIDADOR PROGRAMÁTICO DE OUTPUT — MOTOR DE CALIDAD V600
@@ -8423,7 +8423,7 @@ DEVUELVE SOLO ESTE JSON:
 
   try {
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: 'gpt-4o-mini',
       response_format: { type: 'json_object' },
       messages: [
         { role: 'system', content: 'Eres un editor quirúrgico. Devuelves SOLO JSON válido.' },
@@ -9348,10 +9348,10 @@ Responde SOLO con este JSON válido. Sin markdown, sin texto extra:
 
   try {
     const response = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: 'gpt-4o-mini',
       messages: [{ role: 'user', content: promptTCA }],
       temperature: 0.4,
-      max_tokens: 2000  // V2 necesita espacio para CTI + Angle Amplifier + JSON completo
+      max_tokens: 2000
     });
 
     const raw = response.choices[0].message.content || '';
@@ -9567,12 +9567,12 @@ Define qué sesgos psicológicos usarás en cada segundo.
     }
 
     const estrategia = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: 'gpt-4o-mini',
       messages: [
         { role: 'system', content: 'Eres un Estratega de Marketing Viral de clase mundial.' },
         { role: 'user', content: promptEstrategia }
       ],
-      temperature: intentoActual === 1 ? 0.7 : 0.9, // Más creatividad en reintentos
+      temperature: intentoActual === 1 ? 0.7 : 0.9,
       max_tokens: 1500
     });
 
