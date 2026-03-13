@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
+import { ErrorBoundaryWrapper } from './components/ErrorBoundary.tsx'
 import './index.css' // 🔥 Vital: Importa el diseño "Industrial Premium"
 
 // Verificación de seguridad para evitar pantallas blancas si falta el ID 'root'
@@ -12,6 +13,8 @@ if (!rootElement) {
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
-    <App />
+    <ErrorBoundaryWrapper>
+      <App />
+    </ErrorBoundaryWrapper>
   </React.StrictMode>,
 )

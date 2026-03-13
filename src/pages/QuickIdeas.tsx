@@ -368,17 +368,28 @@ export const QuickIdeas = () => {
 
     // --- ENVIAR AL GENERADOR DE GUIONES ---
    const handleGoToEditor = (idea: IdeaItem) => {
+        // Mapeo inteligente de Objetivo a Loop V700
+        let mappedLoop = 'authority_loop';
+        if (idea.objetivo_principal === 'Viralidad' || idea.objetivo_principal === 'Comunidad') mappedLoop = 'viral_loop';
+        if (idea.objetivo_principal === 'Venta Directa') mappedLoop = 'magnetic_loop';
+        if (idea.objetivo_principal === 'Opinión / Polarización') mappedLoop = 'engagement_loop';
+
+        // Mapeo de emoción a Vector Emocional V700
+        let mappedVector = 'deseo_ardiente';
+        const emocionLower = (idea.emocion_objetivo || '').toLowerCase();
+        if (emocionLower.includes('miedo') || emocionLower.includes('urgencia')) mappedVector = 'miedo_temor';
+        if (emocionLower.includes('dolor') || emocionLower.includes('frustración')) mappedVector = 'dolor_profundo';
+        if (emocionLower.includes('duda') || emocionLower.includes('mito')) mappedVector = 'mito_industria';
+
         navigate('/dashboard/script-generator', {
             state: {
                 // Usar idea_expandida_tca si existe — V600 no reexpande TCA
                 topic: idea.idea_expandida_tca || idea.titulo,
-                hook: idea.gancho_sugerido || idea.concepto,
-                platform: selectedPlatform.label,
-                objective: idea.objetivo_principal,
-                structure: idea.estructura_sugerida,
-                fromIdeas: true,
-                tca_preexpandido: !!idea.idea_expandida_tca,
-                mass_appeal_score: idea.tca?.mass_appeal_score || 0
+                customHook: idea.gancho_sugerido || '', // Enviamos el gancho al nuevo customHook
+                platform: selectedPlatform.id, // Enviar ID, no label
+                strategyLoop: mappedLoop,
+                vectorEmocional: mappedVector,
+                fromIdeas: true
             }
         });
     };

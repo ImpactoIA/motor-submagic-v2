@@ -72,9 +72,20 @@ const OmegaScriptView = ({ scriptData, contentType = 'reel' }: { scriptData: any
 
   const copyScript = () => {
     if (!scriptText) return;
-    navigator.clipboard.writeText(scriptText);
+    if (typeof navigator !== 'undefined' && navigator && navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(scriptText);
+    } else {
+      // Fallback para navegadores sin soporte
+      const textArea = document.createElement('textarea');
+      textArea.value = scriptText;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+    }
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    const t = setTimeout(() => setCopied(false), 2000);
+    return () => clearTimeout(t);
   };
 
   const words = scriptText?.trim().split(/\s+/).filter(Boolean).length || 0;
@@ -1325,10 +1336,9 @@ export const TitanViral = () => {
     if (!file) return;
     const validTypes = ['video/mp4', 'video/quicktime', 'video/webm', 'video/x-msvideo'];
     if (!validTypes.includes(file.type)) { setErrorMsg('Tipo no soportado. Usa MP4, MOV, WEBM o AVI.'); return; }
-    if (file.size > 24 * 1024 * 1024) { setErrorMsg('Video demasiado grande. Máximo 24MB para procesamiento con IA. Comprime el video con HandBrake o similar.'); return; }
-    const reader = new FileReader();
-    reader.onloadend = () => { setUploadedVideoFile(reader.result as string); setUploadedFileName(file.name); };
-    reader.readAsDataURL(file);
+    if (file.size > 10 * 1024 * 1024) { setErrorMsg('El video es demasiado pesado (Máximo 10MB). Por favor, comprímelo o intenta subir un fragmento más corto.'); return; }
+    setUploadedVideoFile(file); // Guardamos el File directamente
+    setUploadedFileName(file.name);
   };
   const handleClearUpload = () => { setUploadedVideoFile(null); setUploadedFileName(''); };
 
@@ -1386,15 +1396,58 @@ export const TitanViral = () => {
         payload.uploadedFileName = uploadedFileName;
       }
 
-      const { data, error } = await supabase.functions.invoke('process-url', { body: payload });
-      if (error) throw error;
+      // ✅ CONFIGURACIÓN DE TIMEOUT: 50s para sincronizar con backend (Free Tier 60s)
+      // ✅ FIX: Enviar FormData para archivos grandes
+      const isFileUpload = uploadMode === 'file' && uploadedVideoFile instanceof File;
+      let body: any = payload;
+      let headers: any = { 'Content-Type': 'application/json' };
+
+      if (isFileUpload) {
+        const formData = new FormData();
+        formData.append('selectedMode', payload.selectedMode);
+        formData.append('estimatedCost', String(payload.estimatedCost));
+        formData.append('text', payload.text);
+        if (payload.expertId) formData.append('expertId', payload.expertId);
+        if (payload.avatarId) formData.append('avatarId', payload.avatarId);
+        if (payload.knowledgeBaseId) formData.append('knowledgeBaseId', payload.knowledgeBaseId);
+        formData.append('settings', JSON.stringify(payload.settings));
+        formData.append('uploadedVideo', uploadedVideoFile);
+        formData.append('uploadedFileName', uploadedFileName);
+        body = formData;
+        headers = {}; // Dejar que el navegador asigne boundary multipart
+      }
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 50000); // 50 segundos máximo
+
+      const { data, error } = await supabase.functions.invoke('process-url', { 
+        body,
+        headers,
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (error) {
+        // ✅ PARSEO INTELIGENTE DE ERRORES
+        const errorMsg = parseBackendError(error);
+        setErrorMsg(errorMsg);
+        setIrProState(prev => ({ ...prev, etapa: 'idle', error: errorMsg }));
+        return;
+      }
+
       // ✅ FIX BUG #4 — manejar redirección de avatar específicamente
       if (!data.success && data.action === 'REDIRECT_TO_AVATAR') {
         setErrorMsg('⚡ Necesitas configurar tu Avatar antes de generar contenido. Ve a Configuración → Avatar y crea tu perfil.');
         setIrProState(prev => ({ ...prev, etapa: 'idle', error: null }));
         return;
       }
-      if (!data.success) throw new Error(data.error || 'Error desconocido.');
+      if (!data.success) {
+        const errorMsg = parseBackendError(data.error || 'Error desconocido.');
+        setErrorMsg(errorMsg);
+        setIrProState(prev => ({ ...prev, etapa: 'idle', error: errorMsg }));
+        return;
+      }
 
       const raw = data.generatedData;
       const resPro = raw?.guion_generado ? raw : { guion_generado: raw, autopsia: raw, modo: raw?.modo || 'ingenieria_inversa_pro', metadata_video: raw?.metadata_video || {} };
@@ -1411,11 +1464,53 @@ export const TitanViral = () => {
       setResult(resPro);
       if (refreshProfile) refreshProfile();
     } catch (err: any) {
-      setErrorMsg(err.message || 'Error de conexión con Titan Brain.');
-      setIrProState(prev => ({ ...prev, etapa: 'idle', error: err.message }));
+      // ✅ PARSEO INTELIGENTE DE ERRORES
+      const errorMsg = parseBackendError(err);
+      setErrorMsg(errorMsg);
+      setIrProState(prev => ({ ...prev, etapa: 'idle', error: errorMsg }));
     } finally {
       setLoading(false);
     }
+  };
+
+  // ✅ FUNCIONES DE APOYO: PARSEO DE ERRORES
+  const parseBackendError = (error: any): string => {
+    // Caso 1: Error es un string JSON
+    if (typeof error === 'string') {
+      try {
+        const parsed = JSON.parse(error);
+        if (parsed.error === 'timeout' && parsed.mensaje) {
+          return `⏱️ ${parsed.mensaje}`;
+        }
+        return parsed.message || parsed.error || error;
+      } catch {
+        // No es JSON, devolver como está
+        return error;
+      }
+    }
+
+    // Caso 2: Error es un objeto con message o error
+    if (typeof error === 'object' && error !== null) {
+      if (error.error === 'timeout' && error.mensaje) {
+        return `⏱️ ${error.mensaje}`;
+      }
+      if (error.message) {
+        return error.message;
+      }
+      if (error.error) {
+        return error.error;
+      }
+      // Intentar serializar el objeto para extraer texto
+      try {
+        const str = JSON.stringify(error);
+        return str.length < 200 ? str : 'Error inesperado. Por favor, intenta de nuevo.';
+      } catch {
+        return 'Error inesperado. Por favor, intenta de nuevo.';
+      }
+    }
+
+    // Caso 3: Error genérico
+    return error?.toString() || 'Error de conexión. Por favor, verifica tu internet e intenta de nuevo.';
   };
 
   // ==================================================================================

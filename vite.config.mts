@@ -7,11 +7,16 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      // CORRECCIÓN TITAN:
-      // Apuntamos a 'src/api' en lugar de buscar 'api' en la raíz fuera del código fuente.
-      '@api': fileURLToPath(new URL('./src/api', import.meta.url)),
-      // Alias útil para importar cosas desde la raíz de src con '@/'
-      '@': fileURLToPath(new URL('./src', import.meta.url)), 
+      // CORRECCIÓN TITAN: Alias principales para el frontend
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@components': fileURLToPath(new URL('./src/components', import.meta.url)),
+      '@pages': fileURLToPath(new URL('./src/pages', import.meta.url)),
+      '@layouts': fileURLToPath(new URL('./src/layouts', import.meta.url)),
+      '@lib': fileURLToPath(new URL('./src/lib', import.meta.url)),
+      '@context': fileURLToPath(new URL('./src/context', import.meta.url)),
+      '@types': fileURLToPath(new URL('./src/types', import.meta.url)),
+      // Alias para API (fuera de src)
+      '@api': fileURLToPath(new URL('./api', import.meta.url)),
     },
   },
   // Esto asegura que en Vercel siempre use rutas absolutas limpias

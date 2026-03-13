@@ -21,7 +21,7 @@ const menuItems = [
   { section: 'Creación Viral' },
   { icon: Zap, label: 'Ideas Rápidas', path: '/dashboard/quick-ideas' },
   { icon: FileText, label: 'Generador Guiones', path: '/dashboard/script-generator' },
-  { icon: Wand2, label: 'Copy Expert', path: '/dashboard/copy-expert' },,
+  { icon: Wand2, label: 'Copy Expert', path: '/dashboard/copy-expert' },
   
   { section: 'Laboratorio de Análisis' },
   { icon: Calculator, label: 'Juez Viral', path: '/dashboard/viral-calculator' },
