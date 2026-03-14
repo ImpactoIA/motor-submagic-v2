@@ -1,6 +1,5 @@
 import React, { Component, type ErrorInfo, type ReactNode } from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 
 interface Props {
   children: ReactNode;
@@ -42,7 +41,6 @@ class ErrorBoundary extends Component<Props, State> {
 
 // Componente funcional para usar con hooks
 export const ErrorBoundaryWrapper: React.FC<{children: ReactNode}> = ({ children }) => {
-  const navigate = useNavigate();
 
   const [hasError, setHasError] = React.useState(false);
   const [error, setError] = React.useState<Error | undefined>(undefined);
@@ -77,14 +75,13 @@ export const ErrorBoundaryWrapper: React.FC<{children: ReactNode}> = ({ children
 };
 
 const ErrorFallback: React.FC<{error?: Error; errorInfo?: ErrorInfo}> = ({ error, errorInfo }) => {
-  const navigate = useNavigate();
 
   const handleReload = () => {
     window.location.reload();
   };
 
   const handleGoHome = () => {
-    navigate('/dashboard');
+    window.location.href = '/dashboard';
   };
 
   return (
