@@ -9,7 +9,7 @@ import {
   User, AlertCircle, PenTool, Layout, Brain, Target, XCircle,
   X, ChevronRight, Flame, TrendingUp, MessageCircle, Award, Eye,
   Image as ImageIcon, UploadCloud, Sparkles, Shield, Mic2, BookOpen,
-  Layers, Crosshair, Zap as ZapIcon, ChevronDown, ChevronUp, Lock,
+  Layers, Crosshair, ChevronDown, ChevronUp, Lock,
   Star, Hash
 } from 'lucide-react';
 
