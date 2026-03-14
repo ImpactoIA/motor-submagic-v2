@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { TCAFeedbackWidget } from '../components/TCAFeedbackWidget';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
@@ -464,6 +464,9 @@ export const ScriptGenerator = () => {
   const location = useLocation();
   const { user, userProfile, refreshProfile } = useAuth();
 
+  // 👉 AGREGA ESTA LÍNEA AQUÍ:
+    const isStateInitialized = useRef(false);
+
   // --- UI States ---
   const [topic, setTopic] = useState('');
   const [selectedPlatform, setSelectedPlatform] = useState(PLATFORMS[0]);
@@ -553,19 +556,22 @@ export const ScriptGenerator = () => {
     loadExperts();
     loadKnowledgeBases();
 
-    if (location.state && location.state.fromIdeas) {
-      if (location.state.topic) setTopic(location.state.topic);
+    if (location.state && location.state.fromIdeas && !isStateInitialized.current) {
+        isStateInitialized.current = true; // Corta el paso para siempre en los siguientes renders
+        
+        if (location.state.topic) setTopic(location.state.topic);
+        
+        if (location.state.customHook) {
+          setCustomHook(location.state.customHook);
+          setHookMode('custom'); 
+        }
+        if (location.state.strategyLoop) setStrategyLoop(location.state.strategyLoop);
+        if (location.state.vectorEmocional) setVectorEmocional(location.state.vectorEmocional);
+        if (location.state.platform) {
+          const plat = PLATFORMS.find(p => p.id === location.state.platform);
+          if (plat) setSelectedPlatform(plat);
+        }
       
-      if (location.state.customHook) {
-        setCustomHook(location.state.customHook);
-        setHookMode('custom'); 
-      }
-      if (location.state.strategyLoop) setStrategyLoop(location.state.strategyLoop);
-      if (location.state.vectorEmocional) setVectorEmocional(location.state.vectorEmocional);
-      if (location.state.platform) {
-        const plat = PLATFORMS.find(p => p.id === location.state.platform);
-        if (plat) setSelectedPlatform(plat);
-      }
       
       // Destruye el estado para que no vuelva a entrar en el if y evite el loop infinito
       navigate(location.pathname, { replace: true, state: null });
