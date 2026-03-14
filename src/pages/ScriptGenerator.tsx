@@ -553,12 +553,12 @@ export const ScriptGenerator = () => {
     loadExperts();
     loadKnowledgeBases();
 
-    if (location.state) {
+    if (location.state && location.state.fromIdeas) {
       if (location.state.topic) setTopic(location.state.topic);
       
       if (location.state.customHook) {
         setCustomHook(location.state.customHook);
-        setHookMode('custom'); // Activa la pestaña visual de Gancho Clonado
+        setHookMode('custom'); 
       }
       if (location.state.strategyLoop) setStrategyLoop(location.state.strategyLoop);
       if (location.state.vectorEmocional) setVectorEmocional(location.state.vectorEmocional);
@@ -567,12 +567,9 @@ export const ScriptGenerator = () => {
         if (plat) setSelectedPlatform(plat);
       }
       
-      window.history.replaceState({}, document.title);
+      // ESTA ES LA MAGIA: Limpiamos el estado con 'null' para romper el bucle infinito
+      navigate(location.pathname, { replace: true, state: null });
     }
-
-    if (userProfile?.active_expert_id) setSelectedExpertId(userProfile.active_expert_id);
-  }, [user, userProfile, location]);
-
   // ==================================================================================
   // 📷 IMAGE
   // ==================================================================================
