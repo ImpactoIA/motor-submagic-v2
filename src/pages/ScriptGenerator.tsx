@@ -567,9 +567,13 @@ export const ScriptGenerator = () => {
         if (plat) setSelectedPlatform(plat);
       }
       
-      // ESTA ES LA MAGIA: Limpiamos el estado con 'null' para romper el bucle infinito
+      // Destruye el estado para que no vuelva a entrar en el if y evite el loop infinito
       navigate(location.pathname, { replace: true, state: null });
     }
+
+    if (userProfile?.active_expert_id) setSelectedExpertId(userProfile.active_expert_id);
+  }, [user, userProfile, location]);
+
   // ==================================================================================
   // 📷 IMAGE
   // ==================================================================================
