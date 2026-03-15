@@ -223,7 +223,8 @@ serve(async (req) => {
       }
 
       case 'generar_guion':
-      case 'generador_guiones': {
+      case 'generador_guiones':
+      case 'script_generator_standard': {
         const r = await handleScriptGenerator(body, settings, processedContext, userContext, openai);
         result = r.result; tokensUsed = r.tokensUsed;
         break;
