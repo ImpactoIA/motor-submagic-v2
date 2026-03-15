@@ -69,17 +69,23 @@ serve(async (req) => {
 
     if (!checkRateLimit(userId)) throw new Error('Límite de solicitudes excedido');
 
-    // ─── Parsear body ─────────────────────────────────────
-    const body = await req.json();
-    const {
-      selectedMode,
-      url,
-      platform,
-      expertId,
-      avatarId,
-      knowledgeBaseId,
-      estimatedCost
-    } = body;
+  // ─── Parsear body ─────────────────────────────────────
+  const body = await req.json();
+  const {
+    selectedMode,
+    url,
+    platform,
+    expertId,
+    avatarId,
+    knowledgeBaseId,
+    estimatedCost,
+    strategyLoop,
+    vectorEmocional,
+    hookMode,
+    customHook,
+    format,
+    architecture
+  } = body || {};
 
     let processedContext = body.transcript || body.text || body.userInput
       || body.customPrompt || body.topic || body.query || "";
@@ -116,6 +122,14 @@ serve(async (req) => {
     const userContext = await getUserContext(
       supabase, expertId || '', avatarId || '', knowledgeBaseId || ''
     );
+
+    // ─── Fallbacks para variables avanzadas (seguridad) ─────────────────────────────
+    const safeStrategyLoop = strategyLoop || 'standard';
+    const safeVectorEmocional = vectorEmocional || 'neutral';
+    const safeHookMode = hookMode || 'direct';
+    const safeCustomHook = customHook || '';
+    const safeFormat = format || 'standard';
+    const safeArchitecture = architecture || 'linear';
 
     // ==================================================================================
     // 🛡️ MIDDLEWARE DE AVATAR + INYECCIÓN DE PERSONALIDAD
