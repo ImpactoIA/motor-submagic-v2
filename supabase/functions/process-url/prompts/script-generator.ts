@@ -2906,10 +2906,14 @@ ${retroalimentacionLoop}
 
 ` : '';
 
+    console.log(`[MOTOR V600] 🚀 Enviando prompt de ${systemPrompt.length} caracteres al LLM...`);
+
     // 🕐 CRONÓMETRO DE IA: AbortController para control de tiempo
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 35000); // 35s timeout
 
+    console.log(`[MOTOR V600] 🔄 Llamada LLM iniciada (intento ${intentoActual})...`);
+    console.log(`[MOTOR V600] 📊 Prompt length: ${systemPrompt.length} chars`);
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o',
       response_format: { type: 'json_object' },
@@ -2921,6 +2925,7 @@ ${retroalimentacionLoop}
       max_tokens: 4000, // 🎯 AJUSTE DE GRRIFO: Reducido de 12,000 a 4,000 tokens (66% menos costo)
       signal: controller.signal // 🛡️ CONTROL DEL CRONÓMETRO: AbortSignal para manejo de timeout
     });
+    console.log(`[MOTOR V600] ✅ Llamada LLM completada (intento ${intentoActual})`);
 
     clearTimeout(timeoutId); // Limpiar timeout si la solicitud fue exitosa
 
