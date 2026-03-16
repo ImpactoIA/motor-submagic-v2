@@ -2787,301 +2787,170 @@ async function ejecutarGeneradorGuiones(
   settings: any = {}
 ): Promise<{ data: any; tokens: number }> {
 
-  const MAX_RETRIES = 3;
-  const MIN_VIRAL_SCORE = 85;
-
-  console.log('[MOTOR V600] 🔥 Iniciando generación con loop de optimización...');
+  console.log('[MOTOR V600] 🔥 Iniciando generación única (sin loop)...');
   console.log(`[MOTOR V600] 📱 Plataforma: ${settings.platform || 'TikTok'}`);
   console.log(`[MOTOR V600] 🏗️ Estructura: ${settings.structure || 'winner_rocket'}`);
   console.log(`[MOTOR V600] 🎯 Tema: ${contexto.tema_especifico || contexto.nicho}`);
-  console.log(`[MOTOR V600] 🔁 Umbral mínimo: ${MIN_VIRAL_SCORE} | Máx intentos: ${MAX_RETRIES}`);
 
   let tokensTotal = 0;
-  let mejorResultado: any = null;
-  let mejorScore = 0;
-  let intentoActual = 0;
-  
-  let retroalimentacionLoop = "";
 
-  // ==================================================================================
-  // LOOP DE OPTIMIZACIÓN
-  // ==================================================================================
+  // ── PASO 1: El Estratega ──
+  let promptEstrategia = '';
 
-  while (intentoActual < MAX_RETRIES) {
-    intentoActual++;
-    console.log(`[MOTOR V600] 🔄 Intento ${intentoActual}/${MAX_RETRIES}...`);
-    try {
-
-    // ── Activar modo refinamiento a partir del intento 2 ──
-    const settingsIntento = {
-      ...settings,
-      intensidad_extra: intentoActual > 1,
-      intento_numero: intentoActual,
-    };
-
-    if (intentoActual > 1) {
-      console.log(`[MOTOR V600] ⚡ Modo refinamiento ACTIVO (intento ${intentoActual})`);
-    }
-
-    // ── PASO 1: El Estratega ──
-    let promptEstrategia = '';
-
-    if (intentoActual > 1) {
-      promptEstrategia = `
-INTENTO ${intentoActual} — MODO REFINAMIENTO OBLIGATORIO:
-El guion anterior NO alcanzó el umbral de dominancia (viral_index < ${MIN_VIRAL_SCORE}).
-Debes generar una versión RADICALMENTE DIFERENTE y más poderosa.
-
-TEMA: "${contexto.tema_especifico}" | NICHO: "${contexto.nicho}"
-PLATAFORMA: ${settings.platform || 'TikTok'}
-
-INSTRUCCIONES DE REFUERZO OBLIGATORIAS:
-1. Aumenta la tensión narrativa — cada bloque debe escalar más que el anterior
-2. Aumenta la polarización estratégica — toma postura más definida y confrontacional
-3. Refuerza los hooks — hook principal debe atacar ego o creencia central del avatar
-4. Inserta más micro-loops — mínimo 3 loops de curiosidad abiertos
-5. Eleva activadores psicológicos — al menos 3 activadores de guardado/share
-6. Aumenta diferenciación estructural — debe sonar COMPLETAMENTE diferente al creador promedio
-
-NO puedes repetir la misma estructura con cambios superficiales.
-Elige variantes de ejecución completamente distintas al intento anterior.
-
-Diseña un esquema de máxima disrupción para este tema.
-`;
-    } else {
-      if (viralDNA) {
-        promptEstrategia = `
+  if (viralDNA) {
+    promptEstrategia = `
 ANALIZA este ADN Viral: ${JSON.stringify(viralDNA.adn_extraido || {})}
 OBJETIVO: Adaptarlo al nicho "${settings.manual_niche || contexto.nicho}".
 TAREA: Crea un ESQUEMA LÓGICO paso a paso de cómo adaptar la estructura al nuevo nicho.
 NO escribas el guion aún. Solo define los puntos clave de la trama.
 `;
-      } else {
-        promptEstrategia = `
+  } else {
+    promptEstrategia = `
 OBJETIVO: Crear un guion viral para "${contexto.tema_especifico}" en el nicho "${contexto.nicho}".
 PLATAFORMA: ${settings.platform || 'TikTok'}
 TAREA: Diseña una estructura ganadora (Gancho -> Retención -> Payoff).
 Define qué sesgos psicológicos usarás en cada segundo.
 `;
-      }
-    }
-
-    const estrategia = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [
-        { role: 'system', content: 'Eres un Estratega de Marketing Viral de clase mundial.' },
-        { role: 'user', content: promptEstrategia }
-      ],
-      temperature: intentoActual === 1 ? 0.7 : 0.9,
-      max_tokens: 1500
-    });
-
-    const planEstrategico = estrategia.choices[0].message.content;
-    tokensTotal += estrategia.usage?.total_tokens || 0;
-
-    // ── PASO 2: El Ejecutor ──
-    const systemPrompt = PROMPT_GENERADOR_GUIONES(contexto, viralDNA, settingsIntento);
-
-    const refinamientoExtra = intentoActual > 1 ? `
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔴 MODO REFINAMIENTO ACTIVO — INTENTO ${intentoActual}/${MAX_RETRIES}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-El intento anterior NO superó viral_index ≥ ${MIN_VIRAL_SCORE}.
-
-INSTRUCCIONES DE EMERGENCIA OBLIGATORIAS:
-✦ Tensión narrativa: MÁXIMA — cada bloque debe escalar sin pausa
-✦ Polarización: ACTIVA — toma postura radical y definida sin concesiones  
-✦ Hook: REFORZADO — ataca ego, creencia o dolor central en los primeros 2 segundos
-✦ Micro-loops: MÍNIMO 3 — abrir preguntas sin respuesta antes del insight
-✦ Activadores: MÍNIMO 3 — frase memorable + dato contraintuitivo + reencuadre mental
-✦ Diferenciación: RADICAL — debe sonar imposible de confundir con otro creador
-✦ Variante de ejecución: COMPLETAMENTE DISTINTA al intento anterior
-
-⚠️ NO REPITAS: misma apertura, misma estructura, mismas fórmulas del intento anterior.
-REINVENTA el ángulo narrativo desde cero.
-
-${retroalimentacionLoop}
-
-` : '';
-
-    console.log(`[MOTOR V600] 🚀 Enviando prompt de ${systemPrompt.length} caracteres al LLM...`);
-
-    // 🕐 CRONÓMETRO DE IA: AbortController para control de tiempo
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 35000); // 35s timeout
-
-    console.log(`[MOTOR V600] 🔄 Llamada LLM iniciada (intento ${intentoActual})...`);
-    console.log(`[MOTOR V600] 📊 Prompt length: ${systemPrompt.length} chars`);
-    
-    // Implementar streaming para evitar timeout
-  const completion = await openai.chat.completions.create({
-      model: 'gpt-4o',
-      response_format: { type: 'json_object' },
-      messages: [
-        { role: 'system', content: 'Eres el Motor de Viralidad e Influencia V600.' },
-        { role: 'user', content: systemPrompt }
-      ],
-      temperature: intentoActual === 1 ? 0.7 : 0.8, // Control de temperatura: 0.7 inicial, 0.8 máximo
-      max_tokens: 4000, // 🎯 AJUSTE DE GRRIFO: Reducido de 12,000 a 4,000 tokens (66% menos costo)
-      signal: controller.signal, // 🛡️ CONTROL DEL CRONÓMETRO: AbortSignal para manejo de timeout
-      stream: true, // 🚀 STREAMING: Evita timeout de Supabase
-      stream_options: { include_usage: true } // Incluir métricas de tokens
-    });
-    
-    // Procesar streaming
-    let fullContent = '';
-    let usage = { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 };
-    
-    for await (const chunk of completion) {
-      const content = chunk.choices?.[0]?.delta?.content || '';
-      if (content) {
-        fullContent += content;
-      }
-      if (chunk.usage) {
-        usage = chunk.usage;
-      }
-    }
-    
-    console.log(`[MOTOR V600] ✅ Streaming completado (intento ${intentoActual})`);
-    console.log(`[MOTOR V600] 📈 Tokens consumidos: ${usage.total_tokens}`);
-
-    clearTimeout(timeoutId); // Limpiar timeout si la solicitud fue exitosa
-
-    tokensTotal += completion.usage?.total_tokens || 0;
-
-    let parsedData: any = {};
-    try {
-      parsedData = JSON.parse(completion.choices[0].message.content || '{}');
-    } catch (e) {
-      console.error(`[MOTOR V600] ❌ Error parseando JSON en intento ${intentoActual}`);
-      continue;
-    }
-
-    // ── PASO 2.5: Validación de longitud del teleprompter ──
-    const teleprompterRaw = parsedData.teleprompter_script || '';
-    const teleprompterPalabras = teleprompterRaw.replace(/\[.*?\]/g, '').trim().split(/\s+/).filter(Boolean).length;
-    const durationSel = (settings.durationId || settings.duration || 'medium');
-    const minPalabras = durationSel === 'short' ? 70 : durationSel === 'long' ? 200 : durationSel === 'masterclass' ? 700 : 140;
-    if (teleprompterPalabras < minPalabras) {
-      console.warn(`[MOTOR V600] ⚠️ Intento ${intentoActual}: teleprompter muy corto (${teleprompterPalabras} palabras, min ${minPalabras}) — rechazando`);
-      retroalimentacionLoop += `\n🔴 RECHAZO POR LONGITUD: El teleprompter_script tiene solo ${teleprompterPalabras} palabras. MINIMO OBLIGATORIO: ${minPalabras} palabras. Amplia el conflicto, la historia, la revelacion y el CTA hasta alcanzar el minimo.`;
-      if (!mejorResultado) mejorResultado = parsedData;
-      continue;
-    }
-
-    // ── PASO 3: Validación obligatoria del score ──
-    const scorePredictivo = parsedData.score_predictivo;
-
-    if (!scorePredictivo) {
-      console.warn(`[MOTOR V600] ⚠️ Intento ${intentoActual}: score_predictivo ausente — rechazando`);
-      // Guardar como fallback si no hay nada mejor
-      if (!mejorResultado) mejorResultado = parsedData;
-      continue;
-    }
-
-    const viralIndex = scorePredictivo.viral_index;
-
-    if (typeof viralIndex !== 'number' || isNaN(viralIndex)) {
-      console.warn(`[MOTOR V600] ⚠️ Intento ${intentoActual}: viral_index no es numérico (${viralIndex}) — rechazando`);
-      if (!mejorResultado) mejorResultado = parsedData;
-      continue;
-    }
-
-    console.log(`[MOTOR V600] 📊 Intento ${intentoActual} — viral_index: ${viralIndex}`);
-
-    // ── P4: SCANNER ANTI-CLICHÉS ACTIVO (PRIMERO — antes de guardar nada) ──
-    const scannerResult = await escanearYLimpiarCliches(parsedData, openai);
-    if (!scannerResult.limpioDesdeInicio) {
-      console.log(`[MOTOR V600] 🧹 Clichés eliminados: ${scannerResult.clichesEliminados}`);
-      parsedData = scannerResult.output; // Versión limpia garantizada
-    }
-
-    // ── P5: VERIFICACIÓN DE SCORE COHERENTE (sobre datos ya limpios) ──
-    const scoreCheck = recalcularScoreCoherente(parsedData);
-    if (scoreCheck.fue_ajustado) {
-      parsedData.score_predictivo = scoreCheck.score_verificado;
-      console.log(`[MOTOR V600] ⚖️ Score corregido por P5 — ${scoreCheck.ajustes_realizados.length} ajustes`);
-    }
-
-    // ── viralIndex VERIFICADO (post-P5, score real) ──
-    const viralIndexVerificado = Number(parsedData.score_predictivo?.viral_index) || viralIndex;
-
-    // ── Guardar el mejor resultado LIMPIO Y VERIFICADO ──
-    if (viralIndexVerificado > mejorScore) {
-      mejorScore = viralIndexVerificado;
-      mejorResultado = parsedData; // Siempre guardamos versión post-P4/P5
-      console.log(`[MOTOR V600] ✅ Nuevo mejor score verificado: ${mejorScore}`);
-    }
-
-    // ── VALIDACIÓN PROGRAMÁTICA V600 ──
-    const validacion = validarOutputGenerador(parsedData);
-
-    if (validacion.aprobado) {
-      console.log(`[MOTOR V600] ✅ Intento ${intentoActual} APROBADO — Calidad: ${validacion.score_total}/100`);
-      parsedData._validacion_calidad = validacion;
-      mejorResultado = parsedData;
-      mejorScore = viralIndexVerificado; // Score real, no inflado
-      break;
-    }
-
-    console.log(`[MOTOR V600] ❌ Intento ${intentoActual} RECHAZADO — Calidad: ${validacion.score_total}/100`);
-    console.log(`[MOTOR V600] 🔄 Motivo: ${validacion.fallos.slice(0, 2).join(' | ')}`);
-
-    // Guardar como mejor disponible aunque no aprobó (ya está limpio por P4/P5)
-    if (viralIndexVerificado > mejorScore) {
-      mejorScore = viralIndexVerificado;
-      mejorResultado = { ...parsedData, _validacion_calidad: validacion };
-    }
-    
-    // En último intento aceptar lo mejor disponible
-    if (intentoActual === MAX_RETRIES) {
-      console.log(`[MOTOR V600] ⚠️ MAX_RETRIES alcanzado. Usando mejor versión disponible.`);
-      if (mejorResultado) {
-        (mejorResultado as any)._advertencia_calidad = `Fallos pendientes: ${validacion.fallos.join('; ')}`;
-      }
-      break;
-    }
-
-    // Pasar fallos al siguiente intento (se inyecta en refinamientoExtra que ya existe)
-    retroalimentacionLoop = `
-⚠️ VALIDADOR AUTOMÁTICO RECHAZÓ EL INTENTO ANTERIOR.
-FALLOS DETECTADOS QUE DEBES CORREGIR OBLIGATORIAMENTE:
-${validacion.fallos.map(f => `- ${f}`).join('\n')}
-NO puedes entregar el guion sin resolver estos puntos.
-`;
-
-    console.log(`[MOTOR V600] 🔁 Reintentando con correcciones específicas...`);
-
-  } catch (loopError: any) {
-      console.error(`[MOTOR V600] 💥 Error en intento ${intentoActual}: ${loopError?.message || loopError}`);
-      if (!mejorResultado) continue;
-      break;
-    }
-  } // ← CIERRE DEL WHILE
-
-  // ── PASO 4: Usar el mejor resultado obtenido ──
-  if (!mejorResultado) {
-    throw new Error('El generador no pudo producir un guion válido tras todos los intentos.');
   }
 
-  console.log(`[MOTOR V600] 🎯 Resultado final — viral_index: ${mejorScore} | Intentos: ${intentoActual}`);
+  const estrategia = await openai.chat.completions.create({
+    model: 'gpt-4o-mini',
+    messages: [
+      { role: 'system', content: 'Eres un Estratega de Marketing Viral de clase mundial.' },
+      { role: 'user', content: promptEstrategia }
+    ],
+    temperature: 0.7,
+    max_tokens: 1500
+  });
 
-   const normalizedData = {
-    ...mejorResultado,
-    guion_completo: mejorResultado.guion_completo || mejorResultado.guion_tecnico_completo || mejorResultado.guion_completo_adaptado,
-    _anti_saturation_report: mejorResultado._limpieza_cliches || { cliches_detectados: [], guion_fue_reescrito: false },
-    _score_verification_report: mejorResultado.score_predictivo?._scores_verificados || null,
-    guion_tecnico_completo: mejorResultado.guion_tecnico_completo || mejorResultado.guion_completo,
-    plan_visual_director: mejorResultado.plan_visual_director || mejorResultado.plan_visual,
-    miniatura_dominante: mejorResultado.miniatura_dominante || null,
-    poder_del_guion: mejorResultado.poder_del_guion || null,
+  const planEstrategico = estrategia.choices[0].message.content;
+  tokensTotal += estrategia.usage?.total_tokens || 0;
+
+  // ── PASO 2: El Ejecutor ──
+  const systemPrompt = PROMPT_GENERADOR_GUIONES(contexto, viralDNA, settings);
+
+  console.log(`[MOTOR V600] 🚀 Enviando prompt de ${systemPrompt.length} caracteres al LLM...`);
+
+  // 🕐 CRONÓMETRO DE IA: AbortController para control de tiempo
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 35000); // 35s timeout
+
+  console.log(`[MOTOR V600] 🔄 Llamada LLM iniciada...`);
+  console.log(`[MOTOR V600] 📊 Prompt length: ${systemPrompt.length} chars`);
+  
+  // Implementar streaming para evitar timeout
+  const completion = await openai.chat.completions.create({
+    model: 'gpt-4o',
+    response_format: { type: 'json_object' },
+    messages: [
+      { role: 'system', content: 'Eres el Motor de Viralidad e Influencia V600.' },
+      { role: 'user', content: systemPrompt }
+    ],
+    temperature: 0.7, // Control de temperatura: 0.7
+    max_tokens: 4000, // 🎯 AJUSTE DE GRRIFO: Reducido de 12,000 a 4,000 tokens (66% menos costo)
+    signal: controller.signal, // 🛡️ CONTROL DEL CRONÓMETRO: AbortSignal para manejo de timeout
+    stream: true, // 🚀 STREAMING: Evita timeout de Supabase
+    stream_options: { include_usage: true } // Incluir métricas de tokens
+  });
+  
+  // Procesar streaming
+  let fullContent = '';
+  let usage = { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 };
+  
+  for await (const chunk of completion) {
+    const content = chunk.choices?.[0]?.delta?.content || '';
+    if (content) {
+      fullContent += content;
+    }
+    if (chunk.usage) {
+      usage = chunk.usage;
+    }
+  }
+  
+  console.log(`[MOTOR V600] ✅ Streaming completado`);
+  console.log(`[MOTOR V600] 📈 Tokens consumidos: ${usage.total_tokens}`);
+
+  clearTimeout(timeoutId); // Limpiar timeout si la solicitud fue exitosa
+
+  tokensTotal += completion.usage?.total_tokens || 0;
+
+  let parsedData: any = {};
+  try {
+    parsedData = JSON.parse(completion.choices[0].message.content || '{}');
+  } catch (e) {
+    console.error(`[MOTOR V600] ❌ Error parseando JSON`);
+    throw new Error('Error al procesar la respuesta del LLM');
+  }
+
+  // ── PASO 2.5: Validación de longitud del teleprompter ──
+  const teleprompterRaw = parsedData.teleprompter_script || '';
+  const teleprompterPalabras = teleprompterRaw.replace(/\[.*?\]/g, '').trim().split(/\s+/).filter(Boolean).length;
+  const durationSel = (settings.durationId || settings.duration || 'medium');
+  const minPalabras = durationSel === 'short' ? 70 : durationSel === 'long' ? 200 : durationSel === 'masterclass' ? 700 : 140;
+  if (teleprompterPalabras < minPalabras) {
+    console.warn(`[MOTOR V600] ⚠️ teleprompter muy corto (${teleprompterPalabras} palabras, min ${minPalabras}) — rechazando`);
+    throw new Error(`Teleprompter demasiado corto: ${teleprompterPalabras} palabras, mínimo requerido: ${minPalabras}`);
+  }
+
+  // ── PASO 3: Validación obligatoria del score ──
+  const scorePredictivo = parsedData.score_predictivo;
+
+  if (!scorePredictivo) {
+    console.warn(`[MOTOR V600] ⚠️ score_predictivo ausente — rechazando`);
+    throw new Error('Score predictivo no disponible');
+  }
+
+  const viralIndex = scorePredictivo.viral_index;
+
+  if (typeof viralIndex !== 'number' || isNaN(viralIndex)) {
+    console.warn(`[MOTOR V600] ⚠️ viral_index no es numérico (${viralIndex}) — rechazando`);
+    throw new Error('Viral index no válido');
+  }
+
+  console.log(`[MOTOR V600] 📊 viral_index: ${viralIndex}`);
+
+  // ── P4: SCANNER ANTI-CLICHÉS ACTIVO (PRIMERO — antes de guardar nada) ──
+  const scannerResult = await escanearYLimpiarCliches(parsedData, openai);
+  if (!scannerResult.limpioDesdeInicio) {
+    console.log(`[MOTOR V600] 🧹 Clichés eliminados: ${scannerResult.clichesEliminados}`);
+    parsedData = scannerResult.output; // Versión limpia garantizada
+  }
+
+  // ── P5: VERIFICACIÓN DE SCORE COHERENTE (sobre datos ya limpios) ──
+  const scoreCheck = recalcularScoreCoherente(parsedData);
+  if (scoreCheck.fue_ajustado) {
+    parsedData.score_predictivo = scoreCheck.score_verificado;
+    console.log(`[MOTOR V600] ⚖️ Score corregido por P5 — ${scoreCheck.ajustes_realizados.length} ajustes`);
+  }
+
+  // ── viralIndex VERIFICADO (post-P5, score real) ──
+  const viralIndexVerificado = Number(parsedData.score_predictivo?.viral_index) || viralIndex;
+
+  // ── VALIDACIÓN PROGRAMÁTICA V600 ──
+  const validacion = validarOutputGenerador(parsedData);
+
+  if (!validacion.aprobado) {
+    console.log(`[MOTOR V600] ❌ Validación fallida — Calidad: ${validacion.score_total}/100`);
+    console.log(`[MOTOR V600] 🔄 Motivo: ${validacion.fallos.slice(0, 2).join(' | ')}`);
+    throw new Error(`Validación fallida: ${validacion.fallos.join(', ')}`);
+  }
+
+  console.log(`[MOTOR V600] ✅ Validación exitosa — Calidad: ${validacion.score_total}/100`);
+
+  const normalizedData = {
+    ...parsedData,
+    guion_completo: parsedData.guion_completo || parsedData.guion_tecnico_completo || parsedData.guion_completo_adaptado,
+    _anti_saturation_report: parsedData._limpieza_cliches || { cliches_detectados: [], guion_fue_reescrito: false },
+    _score_verification_report: parsedData.score_predictivo?._scores_verificados || null,
+    guion_tecnico_completo: parsedData.guion_tecnico_completo || parsedData.guion_completo,
+    plan_visual_director: parsedData.plan_visual_director || parsedData.plan_visual,
+    miniatura_dominante: parsedData.miniatura_dominante || null,
+    poder_del_guion: parsedData.poder_del_guion || null,
     analisis_estrategico: {
-      ...(mejorResultado.analisis_estrategico || {}),
-      razonamiento_interno: `Motor V600 — ${intentoActual} intento(s) | Mejor viral_index: ${mejorScore}`,
-      intentos_realizados: intentoActual,
-      umbral_superado: mejorScore >= MIN_VIRAL_SCORE,
+      ...(parsedData.analisis_estrategico || {}),
+      razonamiento_interno: `Motor V600 — Generación única | viral_index: ${viralIndexVerificado}`,
+      intentos_realizados: 1,
+      umbral_superado: viralIndexVerificado >= 85,
     }
   };
 
