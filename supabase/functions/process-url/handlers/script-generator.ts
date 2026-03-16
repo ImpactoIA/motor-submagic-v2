@@ -23,8 +23,10 @@ export async function handleScriptGenerator(
   let preAnalisis: any = null;
 
   // ══════════════════════════════════════════════════════════
-  // RUTA A: IMAGEN
+  // RUTAS DE INPUT (sin llamadas al LLM)
   // ══════════════════════════════════════════════════════════
+  
+  // RUTA A: IMAGEN
   if (body.image) {
     console.log('[MOTOR V700] 📸 Imagen detectada — activando análisis visual...');
     modoGeneracion = 'imagen';
@@ -43,7 +45,6 @@ export async function handleScriptGenerator(
       const contextoAdicional = body.text || body.userInput || "";
       const temaTexto = contextoAdicional?.trim();
       const temaFinal = temaTexto || conceptoVisual;
-      const inputParaPreAnalisis = temaTexto || conceptoVisual;
 
       temaUsuario = `[TEMA PRINCIPAL DEL USUARIO]: ${temaFinal}
 
@@ -54,80 +55,35 @@ ${temaTexto
   : `Tema extraído de la imagen. Úsalo como eje central.`}
 PROHIBIDO: guion genérico. OBLIGATORIO: mencionar detalles concretos del tema.`;
 
-      preAnalisis = await preAnalizarInput(inputParaPreAnalisis, 'imagen', openai);
-      console.log('[MOTOR V700] 🧬 Fusión Visual + Pre-análisis completados.');
+      console.log('[MOTOR V700] 🧬 Fusión Visual completada.');
 
     } catch (imgError: any) {
       console.error('[ERROR VISION]', imgError);
       throw new Error("Error analizando la imagen. Asegúrate de que sea JPG/PNG válido.");
     }
 
-  // ══════════════════════════════════════════════════════════
   // RUTA B: TEXTO LARGO (> 150 chars)
-  // ══════════════════════════════════════════════════════════
   } else if (
     !body.image &&
     (body.text || body.userInput || processedContext) &&
     (body.text || body.userInput || processedContext || "").length > 150
   ) {
     const inputTexto = body.text || body.userInput || processedContext || "";
-    console.log('[MOTOR V700] 📝 Texto largo — ejecutando análisis P1+P6...');
+    console.log('[MOTOR V700] 📝 Texto largo — preparando análisis...');
     modoGeneracion = 'texto';
-
-    preAnalisis = await preAnalizarInput(inputTexto, 'texto', openai);
-    const estructuraImplicita = await analizarEstructuraImplicita(inputTexto, openai);
-    console.log(`[MOTOR V700] 🏗️ Estructura: ${estructuraImplicita.tipo_estructura} → ${estructuraImplicita.instruccion}`);
-
-    let instruccionEstructura = '';
-    if (estructuraImplicita.instruccion === 'preservar_y_elevar') {
-      instruccionEstructura = `
-[INSTRUCCIÓN P6 — PRESERVAR Y ELEVAR]:
-El texto tiene estructura sólida (${estructuraImplicita.tipo_estructura}). NO la destruyas.
-- Hook a preservar: "${estructuraImplicita.hook_existente}"
-- Cierre a preservar: "${estructuraImplicita.cierre_existente}"
-- Mantener: ${estructuraImplicita.elementos_fuertes.join(' | ')}
-- Reemplazar: ${estructuraImplicita.elementos_debiles.join(' | ')}
-MISIÓN: Misma arquitectura, 3x más potencia narrativa.`;
-    } else if (estructuraImplicita.instruccion === 'extraer_y_reconstruir') {
-      instruccionEstructura = `
-[INSTRUCCIÓN P6 — EXTRAER Y RECONSTRUIR]:
-EXTRAE elementos fuertes: ${estructuraImplicita.elementos_fuertes.join(' | ')}
-DESCARTA débiles: ${estructuraImplicita.elementos_debiles.join(' | ')}
-RECONSTRUYE con arquitectura de 6 bloques obligatoria.`;
-    } else {
-      instruccionEstructura = `
-[INSTRUCCIÓN P6 — REESTRUCTURAR COMPLETO]:
-El texto no tiene estructura aprovechable. Úsalo como fuente de datos, construye desde cero.`;
-    }
 
     temaUsuario = `
 [TEXTO ORIGINAL DEL USUARIO]:
 ${inputTexto.substring(0, 1500)}
 
-[ADN NARRATIVO DETECTADO — P1]:
-- Conflicto Central: ${preAnalisis.conflicto_central}
-- Insight Explotable: ${preAnalisis.insight_explotable}
-- Transformación: ${preAnalisis.transformacion_implicita}
-- Emoción Dominante: ${preAnalisis.emocion_dominante}
-- Tensión Base: ${preAnalisis.tension_detectada}/100
-- Partes Débiles: ${preAnalisis.partes_planas.join(' | ') || 'Ninguna'}
+[INSTRUCCIÓN PARA EL MOTOR]:
+Realiza internamente el Pre-Análisis (P1) y la Teoría Circular de Alcance (TCA) antes de generar el guion.
+- Paso 1: Detecta conflicto central, insight explotable, partes planas y tensión base
+- Paso 2: Aplica TCA para expandir el tema al sector masivo (N2-N3)
+- Paso 3: Usa tus propias deducciones para redactar el guion final
+- NO incluyas los resultados del P1 y TCA en la respuesta final, solo úsalos para informar el guion.`;
 
-[INSTRUCCIONES DEL PRE-ANÁLISIS — P1]:
-${preAnalisis.instrucciones_para_generador}
-
-${instruccionEstructura}`.trim();
-
-    preAnalisis._estructura_implicita = {
-      tipo: estructuraImplicita.tipo_estructura,
-      instruccion: estructuraImplicita.instruccion,
-      elementos_fuertes: estructuraImplicita.elementos_fuertes,
-      elementos_debiles: estructuraImplicita.elementos_debiles,
-      razon: estructuraImplicita.razon
-    };
-
-  // ══════════════════════════════════════════════════════════
   // RUTA C: IDEA CORTA
-  // ══════════════════════════════════════════════════════════
   } else {
     temaUsuario = body.text || body.userInput || settings.topic || userContext.nicho || "Tema General";
     modoGeneracion = 'idea';
@@ -136,55 +92,30 @@ ${instruccionEstructura}`.trim();
       throw new Error("⚠️ Debes ingresar un tema, texto o imagen para generar el guion.");
     }
 
-    try {
-      preAnalisis = await preAnalizarInput(temaUsuario, 'idea', openai);
-      console.log(`[MOTOR V700] 💡 Idea pre-analizada | Tensión: ${preAnalisis.tension_detectada}/100`);
-    } catch (e) {
-      console.warn('[MOTOR V700] ⚠️ Pre-análisis falló — continúa sin él');
-    }
+    console.log(`[MOTOR V700] 💡 Idea corta preparada | Tensión: 50/100`);
   }
 
   // ══════════════════════════════════════════════════════════
-  // CAPA 0 — SISTEMA TCA (expansión de alcance masivo)
+  // ESTRATEGIA TCA (sin llamada al LLM)
   // ══════════════════════════════════════════════════════════
   let estrategiaTCA: any = null;
 
   if (!settings?.tca_preexpandido) {
-    try {
-      console.log('[TCA] 🌀 Ejecutando Sistema de Alcance Masivo...');
-      console.log('Iniciando fetch de TCA...');
-      
-      // TODO: Refactorizar para consolidar en un solo prompt y evitar timeouts
-      // BYPASS TEMPORAL: Simulamos respuesta rápida para evitar timeout
-      const tcaResult = {
-        tema_expandido: temaUsuario,
-        estrategia_tca: {
-          mass_appeal_score: 75,
-          nivel_posicionamiento: 'N2-N3',
-          sector_utilizado: 'General',
-          tipo_contenido_embudo: 'TOFU',
-          hook_sectorial: 'Hook simulado',
-          capa_visible: 'Contenido masivo',
-          capa_estrategica: 'Autoridad implícita'
-        },
-        aprobado: true,
-        instruccion_tca: ''
-      };
-      
-      console.log('Fetch TCA exitoso (simulado)');
-      estrategiaTCA = tcaResult.estrategia_tca;
-
-      if (tcaResult.aprobado && tcaResult.tema_expandido && tcaResult.tema_expandido !== temaUsuario) {
-        temaUsuario = tcaResult.tema_expandido;
-        if (tcaResult.instruccion_tca) {
-          (settings as any)._tca_instruccion = tcaResult.instruccion_tca;
-        }
-        console.log(`[TCA] ✅ Tema expandido | Mass Appeal: ${estrategiaTCA?.mass_appeal_score || 0}/100`);
-      }
-    } catch (tcaError: any) {
-      console.error('🚨 ERROR EN TCA:', tcaError);
-      console.warn('[TCA] ⚠️ Bypass total:', tcaError.message);
-    }
+    console.log('[TCA] 🌀 Sistema de Alcance Masivo integrado en el prompt...');
+    
+    // TODO: Refactorizar para consolidar en un solo prompt y evitar timeouts
+    // BYPASS TEMPORAL: Estrategia TCA integrada en el prompt del guion
+    estrategiaTCA = {
+      mass_appeal_score: 75,
+      nivel_posicionamiento: 'N2-N3',
+      sector_utilizado: 'General',
+      tipo_contenido_embudo: 'TOFU',
+      hook_sectorial: 'Hook integrado',
+      capa_visible: 'Contenido masivo',
+      capa_estrategica: 'Autoridad implícita'
+    };
+    
+    console.log(`[TCA] ✅ Estrategia integrada | Mass Appeal: ${estrategiaTCA?.mass_appeal_score || 0}/100`);
   } else {
     console.log('[TCA] ⚡ Pre-expandido desde Ideas Rápidas — bypass');
   }
