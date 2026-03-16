@@ -121,7 +121,7 @@ Realiza internamente el Pre-Análisis (P1) y la Teoría Circular de Alcance (TCA
   }
 
   // ══════════════════════════════════════════════════════════
-  // MOTOR V700 — GENERADOR PRINCIPAL
+  // MOTOR V700 — GENERADOR PRINCIPAL (SIN LOOP)
   // ══════════════════════════════════════════════════════════
   const contextoEnriquecido = {
     ...userContext,
@@ -144,6 +144,8 @@ Realiza internamente el Pre-Análisis (P1) y la Teoría Circular de Alcance (TCA
   
   // Implementar streaming para evitar timeout
   try {
+    console.log('[MOTOR V700] 🚀 Iniciando ejecución del generador con streaming...');
+    
     const response = await ejecutarGeneradorGuiones(contextoEnriquecido, null, openai, settings);
 
     const result = {
@@ -159,10 +161,11 @@ Realiza internamente el Pre-Análisis (P1) y la Teoría Circular de Alcance (TCA
       })
     };
 
-    console.log(`[MOTOR V700] ✅ Guion generado | Modo: ${modoGeneracion}`);
+    console.log(`[MOTOR V700] ✅ Guion generado exitosamente | Modo: ${modoGeneracion} | Tokens: ${response.tokens}`);
     return { result, tokensUsed: response.tokens };
   } catch (error: any) {
-    console.error('❌ ERROR DIRECTO EN LLM CALL:', error.message);
+    console.error('❌ ERROR en ejecución del generador:', error.message);
+    console.error('❌ Stack trace:', error.stack);
     throw error;
   }
 }
