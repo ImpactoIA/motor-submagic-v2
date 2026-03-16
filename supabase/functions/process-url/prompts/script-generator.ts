@@ -2838,6 +2838,35 @@ Define qué sesgos psicológicos usarás en cada segundo.
   console.log(`[MOTOR V600] 🔄 Llamada LLM iniciada...`);
   console.log(`[MOTOR V600] 📊 Prompt length: ${systemPrompt.length} chars`);
   
+  // ====================================================================================
+// 🔧 PATCH QUIRÚRGICO — prompts/script-generator.ts
+//
+// PROBLEMA RAÍZ:
+//   El código tiene `stream: true` en `ejecutarGeneradorGuiones` PERO luego intenta
+//   leer `completion.choices[0].message.content` como si fuera respuesta no-streaming.
+//   En modo stream, `completion` es un AsyncIterable — NO tiene `.choices[0]`.
+//   Esto lanza un TypeError silencioso → el handler lo atrapa → devuelve 400.
+//
+//   Bug secundario: `tokensTotal += completion.usage?.total_tokens` devuelve NaN
+//   porque en modo stream `completion.usage` no existe en el objeto raíz.
+//
+// SOLUCIÓN:
+//   Reemplazar ÚNICAMENTE el bloque de la llamada OpenAI dentro de ejecutarGeneradorGuiones
+//   (aprox. líneas 820-890 del original).
+//   El resto del archivo (TCA, validadores, P1-P6, exports) NO se modifica.
+//
+// INSTRUCCIÓN DE APLICACIÓN:
+//   En tu archivo `prompts/script-generator.ts`, busca el bloque que empieza con:
+//     "// Implementar streaming para evitar timeout"
+//   y termina con:
+//     "tokensTotal += completion.usage?.total_tokens || 0;"
+//   Reemplázalo COMPLETO por el bloque marcado abajo como [BLOQUE_NUEVO].
+// ====================================================================================
+
+// ══════════════════════════════════════════════════════════════════════
+// [BLOQUE_VIEJO] — ELIMINAR ESTAS ~35 LÍNEAS (buscar y reemplazar todo)
+// ══════════════════════════════════════════════════════════════════════
+/*
   // Implementar streaming para evitar timeout
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o',
@@ -2846,11 +2875,11 @@ Define qué sesgos psicológicos usarás en cada segundo.
       { role: 'system', content: 'Eres el Motor de Viralidad e Influencia V600.' },
       { role: 'user', content: systemPrompt }
     ],
-    temperature: 0.7, // Control de temperatura: 0.7
-    max_tokens: 4000, // 🎯 AJUSTE DE GRRIFO: Reducido de 12,000 a 4,000 tokens (66% menos costo)
-    signal: controller.signal, // 🛡️ CONTROL DEL CRONÓMETRO: AbortSignal para manejo de timeout
-    stream: true, // 🚀 STREAMING: Evita timeout de Supabase
-    stream_options: { include_usage: true } // Incluir métricas de tokens
+    temperature: 0.7,
+    max_tokens: 4000,
+    signal: controller.signal,
+    stream: true,                                    // ← ESTE ERA EL BUG
+    stream_options: { include_usage: true }
   });
   
   // Procesar streaming
@@ -2870,17 +2899,65 @@ Define qué sesgos psicológicos usarás en cada segundo.
   console.log(`[MOTOR V600] ✅ Streaming completado`);
   console.log(`[MOTOR V600] 📈 Tokens consumidos: ${usage.total_tokens}`);
 
-  clearTimeout(timeoutId); // Limpiar timeout si la solicitud fue exitosa
+  clearTimeout(timeoutId);
 
-  tokensTotal += completion.usage?.total_tokens || 0;
+  tokensTotal += completion.usage?.total_tokens || 0;   // ← BUG: siempre NaN en modo stream
 
   let parsedData: any = {};
   try {
-    parsedData = JSON.parse(completion.choices[0].message.content || '{}');
+    parsedData = JSON.parse(completion.choices[0].message.content || '{}');  // ← CRASH: no existe en modo stream
   } catch (e) {
     console.error(`[MOTOR V600] ❌ Error parseando JSON`);
     throw new Error('Error al procesar la respuesta del LLM');
   }
+*/
+
+// ══════════════════════════════════════════════════════════════════════
+// [BLOQUE_NUEVO] — PEGAR EN SU LUGAR
+// ══════════════════════════════════════════════════════════════════════
+
+  // Llamada SIN streaming — este executor es interno y no necesita SSE.
+  // El streaming real hacia el frontend lo maneja handlers/script-generator.ts.
+  // stream: false garantiza que completion.choices[0].message.content existe siempre.
+  const completion = await openai.chat.completions.create({
+    model: 'gpt-4o',
+    response_format: { type: 'json_object' },
+    messages: [
+      { role: 'system', content: 'Eres el Motor de Viralidad e Influencia V600.' },
+      { role: 'user', content: systemPrompt }
+    ],
+    temperature: 0.7,
+    max_tokens: 4000,
+    signal: controller.signal,
+    // stream: false  ← valor por defecto, NO pasar stream:true aquí
+  });
+
+  clearTimeout(timeoutId);
+
+  // Ahora sí completion.choices[0].message.content existe y es un string
+  const rawContent = completion.choices[0]?.message?.content || '{}';
+  const usageTokens = completion.usage?.total_tokens || 0;
+
+  console.log(`[MOTOR V600] ✅ Llamada completada`);
+  console.log(`[MOTOR V600] 📈 Tokens consumidos: ${usageTokens}`);
+
+  tokensTotal += usageTokens;
+
+  let parsedData: any = {};
+  try {
+    // Limpiar bloques markdown por si el modelo los incluye
+    const cleanContent = rawContent.replace(/```json|```/g, '').trim();
+    parsedData = JSON.parse(cleanContent);
+  } catch (e) {
+    console.error(`[MOTOR V600] ❌ Error parseando JSON. Primeros 200 chars: ${rawContent.substring(0, 200)}`);
+    throw new Error('Error al procesar la respuesta del LLM — JSON inválido');
+  }
+
+// ══════════════════════════════════════════════════════════════════════
+// FIN DEL PATCH
+// Lo que viene después (validación de longitud, P4, P5, etc.) NO cambia.
+// ══════════════════════════════════════════════════════════════════════
+
 
   // ── PASO 2.5: Validación de longitud del teleprompter ──
   const teleprompterRaw = parsedData.teleprompter_script || '';

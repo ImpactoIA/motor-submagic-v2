@@ -222,6 +222,21 @@ interface AuditResult {
 }
 
 // ==================================================================================
+// 📊 TIPOS DE STREAMING
+// ==================================================================================
+
+type StreamPhase = 'idle' | 'estratega' | 'generador' | 'complete' | 'error';
+
+interface StreamState {
+  phase: StreamPhase;
+  phaseMessage: string;
+  streamedText: string;    // Texto crudo que va llegando chunk a chunk
+  estrategia: any | null;
+  result: ScriptResult | null;
+  errorMessage: string | null;
+}
+
+// ==================================================================================
 // 📚 CONFIGURACIÓN Y CONSTANTES
 // ==================================================================================
 
@@ -352,7 +367,6 @@ const AWARENESS_LEVELS = [
   "Consciente del Producto"
 ];
 
-// NEW: Strategy loops replacing old objectives
 const STRATEGY_LOOPS = [
   { id: 'magnetic_loop', label: '🧲 Magnetic Loop', desc: 'Atrae, seduce, retiene', color: 'border-pink-500 bg-pink-500/10 text-pink-300' },
   { id: 'engagement_loop', label: '💬 Engagement Loop', desc: 'Comentarios, debates, shares', color: 'border-blue-500 bg-blue-500/10 text-blue-300' },
@@ -360,7 +374,6 @@ const STRATEGY_LOOPS = [
   { id: 'viral_loop', label: '🔥 Viral Loop', desc: 'Explosión orgánica masiva', color: 'border-red-500 bg-red-500/10 text-red-300' },
 ];
 
-// NEW: Emotional vectors
 const EMOTIONAL_VECTORS = [
   { id: 'dolor_profundo', label: '💔 Dolor Profundo', color: 'border-red-600 bg-red-900/20 text-red-300' },
   { id: 'deseo_ardiente', label: '🔥 Deseo Ardiente', color: 'border-orange-500 bg-orange-900/20 text-orange-300' },
@@ -369,7 +382,6 @@ const EMOTIONAL_VECTORS = [
   { id: 'mito_industria', label: '💥 Mito de la Industria', color: 'border-cyan-500 bg-cyan-900/20 text-cyan-300' },
 ];
 
-// NEW: Voice archetypes
 const VOICE_ARCHETYPES = [
   { id: 'dominante_agresivo', label: '⚔️ Dominante / Agresivo', desc: 'Sin filtros, directo al hueso', color: 'border-red-500 bg-red-900/20 text-red-300' },
   { id: 'sabio_filosofico', label: '🦉 Sabio / Filosófico', desc: 'Profundo, reflexivo, eterno', color: 'border-indigo-500 bg-indigo-900/20 text-indigo-300' },
@@ -392,7 +404,6 @@ const CLOSING_OBJECTIVES = [
   { id: 'autoridad', label: '👑 Construir Autoridad' },
 ];
 
-// ELITE TOP 5 HOOKS
 const ELITE_HOOKS = [
   { id: 'enemigo_comun', label: '😡 El Enemigo Común', desc: 'Unifica a tu audiencia contra una amenaza' },
   { id: 'verdad_impopular', label: '🚫 La Verdad Impopular', desc: 'Di lo que nadie se atreve a decir' },
@@ -456,6 +467,73 @@ const SectionCard = ({ children, className = '' }: { children: React.ReactNode; 
 );
 
 // ==================================================================================
+// 🌊 STREAMING PHASE INDICATOR
+// ==================================================================================
+
+const StreamingPhaseIndicator = ({ phase, message, streamedText }: {
+  phase: StreamPhase;
+  message: string;
+  streamedText: string;
+}) => {
+  if (phase === 'idle' || phase === 'complete') return null;
+
+  return (
+    <div className="space-y-4">
+      {/* Phase status */}
+      <div className={`flex items-center gap-3 p-4 rounded-2xl border ${
+        phase === 'estratega'
+          ? 'bg-purple-900/20 border-purple-500/30'
+          : phase === 'generador'
+          ? 'bg-pink-900/20 border-pink-500/30'
+          : phase === 'error'
+          ? 'bg-red-900/20 border-red-500/30'
+          : 'bg-gray-900/20 border-gray-500/30'
+      }`}>
+        {phase !== 'error' ? (
+          <div className="relative w-8 h-8 shrink-0">
+            <div className={`w-8 h-8 rounded-full border-2 border-t-transparent animate-spin ${
+              phase === 'estratega' ? 'border-purple-400' : 'border-pink-400'
+            }`} />
+            <div className={`absolute inset-1 rounded-full ${
+              phase === 'estratega' ? 'bg-purple-500/20' : 'bg-pink-500/20'
+            }`} />
+          </div>
+        ) : (
+          <AlertCircle size={32} className="text-red-400 shrink-0" />
+        )}
+        <div>
+          <p className={`text-sm font-black ${
+            phase === 'estratega' ? 'text-purple-300'
+            : phase === 'generador' ? 'text-pink-300'
+            : phase === 'error' ? 'text-red-300'
+            : 'text-white'
+          }`}>{message}</p>
+          <p className="text-[10px] text-gray-600 mt-0.5 uppercase tracking-widest">
+            {phase === 'estratega' && 'Motor V800 · Paso 1 / 2'}
+            {phase === 'generador' && 'Motor V800 · Paso 2 / 2 · Streaming'}
+            {phase === 'error' && 'Error en el pipeline'}
+          </p>
+        </div>
+      </div>
+
+      {/* Live streaming text preview */}
+      {phase === 'generador' && streamedText.length > 0 && (
+        <div className="bg-black/40 border border-white/[0.04] rounded-xl p-4 max-h-64 overflow-y-auto scrollbar-thin">
+          <p className="text-[10px] font-black text-gray-600 uppercase tracking-widest mb-2 flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse" />
+            Generando en vivo...
+          </p>
+          <pre className="text-xs text-gray-300 whitespace-pre-wrap font-mono leading-relaxed">
+            {streamedText}
+            <span className="inline-block w-1.5 h-3.5 bg-pink-400 animate-pulse ml-0.5 align-middle" />
+          </pre>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ==================================================================================
 // 🎨 COMPONENTE PRINCIPAL
 // ==================================================================================
 
@@ -464,8 +542,8 @@ export const ScriptGenerator = () => {
   const location = useLocation();
   const { user, userProfile, refreshProfile } = useAuth();
 
-  // 👉 AGREGA ESTA LÍNEA AQUÍ:
-    const isStateInitialized = useRef(false);
+  const isStateInitialized = useRef(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   // --- UI States ---
   const [topic, setTopic] = useState('');
@@ -482,7 +560,7 @@ export const ScriptGenerator = () => {
   const [selectedNarrativeFormat, setSelectedNarrativeFormat] = useState('EDUCATIVO_AUTORIDAD');
   const [showStructureExpanded, setShowStructureExpanded] = useState(false);
 
-  // --- Psychology (new) ---
+  // --- Psychology ---
   const [strategyLoop, setStrategyLoop] = useState('magnetic_loop');
   const [vectorEmocional, setVectorEmocional] = useState('dolor_profundo');
   const [arquetipoVoz, setArquetipoVoz] = useState('autoridad_empatica');
@@ -493,7 +571,7 @@ export const ScriptGenerator = () => {
   const [selectedIntensity, setSelectedIntensity] = useState('equilibrado');
   const [closingObjective, setClosingObjective] = useState('seguidores');
 
-  // --- Hooks (new 3-tier system) ---
+  // --- Hooks ---
   const [hookMode, setHookMode] = useState<'elite' | 'custom' | 'arsenal'>('elite');
   const [eliteHookId, setEliteHookId] = useState('enemigo_comun');
   const [customHook, setCustomHook] = useState('');
@@ -517,10 +595,20 @@ export const ScriptGenerator = () => {
     if (selected) setCost(selected.cost);
   }, [durationId]);
 
-  // --- Process ---
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [result, setResult] = useState<ScriptResult | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  // --- Stream State (replaces old isGenerating + result) ---
+  const [streamState, setStreamState] = useState<StreamState>({
+    phase: 'idle',
+    phaseMessage: '',
+    streamedText: '',
+    estrategia: null,
+    result: null,
+    errorMessage: null,
+  });
+
+  // Derived convenience booleans
+  const isGenerating = streamState.phase === 'estratega' || streamState.phase === 'generador';
+  const result = streamState.result;
+  const error = streamState.errorMessage;
 
   // --- Feedback ---
   const [mostrarFeedback, setMostrarFeedback] = useState(false);
@@ -545,6 +633,7 @@ export const ScriptGenerator = () => {
 
   useEffect(() => {
     if (!user) return;
+
     const loadExperts = async () => {
       const { data } = await supabase.from('expert_profiles').select('id, niche, name').eq('user_id', user.id);
       if (data) setExperts(data);
@@ -553,32 +642,37 @@ export const ScriptGenerator = () => {
       const { data: kbData } = await supabase.from('documents').select('id, title').eq('user_id', user.id);
       if (kbData) setKnowledgeBases(kbData);
     };
+
     loadExperts();
     loadKnowledgeBases();
 
     if (location.state && location.state.fromIdeas && !isStateInitialized.current) {
-        isStateInitialized.current = true; // Corta el paso para siempre en los siguientes renders
-        
-        if (location.state.topic) setTopic(location.state.topic);
-        
-        if (location.state.customHook) {
-          setCustomHook(location.state.customHook);
-          setHookMode('custom'); 
-        }
-        if (location.state.strategyLoop) setStrategyLoop(location.state.strategyLoop);
-        if (location.state.vectorEmocional) setVectorEmocional(location.state.vectorEmocional);
-        if (location.state.platform) {
-          const plat = PLATFORMS.find(p => p.id === location.state.platform);
-          if (plat) setSelectedPlatform(plat);
-        }
-      
-      
-      // Destruye el estado para que no vuelva a entrar en el if y evite el loop infinito
+      isStateInitialized.current = true;
+      if (location.state.topic) setTopic(location.state.topic);
+      if (location.state.customHook) {
+        setCustomHook(location.state.customHook);
+        setHookMode('custom');
+      }
+      if (location.state.strategyLoop) setStrategyLoop(location.state.strategyLoop);
+      if (location.state.vectorEmocional) setVectorEmocional(location.state.vectorEmocional);
+      if (location.state.platform) {
+        const plat = PLATFORMS.find(p => p.id === location.state.platform);
+        if (plat) setSelectedPlatform(plat);
+      }
       navigate(location.pathname, { replace: true, state: null });
     }
 
     if (userProfile?.active_expert_id) setSelectedExpertId(userProfile.active_expert_id);
   }, [user, userProfile, location]);
+
+  // Cleanup abort controller on unmount
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
 
   // ==================================================================================
   // 📷 IMAGE
@@ -612,12 +706,12 @@ export const ScriptGenerator = () => {
   };
 
   // ==================================================================================
-  // 🚀 GENERATE
+  // 🌊 GENERATE CON STREAMING SSE
   // ==================================================================================
 
   const handleGenerate = async () => {
     if (!topic.trim() && !selectedImage) {
-      setError("Por favor escribe un tema o sube una imagen.");
+      setStreamState(prev => ({ ...prev, errorMessage: "Por favor escribe un tema o sube una imagen.", phase: 'idle' }));
       return;
     }
 
@@ -629,75 +723,218 @@ export const ScriptGenerator = () => {
       return;
     }
 
-    setIsGenerating(true);
-    setError(null);
-    setResult(null);
+    // Abort cualquier stream previo en vuelo
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    abortControllerRef.current = new AbortController();
+
+    // Reset completo del estado
+    setStreamState({
+      phase: 'estratega',
+      phaseMessage: '🧠 Analizando Estrategia y TCA...',
+      streamedText: '',
+      estrategia: null,
+      result: null,
+      errorMessage: null,
+    });
     setAuditResult(null);
     setShowAudit(false);
     setSaveSuccess(false);
 
     try {
-      const settings = {
-        structure: selectedStructure.id,
-        internalMode: selectedInternalMode.id,
-        narrativeFormat: selectedNarrativeFormat,
-        platform: selectedPlatform.id,
-        duration: durationId,
-        hookType: getActiveHookText(),
-        customHook: hookMode === 'custom' ? customHook : undefined,
-        strategyLoop,
-        vector_emocional: vectorEmocional,
-        arquetipo_voz: arquetipoVoz,
-        awareness,
-        situation,
-        intensity: selectedIntensity,
-        closingObjective,
-        culturalContext: culturalContext || undefined,
+      // ── Obtener token de sesión para auth
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) throw new Error('No hay sesión activa. Por favor inicia sesión.');
+
+      const supabaseUrl = (supabase as any).supabaseUrl || import.meta.env.VITE_SUPABASE_URL;
+      const edgeFunctionUrl = `${supabaseUrl}/functions/v1/process-url`;
+
+      const requestBody = {
+        selectedMode: selectedImage ? 'script_generator_vision' : 'script_generator_standard',
+        text: topic,
+        image: selectedImage || undefined,
         expertId: selectedExpertId || undefined,
         avatarId: userProfile?.active_avatar_id || undefined,
         knowledgeBaseId: selectedKnowledgeBaseId || undefined,
         estimatedCost: cost,
+        settings: {
+          structure: selectedStructure.id,
+          internalMode: selectedInternalMode.id,
+          narrativeFormat: selectedNarrativeFormat,
+          platform: selectedPlatform.id,
+          duration: durationId,
+          hookType: getActiveHookText(),
+          customHook: hookMode === 'custom' ? customHook : undefined,
+          strategyLoop,
+          vector_emocional: vectorEmocional,
+          arquetipo_voz: arquetipoVoz,
+          awareness,
+          situation,
+          intensity: selectedIntensity,
+          closingObjective,
+          culturalContext: culturalContext || undefined,
+        },
       };
 
-      const selectedMode = selectedImage ? 'script_generator_vision' : 'script_generator_standard';
-
-      const { data, error: apiError } = await supabase.functions.invoke('process-url', {
-        body: {
-          selectedMode,
-          text: topic,
-          image: selectedImage || undefined,
-          settings,
-        }
+      // ── Llamada fetch directa para poder leer el ReadableStream
+      const response = await fetch(edgeFunctionUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify(requestBody),
+        signal: abortControllerRef.current.signal,
       });
 
-      if (apiError) throw new Error(apiError.message || 'Error al conectar con el backend');
-      if (!data?.success && !data?.generatedData) throw new Error(data?.error || 'El backend devolvió un error desconocido');
-
-      const finalResult = data.generatedData || data;
-      if (!finalResult.guion_completo && !finalResult.teleprompter_script) {
-        throw new Error('El backend no devolvió un guion. Intenta de nuevo.');
+      // ── Manejo de errores HTTP (400, 500, etc.)
+      if (!response.ok) {
+        let errMsg = `Error del servidor: ${response.status}`;
+        try {
+          const errBody = await response.json();
+          errMsg = errBody?.error || errMsg;
+        } catch {
+          // no-op, usamos el mensaje genérico
+        }
+        throw new Error(errMsg);
       }
 
-      setResult(finalResult);
-      setGuionParaFeedback(finalResult);
-      setTimeout(() => setMostrarFeedback(true), 48 * 60 * 60 * 1000);
+      // ── Verificar que la respuesta es SSE
+      const contentType = response.headers.get('content-type') || '';
+      if (!contentType.includes('text/event-stream')) {
+        // Fallback: respuesta JSON normal (compatibilidad con handlers que no cambiaron)
+        const data = await response.json();
+        if (!data?.success && !data?.generatedData) {
+          throw new Error(data?.error || 'El backend devolvió un error desconocido');
+        }
+        const finalResult = data.generatedData || data;
+        if (!finalResult.guion_completo && !finalResult.teleprompter_script) {
+          throw new Error('El backend no devolvió un guion. Intenta de nuevo.');
+        }
+        setStreamState({
+          phase: 'complete',
+          phaseMessage: '✅ Guion generado',
+          streamedText: finalResult.guion_completo || '',
+          estrategia: null,
+          result: finalResult,
+          errorMessage: null,
+        });
+        setGuionParaFeedback(finalResult);
+        if (refreshProfile) await refreshProfile();
+        return;
+      }
 
-      if (refreshProfile) await refreshProfile();
+      // ── Leer el stream SSE
+      const reader = response.body!.getReader();
+      const decoder = new TextDecoder('utf-8');
+      let buffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+
+        // Procesamos líneas completas del protocolo SSE (data: {...}\n\n)
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || ''; // La última línea puede estar incompleta
+
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed.startsWith('data:')) continue;
+
+          const jsonStr = trimmed.slice(5).trim();
+          if (!jsonStr || jsonStr === '[DONE]') continue;
+
+          let event: any;
+          try {
+            event = JSON.parse(jsonStr);
+          } catch {
+            console.warn('[SSE] Chunk no parseable:', jsonStr.substring(0, 100));
+            continue;
+          }
+
+          switch (event.type) {
+            case 'status':
+              setStreamState(prev => ({
+                ...prev,
+                phase: event.phase as StreamPhase,
+                phaseMessage: event.message,
+              }));
+              break;
+
+            case 'estrategia':
+              setStreamState(prev => ({
+                ...prev,
+                estrategia: event.data,
+              }));
+              break;
+
+            case 'chunk':
+              // Texto llegando letra por letra
+              setStreamState(prev => ({
+                ...prev,
+                streamedText: prev.streamedText + (event.text || ''),
+              }));
+              break;
+
+            case 'complete':
+              // Resultado final estructurado
+              setStreamState({
+                phase: 'complete',
+                phaseMessage: '✅ Guion generado',
+                streamedText: event.result?.guion_completo || event.result?.teleprompter_script || '',
+                estrategia: null,
+                result: event.result,
+                errorMessage: null,
+              });
+              setGuionParaFeedback(event.result);
+              if (refreshProfile) await refreshProfile();
+              break;
+
+            case 'error':
+              throw new Error(event.message || 'Error desconocido desde el servidor');
+          }
+        }
+      }
 
     } catch (e: any) {
-      console.error("[ScriptGenerator] Error generando:", e);
-      setError(e.message || "Error inesperado. Por favor intenta de nuevo.");
-    } finally {
-      setIsGenerating(false);
+      if (e.name === 'AbortError') {
+        // El usuario canceló — no mostramos error
+        setStreamState(prev => ({ ...prev, phase: 'idle', phaseMessage: '', errorMessage: null }));
+        return;
+      }
+      console.error('[ScriptGenerator] Error en stream:', e);
+      setStreamState(prev => ({
+        ...prev,
+        phase: 'error',
+        phaseMessage: '❌ Error en la generación',
+        errorMessage: e.message || 'Error inesperado. Por favor intenta de nuevo.',
+      }));
     }
   };
+
+  // ==================================================================================
+  // 🛑 CANCELAR GENERACIÓN
+  // ==================================================================================
+
+  const handleCancelGeneration = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+  };
+
+  // ==================================================================================
+  // 💾 SAVE, SCHEDULE, AUDIT, COPY
+  // ==================================================================================
 
   const handleSaveLibrary = async () => {
     if (!result || !user) return;
     setIsSaving(true);
     setSaveSuccess(false);
     try {
-      const { error } = await supabase.from('viral_generations').insert({
+      const { error: saveError } = await supabase.from('viral_generations').insert({
         user_id: user.id,
         type: 'generar_guion',
         content: result,
@@ -707,7 +944,7 @@ export const ScriptGenerator = () => {
         tokens_used: 0,
         whisper_minutes: 0
       });
-      if (error) throw error;
+      if (saveError) throw saveError;
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
     } catch (e: any) {
@@ -721,7 +958,7 @@ export const ScriptGenerator = () => {
     if (!scheduleDate) return alert("Selecciona una fecha.");
     if (!result || !user) return;
     try {
-      const { error } = await supabase.from('content_items').insert({
+      const { error: schedError } = await supabase.from('content_items').insert({
         user_id: user.id,
         type: 'calendar_event',
         title: result.metadata_guion?.tema_tratado || topic,
@@ -736,7 +973,7 @@ export const ScriptGenerator = () => {
           metadata: result.metadata_guion
         }
       });
-      if (error) throw error;
+      if (schedError) throw schedError;
       alert(`✅ Guion agendado para el ${scheduleDate}`);
       setIsScheduleModalOpen(false);
     } catch (e: any) {
@@ -750,7 +987,7 @@ export const ScriptGenerator = () => {
     setShowAudit(true);
     setAuditResult(null);
     try {
-      const { data, error } = await supabase.functions.invoke('process-url', {
+      const { data, error: auditError } = await supabase.functions.invoke('process-url', {
         body: {
           selectedMode: 'juez_viral',
           text: result.guion_completo,
@@ -759,7 +996,7 @@ export const ScriptGenerator = () => {
           estimatedCost: 2
         }
       });
-      if (error) throw error;
+      if (auditError) throw auditError;
       if (!data?.success || !data?.generatedData) throw new Error(data?.error || 'Error en la auditoría');
       setAuditResult(data.generatedData);
       if (refreshProfile) await refreshProfile();
@@ -849,1151 +1086,682 @@ export const ScriptGenerator = () => {
                       title={p.label}
                       className={`flex-1 py-2 rounded-lg border flex flex-col items-center gap-1 transition-all text-[10px] font-bold ${
                         selectedPlatform.id === p.id
-                          ? `${p.bg} ${p.color} ${p.border} border shadow-md`
-                          : 'bg-white/[0.03] border-white/[0.06] text-gray-600 hover:border-white/10 hover:text-gray-400'
+                          ? `${p.border} ${p.bg} ${p.color}`
+                          : 'border-white/[0.04] bg-white/[0.02] text-gray-600 hover:border-white/10'
                       }`}
                     >
                       <p.icon size={14} />
-                      <span>{p.label}</span>
+                      <span className="hidden sm:block">{p.label}</span>
                     </button>
                   ))}
                 </div>
 
-                {/* Two-column: text + image */}
-                <div className="grid grid-cols-2 gap-3">
-                  {/* Text input */}
-                  <div className="col-span-2 md:col-span-1">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1.5 block">
-                      Tema / Idea
-                    </label>
-                    <textarea
-                      value={topic}
-                      onChange={(e) => setTopic(e.target.value)}
-                      placeholder={selectedImage
-                        ? "Opcional: ¿Qué aspecto de la imagen te interesa?"
-                        : "Ej: Por qué el 90% de emprendedores fracasan en su primer año..."}
-                      className="w-full bg-white/[0.03] border border-white/[0.07] rounded-xl p-3 text-white text-sm placeholder-gray-700 focus:border-pink-500/50 outline-none h-[120px] resize-none transition-all focus:bg-white/[0.05] focus:shadow-lg focus:shadow-pink-500/5"
-                    />
-                  </div>
-
-                  {/* Image upload */}
-                  <div className="col-span-2 md:col-span-1">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-                      <ImageIcon size={10} /> Inspiración Visual
-                      <span className="text-gray-700 normal-case tracking-normal font-normal">(opcional)</span>
-                    </label>
-                    {!imagePreview ? (
-                      <div className="border-2 border-dashed border-white/[0.06] rounded-xl h-[120px] flex flex-col items-center justify-center hover:border-pink-500/30 transition-all cursor-pointer relative group bg-white/[0.01]">
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageUpload}
-                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                        />
-                        <UploadCloud size={20} className="text-gray-700 group-hover:text-pink-400 transition-colors mb-1.5" />
-                        <span className="text-[10px] font-bold text-gray-700 group-hover:text-gray-400 transition-colors text-center px-3">
-                          Sube una imagen<br />
-                          <span className="text-gray-700 font-normal">La IA la analizará</span>
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="relative rounded-xl overflow-hidden border border-pink-500/20 h-[120px] group">
-                        <img src={imagePreview} alt="Preview" className="w-full h-full object-cover opacity-70 group-hover:opacity-90 transition-opacity" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-2">
-                          <span className="text-[10px] font-black text-green-400 flex items-center gap-1">
-                            <CheckCircle2 size={10} /> Imagen cargada
-                          </span>
-                        </div>
-                        <button
-                          onClick={clearImage}
-                          className="absolute top-2 right-2 p-1 bg-black/70 hover:bg-red-500/80 text-white rounded-md transition-colors"
-                        >
-                          <X size={12} />
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Cultural context */}
-                <div className="mt-3 pt-3 border-t border-white/[0.04]">
-                  <label className="text-[10px] font-black text-yellow-600/80 uppercase tracking-widest mb-1.5 block">
-                    🔥 Tensión Cultural del Sector
-                    <span className="text-gray-700 font-normal normal-case tracking-normal ml-1">— opcional</span>
-                  </label>
+                {/* Topic input */}
+                <div className="relative">
                   <textarea
-                    value={culturalContext}
-                    onChange={e => setCulturalContext(e.target.value.slice(0, 300))}
-                    placeholder="¿Qué está pasando esta semana en tu sector? Ej: Salió un reporte que dice..."
-                    rows={2}
-                    className="w-full bg-white/[0.03] border border-yellow-900/30 text-gray-300 text-xs rounded-lg p-2.5 outline-none focus:border-yellow-600/50 resize-none placeholder-gray-700"
+                    value={topic}
+                    onChange={e => setTopic(e.target.value)}
+                    placeholder="Tu idea, texto largo o descripción de la imagen..."
+                    rows={4}
+                    className="w-full bg-black/50 border border-white/[0.07] rounded-xl p-3.5 text-sm text-white placeholder-gray-700 outline-none focus:border-pink-500/40 transition-colors resize-none"
                   />
-                  <div className="flex justify-end mt-1">
-                    <span className={`text-[9px] ${culturalContext.length > 250 ? 'text-yellow-500' : 'text-gray-700'}`}>
-                      {culturalContext.length}/300
-                    </span>
-                  </div>
+                  <div className="absolute bottom-3 right-3 text-[10px] text-gray-700">{topic.length}</div>
                 </div>
-              </SectionCard>
-            </div>
 
-            {/* ─── STEP 2: ARQUITECTURA Y AUTORIDAD ─── */}
-            <div>
-              <StepBadge number={2} label="Arquitectura y Autoridad" active />
-
-              <SectionCard>
-                {/* Narrative Format */}
-                <div className="mb-4">
-                  <label className="text-[10px] font-black text-violet-400 uppercase tracking-widest mb-2 flex items-center justify-between">
-                    <span className="flex items-center gap-1.5"><Layers size={11} /> Formato Narrativo</span>
-                    <span className="text-[8px] font-black bg-violet-500 text-white px-1.5 py-0.5 rounded-full">V700</span>
-                  </label>
-                  <div className="grid grid-cols-2 gap-1.5">
-                    {NARRATIVE_FORMATS.map(fmt => (
+                {/* Image upload */}
+                <div className="mt-3">
+                  {imagePreview ? (
+                    <div className="relative rounded-xl overflow-hidden border border-white/[0.06]">
+                      <img src={imagePreview} alt="Preview" className="w-full h-32 object-cover" />
                       <button
-                        key={fmt.id}
-                        onClick={() => setSelectedNarrativeFormat(fmt.id)}
-                        className={`p-2 rounded-xl border text-left transition-all group ${
-                          selectedNarrativeFormat === fmt.id
-                            ? 'bg-violet-600/20 border-violet-500/50 text-violet-300'
-                            : 'bg-white/[0.02] border-white/[0.05] text-gray-600 hover:border-white/10 hover:text-gray-400'
+                        onClick={clearImage}
+                        className="absolute top-2 right-2 w-7 h-7 bg-black/80 rounded-full flex items-center justify-center hover:bg-red-900/80 transition-colors"
+                      >
+                        <X size={13} className="text-white" />
+                      </button>
+                      <div className="absolute bottom-2 left-2 bg-black/70 px-2 py-0.5 rounded text-[10px] text-pink-400 font-bold">
+                        📸 Imagen lista
+                      </div>
+                    </div>
+                  ) : (
+                    <label className="flex items-center gap-2 p-3 border border-dashed border-white/[0.08] rounded-xl cursor-pointer hover:border-pink-500/30 hover:bg-pink-900/5 transition-all">
+                      <UploadCloud size={16} className="text-gray-600" />
+                      <span className="text-xs text-gray-600">Subir imagen (JPG/PNG, máx 4MB)</span>
+                      <input type="file" accept="image/jpeg,image/png,image/webp" onChange={handleImageUpload} className="hidden" />
+                    </label>
+                  )}
+                </div>
+
+                {/* Duration */}
+                <div className="mt-4">
+                  <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest block mb-2">Duración</span>
+                  <div className="grid grid-cols-4 gap-1.5">
+                    {DURATIONS.map(d => (
+                      <button
+                        key={d.id}
+                        onClick={() => setDurationId(d.id)}
+                        className={`py-2 rounded-lg border text-center transition-all ${
+                          durationId === d.id
+                            ? 'border-pink-500 bg-pink-500/10 text-pink-300'
+                            : 'border-white/[0.04] bg-white/[0.02] text-gray-600 hover:border-white/10'
                         }`}
                       >
-                        <span className="text-[10px] font-black block leading-tight">{fmt.label}</span>
-                        <span className="text-[8px] opacity-60 leading-tight block mt-0.5">{fmt.desc}</span>
+                        <div className="text-[10px] font-black">{d.label}</div>
+                        <div className="text-[9px] text-gray-600">{d.sublabel}</div>
                       </button>
                     ))}
                   </div>
                 </div>
 
-                {/* Arquitectura */}
-                <div className="mb-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-1.5">
-                      <Layout size={11} /> Arquitectura Base
-                    </label>
-                    <button
-                      onClick={() => setShowStructureExpanded(!showStructureExpanded)}
-                      className="text-[9px] text-gray-600 hover:text-gray-400 flex items-center gap-1 transition-colors"
-                    >
-                      {showStructureExpanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
-                      {showStructureExpanded ? 'Colapsar' : 'Ver todas'}
-                    </button>
+                {/* Experts & KB */}
+                {(experts.length > 0 || knowledgeBases.length > 0) && (
+                  <div className="mt-4 grid grid-cols-2 gap-2">
+                    {experts.length > 0 && (
+                      <div>
+                        <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest block mb-1">Experto</span>
+                        <select
+                          value={selectedExpertId}
+                          onChange={e => setSelectedExpertId(e.target.value)}
+                          className="w-full bg-black/50 border border-white/[0.07] rounded-lg p-2 text-xs text-white outline-none"
+                        >
+                          <option value="">Sin experto</option>
+                          {experts.map(ex => (
+                            <option key={ex.id} value={ex.id}>{ex.name || ex.niche}</option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+                    {knowledgeBases.length > 0 && (
+                      <div>
+                        <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest block mb-1">Base de Conocimiento</span>
+                        <select
+                          value={selectedKnowledgeBaseId}
+                          onChange={e => setSelectedKnowledgeBaseId(e.target.value)}
+                          className="w-full bg-black/50 border border-white/[0.07] rounded-lg p-2 text-xs text-white outline-none"
+                        >
+                          <option value="">Sin base</option>
+                          {knowledgeBases.map(kb => (
+                            <option key={kb.id} value={kb.id}>{kb.title}</option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
                   </div>
+                )}
+              </SectionCard>
+            </div>
 
-                  {/* Selected structure display */}
-                  <div
-                    className={`p-3 rounded-xl border mb-2 cursor-pointer transition-all ${selectedStructure.color}`}
-                    onClick={() => setShowStructureExpanded(!showStructureExpanded)}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-black text-sm">{selectedStructure.label}</span>
-                      <CheckCircle2 size={14} />
-                    </div>
-                    <p className="text-[10px] opacity-70 mt-0.5">{selectedStructure.desc}</p>
-                  </div>
-
-                  {showStructureExpanded && (
-                    <div className="space-y-1 max-h-[200px] overflow-y-auto scrollbar-thin pr-1">
-                      {TITAN_STRUCTURES.map(s => (
+            {/* ─── STEP 2: ARQUITECTURA ─── */}
+            <div>
+              <StepBadge number={2} label="Arquitectura Narrativa" active />
+              <SectionCard>
+                <div className="mb-3">
+                  <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest block mb-2">Estructura</span>
+                  <div className="space-y-1.5">
+                    {TITAN_STRUCTURES.map(s => (
+                      <div key={s.id}>
                         <button
-                          key={s.id}
-                          onClick={() => { setSelectedStructure(s); setSelectedInternalMode(s.modes[0]); setShowStructureExpanded(false); }}
-                          className={`w-full p-2.5 rounded-lg border text-left transition-all ${
-                            selectedStructure.id === s.id ? s.color : 'bg-white/[0.02] border-white/[0.05] text-gray-500 hover:border-white/10'
+                          onClick={() => {
+                            setSelectedStructure(s);
+                            setSelectedInternalMode(s.modes[0]);
+                          }}
+                          className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl border text-left transition-all ${
+                            selectedStructure.id === s.id
+                              ? s.color
+                              : 'border-white/[0.04] bg-white/[0.02] text-gray-500 hover:border-white/10'
                           }`}
                         >
-                          <div className="flex justify-between items-center">
-                            <span className="font-bold text-xs">{s.label}</span>
-                            {selectedStructure.id === s.id && <CheckCircle2 size={12} />}
+                          <span className="text-xs font-bold">{s.label}</span>
+                          {selectedStructure.id === s.id && <ChevronDown size={12} />}
+                        </button>
+                        {selectedStructure.id === s.id && (
+                          <div className="mt-1.5 ml-2 grid grid-cols-2 gap-1">
+                            {s.modes.map(m => (
+                              <button
+                                key={m.id}
+                                onClick={() => setSelectedInternalMode(m)}
+                                className={`text-[10px] px-2 py-1.5 rounded-lg border text-left transition-all ${
+                                  selectedInternalMode.id === m.id
+                                    ? 'border-white/20 bg-white/[0.06] text-white'
+                                    : 'border-white/[0.04] text-gray-600 hover:text-gray-400'
+                                }`}
+                              >
+                                {m.label}
+                              </button>
+                            ))}
                           </div>
-                          <p className="text-[9px] opacity-60 mt-0.5">{s.desc}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest block mb-2">Formato Narrativo</span>
+                  <div className="space-y-1">
+                    {NARRATIVE_FORMATS.map(f => (
+                      <button
+                        key={f.id}
+                        onClick={() => setSelectedNarrativeFormat(f.id)}
+                        className={`w-full flex items-start gap-2 px-3 py-2 rounded-lg border text-left transition-all ${
+                          selectedNarrativeFormat === f.id
+                            ? 'border-pink-500/40 bg-pink-900/10 text-pink-300'
+                            : 'border-white/[0.04] text-gray-600 hover:border-white/10'
+                        }`}
+                      >
+                        <span className="text-xs font-bold shrink-0">{f.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </SectionCard>
+            </div>
+
+            {/* ─── STEP 3: PSICOLOGÍA ─── */}
+            <div>
+              <StepBadge number={3} label="Psicología del Guion" active />
+              <SectionCard>
+                <div className="space-y-4">
+                  {/* Strategy Loop */}
+                  <div>
+                    <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest block mb-2">Strategy Loop</span>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {STRATEGY_LOOPS.map(sl => (
+                        <button
+                          key={sl.id}
+                          onClick={() => setStrategyLoop(sl.id)}
+                          className={`px-3 py-2 rounded-xl border text-xs font-bold text-left transition-all ${
+                            strategyLoop === sl.id ? sl.color : 'border-white/[0.04] text-gray-600 hover:border-white/10'
+                          }`}
+                        >
+                          {sl.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Vector Emocional */}
+                  <div>
+                    <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest block mb-2">Vector Emocional</span>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {EMOTIONAL_VECTORS.map(ev => (
+                        <button
+                          key={ev.id}
+                          onClick={() => setVectorEmocional(ev.id)}
+                          className={`px-3 py-2 rounded-xl border text-xs font-bold text-left transition-all ${
+                            vectorEmocional === ev.id ? ev.color : 'border-white/[0.04] text-gray-600 hover:border-white/10'
+                          }`}
+                        >
+                          {ev.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Voice Archetype */}
+                  <div>
+                    <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest block mb-2">Arquetipo de Voz</span>
+                    <div className="space-y-1">
+                      {VOICE_ARCHETYPES.map(va => (
+                        <button
+                          key={va.id}
+                          onClick={() => setArquetipoVoz(va.id)}
+                          className={`w-full flex items-center justify-between px-3 py-2 rounded-xl border text-xs transition-all ${
+                            arquetipoVoz === va.id ? va.color : 'border-white/[0.04] text-gray-600 hover:border-white/10'
+                          }`}
+                        >
+                          <span className="font-bold">{va.label}</span>
+                          <span className="text-[10px] opacity-60">{va.desc}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Awareness */}
+                  <div>
+                    <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest block mb-2">Nivel de Conciencia</span>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {AWARENESS_LEVELS.map(al => (
+                        <button
+                          key={al}
+                          onClick={() => setAwareness(al)}
+                          className={`px-3 py-2 rounded-xl border text-xs font-bold text-left transition-all ${
+                            awareness === al
+                              ? 'border-emerald-500 bg-emerald-900/20 text-emerald-300'
+                              : 'border-white/[0.04] text-gray-600 hover:border-white/10'
+                          }`}
+                        >
+                          {al}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </SectionCard>
+            </div>
+
+            {/* ─── STEP 4: DETONADOR ─── */}
+            <div>
+              <StepBadge number={4} label="El Detonador — Activación Final" active />
+              <SectionCard className="card-glow-purple">
+                {/* Intensity */}
+                <div className="mb-4">
+                  <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest block mb-2">Intensidad</span>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {INTENSITY_MODES.map(im => (
+                      <button
+                        key={im.id}
+                        onClick={() => setSelectedIntensity(im.id)}
+                        className={`px-3 py-2 rounded-xl border text-xs font-bold text-left transition-all ${
+                          selectedIntensity === im.id ? im.color : 'border-white/[0.04] text-gray-600 hover:border-white/10'
+                        }`}
+                      >
+                        {im.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Closing Objective */}
+                <div className="mb-4">
+                  <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest block mb-2">Objetivo de Cierre</span>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {CLOSING_OBJECTIVES.map(co => (
+                      <button
+                        key={co.id}
+                        onClick={() => setClosingObjective(co.id)}
+                        className={`px-3 py-2 rounded-xl border text-xs font-bold text-left transition-all ${
+                          closingObjective === co.id
+                            ? 'border-purple-500 bg-purple-900/20 text-purple-300'
+                            : 'border-white/[0.04] text-gray-600 hover:border-white/10'
+                        }`}
+                      >
+                        {co.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Hook Mode */}
+                <div className="mb-4">
+                  <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest block mb-2">Sistema de Gancho</span>
+                  <div className="flex gap-1.5 mb-3">
+                    {(['elite', 'custom', 'arsenal'] as const).map(hm => (
+                      <button
+                        key={hm}
+                        onClick={() => setHookMode(hm)}
+                        className={`flex-1 py-1.5 rounded-lg border text-[10px] font-black uppercase tracking-widest transition-all ${
+                          hookMode === hm
+                            ? 'border-yellow-500 bg-yellow-900/20 text-yellow-300'
+                            : 'border-white/[0.04] text-gray-600'
+                        }`}
+                      >
+                        {hm === 'elite' ? '⭐ Elite' : hm === 'custom' ? '✏️ Custom' : '🗃️ Arsenal'}
+                      </button>
+                    ))}
+                  </div>
+
+                  {hookMode === 'elite' && (
+                    <div className="space-y-1">
+                      {ELITE_HOOKS.map(h => (
+                        <button
+                          key={h.id}
+                          onClick={() => setEliteHookId(h.id)}
+                          className={`w-full flex items-start gap-2 px-3 py-2 rounded-lg border text-left transition-all ${
+                            eliteHookId === h.id
+                              ? 'border-yellow-500/40 bg-yellow-900/10 text-yellow-300'
+                              : 'border-white/[0.04] text-gray-600 hover:border-white/10'
+                          }`}
+                        >
+                          <span className="text-xs font-bold shrink-0">{h.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {hookMode === 'custom' && (
+                    <textarea
+                      value={customHook}
+                      onChange={e => setCustomHook(e.target.value)}
+                      placeholder="Escribe tu gancho personalizado aquí..."
+                      rows={3}
+                      className="w-full bg-black/50 border border-white/[0.07] rounded-xl p-3 text-xs text-white placeholder-gray-700 outline-none focus:border-yellow-500/40 transition-colors resize-none"
+                    />
+                  )}
+
+                  {hookMode === 'arsenal' && (
+                    <div className="grid grid-cols-2 gap-1">
+                      {MASTER_HOOKS.map(h => (
+                        <button
+                          key={h}
+                          onClick={() => setArsenalHook(h)}
+                          className={`px-2 py-1.5 rounded-lg border text-[10px] font-bold text-left transition-all ${
+                            arsenalHook === h
+                              ? 'border-yellow-500/40 bg-yellow-900/10 text-yellow-300'
+                              : 'border-white/[0.04] text-gray-600 hover:border-white/10'
+                          }`}
+                        >
+                          {h}
                         </button>
                       ))}
                     </div>
                   )}
                 </div>
 
-                {/* Internal mode */}
-                <div className="mb-4">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                    <Target size={11} /> Modo Estratégico
-                  </label>
-                  <div className="grid grid-cols-2 gap-1.5">
-                    {selectedStructure.modes.map(mode => (
-                      <button
-                        key={mode.id}
-                        onClick={() => setSelectedInternalMode(mode)}
-                        className={`p-2 rounded-lg border text-left transition-all ${
-                          selectedInternalMode.id === mode.id
-                            ? 'bg-indigo-600/20 border-indigo-500/50 text-indigo-300'
-                            : 'bg-white/[0.02] border-white/[0.05] text-gray-600 hover:border-white/10 hover:text-gray-400'
-                        }`}
-                      >
-                        <span className="text-[10px] font-bold block">{mode.label}</span>
-                        <span className="text-[8px] opacity-60 mt-0.5 block leading-tight">{mode.desc}</span>
-                      </button>
-                    ))}
-                  </div>
+                {/* Cultural context */}
+                <div className="mb-5">
+                  <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest block mb-1">Contexto Cultural (opcional)</span>
+                  <input
+                    type="text"
+                    value={culturalContext}
+                    onChange={e => setCulturalContext(e.target.value)}
+                    placeholder="Tendencia, meme, evento actual..."
+                    className="w-full bg-black/50 border border-white/[0.07] rounded-lg p-2.5 text-xs text-white placeholder-gray-700 outline-none focus:border-pink-500/40 transition-colors"
+                  />
                 </div>
 
-                {/* Strategic assets */}
-                <div className="pt-3 border-t border-white/[0.04] grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <div>
-                    <label className="text-[9px] font-black text-gray-600 uppercase tracking-widest mb-1.5 flex items-center gap-1">
-                      <User size={9} /> Experto
-                    </label>
-                    <select
-                      value={selectedExpertId}
-                      onChange={(e) => setSelectedExpertId(e.target.value)}
-                      className="w-full bg-white/[0.03] border border-white/[0.06] text-gray-400 text-xs rounded-lg p-2 outline-none focus:border-indigo-500/50 appearance-none"
-                    >
-                      <option value="">Sin experto</option>
-                      {experts.map(e => (
-                        <option key={e.id} value={e.id}>{e.name} ({e.niche})</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-[9px] font-black text-gray-600 uppercase tracking-widest mb-1.5 flex items-center gap-1">
-                      <BookOpen size={9} /> Duración
-                    </label>
-                    <select
-                      value={durationId}
-                      onChange={e => setDurationId(e.target.value)}
-                      className="w-full bg-white/[0.03] border border-white/[0.06] text-gray-400 text-xs rounded-lg p-2 outline-none focus:border-indigo-500/50 appearance-none"
-                    >
-                      {DURATIONS.map(d => (
-                        <option key={d.id} value={d.id}>{d.label} ({d.sublabel}) — {d.cost}CR</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-[9px] font-black text-gray-600 uppercase tracking-widest mb-1.5 flex items-center gap-1">
-                      <BookOpen size={9} /> Base de Conocimiento
-                    </label>
-                    <select
-                      value={selectedKnowledgeBaseId}
-                      onChange={(e) => setSelectedKnowledgeBaseId(e.target.value)}
-                      className="w-full bg-white/[0.03] border border-white/[0.06] text-gray-400 text-xs rounded-lg p-2 outline-none focus:border-indigo-500/50 appearance-none"
-                    >
-                      <option value="">Sin base de conocimiento</option>
-                      {knowledgeBases.map(kb => (
-                        <option key={kb.id} value={kb.id}>{kb.title}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
+                {/* CTA BUTTON */}
+                <button
+                  onClick={isGenerating ? handleCancelGeneration : handleGenerate}
+                  disabled={false}
+                  className={`w-full py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2.5 transition-all shadow-lg ${
+                    isGenerating
+                      ? 'bg-gray-800 border border-red-500/30 text-red-400 hover:bg-red-900/20'
+                      : 'bg-gradient-to-r from-pink-600 via-fuchsia-600 to-purple-600 hover:from-pink-500 hover:via-fuchsia-500 hover:to-purple-500 text-white shadow-pink-900/30 shimmer-btn'
+                  }`}
+                >
+                  {isGenerating ? (
+                    <>
+                      <X size={16} className="text-red-400" />
+                      Cancelar Generación
+                    </>
+                  ) : (
+                    <>
+                      <Zap size={16} className="text-yellow-300" />
+                      ACTIVAR MOTOR V700 · {cost} créditos
+                    </>
+                  )}
+                </button>
 
-                {/* Closing objective */}
-                <div className="mt-3">
-                  <label className="text-[9px] font-black text-gray-600 uppercase tracking-widest mb-1.5 block">Objetivo del Cierre (CTA)</label>
-                  <div className="grid grid-cols-4 gap-1.5">
-                    {CLOSING_OBJECTIVES.map(obj => (
-                      <button
-                        key={obj.id}
-                        onClick={() => setClosingObjective(obj.id)}
-                        className={`p-2 rounded-lg border text-center text-[10px] font-bold transition-all leading-tight ${
-                          closingObjective === obj.id
-                            ? 'bg-pink-600/20 border-pink-500/50 text-pink-300'
-                            : 'bg-white/[0.02] border-white/[0.05] text-gray-600 hover:text-gray-400'
-                        }`}
-                      >
-                        {obj.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                {/* Cost preview */}
+                <p className="text-center text-[10px] text-gray-700 mt-2">
+                  Pipeline de 2 pasos · Streaming en tiempo real · {DURATIONS.find(d => d.id === durationId)?.words}
+                </p>
               </SectionCard>
-            </div>
-
-            {/* ─── STEP 3: INGENIERÍA PSICOLÓGICA ─── */}
-            <div>
-              <StepBadge number={3} label="Ingeniería Psicológica" active />
-
-              <SectionCard className="card-glow-purple">
-                {/* Strategy Loop */}
-                <div className="mb-4">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                    <Crosshair size={11} /> Estrategia Dominante
-                  </label>
-                  <div className="grid grid-cols-2 gap-1.5">
-                    {STRATEGY_LOOPS.map(loop => (
-                      <button
-                        key={loop.id}
-                        onClick={() => setStrategyLoop(loop.id)}
-                        className={`p-2.5 rounded-xl border text-left transition-all ${
-                          strategyLoop === loop.id
-                            ? loop.color + ' ring-1 ring-current/50'
-                            : 'bg-white/[0.02] border-white/[0.05] text-gray-600 hover:border-white/10 hover:text-gray-400'
-                        }`}
-                      >
-                        <span className="text-xs font-black block">{loop.label}</span>
-                        <span className="text-[9px] opacity-70 block mt-0.5">{loop.desc}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Vector Emocional */}
-                <div className="mb-4">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                    <Zap size={11} /> Vector Emocional
-                  </label>
-                  <div className="flex flex-wrap gap-1.5">
-                    {EMOTIONAL_VECTORS.map(v => (
-                      <button
-                        key={v.id}
-                        onClick={() => setVectorEmocional(v.id)}
-                        className={`px-3 py-1.5 rounded-full border text-[10px] font-bold transition-all ${
-                          vectorEmocional === v.id
-                            ? v.color + ' ring-1 ring-current/40'
-                            : 'bg-white/[0.02] border-white/[0.05] text-gray-600 hover:border-white/10'
-                        }`}
-                      >
-                        {v.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Arquetipo de Voz */}
-                <div className="mb-4">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                    <Mic2 size={11} /> Arquetipo de Voz
-                  </label>
-                  <div className="grid grid-cols-1 gap-1.5">
-                    {VOICE_ARCHETYPES.map(arch => (
-                      <button
-                        key={arch.id}
-                        onClick={() => setArquetipoVoz(arch.id)}
-                        className={`px-3 py-2 rounded-xl border text-left flex items-center gap-3 transition-all ${
-                          arquetipoVoz === arch.id
-                            ? arch.color + ' ring-1 ring-current/40'
-                            : 'bg-white/[0.02] border-white/[0.05] text-gray-600 hover:border-white/10 hover:text-gray-400'
-                        }`}
-                      >
-                        <span className="text-xs font-black whitespace-nowrap">{arch.label}</span>
-                        <span className="text-[9px] opacity-60 leading-tight">{arch.desc}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Awareness + Intensity */}
-                <div className="grid grid-cols-2 gap-3 pt-3 border-t border-white/[0.04]">
-                  <div>
-                    <label className="text-[9px] font-black text-gray-600 uppercase tracking-widest mb-1.5 block">Nivel de Consciencia</label>
-                    <select
-                      value={awareness}
-                      onChange={(e) => setAwareness(e.target.value)}
-                      className="w-full bg-white/[0.03] border border-white/[0.06] text-gray-400 text-xs rounded-lg p-2 outline-none focus:border-indigo-500/50 appearance-none"
-                    >
-                      {AWARENESS_LEVELS.map(a => <option key={a} value={a}>{a}</option>)}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-[9px] font-black text-gray-600 uppercase tracking-widest mb-1.5 flex items-center gap-1">
-                      <Flame size={9} /> Intensidad
-                    </label>
-                    <select
-                      value={selectedIntensity}
-                      onChange={e => setSelectedIntensity(e.target.value)}
-                      className="w-full bg-white/[0.03] border border-white/[0.06] text-gray-400 text-xs rounded-lg p-2 outline-none focus:border-orange-500/50 appearance-none"
-                    >
-                      {INTENSITY_MODES.map(m => <option key={m.id} value={m.id}>{m.label}</option>)}
-                    </select>
-                  </div>
-                </div>
-              </SectionCard>
-            </div>
-
-            {/* ─── STEP 4: EL DETONADOR ─── */}
-            <div>
-              <StepBadge number={4} label="El Detonador — Ganchos Virales" active />
-
-              <SectionCard className="card-glow-pink">
-                {/* Hook mode tabs */}
-                <div className="flex gap-1 mb-4 p-1 bg-white/[0.03] rounded-xl border border-white/[0.05]">
-                  {[
-                    { id: 'elite', label: '⭐ Top 5 Élite' },
-                    { id: 'custom', label: '🔬 Gancho Clonado' },
-                    { id: 'arsenal', label: '🗡️ Arsenal Completo' },
-                  ].map(tab => (
-                    <button
-                      key={tab.id}
-                      onClick={() => setHookMode(tab.id as any)}
-                      className={`flex-1 py-2 rounded-lg text-[10px] font-black transition-all ${
-                        hookMode === tab.id
-                          ? 'bg-gradient-to-r from-pink-600/40 to-purple-600/40 text-white border border-pink-500/30 shadow-md'
-                          : 'text-gray-600 hover:text-gray-400'
-                      }`}
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Elite hooks */}
-                {hookMode === 'elite' && (
-                  <div className="space-y-1.5">
-                    {ELITE_HOOKS.map(hook => (
-                      <button
-                        key={hook.id}
-                        onClick={() => setEliteHookId(hook.id)}
-                        className={`w-full p-3 rounded-xl border text-left transition-all group ${
-                          eliteHookId === hook.id
-                            ? 'bg-gradient-to-r from-pink-600/20 to-purple-600/20 border-pink-500/40 text-white shadow-lg shadow-pink-500/10'
-                            : 'bg-white/[0.02] border-white/[0.05] text-gray-500 hover:border-white/10 hover:text-gray-300'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm font-black">{hook.label}</span>
-                          {eliteHookId === hook.id && (
-                            <span className="w-4 h-4 rounded-full bg-pink-500 flex items-center justify-center shrink-0">
-                              <CheckCircle2 size={10} className="text-white" />
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-[10px] opacity-60 mt-0.5">{hook.desc}</p>
-                      </button>
-                    ))}
-                  </div>
-                )}
-
-                {/* Custom hook clone */}
-                {hookMode === 'custom' && (
-                  <div>
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 block flex items-center gap-1.5">
-                      <Hash size={10} /> Gancho a Clonar
-                    </label>
-                    <textarea
-                      value={customHook}
-                      onChange={e => setCustomHook(e.target.value)}
-                      placeholder="¿Viste un gancho viral que funcionó? Pégalo aquí y la IA modelará su estructura para tu contenido..."
-                      rows={4}
-                      className="w-full bg-white/[0.03] border border-white/[0.07] text-white text-sm placeholder-gray-700 rounded-xl p-3 outline-none focus:border-pink-500/50 resize-none transition-all"
-                    />
-                    <p className="text-[9px] text-gray-700 mt-1.5 italic">
-                      💡 El Motor V700 analizará la estructura psicológica y la replicará adaptada a tu tema
-                    </p>
-                  </div>
-                )}
-
-                {/* Full arsenal dropdown */}
-                {hookMode === 'arsenal' && (
-                  <div>
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 block">
-                      Arsenal Completo (28 Ganchos)
-                    </label>
-                    <select
-                      value={arsenalHook}
-                      onChange={e => setArsenalHook(e.target.value)}
-                      className="w-full bg-white/[0.03] border border-white/[0.07] text-gray-300 text-sm rounded-xl p-3 outline-none focus:border-pink-500/50 appearance-none"
-                      size={6}
-                    >
-                      {MASTER_HOOKS.map((h, i) => (
-                        <option key={i} value={h}>{h}</option>
-                      ))}
-                    </select>
-                    {arsenalHook && (
-                      <div className="mt-2 px-3 py-2 bg-pink-500/10 border border-pink-500/20 rounded-lg">
-                        <span className="text-[10px] text-pink-400 font-bold">Seleccionado: </span>
-                        <span className="text-[10px] text-gray-300">{arsenalHook}</span>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </SectionCard>
-            </div>
-
-            {/* ─── GENERATE BUTTON ─── */}
-            <div className="sticky bottom-4 z-20">
-              <button
-                onClick={handleGenerate}
-                disabled={(!topic.trim() && !selectedImage) || isGenerating}
-                className={`w-full py-4 rounded-2xl font-black text-base flex justify-center items-center gap-3 transition-all shadow-2xl disabled:opacity-40 disabled:cursor-not-allowed relative overflow-hidden group ${
-                  isGenerating
-                    ? 'bg-gray-900 border border-gray-700 text-gray-400'
-                    : 'text-white'
-                }`}
-                style={!isGenerating ? {
-                  background: 'linear-gradient(135deg, #e91e8c 0%, #7c3aed 50%, #e91e8c 100%)',
-                  backgroundSize: '200% auto',
-                  animation: 'shimmer 3s linear infinite',
-                  boxShadow: '0 8px 32px -4px rgba(233,30,140,0.4)'
-                } : {}}
-              >
-                {!isGenerating && (
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-white/10" />
-                )}
-                {isGenerating ? (
-                  <>
-                    <RefreshCw className="animate-spin" size={20} />
-                    <span>MOTOR V700 PROCESANDO...</span>
-                  </>
-                ) : (
-                  <>
-                    <Flame size={20} className="group-hover:scale-110 transition-transform" />
-                    <span>GENERAR GUION VIRAL</span>
-                    <span className="ml-1 px-2 py-0.5 bg-white/20 rounded-full text-sm font-black">
-                      {cost} CR
-                    </span>
-                  </>
-                )}
-              </button>
-
-              {error && (
-                <div className="mt-2 bg-red-500/10 border border-red-500/20 p-3 rounded-xl text-red-400 text-xs text-center flex items-center justify-center gap-2">
-                  <AlertCircle size={14} />
-                  {error}
-                </div>
-              )}
             </div>
           </div>
 
           {/* ============================================================
-              RIGHT COLUMN — RESULTS
+              RIGHT COLUMN — RESULTS & STREAMING
           ============================================================ */}
-          <div>
-            {result ? (
-              <div
-                className="bg-[#060810] border border-white/[0.06] rounded-3xl overflow-hidden shadow-2xl"
-                style={{ boxShadow: '0 0 80px -20px rgba(124,58,237,0.2)' }}
-              >
-                {/* Result header */}
-                <div className="px-6 pt-6 pb-4 border-b border-white/[0.05] bg-gradient-to-r from-pink-900/10 to-purple-900/10">
-                  <div className="flex justify-between items-start gap-3">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex flex-wrap gap-1.5 mb-2">
-                        <span className="text-[9px] font-black text-green-400 uppercase tracking-widest bg-green-500/10 px-2 py-0.5 rounded-full border border-green-500/20 flex items-center gap-1">
-                          <CheckCircle2 size={9} /> Completado
-                        </span>
-                        {result.metadata_guion?.plataforma && (
-                          <span className="text-[9px] font-black text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded-full border border-purple-500/20">
-                            📱 {result.metadata_guion.plataforma}
-                          </span>
-                        )}
-                        {result.metadata_guion?.objetivo_viral && (
-                          <span className="text-[9px] font-black text-yellow-400 bg-yellow-500/10 px-2 py-0.5 rounded-full border border-yellow-500/20">
-                            🎯 {result.metadata_guion.objetivo_viral}
-                          </span>
-                        )}
-                        {result.metadata_guion?.formato_narrativo_activo && (
-                          <span className="text-[9px] font-black text-violet-400 bg-violet-500/10 px-2 py-0.5 rounded-full border border-violet-500/20">
-                            🎭 {result.metadata_guion.formato_narrativo_activo}
-                          </span>
-                        )}
-                      </div>
-                      <h2 className="text-lg font-black text-white leading-snug">
-                        {result.metadata_guion?.tema_tratado || topic}
-                      </h2>
-                      {result.metadata_guion?.percepcion_creador && (
-                        <p className="text-xs text-indigo-400 mt-1 italic">
-                          💡 "{result.metadata_guion.percepcion_creador}"
-                        </p>
-                      )}
-                    </div>
-                    <div className="flex gap-1.5 shrink-0">
-                      <button
-                        onClick={() => setIsScheduleModalOpen(true)}
-                        className="px-3 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-bold text-xs flex items-center gap-1.5 transition-all shadow-lg shadow-indigo-500/20"
-                      >
-                        <CalendarIcon size={14} /> Agendar
-                      </button>
-                      <button
-                        onClick={handleAuditScript}
-                        disabled={isAuditing}
-                        className="px-3 py-2 bg-pink-600 hover:bg-pink-500 disabled:opacity-50 text-white rounded-lg font-bold text-xs flex items-center gap-1.5 transition-all shadow-lg shadow-pink-500/20"
-                      >
-                        {isAuditing ? <RefreshCw className="animate-spin" size={14} /> : <Gavel size={14} />}
-                        {isAuditing ? 'Auditando...' : 'Auditar'}
-                      </button>
-                      <button onClick={handleCopyScript} className="p-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] text-gray-500 hover:text-white transition-all" title="Copiar">
-                        <Copy size={16} />
-                      </button>
-                      <button onClick={handleSaveLibrary} disabled={isSaving} className="p-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] text-gray-500 hover:text-white transition-all disabled:opacity-40" title="Guardar">
-                        {isSaving ? <RefreshCw className="animate-spin" size={16} /> : <Save size={16} />}
-                      </button>
-                    </div>
-                  </div>
-
-                  {saveSuccess && (
-                    <div className="mt-3 bg-green-500/10 border border-green-500/20 p-2.5 rounded-xl text-green-400 text-xs flex items-center gap-2">
-                      <CheckCircle2 size={12} /> Guardado en biblioteca
-                    </div>
-                  )}
-                </div>
-
-                {/* Result body - scrollable */}
-                <div className="p-6 space-y-6 max-h-[calc(100vh-200px)] overflow-y-auto scrollbar-thin">
-
-                  {/* Umbral Dominancia */}
-                  {result.score_predictivo?.umbral_dominancia_superado !== undefined && (
-                    <div className={`flex items-center gap-4 p-4 rounded-2xl border ${
-                      result.score_predictivo.umbral_dominancia_superado
-                        ? 'bg-green-900/10 border-green-500/20'
-                        : 'bg-red-900/10 border-red-500/20'
-                    }`}>
-                      <span className="text-2xl">{result.score_predictivo.umbral_dominancia_superado ? '✅' : '🔴'}</span>
-                      <div className="flex-1">
-                        <p className={`font-black text-sm ${result.score_predictivo.umbral_dominancia_superado ? 'text-green-400' : 'text-red-400'}`}>
-                          {result.score_predictivo.umbral_dominancia_superado ? 'UMBRAL DE DOMINANCIA SUPERADO' : 'UMBRAL NO ALCANZADO'}
-                        </p>
-                        <p className="text-[11px] text-gray-500 mt-0.5">
-                          viral_index: <strong className="text-white">{result.score_predictivo.viral_index}</strong> / mínimo: 85
-                        </p>
-                      </div>
-                      <span className={`text-3xl font-black ${result.score_predictivo.viral_index >= 85 ? 'text-green-400' : 'text-red-400'}`}>
-                        {result.score_predictivo.viral_index}
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Score predictivo cualitativo */}
-                  {result.score_predictivo?.metricas_cualitativas && (
-                    <div className="bg-purple-900/10 border border-purple-500/15 rounded-2xl p-5">
-                      <h3 className="text-xs font-black text-purple-400 mb-4 flex items-center gap-2 uppercase tracking-widest">
-                        <Brain size={14} /> Impacto Estratégico
-                      </h3>
-                      <div className="space-y-3">
-                        {[
-                          { key: 'nivel_de_disrupcion', label: '⚡ Disrupción', color: '#f59e0b' },
-                          { key: 'nivel_de_memorabilidad', label: '🧠 Memorabilidad', color: '#06b6d4' },
-                          { key: 'nivel_de_polarizacion', label: '🔥 Polarización', color: '#ef4444' },
-                          { key: 'nivel_de_control_de_frame', label: '🎯 Control de Frame', color: '#8b5cf6' },
-                          { key: 'nivel_de_diferenciacion_competitiva', label: '⚔️ Diferenciación', color: '#22c55e' },
-                        ].map(({ key, label, color }) => {
-                          const value = (result.score_predictivo!.metricas_cualitativas as any)[key] as number;
-                          return (
-                            <div key={key}>
-                              <div className="flex justify-between items-center mb-1">
-                                <span className="text-xs text-gray-400">{label}</span>
-                                <span className="text-xs font-bold" style={{ color: value < 70 ? '#ef4444' : color }}>
-                                  {value}/100{value < 70 ? ' ⚠️' : ''}
-                                </span>
-                              </div>
-                              <div className="w-full bg-gray-800/50 rounded-full h-1.5">
-                                <div
-                                  className="h-1.5 rounded-full transition-all duration-700"
-                                  style={{ width: `${value}%`, backgroundColor: value < 70 ? '#ef4444' : color }}
-                                />
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Auto validación */}
-                  {result.auto_validacion && (
-                    <div className={`border rounded-2xl p-4 ${
-                      result.auto_validacion.decision === 'APROBAR'
-                        ? 'bg-green-900/8 border-green-500/20'
-                        : 'bg-red-900/8 border-red-500/20'
-                    }`}>
-                      <h3 className={`text-xs font-black mb-3 flex items-center gap-2 uppercase tracking-widest ${
-                        result.auto_validacion.decision === 'APROBAR' ? 'text-green-400' : 'text-red-400'
-                      }`}>
-                        {result.auto_validacion.decision === 'APROBAR' ? <CheckCircle2 size={14} /> : <XCircle size={14} />}
-                        Auto-Validación: {result.auto_validacion.decision}
-                      </h3>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5 text-[10px]">
-                        {[
-                          { key: 'hace_sentir_inspirado', label: 'Inspirador' },
-                          { key: 'suena_distinto', label: 'Único' },
-                          { key: 'podria_molestar', label: 'Polémico' },
-                          { key: 'sera_recordado', label: 'Memorable' },
-                        ].map(({ key, label }) => {
-                          const val = (result.auto_validacion as any)[key];
-                          return (
-                            <div key={key} className={`p-2 rounded-lg ${val ? 'bg-green-500/10' : 'bg-gray-800/50'}`}>
-                              <span className={val ? 'text-green-400' : 'text-gray-600'}>
-                                {val ? '✅' : '❌'} {label}
-                              </span>
-                            </div>
-                          );
-                        })}
-                      </div>
-                      {result.auto_validacion.razon && (
-                        <p className="text-xs text-gray-500 mt-3 italic">💭 {result.auto_validacion.razon}</p>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Análisis viral */}
-                  {result.analisis_viral && (
-                    <div className="bg-purple-900/8 border border-purple-500/15 rounded-2xl p-5">
-                      <h3 className="text-xs font-black text-purple-400 mb-3 flex items-center gap-2 uppercase tracking-widest">
-                        <TrendingUp size={14} /> Análisis Viral
-                      </h3>
-                      <div className="grid grid-cols-2 gap-3 mb-3">
-                        {result.analisis_viral.score_viralidad_predicho && (
-                          <div className="bg-black/30 p-3 rounded-xl">
-                            <div className="flex items-center justify-between mb-2">
-                              <span className="text-[10px] text-gray-500 uppercase font-bold">Score Viral</span>
-                              <span className="text-xl font-black text-purple-400">{result.analisis_viral.score_viralidad_predicho}<span className="text-sm text-gray-600">/100</span></span>
-                            </div>
-                            <div className="w-full bg-gray-800/50 rounded-full h-1.5">
-                              <div className="bg-gradient-to-r from-purple-500 to-pink-500 h-1.5 rounded-full" style={{ width: `${result.analisis_viral.score_viralidad_predicho}%` }} />
-                            </div>
-                          </div>
-                        )}
-                        <div className="bg-black/30 p-3 rounded-xl">
-                          <span className="text-[10px] text-gray-500 uppercase font-bold block mb-2">Loops</span>
-                          <div className="flex gap-3">
-                            <div className="text-center">
-                              <p className="text-lg font-black text-green-400">{result.analisis_viral.loops_abiertos?.length || 0}</p>
-                              <p className="text-[9px] text-gray-600">Abiertos</p>
-                            </div>
-                            <div className="text-center">
-                              <p className="text-lg font-black text-blue-400">{result.analisis_viral.loops_cerrados?.length || 0}</p>
-                              <p className="text-[9px] text-gray-600">Cerrados</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      {result.analisis_viral.trigger_comentarios && (
-                        <div className="bg-pink-500/8 border border-pink-500/15 p-3 rounded-xl">
-                          <span className="text-[9px] font-black text-pink-400 uppercase block mb-1">💬 Trigger de Comentarios</span>
-                          <p className="text-xs text-gray-300 italic">"{result.analisis_viral.trigger_comentarios}"</p>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Dominio narrativo */}
-                  {result.dominio_narrativo && (
-                    <div className="bg-indigo-950/20 border border-indigo-500/15 rounded-2xl p-5">
-                      <h3 className="text-xs font-black text-indigo-400 mb-4 uppercase tracking-widest flex items-center gap-2">
-                        🏛️ Arquitectura Estratégica
-                      </h3>
-                      <div className="grid grid-cols-2 gap-2">
-                        {[
-                          { key: 'marco_impuesto', label: '🖼️ Marco', color: 'border-indigo-500/15' },
-                          { key: 'enemigo_identificado', label: '⚔️ Enemigo', color: 'border-red-500/15' },
-                          { key: 'creencia_atacada', label: '💥 Creencia Atacada', color: 'border-orange-500/15' },
-                          { key: 'nuevo_frame_propuesto', label: '✨ Nuevo Frame', color: 'border-green-500/15' },
-                        ].map(({ key, label, color }) => {
-                          const val = (result.dominio_narrativo as any)[key];
-                          if (!val) return null;
-                          return (
-                            <div key={key} className={`bg-black/30 rounded-xl p-3 border ${color}`}>
-                              <span className="text-[9px] font-black text-gray-500 uppercase block mb-1">{label}</span>
-                              <p className="text-xs text-gray-200">{val}</p>
-                            </div>
-                          );
-                        })}
-                      </div>
-                      {result.dominio_narrativo.postura_dominante && (
-                        <div className="mt-2 bg-black/30 rounded-xl p-3 border border-purple-500/15">
-                          <span className="text-[9px] font-black text-purple-400 uppercase block mb-1">🎯 Postura Dominante</span>
-                          <p className="text-xs text-gray-200">{result.dominio_narrativo.postura_dominante}</p>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Frase de oro */}
-                  {result.poder_del_guion?.frase_de_oro && (
-                    <div className="bg-gradient-to-r from-yellow-500/8 to-amber-500/5 border border-yellow-500/20 rounded-2xl p-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-[10px] font-black text-yellow-400 uppercase tracking-widest flex items-center gap-1.5">
-                          <Star size={10} /> Frase de Oro
-                        </span>
-                        <button
-                          onClick={(e) => {
-                            navigator.clipboard.writeText(result.poder_del_guion!.frase_de_oro!);
-                            const btn = e.currentTarget;
-                            btn.textContent = '✅ Copiada';
-                            setTimeout(() => { btn.textContent = '📋 Copiar'; }, 2000);
-                          }}
-                          className="text-[9px] font-black text-yellow-500/60 hover:text-yellow-400 bg-yellow-500/8 border border-yellow-500/15 px-2 py-1 rounded-lg transition-colors"
-                        >
-                          📋 Copiar
-                        </button>
-                      </div>
-                      <p className="text-white font-black text-xl leading-tight">"{result.poder_del_guion.frase_de_oro}"</p>
-                    </div>
-                  )}
-
-                  {/* Micro-loops */}
-                  {result.micro_loops_detectados && result.micro_loops_detectados.length > 0 && (
-                    <div className="bg-blue-900/8 border border-blue-500/15 rounded-2xl p-4">
-                      <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-3 block">
-                        🔁 Micro-loops ({result.micro_loops_detectados.length})
-                      </span>
-                      <div className="space-y-2">
-                        {result.micro_loops_detectados.map((loop: any, i: number) => (
-                          <div key={i} className="flex items-start gap-2 bg-black/20 rounded-lg p-2.5">
-                            <span className={`text-[8px] font-black px-1.5 py-0.5 rounded shrink-0 mt-0.5 ${loop.tipo === 'apertura' ? 'bg-orange-500/20 text-orange-400' : 'bg-blue-500/20 text-blue-400'}`}>
-                              {loop.tipo === 'apertura' ? '⬆ ABRE' : '⬇ CIERRA'}
-                            </span>
-                            <div className="flex-1">
-                              <p className="text-[10px] text-gray-300 italic">"{loop.frase}"</p>
-                              <p className="text-[9px] text-gray-600 mt-0.5">⏱ {loop.tiempo_aproximado}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Activadores psicológicos */}
-                  {result.activadores_psicologicos && result.activadores_psicologicos.length > 0 && (
-                    <div className="bg-purple-900/8 border border-purple-500/15 rounded-2xl p-4">
-                      <span className="text-[10px] font-black text-purple-400 uppercase tracking-widest mb-3 block">🧠 Activadores Psicológicos</span>
-                      <div className="grid grid-cols-2 gap-2">
-                        {result.activadores_psicologicos.map((act: any, i: number) => (
-                          <div key={i} className="bg-black/20 rounded-xl p-2.5 border border-purple-500/10">
-                            <span className="text-[8px] font-black text-purple-400 uppercase block mb-1">
-                              {act.tipo === 'guardado' ? '💾 Guardado' : act.tipo === 'compartido' ? '🔁 Compartido' : act.tipo === 'comentario' ? '💬 Comentario' : '👁 Follow'}
-                            </span>
-                            <p className="text-[10px] text-gray-300 italic leading-tight">"{act.frase || act.contenido}"</p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* 5 Hooks TCA */}
-                  {result.ganchos_opcionales && result.ganchos_opcionales.length > 0 && (
-                    <div>
-                      <div className="flex items-center justify-between mb-3">
-                        <label className="text-xs font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                          <Zap size={12} /> 5 Hooks TCA
-                        </label>
-                        <span className="text-[9px] font-black bg-gradient-to-r from-pink-600 to-purple-600 text-white px-2 py-0.5 rounded-full">V700</span>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-5 gap-2">
-                        {result.ganchos_opcionales.map((hook: any, idx: number) => {
-                          const hookMeta: Record<string, any> = {
-                            CONTROVERSIAL: { border: 'border-red-500/30', bg: 'bg-red-950/20', label: 'text-red-400', badge: 'bg-red-500/15 text-red-400', emoji: '🔥' },
-                            EMOCIONAL: { border: 'border-pink-500/30', bg: 'bg-pink-950/20', label: 'text-pink-400', badge: 'bg-pink-500/15 text-pink-400', emoji: '💔' },
-                            CURIOSIDAD: { border: 'border-cyan-500/30', bg: 'bg-cyan-950/20', label: 'text-cyan-400', badge: 'bg-cyan-500/15 text-cyan-400', emoji: '🧠' },
-                            AUTORIDAD: { border: 'border-yellow-500/30', bg: 'bg-yellow-950/20', label: 'text-yellow-400', badge: 'bg-yellow-500/15 text-yellow-400', emoji: '👑' },
-                            POLARIZACION: { border: 'border-purple-500/30', bg: 'bg-purple-950/20', label: 'text-purple-400', badge: 'bg-purple-500/15 text-purple-400', emoji: '⚡' },
-                          };
-                          const meta = hookMeta[hook.tipo] || { border: 'border-gray-700', bg: 'bg-gray-900/20', label: 'text-indigo-400', badge: 'bg-indigo-500/10 text-indigo-400', emoji: '🎯' };
-                          return (
-                            <div key={idx} className={`${meta.bg} ${meta.border} border rounded-2xl p-3 flex flex-col gap-2`}>
-                              <div className="flex items-center justify-between">
-                                <span className={`text-[9px] font-black uppercase px-1.5 py-0.5 rounded-full ${meta.badge}`}>{meta.emoji} {hook.tipo}</span>
-                                <span className="text-[9px] font-black text-green-400">{hook.retencion_predicha}%</span>
-                              </div>
-                              <p className={`text-xs font-bold leading-snug ${meta.label}`}>"{hook.texto}"</p>
-                              {hook.mecanismo && (
-                                <span className="text-[9px] text-gray-500 bg-black/30 px-2 py-1 rounded-lg leading-tight block">⚙️ {hook.mecanismo}</span>
-                              )}
-                              <button
-                                onClick={(e) => {
-                                  navigator.clipboard.writeText(hook.texto || '');
-                                  const btn = e.currentTarget;
-                                  btn.textContent = '✅ Copiado';
-                                  setTimeout(() => { btn.textContent = '📋 Copiar'; }, 2000);
-                                }}
-                                className={`text-[9px] font-black uppercase ${meta.label} opacity-50 hover:opacity-100 transition-opacity mt-auto`}
-                              >
-                                📋 Copiar
-                              </button>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Miniatura dominante */}
-                  {(result.miniatura_dominante || result.guion_completo_data?.miniatura_dominante) && (() => {
-                    const min = result.miniatura_dominante || result.guion_completo_data?.miniatura_dominante;
-                    return (
-                      <div className="rounded-2xl overflow-hidden border border-yellow-500/20" style={{ background: 'linear-gradient(135deg, rgba(15,10,0,0.98) 0%, rgba(25,18,0,0.98) 100%)' }}>
-                        <div className="px-5 py-3 border-b border-yellow-500/15 flex items-center justify-between">
-                          <span className="text-xs font-black text-yellow-400 uppercase tracking-widest flex items-center gap-2">🖼️ Frase Miniatura</span>
-                          {min?.plataforma_optimizada && <span className="text-[9px] font-bold text-yellow-600 bg-yellow-500/10 px-2 py-0.5 rounded-full">{min.plataforma_optimizada}</span>}
-                        </div>
-                        <div className="p-5 space-y-4">
-                          <div className="text-center py-4 px-6 bg-black/50 rounded-xl border border-yellow-400/15">
-                            <p className="text-[9px] font-black text-yellow-600 uppercase tracking-widest mb-2">Frase Principal</p>
-                            <p className="text-2xl font-black text-white leading-tight">"{min?.frase_principal}"</p>
-                          </div>
-                          {(min?.variante_agresiva || min?.variante_aspiracional) ? (
-                            <div className="grid grid-cols-2 gap-2">
-                              {min?.variante_agresiva && (
-                                <div className="bg-black/40 rounded-xl p-3 border border-red-500/15 text-center">
-                                  <span className="text-[9px] font-black text-red-400 uppercase block mb-1">⚡ Agresiva</span>
-                                  <p className="text-sm font-black text-gray-200">"{min.variante_agresiva}"</p>
-                                </div>
-                              )}
-                              {min?.variante_aspiracional && (
-                                <div className="bg-black/40 rounded-xl p-3 border border-emerald-500/15 text-center">
-                                  <span className="text-[9px] font-black text-emerald-400 uppercase block mb-1">✨ Aspiracional</span>
-                                  <p className="text-sm font-black text-gray-200">"{min.variante_aspiracional}"</p>
-                                </div>
-                              )}
-                            </div>
-                          ) : min?.variantes_ab && min.variantes_ab.length > 0 && (
-                            <div className="grid grid-cols-2 gap-2">
-                              {min.variantes_ab.map((v: string, i: number) => (
-                                <div key={i} className="bg-black/40 rounded-xl p-3 border border-yellow-500/10 text-center">
-                                  <span className="text-[9px] font-black text-yellow-600 uppercase block mb-1">{i === 0 ? '⚡ Agresiva' : '✨ Aspiracional'}</span>
-                                  <p className="text-sm font-black text-gray-200">"{v}"</p>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                          <div className="grid grid-cols-5 gap-1.5">
-                            {[
-                              { label: 'CTR', value: min?.ctr_score, color: '#facc15' },
-                              { label: 'Disrupción', value: min?.nivel_disrupcion, color: '#f87171' },
-                              { label: 'Gap Curiosidad', value: min?.nivel_gap_curiosidad, color: '#60a5fa' },
-                              { label: 'Polarización', value: min?.nivel_polarizacion, color: '#f472b6' },
-                              { label: 'Algoritmo', value: min?.compatibilidad_algoritmica, color: '#34d399' },
-                            ].map(({ label, value, color }) => (
-                              <div key={label} className="bg-black/40 rounded-xl p-2 text-center border border-white/[0.04]">
-                                <p className="text-[8px] text-gray-600 uppercase mb-1">{label}</p>
-                                <p className="text-base font-black" style={{ color }}>{value}</p>
-                              </div>
-                            ))}
-                          </div>
-                          {(min?.razon_estrategica || min?.justificacion_estrategica) && (
-                            <p className="text-xs text-gray-600 italic border-t border-yellow-500/10 pt-3">
-                              💭 {min?.justificacion_estrategica || min?.razon_estrategica}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })()}
-
-                  {/* Teleprompter */}
-                  {result.teleprompter_script && (
-                    <div>
-                      <div className="flex items-center justify-between mb-3">
-                        <label className="text-xs font-black text-green-400 uppercase tracking-widest flex items-center gap-2">
-                          <AlignLeft size={12} /> 🎤 Teleprompter TCA
-                        </label>
-                        <button
-                          onClick={() => {
-                            const clean = (result.teleprompter_script || '')
-                              .split('\n')
-                              .filter((l: string) => !l.startsWith('[CAPA') && !l.startsWith('⚠️') && !l.startsWith('━') && !l.startsWith('REGLA') && !l.startsWith('✓') && !l.startsWith('TCA =') && !l.startsWith('CAPA ') && !l.startsWith('→') && l.trim() !== '')
-                              .join('\n');
-                            navigator.clipboard.writeText(clean).then(() => {
-                              const btn = document.getElementById('btn-copy-tp');
-                              if (btn) { btn.textContent = '✅ Copiado'; setTimeout(() => { btn.textContent = '📋 Copiar'; }, 2000); }
-                            });
-                          }}
-                          id="btn-copy-tp"
-                          className="text-[10px] font-black text-green-400 bg-green-500/10 border border-green-500/20 px-3 py-1.5 rounded-xl hover:bg-green-500/20 transition-colors flex items-center gap-1"
-                        >
-                          <Copy size={10} /> Copiar
-                        </button>
-                      </div>
-                      <div className="bg-black/80 p-8 rounded-2xl border border-green-500/15 text-green-100 text-xl leading-relaxed font-medium whitespace-pre-wrap shadow-inner max-h-[500px] overflow-y-auto scrollbar-thin font-mono">
-                        {(result.teleprompter_script || '')
-                          .split('\n')
-                          .filter((l: string) => !l.startsWith('[CAPA') && !l.startsWith('⚠️') && !l.startsWith('━') && !l.startsWith('REGLA') && !l.startsWith('✓') && !l.startsWith('TCA =') && !l.startsWith('CAPA ') && !l.startsWith('→') && l.trim() !== '')
-                          .join('\n')
-                        }
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Anti-saturation report */}
-                  {(result as any)._anti_saturation_report?.guion_fue_reescrito && (
-                    <div className="bg-yellow-900/10 border border-yellow-500/15 rounded-xl p-4">
-                      <h3 className="text-xs font-black text-yellow-400 mb-2 flex items-center gap-2">🧹 Anti-Saturación — Clichés Eliminados</h3>
-                      <div className="flex flex-wrap gap-1.5">
-                        {(result as any)._anti_saturation_report.cliches_detectados.map((c: string, i: number) => (
-                          <span key={i} className="text-[10px] bg-yellow-500/10 text-yellow-300 px-2 py-0.5 rounded line-through">{c}</span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Plan audiovisual V700 */}
-                  {(() => {
-                    if (!result.plan_audiovisual_profesional && result.guion_completo_data?.plan_audiovisual_profesional) {
-                      result.plan_audiovisual_profesional = result.guion_completo_data.plan_audiovisual_profesional;
-                    }
-                    return null;
-                  })()}
-
-                  {result?.plan_audiovisual_profesional ? (
-                    <div className="border-t border-white/[0.04] pt-5">
-                      <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                        <Video size={12} /> Plan Audiovisual Profesional
-                        <span className="text-[9px] font-black bg-violet-500 text-white px-1.5 py-0.5 rounded-full">V700</span>
-                      </label>
-                      {result.plan_audiovisual_profesional?.secuencia_temporal?.length > 0 && (
-                        <div className="mb-4 space-y-2">
-                          <p className="text-[10px] font-black text-gray-600 uppercase tracking-widest mb-2">🎬 Secuencia</p>
-                          {result.plan_audiovisual_profesional.secuencia_temporal.map((seg: any, idx: number) => (
-                            <div key={idx} className="flex gap-3 p-3 bg-white/[0.02] rounded-xl border border-white/[0.04] hover:bg-white/[0.03] transition-colors">
-                              <span className="text-xs font-black text-violet-400 w-14 text-right font-mono shrink-0">{seg.tiempo}</span>
-                              <div className="flex-1 space-y-1">
-                                <p className="text-sm text-white font-medium">{seg.descripcion_visual}</p>
-                                <div className="flex gap-2 flex-wrap">
-                                  {seg.tipo_plano && <span className="text-[9px] text-indigo-400">🎥 {seg.tipo_plano}</span>}
-                                  {seg.efecto_retencion && <span className="text-[9px] text-orange-400">⚡ {seg.efecto_retencion}</span>}
-                                  {seg.emocion_objetivo && <span className="text-[9px] text-pink-400">💥 {seg.emocion_objetivo}</span>}
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                      <div className="grid grid-cols-3 gap-3">
-                        {result.plan_audiovisual_profesional?.ritmo_de_cortes && (
-                          <div className="bg-indigo-950/20 border border-indigo-500/15 rounded-xl p-3">
-                            <p className="text-[9px] font-black text-indigo-400 uppercase tracking-widest mb-2">✂️ Ritmo</p>
-                            <p className="text-sm font-black text-white">{result.plan_audiovisual_profesional.ritmo_de_cortes.patron_general}</p>
-                            <p className="text-[10px] text-gray-500 mt-1">{result.plan_audiovisual_profesional.ritmo_de_cortes.descripcion}</p>
-                          </div>
-                        )}
-                        {result.plan_audiovisual_profesional?.musica && (
-                          <div className="bg-pink-950/20 border border-pink-500/15 rounded-xl p-3">
-                            <p className="text-[9px] font-black text-pink-400 uppercase tracking-widest mb-2">🎵 Música</p>
-                            <p className="text-sm font-black text-white">{result.plan_audiovisual_profesional.musica.tipo}</p>
-                            {result.plan_audiovisual_profesional.musica.bpm_aproximado && (
-                              <p className="text-[10px] text-pink-300 font-bold mt-1">{result.plan_audiovisual_profesional.musica.bpm_aproximado} BPM</p>
-                            )}
-                          </div>
-                        )}
-                        {result.plan_audiovisual_profesional?.efectos_de_retencion && (
-                          <div className="bg-orange-950/20 border border-orange-500/15 rounded-xl p-3">
-                            <p className="text-[9px] font-black text-orange-400 uppercase tracking-widest mb-2">⚡ Retención</p>
-                            {result.plan_audiovisual_profesional.efectos_de_retencion.sonido_transicion && (
-                              <p className="text-[10px] text-gray-400 mb-1">🔊 {result.plan_audiovisual_profesional.efectos_de_retencion.sonido_transicion}</p>
-                            )}
-                            {result.plan_audiovisual_profesional.efectos_de_retencion.micro_silencios && (
-                              <p className="text-[10px] text-gray-400">🤫 {result.plan_audiovisual_profesional.efectos_de_retencion.micro_silencios}</p>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ) : ((result.plan_produccion_visual || result.plan_visual) || []).length > 0 ? (
-                    <div className="border-t border-white/[0.04] pt-5">
-                      <label className="text-xs font-black text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
-                        <Video size={12} /> Plan de Producción Visual
-                      </label>
-                      <div className="space-y-2">
-                        {((result.plan_produccion_visual || result.plan_visual) ?? []).map((scene: any, idx: number) => (
-                          <div key={idx} className="flex gap-3 p-3 bg-white/[0.02] rounded-xl border border-white/[0.04]">
-                            <span className="text-xs font-black text-gray-600 w-14 text-right font-mono shrink-0">{scene.tiempo}</span>
-                            <div className="flex-1 space-y-1">
-                              <p className="text-sm text-white">{scene.descripcion_visual || scene.accion_en_pantalla}</p>
-                              <div className="flex gap-2 flex-wrap">
-                                {scene.tipo_plano && <span className="text-[9px] text-indigo-400">🎥 {scene.tipo_plano}</span>}
-                                {scene.movimiento_camara && <span className="text-[9px] text-cyan-400">📷 {scene.movimiento_camara}</span>}
-                                {scene.efecto_retencion && <span className="text-[9px] text-orange-400">⚡ {scene.efecto_retencion}</span>}
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ) : null}
-
-                  {/* Audit section */}
-                  {showAudit && (
-                    <div className="border-t border-white/[0.04] pt-5">
-                      <h3 className="text-sm font-black text-pink-400 mb-4 flex items-center gap-2">
-                        <Gavel size={16} /> Veredicto del Juez Viral
-                      </h3>
-                      {isAuditing ? (
-                        <div className="flex flex-col items-center gap-4 py-10">
-                          <Gavel className="animate-pulse text-pink-500" size={40} />
-                          <p className="text-sm font-bold text-pink-400 animate-pulse">Analizando con 10 criterios virales...</p>
-                        </div>
-                      ) : auditResult ? (
-                        <div className="bg-pink-900/8 border border-pink-500/15 rounded-2xl p-5">
-                          <div className="flex justify-between items-center mb-5">
-                            <div className="text-5xl font-black text-white">
-                              {auditResult.veredicto_final?.score_total}
-                              <span className="text-base text-gray-600">/100</span>
-                            </div>
-                            <div className="text-right">
-                              <div className="text-sm font-bold text-pink-400 uppercase tracking-widest">{auditResult.veredicto_final?.clasificacion}</div>
-                              <div className="text-xs text-gray-600">Probabilidad: {auditResult.veredicto_final?.probabilidad_viral}</div>
-                            </div>
-                          </div>
-                          <div className="grid grid-cols-2 gap-5">
-                            <div>
-                              <span className="text-xs font-black text-green-400 uppercase block mb-2">✅ Fortalezas</span>
-                              <ul className="space-y-1">
-                                {auditResult.fortalezas_clave?.map((f, i) => (
-                                  <li key={i} className="text-xs text-gray-300 flex items-start gap-2">
-                                    <CheckCircle2 size={11} className="text-green-500 mt-0.5 shrink-0" /> {f}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                            <div>
-                              <span className="text-xs font-black text-red-400 uppercase block mb-2">⚠️ Críticos</span>
-                              <ul className="space-y-1">
-                                {auditResult.debilidades_criticas?.map((d, i) => (
-                                  <li key={i} className="text-xs text-gray-300 flex items-start gap-2">
-                                    <AlertCircle size={11} className="text-red-500 mt-0.5 shrink-0" /> {d.problema}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          </div>
-                          {auditResult.optimizaciones_rapidas && auditResult.optimizaciones_rapidas.length > 0 && (
-                            <div className="mt-4 pt-4 border-t border-pink-500/15">
-                              <span className="text-xs font-black text-yellow-400 uppercase block mb-2">💡 Optimizaciones Rápidas</span>
-                              <ul className="space-y-1">
-                                {auditResult.optimizaciones_rapidas.map((opt, i) => (
-                                  <li key={i} className="text-xs text-gray-300">• {opt}</li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-                          {auditResult?.veredicto_final?.score_total !== undefined && auditResult.veredicto_final.score_total < 75 && (
-                            <div className="mt-4 pt-4 border-t border-pink-500/15">
-                              <div className="bg-yellow-900/15 border border-yellow-500/20 rounded-xl p-3 mb-3">
-                                <p className="text-xs text-yellow-400 font-bold flex items-center gap-2 mb-1">
-                                  <AlertCircle size={12} /> Score bajo ({auditResult.veredicto_final.score_total}/100)
-                                </p>
-                                <p className="text-xs text-gray-500">¿Regenerar aplicando el análisis del Juez?</p>
-                              </div>
-                              <button
-                                onClick={async () => {
-                                  if (!auditResult || !topic) return;
-                                  const sugerencias = auditResult.optimizaciones_rapidas?.join('. ') || '';
-                                  const debilidades = auditResult.debilidades_criticas?.map(d => d.solucion).join('. ') || '';
-                                  const mejoras = [sugerencias, debilidades].filter(Boolean).join('. ');
-                                  const topicEnriquecido = topic + (mejoras ? `\n\n[MEJORAS DEL JUEZ]:\n${mejoras}` : '');
-                                  setTopic(topicEnriquecido);
-                                  setAuditResult(null);
-                                  setShowAudit(false);
-                                  setResult(null);
-                                  setTimeout(() => handleGenerate(), 100);
-                                }}
-                                disabled={isGenerating}
-                                className="w-full py-3 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-500 hover:to-orange-500 disabled:opacity-50 text-white font-black rounded-xl text-sm flex justify-center items-center gap-2 transition-all"
-                              >
-                                {isGenerating ? <><RefreshCw className="animate-spin" size={14} /> Regenerando...</> : <><RefreshCw size={14} /> Regenerar con Mejoras</>}
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      ) : (
-                        <div className="text-center py-8 text-gray-600">
-                          <AlertCircle size={24} className="mx-auto mb-2" />
-                          <p className="text-xs">No se pudo obtener la auditoría</p>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
+          <div className="space-y-4">
+            {/* Error banner */}
+            {error && streamState.phase !== 'generador' && streamState.phase !== 'estratega' && (
+              <div className="flex items-start gap-3 p-4 bg-red-900/20 border border-red-500/30 rounded-2xl">
+                <AlertCircle size={18} className="text-red-400 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-bold text-red-300">Error en la generación</p>
+                  <p className="text-xs text-red-400/80 mt-1">{error}</p>
+                  <button
+                    onClick={handleGenerate}
+                    className="mt-2 text-xs text-red-300 underline underline-offset-2 hover:text-white transition-colors"
+                  >
+                    Reintentar
+                  </button>
                 </div>
               </div>
-            ) : (
+            )}
+
+            {/* Streaming Phase Indicator */}
+            {isGenerating && (
+              <StreamingPhaseIndicator
+                phase={streamState.phase}
+                message={streamState.phaseMessage}
+                streamedText={streamState.streamedText}
+              />
+            )}
+
+            {/* Result */}
+            {result ? (
+              <div className="space-y-4">
+                {/* Action bar */}
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={handleCopyScript}
+                    className="flex items-center gap-1.5 px-3 py-2 bg-white/[0.04] border border-white/[0.07] rounded-xl text-xs text-gray-400 hover:text-white hover:border-white/20 transition-all"
+                  >
+                    <Copy size={12} /> Copiar
+                  </button>
+                  <button
+                    onClick={handleSaveLibrary}
+                    disabled={isSaving}
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs transition-all ${
+                      saveSuccess
+                        ? 'bg-green-900/30 border border-green-500/40 text-green-400'
+                        : 'bg-white/[0.04] border border-white/[0.07] text-gray-400 hover:text-white hover:border-white/20'
+                    }`}
+                  >
+                    {saveSuccess ? <><CheckCircle2 size={12} /> Guardado</> : <><Save size={12} /> Guardar</>}
+                  </button>
+                  <button
+                    onClick={() => setIsScheduleModalOpen(true)}
+                    className="flex items-center gap-1.5 px-3 py-2 bg-white/[0.04] border border-white/[0.07] rounded-xl text-xs text-gray-400 hover:text-white hover:border-white/20 transition-all"
+                  >
+                    <CalendarIcon size={12} /> Agendar
+                  </button>
+                  <button
+                    onClick={handleAuditScript}
+                    disabled={isAuditing}
+                    className="flex items-center gap-1.5 px-3 py-2 bg-pink-900/20 border border-pink-500/20 rounded-xl text-xs text-pink-400 hover:border-pink-500/40 transition-all"
+                  >
+                    {isAuditing ? <RefreshCw size={12} className="animate-spin" /> : <Gavel size={12} />}
+                    Juez Viral
+                  </button>
+                  <button
+                    onClick={handleGenerate}
+                    className="flex items-center gap-1.5 px-3 py-2 bg-white/[0.04] border border-white/[0.07] rounded-xl text-xs text-gray-400 hover:text-white hover:border-white/20 transition-all"
+                  >
+                    <RefreshCw size={12} /> Regenerar
+                  </button>
+                </div>
+
+                {/* Score badges */}
+                {result.score_predictivo && (
+                  <div className="grid grid-cols-4 gap-2">
+                    {[
+                      { label: 'Retención', value: result.score_predictivo.retention_score, color: 'text-cyan-400' },
+                      { label: 'Share', value: result.score_predictivo.share_score, color: 'text-blue-400' },
+                      { label: 'Save', value: result.score_predictivo.save_score, color: 'text-green-400' },
+                      { label: 'Viral Index', value: result.score_predictivo.viral_index, color: 'text-yellow-400' },
+                    ].map(metric => (
+                      <div key={metric.label} className="bg-[#080B10] border border-white/[0.06] rounded-xl p-3 text-center">
+                        <div className={`text-xl font-black ${metric.color}`}>{metric.value}</div>
+                        <div className="text-[9px] text-gray-600 uppercase mt-0.5">{metric.label}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Hook */}
+                {result.hook && (
+                  <SectionCard>
+                    <p className="text-[10px] font-black text-pink-400 uppercase tracking-widest mb-2 flex items-center gap-2">
+                      <Zap size={10} /> Gancho de Apertura
+                    </p>
+                    <p className="text-sm font-bold text-white leading-relaxed">{result.hook}</p>
+                  </SectionCard>
+                )}
+
+                {/* Main script */}
+                <SectionCard className="card-glow-pink">
+                  <p className="text-[10px] font-black text-gray-600 uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <PenTool size={10} /> Guion Completo
+                  </p>
+                  <div className="whitespace-pre-wrap text-sm text-gray-200 leading-relaxed font-mono">
+                    {result.guion_completo || result.teleprompter_script}
+                  </div>
+                </SectionCard>
+
+                {/* Poder del guion */}
+                {result.poder_del_guion && (
+                  <SectionCard>
+                    <p className="text-[10px] font-black text-yellow-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                      <Star size={10} /> Poder del Guion
+                    </p>
+                    <div className="space-y-2">
+                      {result.poder_del_guion.frase_de_oro && (
+                        <div className="p-3 bg-yellow-900/10 border border-yellow-500/20 rounded-xl">
+                          <p className="text-[10px] font-black text-yellow-500 uppercase mb-1">🥇 Frase de Oro</p>
+                          <p className="text-xs text-gray-300 italic">"{result.poder_del_guion.frase_de_oro}"</p>
+                        </div>
+                      )}
+                      {result.poder_del_guion.por_que_llegara_a_millones && (
+                        <div className="p-3 bg-emerald-900/10 border border-emerald-500/20 rounded-xl">
+                          <p className="text-[10px] font-black text-emerald-400 uppercase mb-1">🚀 Por qué llegará a millones</p>
+                          <p className="text-xs text-gray-300">{result.poder_del_guion.por_que_llegara_a_millones}</p>
+                        </div>
+                      )}
+                    </div>
+                  </SectionCard>
+                )}
+
+                {/* Miniatura */}
+                {result.miniatura_dominante && (
+                  <SectionCard>
+                    <p className="text-[10px] font-black text-pink-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                      <ImageIcon size={10} /> Miniatura Dominante
+                    </p>
+                    <p className="text-base font-black text-white mb-3 leading-tight">{result.miniatura_dominante.frase_principal}</p>
+                    <div className="grid grid-cols-4 gap-2">
+                      {[
+                        { label: 'CTR', value: result.miniatura_dominante.ctr_score },
+                        { label: 'Disrupción', value: result.miniatura_dominante.nivel_disrupcion },
+                        { label: 'Gap', value: result.miniatura_dominante.nivel_gap_curiosidad },
+                        { label: 'Algoritmo', value: result.miniatura_dominante.compatibilidad_algoritmica },
+                      ].map(m => (
+                        <div key={m.label} className="text-center p-2 bg-white/[0.02] rounded-lg border border-white/[0.04]">
+                          <div className="text-sm font-black text-white">{m.value}</div>
+                          <div className="text-[9px] text-gray-600">{m.label}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </SectionCard>
+                )}
+
+                {/* Optional hooks */}
+                {result.ganchos_opcionales && result.ganchos_opcionales.length > 0 && (
+                  <SectionCard>
+                    <p className="text-[10px] font-black text-gray-600 uppercase tracking-widest mb-3 flex items-center gap-2">
+                      <Hash size={10} /> Ganchos Opcionales
+                    </p>
+                    <div className="space-y-2">
+                      {result.ganchos_opcionales.map((g, i) => (
+                        <div key={i} className="p-3 bg-white/[0.02] border border-white/[0.04] rounded-xl">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-[10px] font-black text-pink-400 uppercase">{g.tipo}</span>
+                            <span className="text-[10px] text-gray-600">Retención: {g.retencion_predicha}%</span>
+                          </div>
+                          <p className="text-xs text-gray-300">{g.texto}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </SectionCard>
+                )}
+
+                {/* Juez Viral Audit */}
+                {showAudit && (
+                  <SectionCard className="border-pink-500/20">
+                    <p className="text-[10px] font-black text-pink-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                      <Gavel size={10} /> Juez Viral
+                    </p>
+                    {isAuditing ? (
+                      <div className="flex flex-col items-center gap-3 py-8">
+                        <Gavel className="animate-pulse text-pink-500" size={40} />
+                        <p className="text-sm font-bold text-pink-400 animate-pulse">Analizando con 10 criterios virales...</p>
+                      </div>
+                    ) : auditResult ? (
+                      <div className="bg-pink-900/8 border border-pink-500/15 rounded-2xl p-5">
+                        <div className="flex justify-between items-center mb-5">
+                          <div className="text-5xl font-black text-white">
+                            {auditResult.veredicto_final?.score_total}
+                            <span className="text-base text-gray-600">/100</span>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-sm font-bold text-pink-400 uppercase tracking-widest">{auditResult.veredicto_final?.clasificacion}</div>
+                            <div className="text-xs text-gray-600">Probabilidad: {auditResult.veredicto_final?.probabilidad_viral}</div>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-5">
+                          <div>
+                            <span className="text-xs font-black text-green-400 uppercase block mb-2">✅ Fortalezas</span>
+                            <ul className="space-y-1">
+                              {auditResult.fortalezas_clave?.map((f, i) => (
+                                <li key={i} className="text-xs text-gray-300 flex items-start gap-2">
+                                  <CheckCircle2 size={11} className="text-green-500 mt-0.5 shrink-0" /> {f}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div>
+                            <span className="text-xs font-black text-red-400 uppercase block mb-2">⚠️ Críticos</span>
+                            <ul className="space-y-1">
+                              {auditResult.debilidades_criticas?.map((d, i) => (
+                                <li key={i} className="text-xs text-gray-300 flex items-start gap-2">
+                                  <AlertCircle size={11} className="text-red-500 mt-0.5 shrink-0" /> {d.problema}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                        {auditResult.optimizaciones_rapidas && auditResult.optimizaciones_rapidas.length > 0 && (
+                          <div className="mt-4 pt-4 border-t border-pink-500/15">
+                            <span className="text-xs font-black text-yellow-400 uppercase block mb-2">💡 Optimizaciones Rápidas</span>
+                            <ul className="space-y-1">
+                              {auditResult.optimizaciones_rapidas.map((opt, i) => (
+                                <li key={i} className="text-xs text-gray-300">• {opt}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {auditResult?.veredicto_final?.score_total !== undefined && auditResult.veredicto_final.score_total < 75 && (
+                          <div className="mt-4 pt-4 border-t border-pink-500/15">
+                            <div className="bg-yellow-900/15 border border-yellow-500/20 rounded-xl p-3 mb-3">
+                              <p className="text-xs text-yellow-400 font-bold flex items-center gap-2 mb-1">
+                                <AlertCircle size={12} /> Score bajo ({auditResult.veredicto_final.score_total}/100)
+                              </p>
+                              <p className="text-xs text-gray-500">¿Regenerar aplicando el análisis del Juez?</p>
+                            </div>
+                            <button
+                              onClick={async () => {
+                                if (!auditResult || !topic) return;
+                                const sugerencias = auditResult.optimizaciones_rapidas?.join('. ') || '';
+                                const debilidades = auditResult.debilidades_criticas?.map(d => d.solucion).join('. ') || '';
+                                const mejoras = [sugerencias, debilidades].filter(Boolean).join('. ');
+                                const topicEnriquecido = topic + (mejoras ? `\n\n[MEJORAS DEL JUEZ]:\n${mejoras}` : '');
+                                setTopic(topicEnriquecido);
+                                setAuditResult(null);
+                                setShowAudit(false);
+                                setStreamState(prev => ({ ...prev, result: null }));
+                                setTimeout(() => handleGenerate(), 100);
+                              }}
+                              disabled={isGenerating}
+                              className="w-full py-3 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-500 hover:to-orange-500 disabled:opacity-50 text-white font-black rounded-xl text-sm flex justify-center items-center gap-2 transition-all"
+                            >
+                              {isGenerating ? <><RefreshCw className="animate-spin" size={14} /> Regenerando...</> : <><RefreshCw size={14} /> Regenerar con Mejoras</>}
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="text-center py-8 text-gray-600">
+                        <AlertCircle size={24} className="mx-auto mb-2" />
+                        <p className="text-xs">No se pudo obtener la auditoría</p>
+                      </div>
+                    )}
+                  </SectionCard>
+                )}
+              </div>
+            ) : !isGenerating ? (
               /* Empty state */
               <div className="h-full min-h-[600px] border-2 border-dashed border-white/[0.04] rounded-3xl flex flex-col items-center justify-center text-center p-12 bg-white/[0.01]">
                 <div className="relative mb-6">
@@ -2022,7 +1790,7 @@ export const ScriptGenerator = () => {
                   ))}
                 </div>
               </div>
-            )}
+            ) : null}
           </div>
         </div>
       </div>

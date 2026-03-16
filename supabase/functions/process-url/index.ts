@@ -37,6 +37,17 @@ import {
 } from './handlers/other-handlers.ts';
 
 // ==================================================================================
+// 🌊 MODOS QUE DEVUELVEN UN ReadableStream (SSE) EN VEZ DE JSON
+// ==================================================================================
+
+const STREAMING_MODES = [
+  'generar_guion',
+  'generador_guiones',
+  'script_generator_standard',
+  'script_generator_vision',
+];
+
+// ==================================================================================
 // 🚀 SERVIDOR PRINCIPAL
 // ==================================================================================
 
@@ -69,23 +80,23 @@ serve(async (req) => {
 
     if (!checkRateLimit(userId)) throw new Error('Límite de solicitudes excedido');
 
-  // ─── Parsear body ─────────────────────────────────────
-  const body = await req.json();
-  const {
-    selectedMode,
-    url,
-    platform,
-    expertId,
-    avatarId,
-    knowledgeBaseId,
-    estimatedCost,
-    strategyLoop,
-    vectorEmocional,
-    hookMode,
-    customHook,
-    format,
-    architecture
-  } = body || {};
+    // ─── Parsear body ─────────────────────────────────────
+    const body = await req.json();
+    const {
+      selectedMode,
+      url,
+      platform,
+      expertId,
+      avatarId,
+      knowledgeBaseId,
+      estimatedCost,
+      strategyLoop,
+      vectorEmocional,
+      hookMode,
+      customHook,
+      format,
+      architecture
+    } = body || {};
 
     let processedContext = body.transcript || body.text || body.userInput
       || body.customPrompt || body.topic || body.query || "";
@@ -123,13 +134,13 @@ serve(async (req) => {
       supabase, expertId || '', avatarId || '', knowledgeBaseId || ''
     );
 
-    // ─── Fallbacks para variables avanzadas (seguridad) ─────────────────────────────
-    const safeStrategyLoop = strategyLoop || 'standard';
+    // ─── Fallbacks para variables avanzadas ─────────────────────────────
+    const safeStrategyLoop   = strategyLoop   || 'standard';
     const safeVectorEmocional = vectorEmocional || 'neutral';
-    const safeHookMode = hookMode || 'direct';
-    const safeCustomHook = customHook || '';
-    const safeFormat = format || 'standard';
-    const safeArchitecture = architecture || 'linear';
+    const safeHookMode       = hookMode        || 'direct';
+    const safeCustomHook     = customHook      || '';
+    const safeFormat         = format          || 'standard';
+    const safeArchitecture   = architecture    || 'linear';
 
     // ==================================================================================
     // 🛡️ MIDDLEWARE DE AVATAR + INYECCIÓN DE PERSONALIDAD
@@ -188,6 +199,71 @@ serve(async (req) => {
     // 🎯 ROUTER — DELEGACIÓN A HANDLERS
     // ==================================================================================
 
+    // ── RUTA ESPECIAL: Modos que devuelven SSE (streaming) ────────────────────────────
+    // handleScriptGenerator devuelve una Response directa (SSE), NO un { result, tokensUsed }.
+    // La devolvemos inmediatamente sin pasar por el bloque de cobros/guardado normal,
+    // ya que el guardado se hace de forma asíncrona después (o desde el cliente).
+    if (STREAMING_MODES.includes(selectedMode)) {
+      console.log(`[TITAN V105] 🌊 Modo streaming detectado: ${selectedMode}`);
+
+      // Pre-cobro antes de empezar el stream (no podemos cobrar después en SSE)
+      if (estimatedCost > 0) {
+        const { data: profile } = await supabase.from('profiles')
+          .select('credits, tier').eq('id', userId).single();
+
+        if (profile?.tier !== 'admin') {
+          if ((profile?.credits || 0) < estimatedCost) {
+            // Devolvemos error JSON (el cliente aún no está en modo stream)
+            return new Response(
+              JSON.stringify({ success: false, error: `Saldo insuficiente. Costo: ${estimatedCost} créditos.` }),
+              { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            );
+          }
+          // Cobrar antes del stream
+          const { error: creditError } = await supabase.rpc('decrement_credits', {
+            user_uuid: userId,
+            amount: estimatedCost
+          });
+          if (creditError) {
+            console.error(`[COBROS PRE-STREAM] ❌ Error: ${creditError.message}`);
+          }
+        }
+      }
+
+      // Llamar al handler — devuelve Response SSE directamente
+      const streamingResponse = await handleScriptGenerator(
+        body,
+        settings,
+        processedContext,
+        userContext,
+        openai,
+        corsHeaders
+      );
+
+      // Registrar en historial de forma no-bloqueante (fire-and-forget)
+      // No podemos esperar el contenido del stream porque ya está fluyendo
+      if (!NO_SAVE_MODES.includes(selectedMode)) {
+        supabase.from('viral_generations').insert({
+          user_id:         userId,
+          type:            selectedMode,
+          content:         { info: 'Generado con streaming V800', tema: body.text?.substring(0, 200) || '' },
+          original_url:    url || null,
+          cost_credits:    estimatedCost || 0,
+          platform:        platform || settings.platform || 'general',
+          tokens_used:     0,
+          whisper_minutes: 0
+        }).then(() => {
+          console.log('[HISTORIAL] ✅ Entrada de streaming guardada');
+        }).catch((e: any) => {
+          console.error('[HISTORIAL] ❌ Error guardando entrada streaming:', e.message);
+        });
+      }
+
+      return streamingResponse;
+    }
+
+    // ── RUTA NORMAL: Handlers que devuelven { result, tokensUsed } ────────────────────
+
     let result: any;
     let tokensUsed    = 0;
     let whisperMinutes = 0;
@@ -219,14 +295,6 @@ serve(async (req) => {
         result = r.result; tokensUsed = r.tokensUsed;
         whisperMinutes = r.whisperMinutes;
         settings._videoDurationSecs = r.videoDurationSecs;
-        break;
-      }
-
-      case 'generar_guion':
-      case 'generador_guiones':
-      case 'script_generator_standard': {
-        const r = await handleScriptGenerator(body, settings, processedContext, userContext, openai);
-        result = r.result; tokensUsed = r.tokensUsed;
         break;
       }
 
@@ -276,7 +344,7 @@ serve(async (req) => {
     }
 
     // ==================================================================================
-    // 💰 COBROS Y GUARDADO
+    // 💰 COBROS Y GUARDADO (solo para handlers no-streaming)
     // ==================================================================================
 
     const calculatedPrice = calculateTitanCost(
