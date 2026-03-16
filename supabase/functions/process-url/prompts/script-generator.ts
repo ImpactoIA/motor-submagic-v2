@@ -2914,7 +2914,9 @@ ${retroalimentacionLoop}
 
     console.log(`[MOTOR V600] 🔄 Llamada LLM iniciada (intento ${intentoActual})...`);
     console.log(`[MOTOR V600] 📊 Prompt length: ${systemPrompt.length} chars`);
-    const completion = await openai.chat.completions.create({
+    
+    // Implementar streaming para evitar timeout
+  const completion = await openai.chat.completions.create({
       model: 'gpt-4o',
       response_format: { type: 'json_object' },
       messages: [
@@ -2923,9 +2925,27 @@ ${retroalimentacionLoop}
       ],
       temperature: intentoActual === 1 ? 0.7 : 0.8, // Control de temperatura: 0.7 inicial, 0.8 máximo
       max_tokens: 4000, // 🎯 AJUSTE DE GRRIFO: Reducido de 12,000 a 4,000 tokens (66% menos costo)
-      signal: controller.signal // 🛡️ CONTROL DEL CRONÓMETRO: AbortSignal para manejo de timeout
+      signal: controller.signal, // 🛡️ CONTROL DEL CRONÓMETRO: AbortSignal para manejo de timeout
+      stream: true, // 🚀 STREAMING: Evita timeout de Supabase
+      stream_options: { include_usage: true } // Incluir métricas de tokens
     });
-    console.log(`[MOTOR V600] ✅ Llamada LLM completada (intento ${intentoActual})`);
+    
+    // Procesar streaming
+    let fullContent = '';
+    let usage = { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 };
+    
+    for await (const chunk of completion) {
+      const content = chunk.choices?.[0]?.delta?.content || '';
+      if (content) {
+        fullContent += content;
+      }
+      if (chunk.usage) {
+        usage = chunk.usage;
+      }
+    }
+    
+    console.log(`[MOTOR V600] ✅ Streaming completado (intento ${intentoActual})`);
+    console.log(`[MOTOR V600] 📈 Tokens consumidos: ${usage.total_tokens}`);
 
     clearTimeout(timeoutId); // Limpiar timeout si la solicitud fue exitosa
 

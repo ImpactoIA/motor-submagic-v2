@@ -132,10 +132,12 @@ Realiza internamente el Pre-Análisis (P1) y la Teoría Circular de Alcance (TCA
   };
 
   console.log('[MOTOR V700] 🚀 Ejecutando generadorGuiones...');
-  const res = await ejecutarGeneradorGuiones(contextoEnriquecido, null, openai, settings);
+  
+  // Implementar streaming para evitar timeout
+  const response = await ejecutarGeneradorGuiones(contextoEnriquecido, null, openai, settings);
 
   const result = {
-    ...res.data,
+    ...response.data,
     modo_generacion: modoGeneracion,
     ...(preAnalisis && {
       pre_analisis_input: {
@@ -148,7 +150,7 @@ Realiza internamente el Pre-Análisis (P1) y la Teoría Circular de Alcance (TCA
   };
 
   console.log(`[MOTOR V700] ✅ Guion generado | Modo: ${modoGeneracion}`);
-  return { result, tokensUsed: res.tokens };
+  return { result, tokensUsed: response.tokens };
 }
 
 // ==================================================================================
