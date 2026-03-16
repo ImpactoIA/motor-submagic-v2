@@ -133,24 +133,38 @@ Realiza internamente el Pre-Análisis (P1) y la Teoría Circular de Alcance (TCA
 
   console.log('[MOTOR V700] 🚀 Ejecutando generadorGuiones...');
   
+  // Verificación de Seguridad: API Key
+  console.log('🔑 Verificando API Key...');
+  const apiKey = Deno.env.get('OPENAI_API_KEY');
+  if (!apiKey) {
+    console.error('❌ ERROR: OPENAI_API_KEY no está definida');
+    throw new Error('OPENAI_API_KEY no está definida en el entorno');
+  }
+  console.log('✅ API Key presente');
+  
   // Implementar streaming para evitar timeout
-  const response = await ejecutarGeneradorGuiones(contextoEnriquecido, null, openai, settings);
+  try {
+    const response = await ejecutarGeneradorGuiones(contextoEnriquecido, null, openai, settings);
 
-  const result = {
-    ...response.data,
-    modo_generacion: modoGeneracion,
-    ...(preAnalisis && {
-      pre_analisis_input: {
-        tipo: modoGeneracion,
-        conflicto_detectado: preAnalisis.conflicto_central,
-        tension_base: preAnalisis.tension_detectada,
-        partes_elevadas: preAnalisis.partes_planas
-      }
-    })
-  };
+    const result = {
+      ...response.data,
+      modo_generacion: modoGeneracion,
+      ...(preAnalisis && {
+        pre_analisis_input: {
+          tipo: modoGeneracion,
+          conflicto_detectado: preAnalisis.conflicto_central,
+          tension_base: preAnalisis.tension_detectada,
+          partes_elevadas: preAnalisis.partes_planas
+        }
+      })
+    };
 
-  console.log(`[MOTOR V700] ✅ Guion generado | Modo: ${modoGeneracion}`);
-  return { result, tokensUsed: response.tokens };
+    console.log(`[MOTOR V700] ✅ Guion generado | Modo: ${modoGeneracion}`);
+    return { result, tokensUsed: response.tokens };
+  } catch (error: any) {
+    console.error('❌ ERROR DIRECTO EN LLM CALL:', error.message);
+    throw error;
+  }
 }
 
 // ==================================================================================
