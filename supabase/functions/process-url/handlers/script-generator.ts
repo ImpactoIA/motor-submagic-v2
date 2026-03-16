@@ -152,7 +152,9 @@ ${instruccionEstructura}`.trim();
   if (!settings?.tca_preexpandido) {
     try {
       console.log('[TCA] 🌀 Ejecutando Sistema de Alcance Masivo...');
+      console.log('Iniciando fetch de TCA...');
       const tcaResult = await ejecutarSistemaTCA(temaUsuario, settings, openai);
+      console.log('Fetch TCA exitoso');
       estrategiaTCA = tcaResult.estrategia_tca;
 
       if (tcaResult.aprobado && tcaResult.tema_expandido && tcaResult.tema_expandido !== temaUsuario) {
@@ -163,6 +165,7 @@ ${instruccionEstructura}`.trim();
         console.log(`[TCA] ✅ Tema expandido | Mass Appeal: ${estrategiaTCA?.mass_appeal_score || 0}/100`);
       }
     } catch (tcaError: any) {
+      console.error('🚨 ERROR EN TCA:', tcaError);
       console.warn('[TCA] ⚠️ Bypass total:', tcaError.message);
     }
   } else {
