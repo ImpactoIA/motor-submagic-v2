@@ -4,7 +4,7 @@
 // Salida: Markdown 3 secciones — [FRASE MINIATURA] [TELEPROMPTER] [PLAN AUDIOVISUAL]
 // ==================================================================================
 
-import { ejecutarGeneradorGuiones, guardarFeedbackTCA } from '../prompts/script-generator.ts';
+import { PROMPT_GENERADOR_GUIONES_V800 } from '../prompts/script-generator.ts';
 import { analizarImagenEstrategica } from '../prompts/vision.ts';
 import { ContextoUsuario } from '../lib/types.ts';
 import { corsHeaders } from '../lib/constants.ts';
@@ -255,30 +255,41 @@ PROHIBIDO: guion genérico. OBLIGATORIO: mencionar detalles concretos del tema v
           modoGeneracion,
         };
 
-        // ejecutarGeneradorGuiones usa PROMPT_GENERADOR_GUIONES_V800
-        // internamente (prompts/script-generator.ts) y devuelve
-        // { data, tokens } con frase_miniatura, teleprompter_script,
-        // plan_audiovisual_director ya parseados desde el Markdown
-        const executorResult = await ejecutarGeneradorGuiones(
-          contextoEnriquecido,
-          null,
-          openai,
-          settingsEnriquecidos
-        );
+        const systemPrompt = PROMPT_GENERADOR_GUIONES_V800(contextoEnriquecido, null, settingsEnriquecidos);
 
-        const parsedResult = executorResult.data;
+        const completion = await openai.chat.completions.create({
+          model: 'gpt-4o',
+          messages: [
+            { role: 'system', content: 'Eres el Motor Viral V800. Respondes ÚNICAMENTE con las 3 secciones Markdown indicadas en el prompt. Sin preámbulos.' },
+            { role: 'user', content: systemPrompt }
+          ],
+          temperature: 0.85,
+          max_tokens: 4000,
+          stream: true
+        });
 
-        // Reconstruir el Markdown completo para enviarlo como chunk
-        // El frontend lo parsea con extractSection() en ResultBlocks
-        const markdownOutput = [
-          `[SECCIÓN 1: FRASE MINIATURA]\n${parsedResult.frase_miniatura || parsedResult.hook || ''}`,
-          `\n\n[SECCIÓN 2: TELEPROMPTER PROFESIONAL]\n${parsedResult.teleprompter_script || parsedResult.guion_completo || ''}`,
-          `\n\n[SECCIÓN 3: PLAN AUDIOVISUAL (DIRECTOR'S CUT)]\n${parsedResult.plan_audiovisual_director || ''}`,
-        ].join('');
+        let fullMarkdown = '';
+        
+        for await (const chunk of completion) {
+          const content = chunk.choices[0]?.delta?.content || '';
+          if (content) {
+            fullMarkdown += content;
+            send({ type: 'chunk', text: content });
+          }
+        }
 
-        send({ type: 'chunk', text: markdownOutput });
+        const extractSection = (text: string, sectionName: string): string => {
+          const match = text.match(new RegExp(`\\[SECCIÓN \\d+: ${sectionName}\\]([\\s\\S]*?)(?=\\[SECCIÓN|$)`, 'i'));
+          return match ? match[1].trim() : '';
+        };
 
-        console.log(`[MOTOR V800] ✅ Guion generado | Tokens: ${executorResult.tokens}`);
+        const parsedResult = {
+          frase_miniatura: extractSection(fullMarkdown, 'FRASE MINIATURA'),
+          teleprompter_script: extractSection(fullMarkdown, 'TELEPROMPTER PROFESIONAL'),
+          plan_audiovisual_director: extractSection(fullMarkdown, 'PLAN AUDIOVISUAL[^\\]]*'),
+          guion_completo: extractSection(fullMarkdown, 'TELEPROMPTER PROFESIONAL') || fullMarkdown,
+          hook: extractSection(fullMarkdown, 'FRASE MINIATURA'),
+        };
 
         send({
           type: 'complete',
@@ -308,21 +319,20 @@ PROHIBIDO: guion genérico. OBLIGATORIO: mencionar detalles concretos del tema v
 // 📊 TCA FEEDBACK (guardar resultado del video publicado)
 // ==================================================================================
 
-export async function handleTcaFeedback(
-  body: any,
-  userId: string,
-  supabase: any
-): Promise<{ result: any; tokensUsed: number }> {
-  console.log('[HANDLER] 📊 Guardando feedback TCA...');
-
-  await guardarFeedbackTCA(supabase, userId, body.guion_data || {}, {
-    resultado_categoria: body.resultado_categoria || 'normal',
-    vistas_48h: body.vistas_48h || null,
-    notas: body.notas || null
-  });
-
-  return {
-    result: { success: true, mensaje: '✅ Resultado guardado. El sistema aprende de tu experiencia.' },
-    tokensUsed: 0
-  };
+export async function handleTcaFeedback(body: any, userId: string, supabase: any) {
+  try {
+    await supabase.from('viral_generations').insert({
+      user_id: userId,
+      type: 'tca_feedback',
+      content: {
+        guion_data: body.guion_data || {},
+        resultado_categoria: body.resultado_categoria || 'normal',
+        vistas: body.vistas_48h || null,
+        notas: body.notas || null
+      }
+    });
+  } catch (e) {
+    console.error('[FEEDBACK] Error guardando:', e);
+  }
+  return { result: { success: true }, tokensUsed: 0 };
 }
