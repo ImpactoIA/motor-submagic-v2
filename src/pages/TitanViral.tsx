@@ -1417,7 +1417,7 @@ export const TitanViral = () => {
       }
 
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 150000); // 150 segundos de espera para IA
+      const timeoutId = setTimeout(() => controller.abort(),30000); // 300 segundos de espera para la IA
 
       // 🛑 IMPORTANTE: No enviamos headers. Supabase detectará automáticamente si es JSON o FormData.
       const { data, error } = await supabase.functions.invoke('process-url', { 
