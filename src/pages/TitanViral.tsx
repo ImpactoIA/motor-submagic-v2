@@ -1418,7 +1418,7 @@ export const TitanViral = () => {
       }
 
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 50000); // 50 segundos máximo
+      const timeoutId = setTimeout(() => controller.abort(), 120000); // 120 segundos para procesos pesados
 
       const { data, error } = await supabase.functions.invoke('process-url', { 
         body,
