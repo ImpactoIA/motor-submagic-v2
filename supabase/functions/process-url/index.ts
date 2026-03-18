@@ -37,6 +37,98 @@ import {
 } from './handlers/other-handlers.ts';
 
 // ==================================================================================
+// 🔁 MODOS QUE USAN EL PATRÓN ASÍNCRONO (respuesta inmediata + background task)
+// ==================================================================================
+
+const ASYNC_BACKGROUND_MODES = ['recreate'];
+
+// ==================================================================================
+// 🏭 BACKGROUND TASK — procesa el recreate y actualiza la DB al terminar
+// ==================================================================================
+
+async function runRecreateBackground(params: {
+  generationId: string;
+  body: any;
+  settings: any;
+  platform: string;
+  processedContext: string;
+  userContext: any;
+  openai: any;
+  supabase: any;
+  userId: string;
+  estimatedCost: number;
+  activeAvatar: any | null;
+}): Promise<void> {
+  const {
+    generationId, body, settings, platform, processedContext,
+    userContext, openai, supabase, userId, estimatedCost, activeAvatar,
+  } = params;
+
+  try {
+    console.log(`[BACKGROUND] 🔁 Iniciando recreate para generation_id=${generationId}`);
+
+    const r = await handleReCreate(body, settings, platform, processedContext, userContext, openai);
+    const result        = r.result;
+    const tokensUsed    = r.tokensUsed;
+    const whisperMinutes   = r.whisperMinutes;
+    const videoDurationSecs = r.videoDurationSecs;
+
+    const calculatedPrice = calculateTitanCost(
+      'recreate', processedContext, whisperMinutes, settings, videoDurationSecs
+    );
+    const finalCost = Math.max(calculatedPrice, estimatedCost || 0);
+
+    if (finalCost > 0) {
+      const { data: profile } = await supabase.from('profiles')
+        .select('credits, tier').eq('id', userId).single();
+      if (profile?.tier !== 'admin') {
+        const { error: creditError } = await supabase.rpc('decrement_credits', {
+          user_uuid: userId,
+          amount: finalCost,
+        });
+        if (creditError) console.error(`[BACKGROUND] ❌ Error cobrando créditos: ${creditError.message}`);
+      }
+    }
+
+    if (activeAvatar) {
+      try {
+        const avatarMw = new AvatarMiddleware(supabase);
+        await avatarMw.incrementContentCount();
+      } catch (e) { console.error('[BACKGROUND] Error evolución avatar:', e); }
+    }
+
+    const { error: updateError } = await supabase
+      .from('viral_generations')
+      .update({
+        status:          'completed',
+        content:         result,
+        cost_credits:    finalCost,
+        tokens_used:     tokensUsed,
+        whisper_minutes: whisperMinutes,
+        updated_at:      new Date().toISOString(),
+      })
+      .eq('id', generationId);
+
+    if (updateError) {
+      console.error(`[BACKGROUND] ❌ Error actualizando registro: ${updateError.message}`);
+    } else {
+      console.log(`[BACKGROUND] ✅ recreate completado. generation_id=${generationId}`);
+    }
+
+  } catch (bgError: any) {
+    console.error(`[BACKGROUND] 💥 Error fatal: ${bgError.message}`);
+    await supabase
+      .from('viral_generations')
+      .update({
+        status:     'error',
+        content:    { error: bgError.message },
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', generationId);
+  }
+}
+
+// ==================================================================================
 // 🌊 MODOS QUE DEVUELVEN UN ReadableStream (SSE) EN VEZ DE JSON
 // ==================================================================================
 
@@ -287,6 +379,79 @@ serve(async (req) => {
       return streamingResponse;
     }
 
+    // ==================================================================================
+    // ⚡ RUTA ASÍNCRONA: recreate — responde en < 2s, proceso pesado en background
+    // ==================================================================================
+
+    if (ASYNC_BACKGROUND_MODES.includes(selectedMode)) {
+      console.log(`[TITAN V105] ⚡ Modo asíncrono: ${selectedMode}`);
+
+      const rawUrls: string[] = body.urls || (body.url ? [body.url] : []);
+
+      const { data: genRecord, error: insertError } = await supabase
+        .from('viral_generations')
+        .insert({
+          user_id:         userId,
+          type:            selectedMode,
+          content:         null,
+          original_url:    rawUrls[0] || null,
+          cost_credits:    estimatedCost || 0,
+          platform:        platform || settings.platform || 'general',
+          tokens_used:     0,
+          whisper_minutes: 0,
+          status:          'processing',
+          metadata: {
+            expertId:        expertId || null,
+            avatarId:        avatarId || null,
+            knowledgeBaseId: knowledgeBaseId || null,
+          },
+        })
+        .select('id')
+        .single();
+
+      if (insertError || !genRecord) {
+        throw new Error(`Error creando registro: ${insertError?.message}`);
+      }
+
+      const generationId = genRecord.id;
+      console.log(`[ASYNC] ✅ Registro creado. generation_id=${generationId}`);
+
+      const backgroundTask = runRecreateBackground({
+        generationId,
+        body,
+        settings,
+        platform:         platform || '',
+        processedContext,
+        userContext,
+        openai,
+        supabase,
+        userId,
+        estimatedCost:    estimatedCost || 0,
+        activeAvatar,
+      });
+
+      try {
+        // @ts-ignore — EdgeRuntime es global en Supabase Edge Functions
+        EdgeRuntime.waitUntil(backgroundTask);
+      } catch (_) {
+        backgroundTask.catch((e: any) => {
+          console.error('[BACKGROUND FALLBACK] Error:', e.message);
+        });
+      }
+
+      return new Response(
+        JSON.stringify({
+          success:       true,
+          async:         true,
+          generation_id: generationId,
+          message:       'Procesando en la nube. Escucha el canal Realtime para el resultado.',
+          metadata:      { mode: selectedMode, duration: Date.now() - startTime },
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+      );
+    }
+
+
     // ── RUTA NORMAL: Handlers que devuelven { result, tokensUsed } ────────────────────
 
     let result: any;
@@ -316,11 +481,10 @@ serve(async (req) => {
       }
 
       case 'recreate': {
-        const r = await handleReCreate(body, settings, platform, processedContext, userContext, openai);
-        result = r.result; tokensUsed = r.tokensUsed;
-        whisperMinutes = r.whisperMinutes;
-        settings._videoDurationSecs = r.videoDurationSecs;
-        break;
+        // ⚡ MODO ASÍNCRONO — el proceso pesado corre en background.
+        // Este case NO debería alcanzarse porque el router asíncrono (más arriba)
+        // intercepta 'recreate' antes del switch. Lo dejamos como guardia de seguridad.
+        throw new Error('El modo recreate debe ser manejado por el router asíncrono. Verifica ASYNC_BACKGROUND_MODES.');
       }
 
       case 'tca_feedback': {
