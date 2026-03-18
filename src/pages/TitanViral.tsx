@@ -1396,11 +1396,9 @@ export const TitanViral = () => {
         payload.uploadedFileName = uploadedFileName;
       }
 
-      // ✅ CONFIGURACIÓN DE TIMEOUT: 50s para sincronizar con backend (Free Tier 60s)
-      // ✅ FIX: Enviar FormData para archivos grandes
+      // ✅ CONFIGURACIÓN DE TIMEOUT Y HEADERS (FIX V800)
       const isFileUpload = uploadMode === 'file' && uploadedVideoFile instanceof File;
-      let body: any = payload;
-      let headers: any = { 'Content-Type': 'application/json' };
+      let requestBody: any;
 
       if (isFileUpload) {
         const formData = new FormData();
@@ -1413,16 +1411,17 @@ export const TitanViral = () => {
         formData.append('settings', JSON.stringify(payload.settings));
         formData.append('uploadedVideo', uploadedVideoFile);
         formData.append('uploadedFileName', uploadedFileName);
-        body = formData;
-        headers = {}; // Dejar que el navegador asigne boundary multipart
+        requestBody = formData;
+      } else {
+        requestBody = payload;
       }
 
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 120000); // 120 segundos para procesos pesados
+      const timeoutId = setTimeout(() => controller.abort(), 150000); // 150 segundos de espera para IA
 
+      // 🛑 IMPORTANTE: No enviamos headers. Supabase detectará automáticamente si es JSON o FormData.
       const { data, error } = await supabase.functions.invoke('process-url', { 
-        body,
-        headers,
+        body: requestBody,
         signal: controller.signal,
       });
 
