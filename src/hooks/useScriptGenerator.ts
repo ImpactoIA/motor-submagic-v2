@@ -46,6 +46,7 @@ export interface GeneratorConfig {
   // Origen
   topic: string;
   selectedImage: string | null;
+  selectedAvatarId: string;
   // Plataforma y duración
   selectedPlatform: { id: string; label: string; icon: any; color: string; border: string; bg: string };
   durationId: string;
@@ -168,7 +169,7 @@ export function useScriptGenerator(config: GeneratorConfig) {
         text:          config.topic,
         image:         config.selectedImage   || undefined,
         expertId:      config.selectedExpertId      || undefined,
-        avatarId:      userProfile?.active_avatar_id || undefined,
+        avatarId:      config.selectedAvatarId || userProfile?.active_avatar_id || undefined,
         knowledgeBaseId: config.selectedKnowledgeBaseId || undefined,
         estimatedCost: config.cost,
 
