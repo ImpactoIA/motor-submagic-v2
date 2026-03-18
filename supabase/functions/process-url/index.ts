@@ -80,8 +80,33 @@ serve(async (req) => {
 
     if (!checkRateLimit(userId)) throw new Error('Límite de solicitudes excedido');
 
-    // ─── Parsear body ─────────────────────────────────────
-    const body = await req.json();
+    // ─── Parsear body (JSON o FormData) ─────────────────────────────────────
+    let body: any = {};
+    const contentType = req.headers.get('content-type') || '';
+
+    if (contentType.includes('multipart/form-data')) {
+      const formData = await req.formData();
+      body.selectedMode = formData.get('selectedMode');
+      body.text = formData.get('text');
+      body.expertId = formData.get('expertId') || undefined;
+      body.avatarId = formData.get('avatarId') || undefined;
+      body.knowledgeBaseId = formData.get('knowledgeBaseId') || undefined;
+      body.estimatedCost = Number(formData.get('estimatedCost')) || 0;
+      
+      const settingsStr = formData.get('settings');
+      if (settingsStr) {
+        try { body.settings = JSON.parse(settingsStr.toString()); } catch(e) {}
+      }
+      
+      const uploadedFile = formData.get('uploadedVideo');
+      if (uploadedFile) {
+        body.uploadedVideo = uploadedFile;
+        body.uploadedFileName = formData.get('uploadedFileName');
+      }
+    } else {
+      body = await req.json();
+    }
+
     const {
       selectedMode,
       url,
