@@ -1108,17 +1108,21 @@ Texto fluido y continuo que suena exactamente como "${epTone || 'la voz natural 
 Longitud: ${wordTarget}
 Aplica en orden: Capa 2 (punto de entrada TCA) → Capa 3 (arquitectura) → Capa 4 (voz y loops)
 
-[SECCIÓN 3: PLAN AUDIOVISUAL (DIRECTOR'S CUT)]
-Instrucciones técnicas para el editor. Formato: lista con timestamps.
-Para cada momento clave incluir:
-  • Timestamp aproximado
-  • Tipo de plano (ej: primer plano extremo, b-roll, plano medio)
-  • Movimiento de cámara (ej: zoom in agresivo, estático, handheld)
-  • Texto en pantalla si aplica
-  • SFX / música (ej: bass drop, silencio súbito, whoosh)
-  • B-Roll específico (ej: "manos sobre teclado, plano detalle a 4K")
-Mínimo 5 momentos clave con los 5 campos cada uno.
-${esImagen ? 'NOTA ESPECIAL: La imagen subida por el usuario debe aparecer como B-Roll en el momento de mayor impacto.' : ''}
+[SECCIÓN 3: PLAN AUDIOVISUAL (AI VIDEO GENERATOR READY)]
+Instrucciones visuales diseñadas para ser súper fáciles de leer y con Prompts listos para copiar y pegar en IAs generadoras de video (Sora, Runway Gen-3, Kling, Midjourney, CapCut).
+
+Formato obligatorio para cada escena (Mínimo 5 momentos clave):
+
+⏱️ **[Timestamp] — [Nombre del Momento / Efecto Psicológico]**
+• 📝 **Texto en Pantalla:** "[Texto de impacto corto, si aplica]"
+• 🔊 **SFX / Audio:** [Diseño sonoro, ej: Silencio súbito, Whoosh grave, Latido]
+• 🤖 **PROMPT DE B-ROLL PARA IA (Copiar y Pegar):**
+\`\`\`text
+Cinematic vertical video, [Sujeto hiper-detallado y acción concreta], [Tipo de iluminación y entorno], [Movimiento de cámara, ej: subtle handheld, slow zoom in], photorealistic, highly detailed, 8k resolution, aspect ratio 9:16
+\`\`\`
+*(REGLA DE ORO DEL PROMPT DE IA: Debe estar OBLIGATORIAMENTE EN INGLÉS porque las IAs de video rinden mejor así. Usa descripciones visuales literales, sin metáforas, sin texto en el video).*
+
+${esImagen ? 'NOTA ESPECIAL: La primera escena debe integrar el concepto de la imagen subida por el usuario.' : ''}
 ${plataforma === 'Facebook' ? 'NOTA: Incluir subtítulos en TODOS los bloques (70% ve sin audio en Facebook).' : ''}
 `;
 };
