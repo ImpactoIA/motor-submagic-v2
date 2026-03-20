@@ -51,544 +51,216 @@ function computeCost(type: ContentType, urlCount: number): number {
 // 🎬 COMPONENTE: GUION + PLAN AUDIOVISUAL (lo más importante)
 // ==================================================================================
 
-const OmegaScriptView = ({ scriptData, contentType = 'reel' }: { scriptData: any; contentType?: string }) => {
-  const [copied, setCopied] = useState(false);
-  const [activeTab, setActiveTab] = useState<'camara' | 'broll' | 'musica'>('camara');
+// ==================================================================================
+// ⚡ SNIPER RESULT VIEW
+// ==================================================================================
 
-  // ✅ FIX BUG #2 — orden correcto: espejo > al_nicho > tecnico_completo
-  const scriptText =
-    scriptData.guion_adaptado_espejo ||
-    scriptData.guion_adaptado_al_nicho ||
-    scriptData.guion_tecnico_completo ||
-    scriptData.guion_completo;
+const SniperResultView = ({ result, contentType = 'reel' }: { result: any; contentType?: string }) => {
+  const [copiedGuion, setCopiedGuion] = useState(false);
+  const [copiedMini,  setCopiedMini]  = useState(false);
 
-  const planAudiovisual = scriptData.plan_audiovisual_profesional || null;
-  const visualPlan      = planAudiovisual?.secuencia_temporal || scriptData.plan_visual_director || scriptData.plan_visual;
-  const bRolls          = planAudiovisual?.b_rolls_estrategicos || [];
-  const musica          = planAudiovisual?.musica || null;
-  const ritmoCamara     = planAudiovisual?.ritmo_de_cortes || null;
-  const efectos         = planAudiovisual?.efectos_de_retencion || null;
-  const miniatura       = scriptData.miniatura_dominante || null;
+  const guion         = result.guion_adaptado_teleprompter || result.guion_teleprompter || result.guion_adaptado_espejo || '';
+const planAV        = result.plan_audiovisual_pro || result.plan_audiovisual || {};
+const adnViral      = Array.isArray(result.adn_viral) ? result.adn_viral : [];
+const idea          = result.idea_ganadora || '';
+const fraseMini     = result.miniatura_circular?.frase_principal || result.frase_miniatura || '';
+const transcFiel    = result.transcripcion_fiel || '';
+const hookVisual    = typeof planAV === 'object' ? (planAV as any).hook_visual || '' : '';
+const captions      = typeof planAV === 'object' ? (planAV as any).captions_dinamicos || [] : [];
+const brolls        = typeof planAV === 'object' ? (planAV as any).brolls_estrategicos || [] : [];
+const sfx           = typeof planAV === 'object' ? (planAV as any).sfx_y_musica || {} : {};
+const ritmoCortes   = typeof planAV === 'object' ? (planAV as any).ritmo_de_cortes || '' : '';
+const varianteB     = result.miniatura_circular?.variante_b || '';
+const porQueClicula = result.miniatura_circular?.por_que_genera_clic || '';
 
-  const copyScript = () => {
-    if (!scriptText) return;
-    if (typeof navigator !== 'undefined' && navigator && navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(scriptText);
+  const words    = guion.trim().split(/\s+/).filter(Boolean).length;
+  const minWords = contentType === 'masterclass' ? 400 : contentType === 'long' ? 250 : 150;
+  const wordsBadge = words >= minWords
+    ? { cls: 'bg-green-500/20 text-green-400 border-green-500/30', label: `${words} palabras ✓` }
+    : { cls: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30', label: `${words} palabras ⚠` };
+
+  const copy = (text: string, setter: (v: boolean) => void) => {
+    if (!text) return;
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText(text);
     } else {
-      // Fallback para navegadores sin soporte
-      const textArea = document.createElement('textarea');
-      textArea.value = scriptText;
-      document.body.appendChild(textArea);
-      textArea.select();
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
       document.execCommand('copy');
-      document.body.removeChild(textArea);
+      document.body.removeChild(ta);
     }
-    setCopied(true);
-    const t = setTimeout(() => setCopied(false), 2000);
-    return () => clearTimeout(t);
+    setter(true);
+    setTimeout(() => setter(false), 2000);
   };
 
-  const words = scriptText?.trim().split(/\s+/).filter(Boolean).length || 0;
-  // ✅ FIX BUG #5 — umbrales sincronizados con backend minWords
-  const minWords = contentType === 'masterclass' ? 800 : contentType === 'long' ? 450 : 250;
-  const wordsBadge = words >= minWords
-    ? { cls: 'bg-blue-500/20 text-blue-400 border-blue-500/30', label: `${words} palabras ✓` }
-    : words >= Math.round(minWords * 0.85)
-    ? { cls: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30', label: `${words} palabras ~` }
-    : { cls: 'bg-red-500/20 text-red-400 border-red-500/30', label: `${words} palabras ⚠ corto` };
+  // Parsear plan_audiovisual en 3 secciones si viene como string con \n
+  const parsePlan = (raw: string) => {
+    const sections: Record<string, string> = {};
+    const parts = raw.split(/\n(?=GANCHO:|DESARROLLO:|CIERRE:)/i);
+    parts.forEach(p => {
+      const match = p.match(/^(GANCHO|DESARROLLO|CIERRE):\s*/i);
+      if (match) sections[match[1].toUpperCase()] = p.replace(match[0], '').trim();
+    });
+    return sections;
+  };
+  const planSections = typeof planAV === 'string' ? parsePlan(planAV) : {};
 
   return (
-    <div className="bg-[#080808] border border-green-500/30 rounded-2xl overflow-hidden shadow-[0_0_50px_-20px_rgba(34,197,94,0.15)]">
-      {/* Header */}
-      <div className="bg-green-900/10 border-b border-green-500/20 p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="bg-green-500 text-black text-[9px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider">READY TO SHOOT</span>
-            <span className={`text-[9px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider border ${wordsBadge.cls}`}>{wordsBadge.label}</span>
+    <div className="space-y-4">
+
+      {/* ── BLOQUE 0: TRANSCRIPCIÓN FIEL ── */}
+{transcFiel && (
+  <details className="bg-[#080b10] border border-white/10 rounded-2xl overflow-hidden">
+    <summary className="p-4 cursor-pointer flex items-center justify-between hover:bg-white/3 transition-colors select-none">
+      <span className="text-xs font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
+        <span>📝</span> Transcripción Fiel del Video Original
+        <span className="text-[9px] font-normal text-gray-600 normal-case tracking-normal">(click para expandir)</span>
+      </span>
+      <ChevronDown size={14} className="text-gray-600" />
+    </summary>
+    <div className="px-5 pb-5 border-t border-white/5">
+      <p className="text-xs text-gray-400 leading-relaxed whitespace-pre-line font-mono mt-4 max-h-52 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-800">
+        {transcFiel}
+      </p>
+    </div>
+  </details>
+)}
+
+
+      {/* ── BLOQUE 1: IDEA GANADORA + ADN VIRAL ── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        {/* Idea Ganadora */}
+        <div className="bg-[#080b10] border border-yellow-500/20 rounded-2xl p-5 shadow-[0_0_40px_-15px_rgba(234,179,8,0.15)]">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-xs font-black text-yellow-400 uppercase tracking-widest flex items-center gap-1.5">
+              <Sparkles size={12} /> Idea Ganadora
+            </span>
           </div>
-          <h3 className="text-lg font-black text-white flex items-center gap-2 tracking-tight">
-            <Clapperboard className="text-green-400" size={20} /> GUION DE PRODUCCIÓN
-          </h3>
+          <p className="text-sm text-gray-200 leading-relaxed">{idea || 'No disponible'}</p>
         </div>
-        <button
-          onClick={copyScript}
-          className="flex items-center gap-2 bg-green-600 hover:bg-green-500 text-black px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all shadow-lg active:scale-95 w-full sm:w-auto justify-center"
-        >
-          {copied ? <CheckCircle2 size={16} /> : <Copy size={16} />}
-          {copied ? 'COPIADO' : 'COPIAR TELEPROMPTER'}
-        </button>
+
+        {/* ADN Viral */}
+        <div className="bg-[#080b10] border border-purple-500/20 rounded-2xl p-5 shadow-[0_0_40px_-15px_rgba(168,85,247,0.15)]">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-xs font-black text-purple-400 uppercase tracking-widest flex items-center gap-1.5">
+              <Brain size={12} /> ADN Viral — 3 Elementos
+            </span>
+          </div>
+          <div className="space-y-2">
+            {adnViral.length > 0 ? adnViral.map((el: string, i: number) => (
+              <div key={i} className="flex items-start gap-2.5">
+                <span className="shrink-0 w-5 h-5 rounded-full bg-purple-500/20 border border-purple-500/30 text-purple-400 text-[10px] font-black flex items-center justify-center mt-0.5">
+                  {i + 1}
+                </span>
+                <p className="text-xs text-gray-300 leading-relaxed">{el}</p>
+              </div>
+            )) : (
+              <p className="text-xs text-gray-500">No disponible</p>
+            )}
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[500px]">
-        {/* Panel izquierdo: Dirección */}
-        <div className="lg:col-span-4 border-b lg:border-b-0 lg:border-r border-white/5 bg-[#0c0c0c] flex flex-col">
-          <div className="p-4 border-b border-white/5 bg-[#0f1115] sticky top-0 z-10">
-            <h4 className="text-[10px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-2">
-              <Film size={12} /> Dirección de Cámara & Audio
-            </h4>
+      {/* ── BLOQUE 2: FRASE MINIATURA ── */}
+      {fraseMini && (
+        <div className="bg-[#080b10] border border-orange-500/30 rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-[0_0_40px_-15px_rgba(249,115,22,0.2)]">
+          <div className="flex-1">
+            <p className="text-[10px] font-black text-orange-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+              <Eye size={11} /> Frase para Miniatura
+            </p>
+            <p className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
+              {fraseMini}
+            </p>
+            <p className="text-[10px] text-gray-500 mt-1.5">Teoría Circular aplicada · Alto impacto visual</p>
           </div>
+          <button
+            onClick={() => copy(fraseMini, setCopiedMini)}
+            className="shrink-0 flex items-center gap-2 bg-orange-600/20 hover:bg-orange-500/30 border border-orange-500/30 text-orange-300 px-3 py-2 rounded-lg text-xs font-bold transition-all active:scale-95"
+          >
+            {copiedMini ? <CheckCircle2 size={14} /> : <Copy size={14} />}
+            {copiedMini ? 'Copiado' : 'Copiar'}
+          </button>
+        </div>
+      )}
 
-          {planAudiovisual && (
-            <div className="flex border-b border-white/5 px-4 overflow-x-auto">
-              {[
-                { id: 'camara', label: '🎥 Cámara' },
-                { id: 'broll',  label: '🎞 B-Roll' },
-                { id: 'musica', label: '🎧 Audio' },
-              ].map(tab => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
-                  className={`px-3 py-2 text-[10px] font-black uppercase tracking-wider transition-all border-b-2 whitespace-nowrap ${
-                    activeTab === tab.id ? 'border-green-500 text-green-400' : 'border-transparent text-gray-600 hover:text-gray-400'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
+      {/* ── BLOQUE 3: GUION + PLAN AUDIOVISUAL ── */}
+      <div className="bg-[#080808] border border-green-500/30 rounded-2xl overflow-hidden shadow-[0_0_50px_-20px_rgba(34,197,94,0.15)]">
+
+        {/* Header */}
+        <div className="bg-green-900/10 border-b border-green-500/20 p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="bg-green-500 text-black text-[9px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider">READY TO SHOOT</span>
+              <span className={`text-[9px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider border ${wordsBadge.cls}`}>
+                {wordsBadge.label}
+              </span>
             </div>
-          )}
-
-          <div className="p-4 space-y-6 overflow-y-auto max-h-[600px] scrollbar-thin scrollbar-thumb-gray-800">
-            {/* TAB CÁMARA */}
-            {(!planAudiovisual || activeTab === 'camara') && visualPlan?.map((scene: any, idx: number) => (
-              <div key={idx} className="relative pl-4 border-l-2 border-gray-800 text-xs group hover:border-green-500/50 transition-colors">
-                <div className="absolute -left-[5px] top-0 w-2 h-2 rounded-full bg-gray-800 border border-gray-700 group-hover:bg-green-500 group-hover:border-green-400 transition-colors" />
-                <div className="flex items-center gap-2 mb-2 flex-wrap">
-                  <span className="text-green-400 font-mono font-bold text-[10px] bg-green-900/10 inline-block px-1.5 py-0.5 rounded">{scene.tiempo}</span>
-                  {scene.tipo_plano && <span className="text-[9px] text-blue-400 font-bold bg-blue-500/10 px-1.5 py-0.5 rounded">{scene.tipo_plano}</span>}
-                  {scene.emocion_objetivo && <span className="text-[9px] text-rose-400 font-bold bg-rose-500/10 px-1.5 py-0.5 rounded">❤ {scene.emocion_objetivo}</span>}
-                </div>
-                {(scene.movimiento_camara || scene.accion_camara || scene.instruccion_produccion) && (
-                  <div className="mb-2 text-blue-300 font-bold flex items-start gap-1.5 leading-tight">
-                    <span className="opacity-50 mt-0.5">🎥</span>
-                    {scene.movimiento_camara || scene.accion_camara || scene.instruccion_produccion}
-                  </div>
-                )}
-                <p className="text-gray-300 font-medium leading-relaxed mb-2">{scene.descripcion_visual || scene.accion_adaptada || scene.accion_en_pantalla}</p>
-                {scene.texto_en_pantalla && (
-                  <div className="bg-white/5 rounded px-2 py-1 mb-2 text-[10px] text-yellow-300 font-bold">📝 {scene.texto_en_pantalla}</div>
-                )}
-                {scene.efecto_retencion && (
-                  <div className="text-[9px] text-purple-400 font-bold mb-1">⚡ {scene.efecto_retencion}</div>
-                )}
-                {(scene.audio_sfx || scene.audio) && (
-                  <div className="mt-1.5 pt-1.5 border-t border-white/5 text-orange-400/90 text-[10px] font-mono flex items-center gap-1.5">
-                    <span className="opacity-70">🔊</span> {scene.audio_sfx || scene.audio}
-                  </div>
-                )}
-                {scene.transicion && (
-                  <div className="mt-1 text-[9px] text-cyan-400/80 font-bold flex items-center gap-1">
-                    <span>→</span> {scene.transicion}
-                  </div>
-                )}
-              </div>
-            ))}
-            {(!planAudiovisual && !visualPlan) && (
-              <div className="space-y-3 py-2">
-                <div className="text-[9px] font-black text-yellow-400 uppercase tracking-widest mb-2">⚡ Guía de dirección automática</div>
-                {[
-                  { t: '0-3s HOOK', c: 'Close-up cara', m: 'Cámara estática o micro-zoom in', sfx: 'Silencio total o 1 nota musical' },
-                  { t: '3-15s SETUP', c: 'Medium shot / Plano americano', m: 'Ligero movimiento lateral', sfx: 'Música 80BPM entrada suave' },
-                  { t: '15-40s CLÍMAX', c: 'Serie de close-ups + B-roll', m: 'Cortes rápidos cada 1-2s', sfx: 'Subida musical + SFX impacto' },
-                  { t: '40s-FIN CIERRE', c: 'Medium shot fijo', m: 'Zoom out lento', sfx: 'Fade musical + CTA verbal' },
-                ].map((s, i) => (
-                  <div key={i} className="relative pl-4 border-l-2 border-gray-800 group hover:border-green-500/40 transition-colors">
-                    <div className="absolute -left-[5px] top-0 w-2 h-2 rounded-full bg-gray-800" />
-                    <span className="text-green-400 font-mono font-bold text-[10px] bg-green-900/10 inline-block px-1.5 py-0.5 rounded mb-1">{s.t}</span>
-                    <p className="text-xs text-gray-300 font-bold mb-0.5">🎥 {s.c}</p>
-                    <p className="text-[10px] text-blue-400/80 mb-0.5">↳ {s.m}</p>
-                    <p className="text-[10px] text-orange-400/80">🔊 {s.sfx}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* TAB B-ROLL — PROFESIONAL */}
-            {planAudiovisual && activeTab === 'broll' && (
-              <div className="space-y-3">
-                {/* Header explicativo */}
-                <div className="bg-blue-500/5 border border-blue-500/15 rounded-xl px-3 py-2 text-[10px] text-blue-300/80">
-                  <span className="font-black">🎞 B-ROLL ESTRATÉGICO</span> — Planos de apoyo para reforzar la narrativa en cada momento clave
-                </div>
-                {bRolls.length > 0 ? bRolls.map((br: any, idx: number) => (
-                  <div key={idx} className="bg-[#080808] rounded-xl p-3 border border-white/5 hover:border-blue-500/20 transition-colors">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-[9px] font-black text-green-400 bg-green-500/10 px-2 py-0.5 rounded-full border border-green-500/20">{br.momento}</span>
-                      {br.duracion_segundos && <span className="text-[9px] text-gray-600 font-bold">⏱ {br.duracion_segundos}s</span>}
-                    </div>
-                    <p className="text-xs text-white font-bold mb-1.5">🎥 {br.que_mostrar}</p>
-                    {br.tipo_plano && (
-                      <span className="inline-block text-[9px] font-black px-2 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 mb-1.5">{br.tipo_plano}</span>
-                    )}
-                    <p className="text-[10px] text-gray-400 mb-1.5 leading-relaxed">↳ {br.por_que_refuerza}</p>
-                    <div className="flex items-center gap-3 pt-1.5 border-t border-white/5">
-                      <p className="text-[9px] text-rose-400 font-bold">❤ {br.emocion_generada}</p>
-                      {br.transicion_recomendada && (
-                        <p className="text-[9px] text-cyan-400 font-bold">✂ {br.transicion_recomendada}</p>
-                      )}
-                    </div>
-                  </div>
-                )) : (
-                  <div className="space-y-2">
-                    <p className="text-xs text-gray-600 text-center py-4">B-rolls no especificados — recomendaciones generales:</p>
-                    {[
-                      { tiempo: '0-3s', rec: 'Plano cerrado de cara (hook visual)', tipo: 'Close-up', emocion: 'Intriga' },
-                      { tiempo: '10-20s', rec: 'Recurso del tema central + texto animado', tipo: 'Insert shot', emocion: 'Contexto' },
-                      { tiempo: 'climax', rec: 'Corte a plano general o reacción', tipo: 'Wide/Reaction', emocion: 'Impacto' },
-                      { tiempo: 'cierre', rec: 'Plano medio con CTA visual', tipo: 'Medium shot', emocion: 'Acción' },
-                    ].map((r, i) => (
-                      <div key={i} className="bg-[#080808] rounded-xl p-3 border border-white/5 border-dashed">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-[9px] font-black text-yellow-400 bg-yellow-500/10 px-2 py-0.5 rounded-full border border-yellow-500/20">{r.tiempo}</span>
-                          <span className="text-[9px] text-purple-400 font-bold">{r.tipo}</span>
-                        </div>
-                        <p className="text-[10px] text-gray-300 font-bold">{r.rec}</p>
-                        <p className="text-[9px] text-rose-400 mt-0.5">❤ {r.emocion}</p>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* TAB AUDIO — PROFESIONAL COMPLETO */}
-            {planAudiovisual && activeTab === 'musica' && (
-              <div className="space-y-4">
-
-                {/* 🎧 MÚSICA */}
-                {musica ? (
-                  <div className="bg-[#080808] rounded-xl p-4 border border-orange-500/15">
-                    <p className="text-[9px] font-black text-orange-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-                      🎧 Música de Fondo
-                    </p>
-                    <div className="grid grid-cols-2 gap-2 mb-3">
-                      {[
-                        { l: 'Estilo', v: musica.tipo || musica.estilo, c: 'text-white' },
-                        { l: 'BPM', v: musica.bpm_aproximado || musica.bpm, c: 'text-orange-400 font-black text-sm' },
-                        { l: 'Emoción dominante', v: musica.emocion_dominante, c: 'text-rose-300' },
-                        { l: 'Entrada', v: musica.entrada_musica || musica.inicio, c: 'text-green-400' },
-                      ].filter(i => i.v).map(item => (
-                        <div key={item.l} className="bg-black/30 rounded-lg px-3 py-2">
-                          <p className="text-[8px] text-gray-600 uppercase tracking-widest mb-0.5">{item.l}</p>
-                          <span className={`text-xs font-bold ${item.c}`}>{item.v}</span>
-                        </div>
-                      ))}
-                    </div>
-                    {musica.cambio_musical && (
-                      <div className="px-3 py-2 bg-yellow-500/5 border border-yellow-500/15 rounded-lg text-[10px] text-yellow-300">
-                        🔄 {musica.cambio_musical}
-                      </div>
-                    )}
-                    {musica.referencias && (
-                      <div className="mt-2 px-3 py-2 bg-blue-500/5 border border-blue-500/15 rounded-lg text-[10px] text-blue-300">
-                        🎵 Ref: {musica.referencias}
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="bg-[#080808] rounded-xl p-4 border border-orange-500/10 border-dashed">
-                    <p className="text-[9px] font-black text-orange-400 uppercase tracking-widest mb-2">🎧 Guía de Música</p>
-                    <div className="space-y-1.5 text-[10px] text-gray-400">
-                      <p>• <span className="text-white font-bold">Hook (0-5s):</span> Sin música o intro de 1 nota — fuerza atención</p>
-                      <p>• <span className="text-white font-bold">Desarrollo:</span> 80-110 BPM — ritmo motivador sin distraer</p>
-                      <p>• <span className="text-white font-bold">Clímax:</span> Subida de volumen o swell para impacto</p>
-                      <p>• <span className="text-white font-bold">Cierre:</span> Fade out o nota larga sostenida</p>
-                    </div>
-                  </div>
-                )}
-
-                {/* ✂ RITMO DE CORTES */}
-                {ritmoCamara ? (
-                  <div className="bg-[#080808] rounded-xl p-4 border border-purple-500/15">
-                    <p className="text-[9px] font-black text-purple-400 uppercase tracking-widest mb-3">✂ Ritmo de Edición</p>
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className="text-xs font-black text-white bg-purple-500/15 px-3 py-1 rounded-full border border-purple-500/25">
-                        {ritmoCamara.patron_general}
-                      </span>
-                    </div>
-                    {ritmoCamara.descripcion && (
-                      <p className="text-[10px] text-gray-400 leading-relaxed mb-2">{ritmoCamara.descripcion}</p>
-                    )}
-                    <div className="space-y-1.5">
-                      {ritmoCamara.aceleraciones && (
-                        <div className="flex items-start gap-2 text-[10px]">
-                          <span className="text-green-400 font-black shrink-0 mt-0.5">⚡</span>
-                          <span className="text-gray-300"><span className="text-green-400 font-bold">Aceleraciones:</span> {ritmoCamara.aceleraciones}</span>
-                        </div>
-                      )}
-                      {ritmoCamara.desaceleraciones && (
-                        <div className="flex items-start gap-2 text-[10px]">
-                          <span className="text-blue-400 font-black shrink-0 mt-0.5">🐌</span>
-                          <span className="text-gray-300"><span className="text-blue-400 font-bold">Desaceleraciones:</span> {ritmoCamara.desaceleraciones}</span>
-                        </div>
-                      )}
-                      {ritmoCamara.frecuencia_cortes && (
-                        <div className="flex items-start gap-2 text-[10px]">
-                          <span className="text-yellow-400 font-black shrink-0 mt-0.5">⏱</span>
-                          <span className="text-gray-300"><span className="text-yellow-400 font-bold">Frecuencia:</span> {ritmoCamara.frecuencia_cortes}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="bg-[#080808] rounded-xl p-4 border border-purple-500/10 border-dashed">
-                    <p className="text-[9px] font-black text-purple-400 uppercase tracking-widest mb-2">✂ Guía de Edición</p>
-                    <div className="space-y-1.5 text-[10px] text-gray-400">
-                      <p>• <span className="text-white font-bold">Hook:</span> Corte cada 1-2s — máxima energía</p>
-                      <p>• <span className="text-white font-bold">Desarrollo:</span> Corte cada 3-5s — ritmo sostenido</p>
-                      <p>• <span className="text-white font-bold">Clímax:</span> J-cut o L-cut para transición suave</p>
-                      <p>• <span className="text-white font-bold">Cierre:</span> Plano largo sin cortes — fuerza escucha</p>
-                    </div>
-                  </div>
-                )}
-
-                {/* 🔊 EFECTOS DE RETENCIÓN + TRANSICIONES */}
-                <div className="bg-[#080808] rounded-xl p-4 border border-cyan-500/15">
-                  <p className="text-[9px] font-black text-cyan-400 uppercase tracking-widest mb-3">🔊 Efectos & Transiciones</p>
-                  {efectos ? (
-                    <div className="space-y-2">
-                      {efectos.sonido_transicion && (
-                        <div className="flex items-start gap-2.5 bg-black/30 rounded-lg px-3 py-2">
-                          <span className="text-lg shrink-0">🎵</span>
-                          <div>
-                            <p className="text-[8px] text-gray-600 uppercase tracking-widest mb-0.5">Sonido de transición</p>
-                            <p className="text-[10px] text-gray-200 font-bold">{efectos.sonido_transicion}</p>
-                          </div>
-                        </div>
-                      )}
-                      {efectos.micro_silencios && (
-                        <div className="flex items-start gap-2.5 bg-black/30 rounded-lg px-3 py-2">
-                          <span className="text-lg shrink-0">🔇</span>
-                          <div>
-                            <p className="text-[8px] text-gray-600 uppercase tracking-widest mb-0.5">Micro-silencios estratégicos</p>
-                            <p className="text-[10px] text-gray-200 font-bold">{efectos.micro_silencios}</p>
-                          </div>
-                        </div>
-                      )}
-                      {efectos.cambios_de_plano && (
-                        <div className="flex items-start gap-2.5 bg-black/30 rounded-lg px-3 py-2">
-                          <span className="text-lg shrink-0">✂</span>
-                          <div>
-                            <p className="text-[8px] text-gray-600 uppercase tracking-widest mb-0.5">Cambios de plano</p>
-                            <p className="text-[10px] text-gray-200 font-bold">{efectos.cambios_de_plano}</p>
-                          </div>
-                        </div>
-                      )}
-                      {efectos.micro_interrupciones && (
-                        <div className="flex items-start gap-2.5 bg-black/30 rounded-lg px-3 py-2">
-                          <span className="text-lg shrink-0">⚡</span>
-                          <div>
-                            <p className="text-[8px] text-gray-600 uppercase tracking-widest mb-0.5">Micro-interrupciones</p>
-                            <p className="text-[10px] text-gray-200 font-bold">{efectos.micro_interrupciones}</p>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="space-y-2 text-[10px]">
-                      {[
-                        { icon: '🎵', label: 'Transición entrada', val: 'Whoosh + zoom in — refuerza el hook' },
-                        { icon: '🔇', label: 'Silencio estratégico', val: 'Pausa 0.5s antes del punto crítico — tensión máxima' },
-                        { icon: '✂', label: 'Jump cut', val: 'En momentos de reencuadre para mantener energía' },
-                        { icon: '🔔', label: 'SFX de impacto', val: 'Sonido de golpe suave al revelar dato clave' },
-                        { icon: '📳', label: 'Texto animado', val: 'Palabras clave en pantalla sincronizadas con voz' },
-                      ].map((r, i) => (
-                        <div key={i} className="flex items-start gap-2.5 bg-black/30 rounded-lg px-3 py-2">
-                          <span className="text-sm shrink-0">{r.icon}</span>
-                          <div>
-                            <p className="text-[8px] text-gray-600 uppercase tracking-widest mb-0.5">{r.label}</p>
-                            <p className="text-[10px] text-gray-300 font-bold">{r.val}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {!musica && !ritmoCamara && !efectos && (
-                  <p className="text-[10px] text-gray-600 text-center py-2">
-                    ↑ Guías de producción profesional generadas automáticamente
-                  </p>
-                )}
-              </div>
-            )}
-
+            <h3 className="text-lg font-black text-white flex items-center gap-2 tracking-tight">
+              <Clapperboard className="text-green-400" size={20} /> Guion Teleprompter
+            </h3>
           </div>
-
-          {/* 🖼 MINIATURA + FRASES POR RED SOCIAL */}
-          {miniatura && (
-            <div className="border-t border-white/5 p-4 space-y-4">
-              {/* Frase principal */}
-              <div>
-                <p className="text-[9px] font-black text-yellow-400 uppercase tracking-widest mb-2">🖼 Frase de Miniatura</p>
-                <div className="bg-gradient-to-r from-yellow-900/20 to-orange-900/10 rounded-xl p-4 border border-yellow-500/25 text-center mb-2">
-                  <p className="text-xl font-black text-white leading-tight">{miniatura.frase_principal}</p>
-                  {miniatura.emocion_dominante_activada && (
-                    <p className="text-[9px] text-yellow-400/70 mt-1 uppercase tracking-widest">{miniatura.emocion_dominante_activada}</p>
-                  )}
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  {miniatura.variante_agresiva && (
-                    <div className="bg-red-500/5 border border-red-500/15 rounded-lg p-2.5">
-                      <p className="text-[8px] text-red-400 font-black uppercase mb-1">🔥 Agresiva</p>
-                      <p className="text-[11px] text-white font-bold leading-snug">{miniatura.variante_agresiva}</p>
-                    </div>
-                  )}
-                  {miniatura.variante_aspiracional && (
-                    <div className="bg-blue-500/5 border border-blue-500/15 rounded-lg p-2.5">
-                      <p className="text-[8px] text-blue-400 font-black uppercase mb-1">✨ Aspiracional</p>
-                      <p className="text-[11px] text-white font-bold leading-snug">{miniatura.variante_aspiracional}</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Frases por plataforma */}
-              {miniatura.frases_por_plataforma && (
-                <div>
-                  <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-2">📱 Hook por Red Social</p>
-                  <div className="space-y-1.5">
-                    {[
-                      { key: 'tiktok',          icon: '🎵', label: 'TikTok',          color: 'border-pink-500/20 hover:border-pink-500/40',   textColor: 'text-pink-300'   },
-                      { key: 'instagram_reels', icon: '📸', label: 'Instagram Reels', color: 'border-purple-500/20 hover:border-purple-500/40', textColor: 'text-purple-300' },
-                      { key: 'youtube',         icon: '▶️', label: 'YouTube',         color: 'border-red-500/20 hover:border-red-500/40',       textColor: 'text-red-300'    },
-                      { key: 'linkedin',        icon: '💼', label: 'LinkedIn',        color: 'border-blue-500/20 hover:border-blue-500/40',     textColor: 'text-blue-300'   },
-                      { key: 'facebook',        icon: '👥', label: 'Facebook',        color: 'border-indigo-500/20 hover:border-indigo-500/40', textColor: 'text-indigo-300' },
-                    ].map(p => miniatura.frases_por_plataforma[p.key] ? (
-                      <div key={p.key} className={`bg-[#080808] rounded-lg px-3 py-2 border ${p.color} transition-colors`}>
-                        <div className="flex items-start gap-2">
-                          <span className="text-sm shrink-0 leading-tight mt-0.5">{p.icon}</span>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-[8px] text-gray-600 uppercase tracking-widest font-black">{p.label}</p>
-                            <p className={`text-[11px] font-black leading-snug mt-0.5 ${p.textColor}`}>
-                              "{miniatura.frases_por_plataforma[p.key]}"
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    ) : null)}
-                  </div>
-                </div>
-              )}
-
-              {/* Títulos del video */}
-              {miniatura.titulo_video && (
-                <div>
-                  <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-2">🎬 Títulos del Video</p>
-                  <div className="space-y-1.5">
-                    {[miniatura.titulo_video.opcion_1, miniatura.titulo_video.opcion_2, miniatura.titulo_video.opcion_3].map((t: string, i: number) => t && (
-                      <div key={i} className="bg-[#080808] rounded-lg px-3 py-2 border border-white/5 flex items-center gap-2">
-                        <span className="text-[9px] font-black text-gray-600 shrink-0">0{i+1}</span>
-                        <p className="text-[11px] text-gray-200 font-bold leading-snug">"{t}"</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Scores CTR */}
-              <div className="grid grid-cols-4 gap-1.5">
-                {[
-                  { label: 'CTR',        val: miniatura.ctr_score,           color: 'text-yellow-400', bg: 'bg-yellow-500/10' },
-                  { label: 'Disrupción', val: miniatura.nivel_disrupcion,     color: 'text-red-400',    bg: 'bg-red-500/10'    },
-                  { label: 'Curiosidad', val: miniatura.nivel_gap_curiosidad, color: 'text-blue-400',   bg: 'bg-blue-500/10'   },
-                  { label: 'Polariz.',   val: miniatura.nivel_polarizacion,   color: 'text-pink-400',   bg: 'bg-pink-500/10'   },
-                ].map(m => (
-                  <div key={m.label} className={`text-center ${m.bg} rounded-lg p-2 border border-white/5`}>
-                    <p className={`text-lg font-black ${m.color}`}>{m.val}</p>
-                    <p className="text-[8px] text-gray-600 uppercase">{m.label}</p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Gap de curiosidad y mecanismo */}
-              {(miniatura.gap_curiosidad || miniatura.mecanismo_psicologico) && (
-                <div className="space-y-1.5">
-                  {miniatura.gap_curiosidad && (
-                    <div className="bg-[#080808] rounded-lg px-3 py-2 border border-white/5">
-                      <p className="text-[8px] text-gray-600 uppercase tracking-widest mb-0.5">❓ Gap de curiosidad</p>
-                      <p className="text-[10px] text-gray-300 font-bold leading-relaxed">{miniatura.gap_curiosidad}</p>
-                    </div>
-                  )}
-                  {miniatura.mecanismo_psicologico && (
-                    <div className="bg-[#080808] rounded-lg px-3 py-2 border border-white/5">
-                      <p className="text-[8px] text-gray-600 uppercase tracking-widest mb-0.5">🧠 Mecanismo psicológico</p>
-                      <p className="text-[10px] text-gray-300 font-bold">{miniatura.mecanismo_psicologico}</p>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
+          <button
+            onClick={() => copy(guion, setCopiedGuion)}
+            className="flex items-center gap-2 bg-green-600 hover:bg-green-500 text-black px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all shadow-lg active:scale-95 w-full sm:w-auto justify-center"
+          >
+            {copiedGuion ? <CheckCircle2 size={16} /> : <Copy size={16} />}
+            {copiedGuion ? 'COPIADO' : 'COPIAR TELEPROMPTER'}
+          </button>
         </div>
 
-        {/* Teleprompter */}
-        <div className="lg:col-span-8 bg-[#080808] p-8 flex flex-col">
-          <div className="prose prose-invert max-w-none flex-1">
-            <div className="whitespace-pre-wrap font-mono text-base md:text-lg leading-loose text-gray-200 selection:bg-green-500/30">
-              {scriptText || (
-                <div className="text-center py-12">
-                  <p className="text-orange-400 font-black text-sm mb-2">⚠ El guion llegó vacío</p>
-                  <p className="text-gray-600 text-xs">El motor procesó el ADN pero el guion no se generó. Intenta de nuevo — el análisis ya está completo.</p>
-                </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12">
+
+          {/* Panel izquierdo: Plan Audiovisual */}
+          {(planSections.GANCHO || planSections.DESARROLLO || planSections.CIERRE || (typeof planAV === 'string' && planAV.length > 20)) && (
+            <div className="lg:col-span-4 border-b lg:border-b-0 lg:border-r border-white/5 bg-[#0c0c0c]">
+              <div className="p-4 border-b border-white/5 bg-[#0f1115] sticky top-0 z-10">
+                <h4 className="text-[10px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-2">
+                  <Film size={12} /> Plan Audiovisual
+                </h4>
+              </div>
+              <div className="p-4 space-y-3 overflow-y-auto max-h-[500px]">
+                {planSections.GANCHO && (
+                  <div className="bg-white/3 rounded-lg p-3 border border-white/5">
+                    <p className="text-[9px] font-black text-green-400 uppercase tracking-wider mb-1.5">🎬 Gancho (0-3s)</p>
+                    <p className="text-[11px] text-gray-300 leading-relaxed">{planSections.GANCHO}</p>
+                  </div>
+                )}
+                {planSections.DESARROLLO && (
+                  <div className="bg-white/3 rounded-lg p-3 border border-white/5">
+                    <p className="text-[9px] font-black text-blue-400 uppercase tracking-wider mb-1.5">📽 Desarrollo</p>
+                    <p className="text-[11px] text-gray-300 leading-relaxed">{planSections.DESARROLLO}</p>
+                  </div>
+                )}
+                {planSections.CIERRE && (
+                  <div className="bg-white/3 rounded-lg p-3 border border-white/5">
+                    <p className="text-[9px] font-black text-orange-400 uppercase tracking-wider mb-1.5">🎯 Cierre + CTA</p>
+                    <p className="text-[11px] text-gray-300 leading-relaxed">{planSections.CIERRE}</p>
+                  </div>
+                )}
+                {/* Fallback: si el plan no tiene secciones marcadas, mostrar como bloque */}
+                {!planSections.GANCHO && !planSections.DESARROLLO && !planSections.CIERRE && typeof planAV === 'string' && (
+                  <p className="text-[11px] text-gray-300 leading-relaxed whitespace-pre-line">{planAV}</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Panel derecho: Guion */}
+          <div className={`${(planSections.GANCHO || planSections.DESARROLLO || planSections.CIERRE || (typeof planAV === 'string' && planAV.length > 20)) ? 'lg:col-span-8' : 'lg:col-span-12'} bg-[#080808]`}>
+            <div className="p-6 overflow-y-auto max-h-[500px]">
+              {guion ? (
+                <p className="text-sm text-gray-100 leading-[1.9] whitespace-pre-line font-mono">
+                  {guion}
+                </p>
+              ) : (
+                <p className="text-sm text-gray-500 italic">Guion no disponible.</p>
               )}
             </div>
           </div>
 
-          {/* PODER DEL GUION — Las 3 frases que lo harán viral */}
-          {(scriptData.hook_primeros_3_segundos || scriptData.frase_de_oro || scriptData.punto_de_no_retorno || scriptData.por_que_llegara_a_millones) && (
-            <div className="mt-8 pt-6 border-t border-white/5 space-y-3">
-              <p className="text-[9px] font-black text-green-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-                <Flame size={11} fill="currentColor" /> Poder del Guion — Las frases que lo harán viral
-              </p>
-
-              {scriptData.hook_primeros_3_segundos && (
-                <div className="bg-gradient-to-r from-green-900/20 to-emerald-900/10 rounded-xl p-4 border border-green-500/30">
-                  <p className="text-[8px] text-green-400 font-black uppercase tracking-widest mb-1.5">🎯 Hook — Primeros 3 segundos</p>
-                  <p className="text-sm text-green-200 font-black leading-relaxed italic">"{scriptData.hook_primeros_3_segundos}"</p>
-                </div>
-              )}
-
-              {scriptData.frase_de_oro && (
-                <div className="bg-gradient-to-r from-yellow-900/20 to-amber-900/10 rounded-xl p-4 border border-yellow-500/30">
-                  <p className="text-[8px] text-yellow-400 font-black uppercase tracking-widest mb-1.5">⭐ Frase de Oro — La que se guarda sola</p>
-                  <p className="text-sm text-yellow-200 font-black leading-relaxed italic">"{scriptData.frase_de_oro}"</p>
-                </div>
-              )}
-
-              {scriptData.punto_de_no_retorno && (
-                <div className="bg-gradient-to-r from-red-900/20 to-rose-900/10 rounded-xl p-4 border border-red-500/30">
-                  <p className="text-[8px] text-red-400 font-black uppercase tracking-widest mb-1.5">💥 Punto de No Retorno — La que divide</p>
-                  <p className="text-sm text-red-200 font-black leading-relaxed italic">"{scriptData.punto_de_no_retorno}"</p>
-                </div>
-              )}
-
-              {scriptData.por_que_llegara_a_millones && (
-                <div className="bg-[#0a0a0a] rounded-xl p-4 border border-white/10">
-                  <p className="text-[8px] text-purple-400 font-black uppercase tracking-widest mb-1.5">🚀 Por qué llegará a millones</p>
-                  <p className="text-xs text-gray-300 leading-relaxed">{scriptData.por_que_llegara_a_millones}</p>
-                </div>
-              )}
-
-              {/* Predicción de comentarios */}
-              {scriptData.prediccion_comentarios?.length > 0 && (
-                <div>
-                  <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-2">💬 Comentarios predichos</p>
-                  <div className="space-y-1.5">
-                    {scriptData.prediccion_comentarios.map((c: string, i: number) => (
-                      <div key={i} className={`flex items-start gap-2.5 rounded-lg px-3 py-2 border text-[10px] ${i === 0 ? 'bg-red-500/5 border-red-500/15' : i === 1 ? 'bg-green-500/5 border-green-500/15' : 'bg-blue-500/5 border-blue-500/15'}`}>
-                        <span className="shrink-0 text-sm">{i === 0 ? '😤' : i === 1 ? '🙌' : '🪞'}</span>
-                        <div>
-                          <p className="text-[8px] font-black uppercase tracking-widest text-gray-600 mb-0.5">{i === 0 ? 'En contra' : i === 1 ? 'A favor' : 'Identificación'}</p>
-                          <p className="text-gray-300 leading-relaxed italic">"{c}"</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
         </div>
       </div>
     </div>
@@ -1301,12 +973,66 @@ export const TitanViral = () => {
   const [avatars, setAvatars] = useState<any[]>([]);
   const [experts, setExperts] = useState<any[]>([]);
   const [knowledgeBases, setKnowledgeBases] = useState<any[]>([]);
+  const [generationId, setGenerationId]   = useState<string | null>(null);
+  const [cloudStatus, setCloudStatus]     = useState<'idle' | 'processing' | 'completed' | 'error'>('idle');
 
   const validUrls = urls.filter(u => u.trim());
   const urlCount  = uploadMode === 'file' ? 1 : Math.max(validUrls.length, 1);
   const cost      = computeCost(contentType, urlCount);
 
   useEffect(() => { loadUserData(); }, []);
+  useEffect(() => {
+    if (!generationId) return;
+
+    console.log(`[REALTIME] 📡 Suscribiendo a generation_id=${generationId}`);
+
+    const channel = supabase
+      .channel(`recreate-${generationId}`)
+      .on(
+        'postgres_changes',
+        {
+          event:  'UPDATE',
+          schema: 'public',
+          table:  'viral_generations',
+          filter: `id=eq.${generationId}`,
+        },
+        (payload: any) => {
+          const updated = payload.new;
+          console.log(`[REALTIME] 📬 status=${updated.status}`);
+
+          if (updated.status === 'completed' && updated.content) {
+            const raw = updated.content;
+            const resPro = raw?.guion_generado
+              ? raw
+              : { guion_generado: raw, autopsia: raw, modo: raw?.modo || 'sniper_enterprise', metadata_video: raw?.metadata_video || {} };
+
+            setIrProState({
+              etapa: 'completo', iteracion: 0,
+              scoreActual: resPro.score_viral_estructural?.viralidad_estructural_global || 0,
+              output: null, guionGenerado: null, veredictoJuez: null, error: null,
+            });
+            setResult(resPro);
+            setCloudStatus('completed');
+            setLoading(false);
+            setGenerationId(null);
+            if (refreshProfile) refreshProfile();
+            supabase.removeChannel(channel);
+
+          } else if (updated.status === 'error') {
+            const errMsg = updated.content?.error || 'El proceso en la nube falló. Intenta de nuevo.';
+            setErrorMsg(errMsg);
+            setIrProState(prev => ({ ...prev, etapa: 'idle', error: errMsg }));
+            setCloudStatus('error');
+            setLoading(false);
+            setGenerationId(null);
+            supabase.removeChannel(channel);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [generationId]);
 
   const loadUserData = async () => {
     try {
@@ -1348,9 +1074,9 @@ export const TitanViral = () => {
     setIsAuditing(true);
     // ✅ FIX BUG #1 — usar campos reales del backend (recreate)
     const scriptText =
-      result.guion_generado?.guion_adaptado_espejo ||
-      result.guion_generado?.guion_adaptado_al_nicho ||
-      result.guion_generado?.guion_tecnico_completo || '';
+  result.guion_adaptado_teleprompter ||
+  result.guion_generado?.guion_adaptado_espejo ||
+  result.guion_generado?.guion_adaptado_al_nicho || '';
     try {
       const { data, error } = await supabase.functions.invoke('process-url', {
         body: { selectedMode: 'juez_viral', text: scriptText, expertId: selectedExpertId || undefined, avatarId: selectedAvatarId || undefined, estimatedCost: 2 }
@@ -1428,39 +1154,50 @@ export const TitanViral = () => {
       clearTimeout(timeoutId);
 
       if (error) {
-        // ✅ PARSEO INTELIGENTE DE ERRORES
         const errorMsg = parseBackendError(error);
         setErrorMsg(errorMsg);
         setIrProState(prev => ({ ...prev, etapa: 'idle', error: errorMsg }));
+        setLoading(false);
         return;
       }
 
-      // ✅ FIX BUG #4 — manejar redirección de avatar específicamente
       if (!data.success && data.action === 'REDIRECT_TO_AVATAR') {
         setErrorMsg('⚡ Necesitas configurar tu Avatar antes de generar contenido. Ve a Configuración → Avatar y crea tu perfil.');
         setIrProState(prev => ({ ...prev, etapa: 'idle', error: null }));
+        setLoading(false);
         return;
       }
+
       if (!data.success) {
         const errorMsg = parseBackendError(data.error || 'Error desconocido.');
         setErrorMsg(errorMsg);
         setIrProState(prev => ({ ...prev, etapa: 'idle', error: errorMsg }));
+        setLoading(false);
         return;
       }
 
+      // ⚡ RESPUESTA ASÍNCRONA — backend devuelve generation_id
+      if (data.async && data.generation_id) {
+        console.log(`[REALTIME] 📡 generation_id=${data.generation_id}`);
+        setGenerationId(data.generation_id);
+        setCloudStatus('processing');
+        setIrProState(prev => ({ ...prev, etapa: 'generando' }));
+        return; // loading se mantiene true — Realtime lo apaga
+      }
+
+      // Fallback sincrónico
       const raw = data.generatedData;
-      const resPro = raw?.guion_generado ? raw : { guion_generado: raw, autopsia: raw, modo: raw?.modo || 'ingenieria_inversa_pro', metadata_video: raw?.metadata_video || {} };
-      // ✅ FIX BUG #7 — scoreActual usa el campo real del backend; guionGenerado eliminado (estado fantasma)
+      const resPro = raw?.guion_generado
+        ? raw
+        : { guion_generado: raw, autopsia: raw, modo: raw?.modo || 'sniper_enterprise', metadata_video: raw?.metadata_video || {} };
+
       setIrProState({
-        etapa: 'completo',
-        iteracion: resPro.iteracion_loop || 0,
-        scoreActual: resPro.score_viral_estructural?.viralidad_estructural_global || resPro.score_final_obtenido || 0,
-        output: null,
-        guionGenerado: null,
-        veredictoJuez: null,
-        error: null,
+        etapa: 'completo', iteracion: 0,
+        scoreActual: resPro.score_viral_estructural?.viralidad_estructural_global || 0,
+        output: null, guionGenerado: null, veredictoJuez: null, error: null,
       });
       setResult(resPro);
+      setLoading(false);
       if (refreshProfile) refreshProfile();
     } catch (err: any) {
       // ✅ PARSEO INTELIGENTE DE ERRORES
@@ -1763,8 +1500,50 @@ export const TitanViral = () => {
         </div>
       </div>
 
+      {/* ── PROCESANDO EN LA NUBE (estado asíncrono) ── */}
+      {cloudStatus === 'processing' && !result && (
+        <div className="mt-8 bg-[#080b10] border border-blue-500/20 rounded-2xl p-8 flex flex-col items-center gap-6 shadow-[0_0_60px_-20px_rgba(59,130,246,0.2)]">
+          <div className="relative">
+            <div className="w-16 h-16 rounded-full border-4 border-blue-500/20" />
+            <div className="w-16 h-16 rounded-full border-4 border-t-blue-500 border-r-transparent border-b-transparent border-l-transparent animate-spin absolute inset-0" />
+            <Cpu className="text-blue-400 absolute inset-0 m-auto" size={22} />
+          </div>
+          <div className="text-center space-y-2">
+            <p className="text-white font-black text-lg tracking-tight">Procesando en la nube...</p>
+            <p className="text-gray-400 text-sm max-w-md">
+              El motor <span className="text-blue-400 font-bold">Sniper Enterprise</span> está
+              analizando el ADN viral y generando tu guion. Tarda entre 20 y 40 segundos.
+              <span className="text-gray-500"> No cierres esta ventana.</span>
+            </p>
+          </div>
+          <div className="w-full max-w-sm space-y-2">
+            {[
+              { icon: '🕷️', label: 'Scraping y transcripción del video' },
+              { icon: '🧬', label: 'Extracción de ADN viral' },
+              { icon: '✍️', label: 'Generación del guion adaptado' },
+              { icon: '🎬', label: 'Plan audiovisual y miniatura' },
+            ].map((step, i) => (
+              <div key={i} className="flex items-center gap-3 bg-white/3 rounded-lg px-3 py-2 border border-white/5">
+                <span className="text-base">{step.icon}</span>
+                <span className="text-[11px] text-gray-400 font-medium">{step.label}</span>
+                <Loader2 size={11} className="ml-auto text-blue-400 animate-spin shrink-0" />
+              </div>
+            ))}
+          </div>
+          <p className="text-[10px] text-gray-600 flex items-center gap-1.5">
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+            Escuchando resultados via Supabase Realtime
+          </p>
+        </div>
+      )}
+
       {/* ─── ZONA DE RESULTADOS ─── */}
-      {result && result.guion_generado && (result.guion_generado.guion_adaptado_espejo || result.guion_generado.guion_adaptado_al_nicho || result.guion_generado.guion_tecnico_completo) && (
+      {result && (
+        result.guion_adaptado_teleprompter ||
+        result.guion_generado?.guion_adaptado_espejo ||
+        result.guion_generado?.guion_adaptado_al_nicho ||
+        result.guion_generado?.guion_tecnico_completo
+      ) && (
         <div className="mt-20 space-y-10 animate-in slide-in-from-bottom-10 duration-1000">
 
           {/* Success header */}
@@ -1865,7 +1644,7 @@ export const TitanViral = () => {
             )}
 
             {/* 1 ─── GUION (LO MÁS IMPORTANTE) */}
-            <OmegaScriptView scriptData={result.guion_generado} contentType={contentType} />
+            <SniperResultView result={result} contentType={contentType} />
 
             {/* 1B ─── 5 HOOKS ALTERNATIVOS */}
             {result.guion_generado.hooks_alternativos?.length > 0 && (

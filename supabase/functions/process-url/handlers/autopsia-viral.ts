@@ -1,7 +1,7 @@
 // ==================================================================================
 // 🔬 HANDLER: AUTOPSIA VIRAL + RECREATE (Ingeniería Inversa)
 // autopsia_viral → análisis forense puro de un video
-// recreate       → ingeniería inversa + generación de guion nuevo
+// recreate       → Sniper Enterprise — 6 bloques directos al frontend
 // ==================================================================================
 
 import { ejecutarAutopsiaViral } from '../prompts/autopsia-viral.ts';
@@ -11,7 +11,7 @@ import { ContextoUsuario } from '../lib/types.ts';
 import { logger, createError, sanitizeContext } from '../lib/logger.ts';
 
 // ==================================================================================
-// 🔬 AUTOPSIA VIRAL
+// 🔬 AUTOPSIA VIRAL — sin cambios, funciona igual
 // ==================================================================================
 
 export async function handleAutopsiaViral(
@@ -25,9 +25,9 @@ export async function handleAutopsiaViral(
   console.log('[HANDLER] 🔬 Autopsia Viral...');
 
   let contentToAnalyze = "";
-  let platName = platform || 'General';
-  let videoDescription = '';
-  let whisperMinutes = 0;
+  let platName          = platform || 'General';
+  let videoDescription  = '';
+  let whisperMinutes    = 0;
   let videoDurationSecs = 0;
   let videoSource: 'url' | 'upload' | 'manual' = 'manual';
 
@@ -40,11 +40,12 @@ export async function handleAutopsiaViral(
         openai
       );
 
-      const transcriptPart = videoData.transcript || '';
+      const transcriptPart  = videoData.transcript || '';
       const descriptionPart = (videoData as any).description || '';
       contentToAnalyze = transcriptPart.length >= descriptionPart.length
         ? transcriptPart
-        : (transcriptPart + (descriptionPart && descriptionPart !== transcriptPart ? '\n\n' + descriptionPart : ''));
+        : (transcriptPart + (descriptionPart && descriptionPart !== transcriptPart
+            ? '\n\n' + descriptionPart : ''));
 
       videoDescription  = videoData.description;
       platName          = videoData.platform || platName;
@@ -80,22 +81,22 @@ export async function handleAutopsiaViral(
   const result = {
     ...autopsiaRes.data,
     metadata_video: {
-      source: videoSource,
-      platform: platName,
-      description: videoDescription,
-      whisper_used: whisperMinutes > 0,
-      whisper_minutes: whisperMinutes,
+      source:           videoSource,
+      platform:         platName,
+      description:      videoDescription,
+      whisper_used:     whisperMinutes > 0,
+      whisper_minutes:  whisperMinutes,
       duration_seconds: videoDurationSecs,
-      original_url: body.url || null,
-      uploaded_file: body.uploadedFileName || null,
-    }
+      original_url:     body.url || null,
+      uploaded_file:    body.uploadedFileName || null,
+    },
   };
 
   return { result, tokensUsed: autopsiaRes.tokens, whisperMinutes, videoDurationSecs };
 }
 
 // ==================================================================================
-// 🔁 RECREATE — INGENIERÍA INVERSA PRO
+// 🔁 RECREATE — SNIPER ENTERPRISE (6 bloques directos)
 // ==================================================================================
 
 export async function handleReCreate(
@@ -106,30 +107,31 @@ export async function handleReCreate(
   userContext: ContextoUsuario,
   openai: any
 ): Promise<{ result: any; tokensUsed: number; whisperMinutes: number; videoDurationSecs: number }> {
-  console.log('[HANDLER] MOTOR: INGENIERÍA INVERSA OMEGA 3.0');
+  console.log('[HANDLER] ⚡ SNIPER ENTERPRISE — Ingeniería Inversa');
 
-  const rawUrls: string[] = body.urls || (body.url ? [body.url] : []);
-  const outputLanguage: string = body.outputLanguage || settings.outputLanguage || 'es';
+  const rawUrls: string[]          = body.urls || (body.url ? [body.url] : []);
+  const outputLanguage: string     = body.outputLanguage || settings.outputLanguage || 'es';
   const languageNames: Record<string, string> = {
     'es': 'espanol - escribe como hispanohablante nativo, adapta modismos y referencias culturales',
     'en': 'English - write as a native English speaker, adapt idioms and cultural references',
     'pt': 'portugues brasileiro - escreva como falante nativo, adapte expressoes e referencias culturais',
-    'fr': 'francais - ecris comme un locuteur natif, adapte les expressions et references culturelles'
+    'fr': 'francais - ecris comme un locuteur natif, adapte les expressions et references culturelles',
   };
   const outputLanguageFull = languageNames[outputLanguage] || languageNames['es'];
-  const urlCount = rawUrls.filter((u: string) => u && u.trim()).length;
-  settings.urlCount = urlCount;
+  const urlCount           = rawUrls.filter((u: string) => u && u.trim()).length;
+  settings.urlCount        = urlCount;
 
-  let contentToAnalyze = "";
-  let targetTopic      = processedContext;
-  let platName         = settings.platform || platform || 'TikTok';
-  let videoDescription = '';
-  let whisperMinutes   = 0;
+  let contentToAnalyze  = "";
+  let targetTopic       = processedContext;
+  let platName          = settings.platform || platform || 'TikTok';
+  let videoDescription  = '';
+  let whisperMinutes    = 0;
   let videoDurationSecs = 0;
   let videoSource: 'url' | 'upload' | 'manual' = 'manual';
-  let videoData: any = null;
+  let videoData: any    = null;
   const multiAnalysis: any[] = [];
 
+  // ── Obtener contenido del video ─────────────────────────────────
   try {
     if (rawUrls.length > 0 || body.uploadedVideo) {
       const sources = rawUrls.length > 0 ? rawUrls : [null];
@@ -140,7 +142,7 @@ export async function handleReCreate(
 
         videoData = await getVideoContent(
           singleUrl,
-          i === 0 ? (body.uploadedVideo || null) : null,
+          i === 0 ? (body.uploadedVideo    || null) : null,
           i === 0 ? (body.uploadedFileName || null) : null,
           openai
         );
@@ -160,8 +162,11 @@ export async function handleReCreate(
           whisperMinutes += Math.ceil(videoData.duration / 60);
         }
 
+        // Para multi-URL: análisis individual de cada fuente
         if (rawUrls.length > 1) {
-          const autopsiaIndividual = await ejecutarAutopsiaViral(videoData.transcript, platName, openai);
+          const autopsiaIndividual = await ejecutarAutopsiaViral(
+            videoData.transcript, platName, openai
+          );
           multiAnalysis.push(autopsiaIndividual.data);
         }
       }
@@ -186,22 +191,24 @@ export async function handleReCreate(
     throw new Error('Contenido insuficiente (mínimo 20 caracteres).');
   }
 
-  // ─── Enriquecer contexto ────────────────────────────────
+  // ── Enriquecer contexto del usuario ────────────────────────────
   if (targetTopic?.trim()) {
-    (userContext as any).nicho = targetTopic.trim();
-    (userContext as any).nicho_usuario_explicito = targetTopic.trim();
+    (userContext as any).nicho                    = targetTopic.trim();
+    (userContext as any).nicho_usuario_explicito  = targetTopic.trim();
   }
-  (userContext as any).contentType      = settings.contentType || 'reel';
-  (userContext as any).targetPlatform   = settings.platform || platName;
-  (userContext as any).outputLanguage   = outputLanguage;
+  (userContext as any).contentType        = settings.contentType  || 'reel';
+  (userContext as any).targetPlatform     = settings.platform     || platName;
+  (userContext as any).outputLanguage     = outputLanguage;
   (userContext as any).outputLanguageFull = outputLanguageFull;
   (userContext as any)._videoDurationSecs = videoDurationSecs;
 
   if (videoData?.likes !== undefined) {
     (userContext as any)._engagement = {
-      likes: videoData.likes || 0, views: videoData.views || 0,
-      comments: videoData.comments || 0, shares: videoData.shares || 0,
-      author: videoData.author || '',
+      likes:    videoData.likes    || 0,
+      views:    videoData.views    || 0,
+      comments: videoData.comments || 0,
+      shares:   videoData.shares   || 0,
+      author:   videoData.author   || '',
     };
   }
 
@@ -209,27 +216,62 @@ export async function handleReCreate(
     (userContext as any).multi_adn_sources = multiAnalysis.map((a: any) => ({
       genero: a.adn_profundo?.genero_narrativo,
       emocion: a.adn_profundo?.emocion_nucleo,
-      hook: a.adn_estructura?.tipo_apertura,
-      score: a.score_viral_estructural?.viralidad_estructural_global,
+      hook:    a.adn_estructura?.tipo_apertura,
+      score:   a.score_viral_estructural?.viralidad_estructural_global,
     }));
   }
 
-  const motorRes = await ejecutarIngenieriaInversaPro(contentToAnalyze, userContext, openai, videoDescription || platName);
+  // ── Ejecutar motor Sniper Enterprise ───────────────────────────
+  const motorRes = await ejecutarIngenieriaInversaPro(
+    contentToAnalyze, userContext, openai, videoDescription || platName
+  );
 
   settings._videoDurationSecs = videoDurationSecs;
 
+  // ── Extraer los 6 bloques directamente ─────────────────────────
+  const sniperData = motorRes.data || {};
+
   const result = {
-    guion_generado: motorRes.data,
-    autopsia: motorRes.data,
-    modo: urlCount > 1 ? 'ingenieria_inversa_pro_hibrida' : 'ingenieria_inversa_pro',
+    // ── 6 BLOQUES LETALES — acceso directo desde el frontend ─────
+    transcripcion_fiel:          sniperData.transcripcion_fiel          || '',
+    idea_ganadora:               sniperData.idea_ganadora               || '',
+    adn_viral:                   Array.isArray(sniperData.adn_viral)
+                                   ? sniperData.adn_viral
+                                   : ['No disponible', 'No disponible', 'No disponible'],
+    guion_adaptado_teleprompter: sniperData.guion_adaptado_teleprompter || '',
+    plan_audiovisual_pro:        sniperData.plan_audiovisual_pro        || {},
+    miniatura_circular:          sniperData.miniatura_circular          || {},
+
+    // ── COMPATIBILIDAD HACIA ATRÁS ────────────────────────────────
+    // Cualquier código que lea result.guion_generado.* no explota
+    guion_generado: {
+      ...sniperData,
+      // Aliases para que handleRunAudit y OmegaAuditCard lean el guion correctamente
+      guion_adaptado_espejo:   sniperData.guion_adaptado_teleprompter || '',
+      guion_adaptado_al_nicho: sniperData.guion_adaptado_teleprompter || '',
+      guion_tecnico_completo:  sniperData.guion_adaptado_teleprompter || '',
+    },
+
+    // Alias plano para SniperResultView (frase miniatura)
+    frase_miniatura:  sniperData.miniatura_circular?.frase_principal || '',
+
+    modo: urlCount > 1 ? 'sniper_enterprise_hibrido' : 'sniper_enterprise',
+
     metadata_video: {
-      source: videoSource, platform: platName, description: videoDescription,
-      whisper_used: whisperMinutes > 0, whisper_minutes: whisperMinutes,
-      duration_seconds: videoDurationSecs, urls_analizadas: urlCount,
-      original_url: rawUrls[0] || null, uploaded_file: body.uploadedFileName || null,
-      nicho_usuario: targetTopic || (userContext as any)?.nicho || '',
-    }
+      source:           videoSource,
+      platform:         platName,
+      description:      videoDescription,
+      whisper_used:     whisperMinutes > 0,
+      whisper_minutes:  whisperMinutes,
+      duration_seconds: videoDurationSecs,
+      urls_analizadas:  urlCount,
+      original_url:     rawUrls[0]               || null,
+      uploaded_file:    body.uploadedFileName     || null,
+      nicho_usuario:    targetTopic || (userContext as any)?.nicho || '',
+    },
   };
+
+  console.log(`[HANDLER] ✅ Sniper completado — bloques: transcripcion_fiel=${!!result.transcripcion_fiel}, guion=${result.guion_adaptado_teleprompter.length} chars`);
 
   return { result, tokensUsed: motorRes.tokens, whisperMinutes, videoDurationSecs };
 }

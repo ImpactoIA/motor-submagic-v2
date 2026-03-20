@@ -374,10 +374,11 @@ export async function transcribeVideoWithWhisper(videoUrl: string, openai: any):
   const timeoutId = setTimeout(() => controller.abort(), 25000); // 25 segundos máximo
 
   const transcription = await openai.audio.transcriptions.create({
-    file: videoFile,
-    model: 'whisper-1',
+    file:            videoFile,
+    model:           'whisper-1',
+    temperature:     0,
     response_format: 'verbose_json',
-    signal: controller.signal,
+    signal:          controller.signal,
   });
 
   clearTimeout(timeoutId);
@@ -424,9 +425,10 @@ async function transcribeLargeVideoWithWhisper(videoBuffer: ArrayBuffer, openai:
     try {
       const chunkFile = new File([chunkBuffer], `chunk_${i + 1}.mp4`, { type: 'video/mp4' });
       const chunkTranscription = await openai.audio.transcriptions.create({
-        file: chunkFile,
-        model: 'whisper-1',
-        response_format: 'verbose_json'
+        file:            chunkFile,
+        model:           'whisper-1',
+        temperature:     0,
+        response_format: 'verbose_json',
       });
       
       transcripts.push(chunkTranscription.text);
@@ -478,11 +480,16 @@ export async function processUploadedVideo(
       'video/mp4';
     const videoFile = new File([videoBuffer], fileName, { type: mimeType });
     console.log('[UPLOAD] 🎙️ Enviando a Whisper...');
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 25000); // 25 segundos máximo
     const transcription = await openai.audio.transcriptions.create({
       file: videoFile,
       model: 'whisper-1',
-      response_format: 'verbose_json'
+      response_format: 'verbose_json',
+      temperature: 0,
+      signal: controller.signal,
     });
+    clearTimeout(timeoutId);
     console.log('[UPLOAD] ✅ Transcripción completada');
     return { transcript: transcription.text, duration: transcription.duration || 0, fileType: fileExtension };
   } catch (error: any) {
@@ -534,7 +541,7 @@ export async function scrapeAndTranscribeVideo(
     const hasRealVideoUrl = videoData.videoUrl && videoData.videoUrl !== url && videoData.videoUrl.startsWith('http');
 
     // ─── Transcript rico: usarlo directo ──────────────────
-    if (transcriptLen > 300) {
+    if (transcriptLen > 800) {
       console.log(`[SCRAPER] ✅ Transcript rico (${transcriptLen} chars) — usando directo`);
       return {
         transcript: videoData.transcript!,
