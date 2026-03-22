@@ -59,7 +59,7 @@ DEVICE        = os.getenv("WHISPER_DEVICE", "cpu")
 API_SECRET    = os.getenv("API_SECRET", "")  # Token de seguridad — configura en Railway
 
 logger.info(f"🔄 Cargando modelo Whisper {MODEL_SIZE} ({COMPUTE_TYPE} en {DEVICE})...")
-whisper_model = WhisperModel(MODEL_SIZE, device="cpu", compute_type="int8")
+whisper_model = WhisperModel(MODEL_SIZE, device=DEVICE, compute_type=COMPUTE_TYPE)
 logger.info(f"✅ Modelo Whisper cargado.")
 
 # Directorio temporal para audios descargados
@@ -164,21 +164,26 @@ async def transcribe(
 
         # temperature=0 → máxima precisión, sin alucinaciones
         # beam_size=5   → mejor calidad (reducir a 1 para máxima velocidad)
-       segments, info = await loop.run_in_executor(
-    None,
-    lambda: whisper_model.transcribe(
-        str(actual_audio),
-        language    = req.language or None,
-        temperature = 0,
-    )
-)
-transcript = " ".join(seg.text.strip() for seg in segments).strip()
-detected_lang = info.language or "auto"
+        segments, info = await loop.run_in_executor(
+            None,
+            lambda: whisper_model.transcribe(
+                str(actual_audio),
+                language          = req.language or None,  # None = auto-detect
+                temperature       = 0,
+                beam_size         = 5,
+                vad_filter        = True,   # elimina silencio — más rápido y preciso
+                vad_parameters    = {"min_silence_duration_ms": 500},
+                word_timestamps   = False,  # no necesitamos timestamps por palabra
+            )
+        )
+
+        # Concatenar todos los segmentos en un solo string
+        transcript = " ".join(seg.text.strip() for seg in segments).strip()
 
         t_whisper    = round((time.time() - t2) * 1000)
         t_total      = round((time.time() - start_total) * 1000)
         word_count   = len(transcript.split())
-        detected_lang = result.get("language") or "auto"
+        detected_lang = info.language or "auto"
 
         logger.info(f"[WHISPER] ✅ Transcripción en {t_whisper}ms — {word_count} palabras — idioma: {detected_lang}")
         logger.info(f"[TOTAL] ⚡ Proceso completo: {t_total}ms")
