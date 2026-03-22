@@ -170,7 +170,7 @@ async def transcribe(
                 str(actual_audio),
                 language          = req.language or None,  # None = auto-detect
                 temperature       = 0,
-                beam_size         = 5,
+                beam_size         = 1,
                 vad_filter        = True,   # elimina silencio — más rápido y preciso
                 vad_parameters    = {"min_silence_duration_ms": 500},
                 word_timestamps   = False,  # no necesitamos timestamps por palabra
