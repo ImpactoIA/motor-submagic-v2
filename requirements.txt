@@ -1,5 +1,5 @@
 setuptools<70.0.0
-torch--no-cache-dir
+torch==2.2.2+cpu
 fastapi
 uvicorn
 yt-dlp
