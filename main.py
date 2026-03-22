@@ -15,7 +15,7 @@
 from fastapi import FastAPI, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import whisper
+from faster_whisper import WhisperModel
 import yt_dlp
 import os
 import uuid
@@ -59,7 +59,7 @@ DEVICE        = os.getenv("WHISPER_DEVICE", "cpu")
 API_SECRET    = os.getenv("API_SECRET", "")  # Token de seguridad — configura en Railway
 
 logger.info(f"🔄 Cargando modelo Whisper {MODEL_SIZE} ({COMPUTE_TYPE} en {DEVICE})...")
-whisper_model = whisper.load_model(MODEL_SIZE)
+whisper_model = WhisperModel(MODEL_SIZE, device="cpu", compute_type="int8")
 logger.info(f"✅ Modelo Whisper cargado.")
 
 # Directorio temporal para audios descargados
@@ -164,16 +164,16 @@ async def transcribe(
 
         # temperature=0 → máxima precisión, sin alucinaciones
         # beam_size=5   → mejor calidad (reducir a 1 para máxima velocidad)
-        result = await loop.run_in_executor(
+       segments, info = await loop.run_in_executor(
     None,
     lambda: whisper_model.transcribe(
         str(actual_audio),
         language    = req.language or None,
         temperature = 0,
-        fp16        = False,
     )
 )
-transcript = result["text"].strip()
+transcript = " ".join(seg.text.strip() for seg in segments).strip()
+detected_lang = info.language or "auto"
 
         t_whisper    = round((time.time() - t2) * 1000)
         t_total      = round((time.time() - start_total) * 1000)
