@@ -1,4 +1,5 @@
 FROM python:3.11-slim
+
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
@@ -7,8 +8,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg && rm -r
 WORKDIR /app
 COPY requirements.txt .
 
+# Instalamos las herramientas base primero
 RUN pip install --no-cache-dir --upgrade pip "setuptools<70.0.0" wheel
-RUN pip install --no-cache-dir -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
+
+# Instalamos todo SIN aislamiento para que Whisper no use versiones rotas
+RUN pip install --no-cache-dir -r requirements.txt --no-build-isolation --extra-index-url https://download.pytorch.org/whl/cpu
 
 COPY . .
 EXPOSE 8000
