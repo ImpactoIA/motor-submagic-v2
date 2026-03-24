@@ -1,7 +1,6 @@
-setuptools<70.0.0
-torch==2.2.2+cpu
 fastapi
 uvicorn
 yt-dlp
 python-multipart
-openai-whisper
+openai
+pydantic
