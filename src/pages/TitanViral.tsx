@@ -55,23 +55,237 @@ function computeCost(type: ContentType, urlCount: number): number {
 // ⚡ SNIPER RESULT VIEW
 // ==================================================================================
 
+// ── Score ADN Card (reemplaza IRProScoreCard con datos reales) ────
+const ScoreAdnCard = ({ scoreAdn }: { scoreAdn: any }) => {
+  if (!scoreAdn) return null;
+  const global = scoreAdn.global || 0;
+  const label  = global >= 85 ? '🔥 VIRAL POTENCIAL'
+               : global >= 70 ? '⚡ ALTA VIRALIDAD'
+               : global >= 50 ? '📈 EN DESARROLLO'
+               : '⚠ NECESITA MEJORAS';
+  const color  = global >= 85 ? 'text-green-400' : global >= 70 ? 'text-purple-400' : global >= 50 ? 'text-yellow-400' : 'text-red-400';
+  const radius = 46;
+  const circ   = 2 * Math.PI * radius;
+  const prog   = (global / 100) * circ;
+  const strokeColor = global >= 85 ? '#22c55e' : global >= 70 ? '#a855f7' : global >= 50 ? '#f59e0b' : '#ef4444';
+
+  return (
+    <div className="bg-[#0f1115] border border-purple-500/30 rounded-2xl p-6 h-full flex flex-col shadow-[0_0_30px_-10px_rgba(168,85,247,0.2)]">
+      <h3 className="text-purple-400 text-[10px] font-black uppercase tracking-widest mb-4 flex items-center gap-2">
+        <Zap size={12} fill="currentColor" /> Score ADN Viral
+      </h3>
+      <div className="flex items-center gap-5 mb-5">
+        <div className="relative flex items-center justify-center" style={{ width: 110, height: 110 }}>
+          <svg width={110} height={110} style={{ transform: 'rotate(-90deg)' }}>
+            <circle cx={55} cy={55} r={radius} fill="none" stroke="#1a1a2e" strokeWidth={8} />
+            <circle cx={55} cy={55} r={radius} fill="none" stroke={strokeColor} strokeWidth={8}
+              strokeDasharray={`${circ}`} strokeDashoffset={circ - prog} strokeLinecap="round"
+              style={{ transition: 'stroke-dashoffset 1.5s cubic-bezier(0.4,0,0.2,1)', filter: `drop-shadow(0 0 8px ${strokeColor}60)` }} />
+          </svg>
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <span className="text-3xl font-black text-white leading-none">{global}</span>
+            <span className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">/100</span>
+          </div>
+        </div>
+        <div>
+          <p className={`text-xs font-black mb-1 ${color}`}>{label}</p>
+          {scoreAdn.diagnostico && (
+            <p className="text-[10px] text-gray-500 leading-relaxed">{scoreAdn.diagnostico}</p>
+          )}
+        </div>
+      </div>
+      <div className="space-y-2 flex-1">
+        {[
+          { label: 'Retención',    val: scoreAdn.retencion    || 0, color: 'bg-blue-500',   peso: '25%' },
+          { label: 'Emoción',      val: scoreAdn.emocion      || 0, color: 'bg-pink-500',   peso: '20%' },
+          { label: 'Atención',     val: scoreAdn.atencion     || 0, color: 'bg-purple-500', peso: '20%' },
+          { label: 'Valor',        val: scoreAdn.valor        || 0, color: 'bg-green-500',  peso: '15%' },
+          { label: 'Polarización', val: scoreAdn.polarizacion || 0, color: 'bg-orange-500', peso: '10%' },
+        ].map(item => (
+          <div key={item.label} className="space-y-1">
+            <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-tighter">
+              <span className="text-gray-500 flex items-center gap-1.5">
+                {item.label}
+                <span className="text-gray-700 font-normal normal-case tracking-normal text-[9px]">({item.peso})</span>
+              </span>
+              <span className={`font-black ${item.val >= 80 ? 'text-green-400' : item.val >= 60 ? 'text-yellow-400' : 'text-red-400'}`}>
+                {item.val}<span className="text-gray-600 font-normal">%</span>
+              </span>
+            </div>
+            <div className="h-2 bg-gray-800/80 rounded-full overflow-hidden">
+              <div style={{ width: `${item.val}%`, transition: 'width 1.4s cubic-bezier(0.4,0,0.2,1)' }}
+                className={`h-full ${item.color} rounded-full`} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// ── Plan Audiovisual Tabla por Escenas ────────────────────────────
+const PlanAudiovisualTabla = ({ planAV }: { planAV: any }) => {
+  const [escenaActiva, setEscenaActiva] = useState<number>(0);
+  const [copiedPrompt, setCopiedPrompt] = useState<number | null>(null);
+
+  const escenas = Array.isArray(planAV?.escenas) ? planAV.escenas : [];
+  const ritmo   = planAV?.ritmo_de_cortes || '';
+  const musica  = planAV?.musica_completa || {};
+
+  if (escenas.length === 0) return null;
+
+  const tipoColors: Record<string, string> = {
+    HOOK:            'bg-green-500/20 text-green-400 border-green-500/30',
+    DESARROLLO_1:    'bg-blue-500/20 text-blue-400 border-blue-500/30',
+    DESARROLLO_2:    'bg-orange-500/20 text-orange-400 border-orange-500/30',
+    CIERRE_CIRCULAR: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
+  };
+
+  const copyPrompt = (prompt: string, idx: number) => {
+    if (!prompt) return;
+    navigator?.clipboard?.writeText(prompt).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = prompt;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    });
+    setCopiedPrompt(idx);
+    setTimeout(() => setCopiedPrompt(null), 2000);
+  };
+
+  const escena = escenas[escenaActiva];
+
+  return (
+    <div className="bg-[#080808] border border-blue-500/20 rounded-2xl overflow-hidden shadow-[0_0_40px_-15px_rgba(59,130,246,0.15)]">
+      {/* Header */}
+      <div className="bg-blue-900/10 border-b border-blue-500/20 p-5 flex items-center gap-3">
+        <Film size={18} className="text-blue-400" />
+        <div>
+          <h3 className="text-white font-black text-sm tracking-tight">Plan Audiovisual Pro</h3>
+          <p className="text-[10px] text-gray-500 mt-0.5">Asesoría completa escena por escena · Prompts listos para IA</p>
+        </div>
+      </div>
+
+      {/* Tabs de escenas */}
+      <div className="flex border-b border-white/5 overflow-x-auto">
+        {escenas.map((e: any, i: number) => (
+          <button key={i} onClick={() => setEscenaActiva(i)}
+            className={`flex-1 min-w-[100px] px-4 py-3 text-[10px] font-black uppercase tracking-wider transition-all border-b-2 ${
+              escenaActiva === i
+                ? 'border-blue-500 text-blue-400 bg-blue-500/5'
+                : 'border-transparent text-gray-600 hover:text-gray-400 hover:bg-white/3'
+            }`}>
+            <span className="block text-[9px] text-gray-600 font-normal mb-0.5">{e.momento}</span>
+            {e.tipo?.replace(/_/g, ' ')}
+          </button>
+        ))}
+      </div>
+
+      {/* Contenido de la escena activa */}
+      {escena && (
+        <div className="p-5 space-y-4">
+
+          {/* Badge tipo + momento */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className={`text-[10px] font-black px-3 py-1 rounded-full border ${tipoColors[escena.tipo] || 'bg-white/5 text-gray-400 border-white/10'}`}>
+              {escena.tipo?.replace(/_/g, ' ')}
+            </span>
+            <span className="text-[10px] text-gray-600 font-bold">⏱ {escena.momento}</span>
+          </div>
+
+          {/* Tabla principal */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+
+            {/* Descripción escena */}
+            <div className="bg-[#0f1115] rounded-xl p-4 border border-white/5">
+              <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-2">🎬 Descripción de Escena</p>
+              <p className="text-xs text-gray-200 leading-relaxed">{escena.descripcion_escena || '—'}</p>
+            </div>
+
+            {/* Cámara */}
+            <div className="bg-[#0f1115] rounded-xl p-4 border border-white/5">
+              <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-2">📷 Cámara</p>
+              <p className="text-xs text-cyan-300 font-bold mb-1">{escena.angulo_camara || '—'}</p>
+              <p className="text-[10px] text-gray-400">{escena.movimiento || '—'}</p>
+            </div>
+
+            {/* Caption */}
+            <div className="bg-[#0f1115] rounded-xl p-4 border border-yellow-500/10">
+              <p className="text-[9px] font-black text-yellow-500 uppercase tracking-widest mb-2">✍️ Caption en Pantalla</p>
+              <p className="text-sm font-black text-yellow-200 tracking-tight">{escena.caption || '—'}</p>
+            </div>
+
+            {/* SFX / Música */}
+            <div className="bg-[#0f1115] rounded-xl p-4 border border-green-500/10">
+              <p className="text-[9px] font-black text-green-500 uppercase tracking-widest mb-2">🎵 Sonido / Música</p>
+              <p className="text-xs text-green-200 leading-relaxed">{escena.sfx || '—'}</p>
+            </div>
+
+            {/* Por qué retiene */}
+            <div className="md:col-span-2 bg-purple-500/5 rounded-xl p-4 border border-purple-500/15">
+              <p className="text-[9px] font-black text-purple-400 uppercase tracking-widest mb-2">🧠 Por qué retiene al espectador</p>
+              <p className="text-xs text-gray-300 leading-relaxed">{escena.por_que_retiene || '—'}</p>
+            </div>
+
+            {/* Prompt B-Roll */}
+            {escena.prompt_broll && (
+              <div className="md:col-span-2 bg-[#0a0f1a] rounded-xl p-4 border border-blue-500/20">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-[9px] font-black text-blue-400 uppercase tracking-widest">
+                    🤖 Prompt B-Roll — Copia en Midjourney / Runway / Sora
+                  </p>
+                  <button onClick={() => copyPrompt(escena.prompt_broll, escenaActiva)}
+                    className="flex items-center gap-1.5 text-[9px] font-black px-2.5 py-1.5 rounded-lg bg-blue-600/20 hover:bg-blue-500/30 border border-blue-500/30 text-blue-300 transition-all active:scale-95">
+                    {copiedPrompt === escenaActiva ? <CheckCircle2 size={11} /> : <Copy size={11} />}
+                    {copiedPrompt === escenaActiva ? 'COPIADO' : 'COPIAR'}
+                  </button>
+                </div>
+                <p className="text-[11px] text-blue-100 font-mono leading-relaxed bg-black/30 rounded-lg p-3 border border-blue-500/10">
+                  {escena.prompt_broll}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Footer: Ritmo de cortes + Música */}
+      <div className="border-t border-white/5 p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+        {ritmo && (
+          <div className="bg-[#0f1115] rounded-xl p-4 border border-white/5">
+            <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-2">✂️ Ritmo de Cortes</p>
+            <p className="text-xs text-gray-300 leading-relaxed">{ritmo}</p>
+          </div>
+        )}
+        {musica.genero && (
+          <div className="bg-[#0f1115] rounded-xl p-4 border border-green-500/10">
+            <p className="text-[9px] font-black text-green-500 uppercase tracking-widest mb-2">🎶 Música Completa</p>
+            <div className="space-y-1">
+              <p className="text-xs text-green-200 font-bold">{musica.genero} · {musica.bpm} BPM</p>
+              {musica.referencia && <p className="text-[10px] text-gray-400">Ref: {musica.referencia}</p>}
+              {musica.cuando_entra && <p className="text-[10px] text-gray-500">Entra: {musica.cuando_entra}</p>}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const SniperResultView = ({ result, contentType = 'reel' }: { result: any; contentType?: string }) => {
   const [copiedGuion, setCopiedGuion] = useState(false);
   const [copiedMini,  setCopiedMini]  = useState(false);
 
-  const guion         = result.guion_adaptado_teleprompter || result.guion_teleprompter || result.guion_adaptado_espejo || '';
-const planAV        = result.plan_audiovisual_pro || result.plan_audiovisual || {};
-const adnViral      = Array.isArray(result.adn_viral) ? result.adn_viral : [];
-const idea          = result.idea_ganadora || '';
-const fraseMini     = result.miniatura_circular?.frase_principal || result.frase_miniatura || '';
-const transcFiel    = result.transcripcion_fiel || '';
-const hookVisual    = typeof planAV === 'object' ? (planAV as any).hook_visual || '' : '';
-const captions      = typeof planAV === 'object' ? (planAV as any).captions_dinamicos || [] : [];
-const brolls        = typeof planAV === 'object' ? (planAV as any).brolls_estrategicos || [] : [];
-const sfx           = typeof planAV === 'object' ? (planAV as any).sfx_y_musica || {} : {};
-const ritmoCortes   = typeof planAV === 'object' ? (planAV as any).ritmo_de_cortes || '' : '';
-const varianteB     = result.miniatura_circular?.variante_b || '';
-const porQueClicula = result.miniatura_circular?.por_que_genera_clic || '';
+  const guion      = result.guion_adaptado_teleprompter || result.guion_teleprompter || result.guion_adaptado_espejo || '';
+  const planAV     = result.plan_audiovisual_pro || result.plan_audiovisual || {};
+  const adnViral   = Array.isArray(result.adn_viral) ? result.adn_viral : [];
+  const idea       = result.idea_ganadora || '';
+  const fraseMini  = result.miniatura_circular?.frase_principal || result.frase_miniatura || '';
+  const transcFiel = result.transcripcion_fiel || '';
+  const scoreAdn   = result.score_adn || null;
+  const varianteB  = result.miniatura_circular?.variante_b || '';
 
   const words    = guion.trim().split(/\s+/).filter(Boolean).length;
   const minWords = contentType === 'masterclass' ? 400 : contentType === 'long' ? 250 : 150;
@@ -95,39 +309,26 @@ const porQueClicula = result.miniatura_circular?.por_que_genera_clic || '';
     setTimeout(() => setter(false), 2000);
   };
 
-  // Parsear plan_audiovisual en 3 secciones si viene como string con \n
-  const parsePlan = (raw: string) => {
-    const sections: Record<string, string> = {};
-    const parts = raw.split(/\n(?=GANCHO:|DESARROLLO:|CIERRE:)/i);
-    parts.forEach(p => {
-      const match = p.match(/^(GANCHO|DESARROLLO|CIERRE):\s*/i);
-      if (match) sections[match[1].toUpperCase()] = p.replace(match[0], '').trim();
-    });
-    return sections;
-  };
-  const planSections = typeof planAV === 'string' ? parsePlan(planAV) : {};
-
   return (
     <div className="space-y-4">
 
       {/* ── BLOQUE 0: TRANSCRIPCIÓN FIEL ── */}
-{transcFiel && (
-  <details className="bg-[#080b10] border border-white/10 rounded-2xl overflow-hidden">
-    <summary className="p-4 cursor-pointer flex items-center justify-between hover:bg-white/3 transition-colors select-none">
-      <span className="text-xs font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
-        <span>📝</span> Transcripción Fiel del Video Original
-        <span className="text-[9px] font-normal text-gray-600 normal-case tracking-normal">(click para expandir)</span>
-      </span>
-      <ChevronDown size={14} className="text-gray-600" />
-    </summary>
-    <div className="px-5 pb-5 border-t border-white/5">
-      <p className="text-xs text-gray-400 leading-relaxed whitespace-pre-line font-mono mt-4 max-h-52 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-800">
-        {transcFiel}
-      </p>
-    </div>
-  </details>
-)}
-
+      {transcFiel && (
+        <details className="bg-[#080b10] border border-white/10 rounded-2xl overflow-hidden">
+          <summary className="p-4 cursor-pointer flex items-center justify-between hover:bg-white/3 transition-colors select-none">
+            <span className="text-xs font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
+              <span>📝</span> Transcripción Fiel del Video Original
+              <span className="text-[9px] font-normal text-gray-600 normal-case tracking-normal">(click para expandir)</span>
+            </span>
+            <ChevronDown size={14} className="text-gray-600" />
+          </summary>
+          <div className="px-5 pb-5 border-t border-white/5">
+            <p className="text-xs text-gray-400 leading-relaxed whitespace-pre-line font-mono mt-4 max-h-52 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-800">
+              {transcFiel}
+            </p>
+          </div>
+        </details>
+      )}
 
       {/* ── BLOQUE 1: IDEA GANADORA + ADN VIRAL ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -174,7 +375,12 @@ const porQueClicula = result.miniatura_circular?.por_que_genera_clic || '';
             <p className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
               {fraseMini}
             </p>
-            <p className="text-[10px] text-gray-500 mt-1.5">Teoría Circular aplicada · Alto impacto visual</p>
+            {varianteB && (
+              <p className="text-[10px] text-gray-500 mt-1.5">
+                Variante B: <span className="text-gray-400 italic">"{varianteB}"</span>
+              </p>
+            )}
+            <p className="text-[10px] text-gray-600 mt-1">Teoría Circular aplicada · Alto impacto visual</p>
           </div>
           <button
             onClick={() => copy(fraseMini, setCopiedMini)}
@@ -186,10 +392,8 @@ const porQueClicula = result.miniatura_circular?.por_que_genera_clic || '';
         </div>
       )}
 
-      {/* ── BLOQUE 3: GUION + PLAN AUDIOVISUAL ── */}
+      {/* ── BLOQUE 3: GUION TELEPROMPTER ── */}
       <div className="bg-[#080808] border border-green-500/30 rounded-2xl overflow-hidden shadow-[0_0_50px_-20px_rgba(34,197,94,0.15)]">
-
-        {/* Header */}
         <div className="bg-green-900/10 border-b border-green-500/20 p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
@@ -210,59 +414,21 @@ const porQueClicula = result.miniatura_circular?.por_que_genera_clic || '';
             {copiedGuion ? 'COPIADO' : 'COPIAR TELEPROMPTER'}
           </button>
         </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12">
-
-          {/* Panel izquierdo: Plan Audiovisual */}
-          {(planSections.GANCHO || planSections.DESARROLLO || planSections.CIERRE || (typeof planAV === 'string' && planAV.length > 20)) && (
-            <div className="lg:col-span-4 border-b lg:border-b-0 lg:border-r border-white/5 bg-[#0c0c0c]">
-              <div className="p-4 border-b border-white/5 bg-[#0f1115] sticky top-0 z-10">
-                <h4 className="text-[10px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-2">
-                  <Film size={12} /> Plan Audiovisual
-                </h4>
-              </div>
-              <div className="p-4 space-y-3 overflow-y-auto max-h-[500px]">
-                {planSections.GANCHO && (
-                  <div className="bg-white/3 rounded-lg p-3 border border-white/5">
-                    <p className="text-[9px] font-black text-green-400 uppercase tracking-wider mb-1.5">🎬 Gancho (0-3s)</p>
-                    <p className="text-[11px] text-gray-300 leading-relaxed">{planSections.GANCHO}</p>
-                  </div>
-                )}
-                {planSections.DESARROLLO && (
-                  <div className="bg-white/3 rounded-lg p-3 border border-white/5">
-                    <p className="text-[9px] font-black text-blue-400 uppercase tracking-wider mb-1.5">📽 Desarrollo</p>
-                    <p className="text-[11px] text-gray-300 leading-relaxed">{planSections.DESARROLLO}</p>
-                  </div>
-                )}
-                {planSections.CIERRE && (
-                  <div className="bg-white/3 rounded-lg p-3 border border-white/5">
-                    <p className="text-[9px] font-black text-orange-400 uppercase tracking-wider mb-1.5">🎯 Cierre + CTA</p>
-                    <p className="text-[11px] text-gray-300 leading-relaxed">{planSections.CIERRE}</p>
-                  </div>
-                )}
-                {/* Fallback: si el plan no tiene secciones marcadas, mostrar como bloque */}
-                {!planSections.GANCHO && !planSections.DESARROLLO && !planSections.CIERRE && typeof planAV === 'string' && (
-                  <p className="text-[11px] text-gray-300 leading-relaxed whitespace-pre-line">{planAV}</p>
-                )}
-              </div>
-            </div>
+        <div className="p-6 overflow-y-auto max-h-[500px]">
+          {guion ? (
+            <p className="text-sm text-gray-100 leading-[1.9] whitespace-pre-line font-mono">{guion}</p>
+          ) : (
+            <p className="text-sm text-gray-500 italic">Guion no disponible.</p>
           )}
-
-          {/* Panel derecho: Guion */}
-          <div className={`${(planSections.GANCHO || planSections.DESARROLLO || planSections.CIERRE || (typeof planAV === 'string' && planAV.length > 20)) ? 'lg:col-span-8' : 'lg:col-span-12'} bg-[#080808]`}>
-            <div className="p-6 overflow-y-auto max-h-[500px]">
-              {guion ? (
-                <p className="text-sm text-gray-100 leading-[1.9] whitespace-pre-line font-mono">
-                  {guion}
-                </p>
-              ) : (
-                <p className="text-sm text-gray-500 italic">Guion no disponible.</p>
-              )}
-            </div>
-          </div>
-
         </div>
       </div>
+
+      {/* ── BLOQUE 4: SCORE ADN (datos reales) ── */}
+      {scoreAdn && <ScoreAdnCard scoreAdn={scoreAdn} />}
+
+      {/* ── BLOQUE 5: PLAN AUDIOVISUAL PRO (tabla por escenas) ── */}
+      <PlanAudiovisualTabla planAV={planAV} />
+
     </div>
   );
 };
@@ -1581,21 +1747,12 @@ export const TitanViral = () => {
             </div>
           )}
 
-          {/* SCORE + MOTORES */}
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              <div className="lg:col-span-4">
-                <IRProScoreCard score={result.guion_generado?.score_viral_estructural} />
-              </div>
-              <div className="lg:col-span-8 bg-[#0f1115] border border-white/5 rounded-2xl p-6">
-                <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-4">
-                  <Brain className="text-green-500" size={18} />
-                  <h3 className="text-white font-black text-sm uppercase tracking-tighter italic">Motores de Ingeniería Inversa Activos</h3>
-                </div>
-                <MotoresActivosCard output={result.guion_generado} />
-              </div>
+          {/* SCORE ADN — datos reales del análisis */}
+          {result.score_adn && (
+            <div className="max-w-6xl mx-auto">
+              <ScoreAdnCard scoreAdn={result.score_adn} />
             </div>
-          </div>
+          )}
 
           {/* Multi-URL badge */}
           {(result.metadata_video?.urls_analizadas || 0) > 1 && (
