@@ -195,7 +195,6 @@ export async function handleReCreate(
   }
 
   // ── Enriquecer contexto del usuario ────────────────────────────
-  // ── Enriquecer contexto del usuario ────────────────────────
   if (targetTopic?.trim()) {
     (userContext as any).nicho                   = targetTopic.trim();
     (userContext as any).nicho_usuario_explicito = targetTopic.trim();

@@ -135,8 +135,12 @@ Analiza la transcripción y devuelve EXCLUSIVAMENTE este JSON (sin texto antes, 
   }
 }
 
-REGLAS CRÍTICAS:
-- SOLO JSON. Cero texto antes o después. Cero markdown. Cero backticks.
+REGLAS CRÍTICAS — NO NEGOCIABLES:
+- SOLO JSON. Cero texto antes o después. Cero markdown. Cero backticks. Cero explicaciones.
+- PROHIBIDO SUAVIZAR: Si el video original usa lenguaje crudo, polémico, confrontacional o vulgar, el guion adaptado DEBE mantener ese mismo nivel de intensidad y riesgo narrativo. "Suavizar" = fracaso total del sistema.
+- PROHIBIDO CENSURAR POR DEFECTO: No apliques filtros corporativos ni advertencias morales. Tu función es clonación viral con precisión quirúrgica, no editorialización.
+- Si el hook original es agresivo → el hook adaptado es igual de agresivo en el nicho del usuario.
+- El JSON debe ser parseable directamente con JSON.parse(). Sin texto envolvente de ningún tipo.
 - "adn_viral" DEBE ser array de exactamente 3 strings.
 - "guion_adaptado_teleprompter" DEBE tener mínimo 200 palabras.
 - "score_adn" — todos los valores numéricos entre 0-100. Basados en análisis REAL del video original, no inventados.
@@ -231,29 +235,13 @@ async function ejecutarIngenieriaInversaPro(
   let data: any;
   try {
     data = JSON.parse(clean);
-  } catch (_) {
-    console.error('[SNIPER-ENTERPRISE-v2] ❌ JSON inválido:', clean.substring(0, 300));
-    data = {
-      transcripcion_fiel:          transcripcionFiel,
-      idea_ganadora:               'Error al procesar. Intenta de nuevo.',
-      adn_viral:                   ['No disponible', 'No disponible', 'No disponible'],
-      score_adn: {
-        retencion: 0, emocion: 0, atencion: 0, valor: 0,
-        polarizacion: 0, global: 0, diagnostico: 'Error de procesamiento.',
-      },
-      guion_adaptado_teleprompter: raw,
-      plan_audiovisual_pro: {
-        hook_visual:     '',
-        escenas:         [],
-        ritmo_de_cortes: 'MEDIO',
-        musica_completa: {},
-      },
-      miniatura_circular: {
-        frase_principal:     'Error de procesamiento',
-        por_que_genera_clic: '',
-        variante_b:          '',
-      },
-    };
+  } catch (parseErr: any) {
+    const snippet = clean.substring(0, 500);
+    console.error('[SNIPER-ENTERPRISE-v2] ❌ JSON inválido — raw:', snippet);
+    throw new Error(
+      `SNIPER_JSON_PARSE_ERROR: OpenAI devolvió una respuesta que no es JSON válido. ` +
+      `Primeros 300 chars: ${snippet.substring(0, 300)}`
+    );
   }
 
   // ── Normalizar adn_viral ──────────────────────────────────────────
@@ -295,7 +283,7 @@ async function ejecutarIngenieriaInversaPro(
   };
   data.plan_audiovisual_profesional = data.plan_audiovisual_pro || {};
 
-  // score_viral_estructural compatible con IRProScoreCard (mantiene los nombres que ya usa el frontend)
+  // score_viral_estructural compatible con IRProScoreCard
   data.score_viral_estructural = {
     viralidad_estructural_global: data.score_adn?.global             || 0,
     retencion_estructural:        data.score_adn?.retencion          || 0,

@@ -65,13 +65,9 @@ async function runRecreateBackground(params: {
   } = params;
 
   try {
-    const bgStart = Date.now();
     console.log(`[BACKGROUND] 🔁 Iniciando recreate para generation_id=${generationId}`);
 
-    console.log(`[BACKGROUND] ⏳ Llamando a handleReCreate...`);
     const r = await handleReCreate(body, settings, platform, processedContext, userContext, openai);
-    console.log(`[BACKGROUND] ✅ handleReCreate OK en ${Date.now() - bgStart}ms — tokens: ${r.tokensUsed}`);
-
     const result        = r.result;
     const tokensUsed    = r.tokensUsed;
     const whisperMinutes   = r.whisperMinutes;
@@ -81,7 +77,6 @@ async function runRecreateBackground(params: {
       'recreate', processedContext, whisperMinutes, settings, videoDurationSecs
     );
     const finalCost = Math.max(calculatedPrice, estimatedCost || 0);
-    console.log(`[BACKGROUND] 💰 Costo: ${finalCost} CR`);
 
     if (finalCost > 0) {
       const { data: profile } = await supabase.from('profiles')
@@ -115,13 +110,13 @@ async function runRecreateBackground(params: {
       .eq('id', generationId);
 
     if (updateError) {
-      console.error(`[BACKGROUND] ❌ Error actualizando DB: ${updateError.message} | Code: ${updateError.code}`);
+      console.error(`[BACKGROUND] ❌ Error actualizando registro: ${updateError.message}`);
     } else {
-      console.log(`[BACKGROUND] ✅ recreate completado en ${Date.now() - bgStart}ms. generation_id=${generationId}`);
+      console.log(`[BACKGROUND] ✅ recreate completado. generation_id=${generationId}`);
     }
 
   } catch (bgError: any) {
-    console.error(`[BACKGROUND] 💥 Error fatal: ${bgError.message} | Stack: ${bgError.stack?.substring(0,200)}`);
+    console.error(`[BACKGROUND] 💥 Error fatal: ${bgError.message}`);
     await supabase
       .from('viral_generations')
       .update({
@@ -385,11 +380,11 @@ serve(async (req) => {
     }
 
     // ==================================================================================
-    // ⚡ RUTA SÍNCRONA: recreate — ejecuta directamente y devuelve el JSON final
+    // ⚡ RUTA ASÍNCRONA: recreate — responde en < 2s, proceso pesado en background
     // ==================================================================================
 
     if (ASYNC_BACKGROUND_MODES.includes(selectedMode)) {
-      console.log(`[TITAN V105] ⚡ Modo síncrono: ${selectedMode}`);
+      console.log(`[TITAN V105] ⚡ Modo asíncrono: ${selectedMode}`);
 
       const rawUrls: string[] = body.urls || (body.url ? [body.url] : []);
 
@@ -419,68 +414,37 @@ serve(async (req) => {
       }
 
       const generationId = genRecord.id;
-      console.log(`[SYNC] ✅ Registro creado. generation_id=${generationId}`);
+      console.log(`[ASYNC] ✅ Registro creado. generation_id=${generationId}`);
 
-      // Ejecución síncrona directa
-      const r = await handleReCreate(body, settings, platform || '', processedContext, userContext, openai);
-      const result        = r.result;
-      const tokensUsed    = r.tokensUsed;
-      const whisperMinutes   = r.whisperMinutes;
-      const videoDurationSecs = r.videoDurationSecs;
+      const backgroundTask = runRecreateBackground({
+        generationId,
+        body,
+        settings,
+        platform:         platform || '',
+        processedContext,
+        userContext,
+        openai,
+        supabase,
+        userId,
+        estimatedCost:    estimatedCost || 0,
+        activeAvatar,
+      });
 
-      const calculatedPrice = calculateTitanCost(
-        'recreate', processedContext, whisperMinutes, settings, videoDurationSecs
-      );
-      const finalCost = Math.max(calculatedPrice, estimatedCost || 0);
-
-      // Cobrar créditos
-      if (finalCost > 0) {
-        const { data: profile } = await supabase.from('profiles')
-          .select('credits, tier').eq('id', userId).single();
-        if (profile?.tier !== 'admin') {
-          const { error: creditError } = await supabase.rpc('decrement_credits', {
-            user_uuid: userId,
-            amount: finalCost,
-          });
-          if (creditError) console.error(`[SYNC] ❌ Error cobrando créditos: ${creditError.message}`);
-        }
+      try {
+        // @ts-ignore — EdgeRuntime es global en Supabase Edge Functions
+        EdgeRuntime.waitUntil(backgroundTask);
+      } catch (_) {
+        backgroundTask.catch((e: any) => {
+          console.error('[BACKGROUND FALLBACK] Error:', e.message);
+        });
       }
 
-      // Evolución del Avatar
-      if (activeAvatar) {
-        try {
-          const avatarMw = new AvatarMiddleware(supabase);
-          await avatarMw.incrementContentCount();
-        } catch (e) { console.error('[SYNC] Error evolución avatar:', e); }
-      }
-
-      // Actualizar registro con el resultado final
-      const { error: updateError } = await supabase
-        .from('viral_generations')
-        .update({
-          status:          'completed',
-          content:         result,
-          cost_credits:    finalCost,
-          tokens_used:     tokensUsed,
-          whisper_minutes: whisperMinutes,
-          updated_at:      new Date().toISOString(),
-        })
-        .eq('id', generationId);
-
-      if (updateError) {
-        console.error(`[SYNC] ❌ Error actualizando DB: ${updateError.message} | Code: ${updateError.code}`);
-      } else {
-        console.log(`[SYNC] ✅ recreate completado en ${Date.now() - startTime}ms. generation_id=${generationId}`);
-      }
-
-      // CORRECCIÓN TS: casteo seguro para evitar error de tipo `never` en activeAvatar
-      const safeAvatar = activeAvatar as any;
       return new Response(
         JSON.stringify({
           success:       true,
-          generatedData: result,
-          finalCost,
-          avatar_used:   safeAvatar ? { id: safeAvatar.id, name: safeAvatar.name } : null,
+          async:         true,
+          generation_id: generationId,
+          message:       'Procesando en la nube. Escucha el canal Realtime para el resultado.',
           metadata:      { mode: selectedMode, duration: Date.now() - startTime },
         }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
@@ -626,7 +590,7 @@ serve(async (req) => {
         success:       true,
         generatedData: result,
         finalCost,
-        avatar_used:   (activeAvatar as any) ? { id: (activeAvatar as any).id, name: (activeAvatar as any).name } : null,
+        avatar_used:   activeAvatar ? { id: activeAvatar.id, name: activeAvatar.name } : null,
         metadata:      { mode: selectedMode, duration: Date.now() - startTime }
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
